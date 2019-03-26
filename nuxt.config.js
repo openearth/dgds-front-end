@@ -1,7 +1,14 @@
+import dotEnv from 'dotenv-safe'
 import pkg from './package'
+
+dotEnv.config()
 
 export default {
   mode: 'universal',
+
+  env: {
+    MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
+  },
 
   /*
    ** Headers of the page
@@ -24,12 +31,12 @@ export default {
   /*
    ** Global CSS
    */
-  css: [],
+  css: ['mapbox-gl/dist/mapbox-gl.css'],
 
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: ['~/plugins/mapbox'],
 
   /*
    ** Nuxt.js modules
