@@ -1,10 +1,8 @@
 <template>
   <section class="timeseries">
-    <template v-for="graph in graphs">
-      <div :id="graph" :key="graph" class="graphs">
-        {{ graph }}
-      </div>
-    </template>
+    <div v-for="graph in graphs" :id="graph.id" :key="graph.id" class="graphs">
+      {{ graph.id }}
+    </div>
   </section>
 </template>
 
@@ -14,41 +12,74 @@ import echarts from 'echarts'
 export default {
   data() {
     return {
-      graphs: ['waterlevel', 'winddata'],
+      graphs: [{ id: 'test' }],
     }
   },
   watch: {
     graphs: {
       handler: function(graphs) {
-        this.graphs = graphs
-        this.createPlots()
+        // this.graphs = graphs
+        console.log('graphs', this.graphs)
+        this.graphs.forEach(graph => {
+          this.createPlot(graph)
+        })
       },
     },
   },
   mounted() {
-    this.createPlots()
+    this.fetchTimeseries()
   },
   methods: {
-    createPlots() {
-      this.graphs.forEach(plotId => {
-        const myChart = echarts.init(document.getElementById(plotId))
-        const option = {
-          xAxis: {
-            type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    fetchTimeseries() {
+      // this.graphs = []
+      fetch('http://localhost:3001/api/v1/timeseries')
+        .then(response => response.json())
+        .then(res => {
+          // Only use the reults which contain events
+          const events = res.results.filter(x => x.events)
+          const newGraphs = []
+
+          events.forEach(result => {
+            // For each event store the timeserie data in graphs
+            const times = result.events.map(e => e.timeStamp)
+            const values = result.events.map(e => e.value)
+            newGraphs.push({
+              id: result.id,
+              values: values,
+              times: times,
+            })
+          })
+          this.graphs = newGraphs
+        })
+        .catch(error => {
+          console.log('Request failed', error)
+          this.graphs = []
+        })
+    },
+    createPlot(plotSettings) {
+      console.log(plotSettings.id)
+      console.log('test', this.$el.childNodes[`div#${plotSettings.id}`])
+      const el = document.getElementById(plotSettings.id)
+
+      console.log(plotSettings.id, el)
+      const myChart = echarts.init(el)
+      console.log(myChart)
+      const option = {
+        xAxis: {
+          type: 'category',
+          data: plotSettings.times,
+        },
+        yAxis: {
+          type: 'value',
+        },
+        series: [
+          {
+            type: 'line',
+            data: plotSettings.values,
           },
-          yAxis: {
-            type: 'value',
-          },
-          series: [
-            {
-              data: [820, 932, 901, 934, 1290, 1330, 1320],
-              type: 'line',
-            },
-          ],
-        }
-        myChart.setOption(option)
-      })
+        ],
+      }
+      myChart.setOption(option)
     },
   },
 }
