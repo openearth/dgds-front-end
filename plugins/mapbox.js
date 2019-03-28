@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import map from 'lodash/fp/map'
+import has from 'lodash/fp/has'
 import diff from '../lib/diff-object'
 import dispatchEvent from '../lib/dispatch-event'
 import loadModule from '../lib/load-module'
@@ -47,6 +48,9 @@ Vue.directive('mapbox', {
   },
 
   update(container, { value: newValue, oldValue }) {
+    const changed = diff(oldValue, newValue)
+    const styleIn = has('style')
+
     newValue.sources.forEach(source => {
       pointsLayer.source.data.features = [
         ...pointsLayer.source.data.features,
@@ -56,9 +60,7 @@ Vue.directive('mapbox', {
 
     updateLayerSources(layers)
 
-    const diffed = diff(oldValue, newValue)
-
-    if (diffed && diffed.style) {
+    if (styleIn(changed)) {
       const url = getUrlFromStyleWhere({ id: newValue.style })
       mapbox.setStyle(url)
     }
