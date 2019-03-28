@@ -1,22 +1,22 @@
 import Vue from 'vue'
+import map from 'lodash/fp/map'
 import diff from '../lib/diff-object'
 import dispatchEvent from '../lib/dispatch-event'
 import loadModule from '../lib/load-module'
 import mapAsync from '../lib/map-async'
+import updateLayerSource from '../lib/mapbox/update-layer-source'
 import pointsLayer from '../lib/mapbox/layers/points-layer'
 import { getStyle } from '../lib/mapbox/get-style'
 import addLayer from '../lib/mapbox/add-layer'
 import addImage from '../lib/mapbox/add-image'
 import icons from '../lib/mapbox/icons'
 
-let map
+let mapbox
+let addLayersToMap
+let updateLayerSources
+let addIcons
 
-const eachLayer = fn => [pointsLayer].forEach(fn)
-const eachIcon = mapAsync(icons)
-
-const updateLayerSource = map => layer => {
-  map.getSource(layer.id).setData(layer.source.data)
-}
+const layers = [pointsLayer]
 
 Vue.directive('mapbox', {
   async bind(container, { value }, vnode) {
@@ -25,19 +25,23 @@ Vue.directive('mapbox', {
     const mapboxgl = await loadModule(import('mapbox-gl'))
     mapboxgl.accessToken = process.env.MAPBOX_ACCESS_TOKEN
 
-    map = new mapboxgl.Map({ container, style })
-    map.addControl(new mapboxgl.NavigationControl())
+    mapbox = new mapboxgl.Map({ container, style })
+    mapbox.addControl(new mapboxgl.NavigationControl())
 
-    map.on('load', async () => {
-      await eachIcon(addImage(map))
-      eachLayer(addLayer(map))
+    addIcons = mapAsync(addImage(mapbox))
+    addLayersToMap = map(addLayer(mapbox))
+    updateLayerSources = map(updateLayerSource(mapbox))
+
+    mapbox.on('load', async () => {
+      await addIcons(icons)
+      addLayersToMap(layers)
       emitEvent('load')
     })
 
-    map.on('styledataloading', _ =>
-      map.once('styledata', async _ => {
-        await eachIcon(addImage(map))
-        eachLayer(addLayer(map))
+    mapbox.on('styledataloading', _ =>
+      mapbox.once('styledata', async _ => {
+        await addIcons(icons)
+        addLayersToMap(layers)
       }),
     )
   },
@@ -50,13 +54,13 @@ Vue.directive('mapbox', {
       ]
     })
 
-    eachLayer(updateLayerSource(map))
+    updateLayerSources(layers)
 
     const diffed = diff(oldValue, newValue)
 
     if (diffed && diffed.style) {
       const newStyle = getStyle({ id: newValue.style })
-      map.setStyle(newStyle.get('url'))
+      mapbox.setStyle(newStyle.get('url'))
     }
   },
 })
