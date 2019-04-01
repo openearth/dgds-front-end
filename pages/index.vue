@@ -1,23 +1,9 @@
 <template>
-  <section
-    v-mapbox="{
-      style: style,
-    }"
-    class="container"
-  ></section>
+  <section></section>
 </template>
 
 <script>
-export default {
-  data: () => ({
-    style: 'light',
-  }),
-}
+export default {}
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-}
-</style>
+<style></style>

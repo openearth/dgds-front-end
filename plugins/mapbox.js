@@ -16,13 +16,14 @@ let mapbox
 let addLayersToMap
 let updateLayerSources
 let addIcons
+let mapboxLoaded = false
 
 const layers = [pointsLayer]
 
 Vue.directive('mapbox', {
-  async bind(container, { value }, vnode) {
+  async bind(container, args, vnode) {
     const emitEvent = dispatchEvent(container)
-    const styleUrl = getUrlFromStyleWhere({ id: value.style })
+    const styleUrl = getUrlFromStyleWhere({ id: args.value.style })
     const mapboxgl = await loadModule(import('mapbox-gl'))
     mapboxgl.accessToken = process.env.MAPBOX_ACCESS_TOKEN
 
@@ -33,10 +34,11 @@ Vue.directive('mapbox', {
     addLayersToMap = map(addLayer(mapbox))
     updateLayerSources = map(updateLayerSource(mapbox))
 
-    mapbox.on('load', () => {
-      addIcons(icons)
+    mapbox.on('load', async () => {
+      await addIcons(icons)
       addLayersToMap(layers)
       emitEvent('load')
+      mapboxLoaded = true
     })
 
     mapbox.on('styledataloading', _ =>
@@ -52,17 +54,16 @@ Vue.directive('mapbox', {
     const styleIn = has('style')
 
     newValue.sources.forEach(source => {
-      pointsLayer.source.data.features = [
-        ...pointsLayer.source.data.features,
-        ...source.features,
-      ]
+      pointsLayer.source.data.features = source.features
     })
 
-    updateLayerSources(layers)
+    if (mapboxLoaded) {
+      updateLayerSources(layers)
 
-    if (styleIn(changed)) {
-      const url = getUrlFromStyleWhere({ id: newValue.style })
-      mapbox.setStyle(url)
+      if (styleIn(changed)) {
+        const url = getUrlFromStyleWhere({ id: newValue.style })
+        mapbox.setStyle(url)
+      }
     }
   },
 })
