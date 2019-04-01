@@ -13,12 +13,14 @@
 import { mapState, mapGetters } from 'vuex'
 export default {
   computed: {
-    ...mapState('map', ['styleId']),
+    ...mapState({
+      activeTheme: state => state.preferences.theme.active,
+    }),
     ...mapGetters('map', ['activeDataSets']),
     mapboxOptions() {
       return {
         sources: this.activeDataSets,
-        style: this.styleId,
+        style: this.activeTheme,
       }
     },
   },

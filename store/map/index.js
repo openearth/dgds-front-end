@@ -5,7 +5,6 @@ import getFromApi from '../../lib/request/get'
 export const state = () => ({
   dataSets: {},
   activeDataSetIds: [],
-  styleId: 'dark',
 })
 
 export const mutations = {
