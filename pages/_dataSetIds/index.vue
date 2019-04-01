@@ -8,10 +8,10 @@ import { mapActions } from 'vuex'
 export default {
   mounted() {
     const { dataSetIds } = this.$route.params
-    this.loadDataSetsById(dataSetIds)
+    this.loadLocationsInDataSets(dataSetIds)
   },
   methods: {
-    ...mapActions('map', ['loadDataSetsById']),
+    ...mapActions('map', ['loadLocationsInDataSets']),
   },
 }
 </script>

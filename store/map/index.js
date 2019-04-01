@@ -1,9 +1,15 @@
 import Vue from 'vue'
 import isArray from 'lodash/isArray'
+import identity from 'lodash/fp/identity'
+import get from 'lodash/fp/get'
+import negate from 'lodash/negate'
 import getFromApi from '../../lib/request/get'
+import { includesIn } from '../../lib/utils'
 
 export const state = () => ({
-  dataSets: {},
+  dataSets: {
+    wl: {},
+  },
   activeDataSetIds: [],
 })
 
@@ -14,20 +20,27 @@ export const mutations = {
   clearActiveDataSetIds(state) {
     state.activeDataSetIds = []
   },
-  addDataSet(state, { id, data }) {
-    Vue.set(state.dataSets, id, data)
+  addDataSetLocations(state, { id, data }) {
+    Vue.set(state.dataSets[id], 'locations', data)
   },
 }
 
 export const actions = {
-  loadDataSetsById({ commit }, _ids) {
+  loadLocationsInDataSets({ commit, state }, _ids) {
+    const knownDataSetIds = Object.keys(state.dataSets)
     const ids = isArray(_ids) ? _ids : _ids.split(',')
-    commit('setActiveDataSetIds', ids)
+    const knownIds = ids.filter(includesIn(knownDataSetIds))
+    const unknownIds = ids.filter(negate(includesIn(knownDataSetIds)))
 
-    ids.forEach(id =>
-      getFromApi(`geojson/${id}`).then(data =>
-        commit('addDataSet', { id, data }),
-      ),
+    unknownIds.forEach(id => console.warn(`Data set ${id} is not known.`))
+
+    commit('setActiveDataSetIds', knownIds)
+
+    knownIds.forEach(id =>
+      getFromApi('locations').then(({ results: features }) => {
+        const data = { type: 'FeatureCollection', features }
+        commit('addDataSetLocations', { id, data })
+      }),
     )
   },
 }
@@ -37,7 +50,10 @@ export const getters = {
     const { activeDataSetIds, dataSets } = state
     const activeDataSets = activeDataSetIds
       .map(id => dataSets[id])
-      .filter(value => value)
+      .filter(identity)
     return activeDataSets
+  },
+  activeDataSetsLocations(state, { activeDataSets }) {
+    return activeDataSets.map(get('locations')).filter(identity)
   },
 }
