@@ -1,6 +1,10 @@
 <template>
   <div class="default-layout" style="position: relative;">
-    <div id="map" v-mapbox="mapboxOptions" />
+    <div
+      id="map"
+      v-mapbox="mapboxOptions"
+      @select-locations="selectLocations"
+    />
     <div style="position: absolute; top: 0; left: 0;">
       <nuxt-link to="/">Home</nuxt-link>
       <nuxt-link to="/wl">WL</nuxt-link>
@@ -21,6 +25,16 @@ export default {
       return {
         sources: this.activeDataSetsLocations,
         style: this.activeTheme,
+      }
+    },
+  },
+  methods: {
+    selectLocations({ detail }) {
+      const currentPath = this.$route.fullPath
+      const locationIds = detail.map(feature => feature.properties.locationId)
+
+      if (this.$route.name !== 'dataSetIds-locationIds') {
+        this.$router.push(`${currentPath}/${locationIds}`)
       }
     },
   },

@@ -6,7 +6,7 @@ import dispatchEvent from '../lib/dispatch-event'
 import loadModule from '../lib/load-module'
 import mapAsync from '../lib/map-async'
 import updateLayerSource from '../lib/mapbox/update-layer-source'
-import pointsLayer from '../lib/mapbox/layers/points-layer'
+import locationsLayer from '../lib/mapbox/layers/locations-layer'
 import { getUrlFromStyleWhere } from '../lib/mapbox/get-style'
 import addLayer from '../lib/mapbox/add-layer'
 import addImage from '../lib/mapbox/add-image'
@@ -18,7 +18,7 @@ let updateLayerSources
 let addIcons
 let mapboxLoaded = false
 
-const layers = [pointsLayer]
+const layers = [locationsLayer]
 
 Vue.directive('mapbox', {
   async bind(container, args, vnode) {
@@ -41,6 +41,18 @@ Vue.directive('mapbox', {
       mapboxLoaded = true
     })
 
+    mapbox.on('click', 'locations', event => {
+      emitEvent('select-locations', event.features)
+    })
+
+    mapbox.on('mouseenter', 'locations', function() {
+      mapbox.getCanvas().style.cursor = 'pointer'
+    })
+
+    mapbox.on('mouseleave', 'locations', function() {
+      mapbox.getCanvas().style.cursor = ''
+    })
+
     mapbox.on('styledataloading', _ =>
       mapbox.once('styledata', _ => {
         addIcons(icons)
@@ -55,10 +67,10 @@ Vue.directive('mapbox', {
 
     if (newValue.sources.length) {
       newValue.sources.forEach(source => {
-        pointsLayer.source.data.features = source.features
+        locationsLayer.source.data.features = source.features
       })
     } else {
-      pointsLayer.source.data.features = []
+      locationsLayer.source.data.features = []
     }
 
     if (mapboxLoaded) {
