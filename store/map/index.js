@@ -11,6 +11,7 @@ export const state = () => ({
     wl: {},
   },
   activeDataSetIds: [],
+  activeLocationIds: [],
 })
 
 export const mutations = {
@@ -19,6 +20,12 @@ export const mutations = {
   },
   clearActiveDataSetIds(state) {
     state.activeDataSetIds = []
+  },
+  setActiveLocationIds(state, ids) {
+    state.activeLocationIds = ids
+  },
+  clearActiveLocationIds(state) {
+    state.activeLocationIds = []
   },
   addDataSetLocations(state, { id, data }) {
     Vue.set(state.dataSets[id], 'locations', data)
@@ -42,6 +49,10 @@ export const actions = {
         commit('addDataSetLocations', { id, data })
       }),
     )
+  },
+  loadTimeseriesDataForLocation({ commit }, _ids) {
+    const ids = isArray(_ids) ? _ids : _ids.split(',')
+    commit('setActiveLocationIds', ids)
   },
 }
 
