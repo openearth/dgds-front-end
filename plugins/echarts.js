@@ -46,6 +46,33 @@ Vue.directive('echarts', {
     chart = echarts.init(el, null, { renderer })
     chart.setOption(options)
     changeTheme(style)
+    chart.setOption({
+      toolbox: {
+        left: 'center',
+
+        feature: {
+          dataZoom: {
+            title: 'hoi',
+            yAxisIndex: 'none',
+          },
+        },
+      },
+
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow',
+        },
+      },
+      dataZoom: [
+        {
+          type: 'inside',
+        },
+        {
+          type: 'slider',
+        },
+      ],
+    })
   },
 
   update(el, { value: newValue, oldValue }) {

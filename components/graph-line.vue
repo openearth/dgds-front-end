@@ -27,12 +27,14 @@ export default {
   },
   computed: {
     options() {
+      console.log('options graph=line', this.category, this.series)
       return {
-        symbol: 'circle',
-        showAllSymbol: true,
         xAxis: {
           type: 'category',
           data: this.category,
+          axisLine: {
+            onZero: false,
+          },
         },
         yAxis: {
           type: 'value',
