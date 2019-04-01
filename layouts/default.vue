@@ -2,6 +2,7 @@
   <div class="default-layout" style="position: relative;">
     <div id="map" v-mapbox="mapboxOptions" />
     <div style="position: absolute; top: 0; left: 0;">
+      <nuxt-link to="/">Home</nuxt-link>
       <nuxt-link to="/wl">WL</nuxt-link>
     </div>
     <nuxt />

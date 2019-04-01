@@ -53,9 +53,13 @@ Vue.directive('mapbox', {
     const changed = diff(oldValue, newValue)
     const styleIn = has('style')
 
-    newValue.sources.forEach(source => {
-      pointsLayer.source.data.features = source.features
-    })
+    if (newValue.sources.length) {
+      newValue.sources.forEach(source => {
+        pointsLayer.source.data.features = source.features
+      })
+    } else {
+      pointsLayer.source.data.features = []
+    }
 
     if (mapboxLoaded) {
       updateLayerSources(layers)
