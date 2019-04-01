@@ -1,7 +1,7 @@
 <template>
   <figure class="graph-line">
-    <figcaption class="graph-line__caption">{{ title }}</figcaption>
-    <div v-echarts="{ options }" class="graph-line"></div>
+    <!-- <figcaption class="graph-line__caption">{{ title }}</figcaption> -->
+    <div v-echarts="{ options, style: theme }" class="graph-line"></div>
   </figure>
 </template>
 
@@ -20,10 +20,16 @@ export default {
       type: String,
       default: '',
     },
+    theme: {
+      type: String,
+      default: '',
+    },
   },
   computed: {
     options() {
       return {
+        symbol: 'circle',
+        showAllSymbol: true,
         xAxis: {
           type: 'category',
           data: this.category,

@@ -5,7 +5,14 @@
       :category="category"
       :series="[serie]"
       :title="title"
+      :theme="theme"
     />
+    <div style="position: absolute; top: 0; left: 0;">
+      <select @change="changeStyle">
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+      </select>
+    </div>
   </section>
 </template>
 
@@ -17,9 +24,10 @@ export default {
     category: [],
     serie: [],
     title: 'My title',
+    theme: 'dark',
   }),
   async asyncData() {
-    const result = await fetch('http://localhost:3001/api/v1/timeseries')
+    const result = await fetch('http://localhost:5000/dummytimeseries')
       .then(response => response.json())
       .then(res => {
         const events = res.results.filter(x => x.events)
@@ -30,6 +38,11 @@ export default {
       })
     return result
   },
+  methods: {
+    changeStyle(event) {
+      this.theme = event.target.value
+    },
+  },
 }
 </script>
 
@@ -38,6 +51,7 @@ export default {
   width: 100vw;
   height: 100vh;
   overflow-y: scroll;
+  position: relative;
 }
 .graphs {
   width: 100%;
