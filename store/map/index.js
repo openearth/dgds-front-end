@@ -65,6 +65,21 @@ export const getters = {
     return activeDataSets
   },
   activeDataSetsLocations(state, { activeDataSets }) {
-    return activeDataSets.map(get('locations')).filter(identity)
+    const { activeLocationIds } = state
+    return activeDataSets
+      .map(get('locations'))
+      .filter(identity)
+      .map(locations => {
+        const features = locations.features.map(feature => {
+          const id = feature.properties.locationId
+          const active = includesIn(activeLocationIds, id)
+          const properties = { ...feature.properties }
+          if (active) {
+            properties.active = active
+          }
+          return { ...feature, properties }
+        })
+        return { ...locations, features }
+      })
   },
 }
