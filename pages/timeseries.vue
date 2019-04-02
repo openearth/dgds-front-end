@@ -7,18 +7,13 @@
       :category="data.category"
       :series="[data.serie]"
       :title="data.title"
-      :theme="theme"
+      :theme="activeTheme"
     />
-    <div style="position: absolute; top: 0; left: 0;">
-      <select @change="changeTheme">
-        <option value="dark">Dark</option>
-        <option value="light">Light</option>
-      </select>
-    </div>
   </section>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import GraphLine from '~/components/graph-line'
 import moment from 'moment'
 
@@ -26,8 +21,12 @@ export default {
   components: { GraphLine },
   data: () => ({
     datasets: [],
-    theme: 'dark',
   }),
+  computed: {
+    ...mapState({
+      activeTheme: state => state.preferences.theme.active,
+    }),
+  },
   async asyncData() {
     const setnames = ['waterlevel', 'winddata']
     const datasets = await Promise.all(
@@ -49,11 +48,6 @@ export default {
       }),
     )
     return { datasets }
-  },
-  methods: {
-    changeTheme(event) {
-      this.theme = event.target.value
-    },
   },
 }
 </script>
