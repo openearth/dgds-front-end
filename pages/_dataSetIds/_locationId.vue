@@ -7,8 +7,8 @@ import { mapActions, mapMutations } from 'vuex'
 
 export default {
   mounted() {
-    const { locationIds } = this.$route.params
-    this.loadTimeseriesDataForLocation(locationIds)
+    const { dataSetIds, locationId } = this.$route.params
+    this.loadTimeseriesDataForLocation({ dataSetIds, locationId })
   },
   destroyed() {
     this.clearActiveLocationIds()

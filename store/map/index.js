@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import moment from 'moment'
 import isArray from 'lodash/isArray'
 import identity from 'lodash/fp/identity'
 import get from 'lodash/fp/get'
@@ -30,6 +31,9 @@ export const mutations = {
   addDataSetLocations(state, { id, data }) {
     Vue.set(state.dataSets[id], 'locations', data)
   },
+  addDataSetPointData(state, { id, data }) {
+    Vue.set(state.dataSets[id], 'pointData', data)
+  },
 }
 
 export const actions = {
@@ -50,9 +54,26 @@ export const actions = {
       }),
     )
   },
-  loadTimeseriesDataForLocation({ commit }, _ids) {
-    const ids = isArray(_ids) ? _ids : _ids.split(',')
-    commit('setActiveLocationIds', ids)
+  loadTimeseriesDataForLocation({ commit, state }, { dataSetIds, locationId }) {
+    const dataSets = isArray(dataSetIds) ? dataSetIds : dataSetIds.split(',')
+    commit('setActiveLocationIds', [locationId])
+    dataSets.forEach(dataSetId =>
+      getFromApi('timeseries').then(res => {
+        const events = res.results.filter(x => x.events)
+        const category = events[0].events.map(event => {
+          return moment(event.timeStamp).format('MM-DD-YYYY \n HH:mm')
+        })
+        commit('addDataSetPointData', {
+          id: dataSetId,
+          data: {
+            [locationId]: {
+              category: category,
+              serie: events[0].events.map(event => event.value),
+            },
+          },
+        })
+      }),
+    )
   },
 }
 
