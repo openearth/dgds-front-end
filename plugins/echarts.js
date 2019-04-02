@@ -75,7 +75,8 @@ Vue.directive('echarts', {
           color: styles[style].color,
         },
       }
-    serie.symbolSize = 5
+      serie.symbolSize = 5
+    })
     chart.setOption(options)
     chart.setOption({
       toolbox: {
@@ -110,7 +111,6 @@ Vue.directive('echarts', {
     chart.setOption(styles[style])
     charts.push(chart)
   },
-
   update(el, { value: newValue, oldValue }) {
     // Check which values have been changed
     const diffed = diff(oldValue, newValue)
