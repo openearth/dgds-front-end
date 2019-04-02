@@ -10,6 +10,7 @@ import { includesIn } from '../../lib/utils'
 export const state = () => ({
   dataSets: {
     wl: {},
+    wd: {},
   },
   activeDataSetIds: [],
   activeLocationIds: [],
@@ -54,9 +55,10 @@ export const actions = {
       }),
     )
   },
-  loadTimeseriesDataForLocation({ commit, state }, { dataSetIds, locationId }) {
+  loadPointDataForLocation({ commit, state }, { dataSetIds, locationId }) {
     const dataSets = isArray(dataSetIds) ? dataSetIds : dataSetIds.split(',')
     commit('setActiveLocationIds', [locationId])
+
     dataSets.forEach(dataSetId =>
       getFromApi('timeseries').then(res => {
         const events = res.results.filter(x => x.events)
@@ -67,6 +69,7 @@ export const actions = {
           id: dataSetId,
           data: {
             [locationId]: {
+              title: `${locationId}`,
               category: category,
               serie: events[0].events.map(event => event.value),
             },
@@ -102,5 +105,20 @@ export const getters = {
         })
         return { ...locations, features }
       })
+  },
+  activePointDataPerDataSet(state) {
+    const { activeLocationIds, activeDataSetIds, dataSets } = state
+
+    return activeLocationIds.reduce((acc, locationId) => {
+      acc[locationId] = activeDataSetIds
+        .map(dataSetId => {
+          const data = get(`${dataSetId}.pointData[${locationId}]`, dataSets)
+          const obj = { [dataSetId]: data }
+          return data ? obj : undefined
+        })
+        .filter(identity)
+        .reduce((obj, item) => ({ ...obj, ...item }), [])
+      return acc
+    }, {})
   },
 }
