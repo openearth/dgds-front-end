@@ -40,6 +40,7 @@ export default {
               return moment(event.timeStamp).format('MM-DD-YYYY \n HH:mm')
             })
             return {
+              id: set,
               title: set,
               category: category,
               serie: events[0].events.map(event => event.value),
@@ -47,7 +48,6 @@ export default {
           })
       }),
     )
-    console.log('datasets', datasets)
     return { datasets }
   },
   methods: {
@@ -67,7 +67,7 @@ export default {
 }
 .graphs {
   width: 100%;
-  height: 100%;
+  height: 50%;
   margin: auto;
 }
 </style>

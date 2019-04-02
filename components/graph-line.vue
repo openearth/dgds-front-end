@@ -27,8 +27,11 @@ export default {
   },
   computed: {
     options() {
-      console.log('options graph=line', this.category, this.series)
       return {
+        title: {
+          text: this.title,
+          x: 'center',
+        },
         xAxis: {
           type: 'category',
           data: this.category,
@@ -41,6 +44,7 @@ export default {
         },
         series: this.series.map(data => ({
           type: 'line',
+          showAllSymbol: true,
           data,
         })),
       }
