@@ -32,7 +32,7 @@ export default {
     const setnames = ['waterlevel', 'winddata']
     const datasets = await Promise.all(
       setnames.map(set => {
-        return fetch('http://localhost:5000/dummytimeseries')
+        return fetch('http://localhost:3001/timeseries')
           .then(response => response.json())
           .then(res => {
             const events = res.results.filter(x => x.events)
@@ -60,10 +60,13 @@ export default {
 
 <style>
 .timeseries {
-  width: 100vw;
-  height: 100vh;
+  width: 80vw;
+  height: 80vh;
   overflow-y: scroll;
-  position: relative;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .graphs {
   width: 100%;
