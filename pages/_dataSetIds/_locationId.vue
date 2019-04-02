@@ -13,10 +13,9 @@
 </template>
 
 <script>
-import isArray from 'lodash/isArray'
-import negate from 'lodash/negate'
 import flatten from 'lodash/flatten'
 import get from 'lodash/fp/get'
+import identity from 'lodash/identity'
 import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
 import GraphLine from '~/components/graph-line'
 
@@ -26,19 +25,15 @@ export default {
     ...mapGetters('map', ['activePointDataPerDataSet']),
     ...mapState({ activeTheme: state => state.preferences.theme.active }),
     dataSets() {
-      const result = Object.keys(this.activePointDataPerDataSet).map(
-        pointId => {
-          const dataSetIds = Object.keys(
-            this.activePointDataPerDataSet[pointId],
-          )
-          const result = dataSetIds
-            .map(dataSetId =>
-              get(`${pointId}.${dataSetId}`, this.activePointDataPerDataSet),
-            )
-            .filter(value => !!value)
-          return result
-        },
-      )
+      const activePointData = this.activePointDataPerDataSet
+
+      // prettier-ignore
+      const result = Object.keys(activePointData)
+        .map(pointId =>
+            Object.keys(activePointData[pointId])
+              .map(dataSetId => get(`${pointId}.${dataSetId}`, activePointData))
+              .filter(identity)
+        )
       return flatten(result)
     },
   },
