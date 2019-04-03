@@ -21,22 +21,22 @@ export default {
     ...mapState({
       activeTheme: state => state.preferences.theme.active,
     }),
-    ...mapGetters('map', ['activeDataSetsLocations']),
+    ...mapGetters('map', ['activeDatasetsLocations']),
     mapboxOptions() {
       return {
-        sources: this.activeDataSetsLocations,
+        sources: this.activeDatasetsLocations,
         style: this.activeTheme,
       }
     },
   },
   methods: {
     selectLocations({ detail }) {
-      const { dataSetIds } = this.$route.params
+      const { datasetIds } = this.$route.params
       const locationIds = detail.map(feature => feature.properties.locationId)
 
       this.$router.push({
-        name: 'dataSetIds-locationId',
-        params: { dataSetIds, locationId: head(locationIds) },
+        name: 'datasetIds-locationId',
+        params: { datasetIds, locationId: head(locationIds) },
       })
     },
   },

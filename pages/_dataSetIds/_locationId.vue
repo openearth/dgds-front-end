@@ -5,7 +5,7 @@
     </header>
     <section class="location-id__graphs">
       <GraphLine
-        v-for="(data, index) in dataSets"
+        v-for="(data, index) in datasets"
         :key="index"
         :category="data.category"
         :series="[data.serie]"
@@ -28,24 +28,24 @@ export default {
   middleware: 'load-location-id',
   components: { GraphLine },
   computed: {
-    ...mapGetters('map', ['activePointDataPerDataSet']),
+    ...mapGetters('map', ['activePointDataPerDataset']),
     ...mapState({ activeTheme: state => state.preferences.theme.active }),
-    dataSets() {
-      const activePointData = this.activePointDataPerDataSet
+    datasets() {
+      const activePointData = this.activePointDataPerDataset
 
       // prettier-ignore
       const result = Object.keys(activePointData)
         .map(pointId =>
             Object.keys(activePointData[pointId])
-              .map(dataSetId => get(`${pointId}.${dataSetId}`, activePointData))
+              .map(datasetId => get(`${pointId}.${datasetId}`, activePointData))
               .filter(identity)
         )
       return flatten(result)
     },
   },
   mounted() {
-    const { dataSetIds, locationId } = this.$route.params
-    this.loadPointDataForLocation({ dataSetIds, locationId })
+    const { datasetIds, locationId } = this.$route.params
+    this.loadPointDataForLocation({ datasetIds, locationId })
   },
   destroyed() {
     this.clearActiveLocationIds()
@@ -54,8 +54,8 @@ export default {
     ...mapActions('map', ['loadPointDataForLocation']),
     ...mapMutations('map', ['clearActiveLocationIds']),
     close() {
-      const { dataSetIds } = this.$route.params
-      this.$router.push({ name: 'dataSetIds', params: { dataSetIds } })
+      const { datasetIds } = this.$route.params
+      this.$router.push({ name: 'datasetIds', params: { datasetIds } })
     },
   },
 }

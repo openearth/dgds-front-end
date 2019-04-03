@@ -22,20 +22,20 @@ import {
 } from '../../lib/utils'
 
 export const state = () => ({
-  dataSets: {
+  datasets: {
     wl: {},
     wd: {},
   },
-  activeDataSetIds: [],
+  activeDatasetIds: [],
   activeLocationIds: [],
 })
 
 export const mutations = {
-  setActiveDataSetIds(state, ids) {
-    state.activeDataSetIds = ids
+  setActiveDatasetIds(state, ids) {
+    state.activeDatasetIds = ids
   },
-  clearActiveDataSetIds(state) {
-    state.activeDataSetIds = []
+  clearActiveDatasetIds(state) {
+    state.activeDatasetIds = []
   },
   setActiveLocationIds(state, ids) {
     state.activeLocationIds = ids
@@ -43,24 +43,24 @@ export const mutations = {
   clearActiveLocationIds(state) {
     state.activeLocationIds = []
   },
-  addDataSetLocations(state, { id, data }) {
-    Vue.set(state.dataSets[id], 'locations', data)
+  addDatasetLocations(state, { id, data }) {
+    Vue.set(state.datasets[id], 'locations', data)
   },
-  addDataSetPointData(state, { id, data }) {
-    Vue.set(state.dataSets[id], 'pointData', data)
+  addDatasetPointData(state, { id, data }) {
+    Vue.set(state.datasets[id], 'pointData', data)
   },
 }
 
 export const actions = {
-  loadLocationsInDataSets({ commit, state, getters }, _ids) {
-    const { knownDataSetIds } = getters
+  loadLocationsInDatasets({ commit, state, getters }, _ids) {
+    const { knownDatasetIds } = getters
     const ids = isArray(_ids) ? _ids : _ids.split(',')
-    const knownIds = ids.filter(includesIn(knownDataSetIds))
-    const unknownIds = ids.filter(negate(includesIn(knownDataSetIds)))
+    const knownIds = ids.filter(includesIn(knownDatasetIds))
+    const unknownIds = ids.filter(negate(includesIn(knownDatasetIds)))
 
     unknownIds.forEach(id => console.warn(`Data set ${id} is not known.`))
 
-    commit('setActiveDataSetIds', knownIds)
+    commit('setActiveDatasetIds', knownIds)
 
     // prettier-ignore
     knownIds.forEach(id => {
@@ -70,12 +70,12 @@ export const actions = {
       return getFromApi('locations', parameters)
         .then(({ results: features }) => {
           const data = { type: 'FeatureCollection', features }
-          commit('addDataSetLocations', { id, data })
+          commit('addDatasetLocations', { id, data })
         })
     })
   },
 
-  loadPointDataForLocation({ commit, getters }, { dataSetIds, locationId }) {
+  loadPointDataForLocation({ commit, getters }, { datasetIds, locationId }) {
     // prettier-ignore
     const getEvents = pipe([
       filter(has('events')),
@@ -97,26 +97,26 @@ export const actions = {
     ])
 
     // prettier-ignore
-    const dataSets = isArray(dataSetIds)
-      ? dataSetIds
-      : dataSetIds.split(',')
+    const datasets = isArray(datasetIds)
+      ? datasetIds
+      : datasetIds.split(',')
 
     commit('setActiveLocationIds', [locationId])
 
     // prettier-ignore
-    dataSets
-      .forEach(dataSetId => {
+    datasets
+      .forEach(datasetId => {
         const parameters = {
           locationCode: locationId,
           startTime: '2019-03-22T00:00:00Z',
           endTime: '2019-03-26T00:50:00Z',
-          datasetId: dataSetId,
+          datasetId: datasetId,
         }
 
         return getFromApi('timeseries', parameters)
           .then(({ results }) => {
-            commit('addDataSetPointData', {
-              id: dataSetId,
+            commit('addDatasetPointData', {
+              id: datasetId,
               data: {
                 [locationId]: {
                   title: `${locationId}`,
@@ -131,34 +131,34 @@ export const actions = {
 }
 
 export const getters = {
-  knownDataSetIds(state) {
-    return Object.keys(state.dataSets)
+  knownDatasetIds(state) {
+    return Object.keys(state.datasets)
   },
   knownLocationIds(state) {
-    const getInDataSets = getIn(state.dataSets)
+    const getInDatasets = getIn(state.datasets)
     const getLocationId = map(get('properties.locationId'))
-    const featuresInDataSets = id => getInDataSets(`${id}.locations.features`)
+    const featuresInDatasets = id => getInDatasets(`${id}.locations.features`)
     const getKnownLocationIds = pipe([
       Object.keys,
-      filter(featuresInDataSets),
-      map(pipe([featuresInDataSets, getLocationId])),
+      filter(featuresInDatasets),
+      map(pipe([featuresInDatasets, getLocationId])),
       flatten,
       uniq,
     ])
 
-    return getKnownLocationIds(state.dataSets)
+    return getKnownLocationIds(state.datasets)
   },
 
-  activeDataSets(state) {
-    const { activeDataSetIds, dataSets } = state
-    const getInDataSets = getIn(dataSets)
+  activeDatasets(state) {
+    const { activeDatasetIds, datasets } = state
+    const getInDatasets = getIn(datasets)
 
     // prettier-ignore
-    return activeDataSetIds
-      .map(getInDataSets)
+    return activeDatasetIds
+      .map(getInDatasets)
       .filter(identity)
   },
-  activeDataSetsLocations({ activeLocationIds }, { activeDataSets }) {
+  activeDatasetsLocations({ activeLocationIds }, { activeDatasets }) {
     const getActiveProperty = feature =>
       pipe([
         get('properties.locationId'),
@@ -184,7 +184,7 @@ export const getters = {
         merge(location)
       ])(location)
 
-    return activeDataSets
+    return activeDatasets
       .map(get('locations'))
       .filter(identity)
       .map(enhanceFeatureWithActiveState)
@@ -193,18 +193,18 @@ export const getters = {
     const { activeLocationIds, activeDataSetIds, dataSets } = state
     const getPointDataForLocation = locationId => dataSetId =>
       pipe([
-        get(`${dataSetId}.pointData[${locationId}]`),
-        when(wrapInProperty(dataSetId), () => undefined),
+        get(`${datasetId}.pointData[${locationId}]`),
+        when(wrapInProperty(datasetId), () => undefined),
         filter(identity),
         reduce(merge, {}),
-      ])(dataSets)
+      ])(datasets)
 
     // prettier-ignore
     const getDataForLocation = locationId =>
       pipe([
         map(getPointDataForLocation(locationId)),
         wrapInProperty(locationId),
-      ])(activeDataSetIds)
+      ])(activeDatasetIds)
 
     return activeLocationIds.reduce(
       (acc, locationId) => merge(acc, getDataForLocation(locationId)),

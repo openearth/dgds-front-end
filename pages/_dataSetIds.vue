@@ -7,15 +7,15 @@ import { mapActions, mapMutations } from 'vuex'
 
 export default {
   mounted() {
-    const { dataSetIds } = this.$route.params
-    this.loadLocationsInDataSets(dataSetIds)
+    const { datasetIds } = this.$route.params
+    this.loadLocationsInDatasets(datasetIds)
   },
   destroyed() {
-    this.clearActiveDataSetIds()
+    this.clearActiveDatasetIds()
   },
   methods: {
-    ...mapActions('map', ['loadLocationsInDataSets']),
-    ...mapMutations('map', ['clearActiveDataSetIds']),
+    ...mapActions('map', ['loadLocationsInDatasets']),
+    ...mapMutations('map', ['clearActiveDatasetIds']),
   },
 }
 </script>
