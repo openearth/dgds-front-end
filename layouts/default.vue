@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import head from 'lodash/head'
 import { mapState, mapGetters } from 'vuex'
 export default {
   computed: {
@@ -35,7 +36,7 @@ export default {
 
       this.$router.push({
         name: 'dataSetIds-locationId',
-        params: { dataSetIds, locationId: locationIds.join(',') },
+        params: { dataSetIds, locationId: head(locationIds) },
       })
     },
   },
