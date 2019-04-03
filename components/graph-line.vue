@@ -19,11 +19,6 @@ const styleLight = {
       },
     },
   },
-  title: {
-    textStyle: {
-      color: '#FFFFFF',
-    },
-  },
   backgroundColor: '#ffffff',
   color: '#cc28b0',
   textStyle: {
@@ -54,11 +49,6 @@ const styleDark = {
       restore: {
         color: '#787878',
       },
-    },
-  },
-  title: {
-    textStyle: {
-      color: '#FFFFFF',
     },
   },
   backgroundColor: '#202020',
@@ -148,9 +138,6 @@ export default {
   computed: {
     data() {
       const data = {
-        title: {
-          text: this.title,
-        },
         xAxis: {
           data: this.category,
         },
