@@ -54,7 +54,8 @@ export default {
     ...mapActions('map', ['loadPointDataForLocation']),
     ...mapMutations('map', ['clearActiveLocationIds']),
     close() {
-      this.$router.go(-1)
+      const { dataSetIds } = this.$route.params
+      this.$router.push({ name: 'dataSetIds', params: { dataSetIds } })
     },
   },
 }
