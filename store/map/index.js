@@ -2,7 +2,6 @@ import Vue from 'vue'
 import isArray from 'lodash/isArray'
 import identity from 'lodash/fp/identity'
 import filter from 'lodash/fp/filter'
-import includes from 'lodash/fp/includes'
 import get from 'lodash/fp/get'
 import has from 'lodash/fp/has'
 import map from 'lodash/fp/map'
@@ -77,8 +76,6 @@ export const actions = {
   },
 
   loadPointDataForLocation({ commit, getters }, { dataSetIds, locationId }) {
-    const { knownLocationIds, knownDataSetIds } = getters
-
     // prettier-ignore
     const getEvents = pipe([
       filter(has('events')),
@@ -104,13 +101,10 @@ export const actions = {
       ? dataSetIds
       : dataSetIds.split(',')
 
-    includes(locationId, knownLocationIds)
-      ? commit('setActiveLocationIds', [locationId])
-      : console.warn(`LocationId ${locationId} is not known.`)
+    commit('setActiveLocationIds', [locationId])
 
     // prettier-ignore
     dataSets
-      .filter(includesIn(knownDataSetIds))
       .forEach(dataSetId => {
         const parameters = {
           locationCode: locationId,

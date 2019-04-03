@@ -30,12 +30,13 @@ export default {
   },
   methods: {
     selectLocations({ detail }) {
-      const currentPath = this.$route.fullPath
+      const { dataSetIds } = this.$route.params
       const locationIds = detail.map(feature => feature.properties.locationId)
 
-      if (this.$route.name !== 'dataSetIds-locationIds') {
-        this.$router.push(`${currentPath}/${locationIds}`)
-      }
+      this.$router.push({
+        name: 'dataSetIds-locationId',
+        params: { dataSetIds, locationId: locationIds.join(',') },
+      })
     },
   },
 }

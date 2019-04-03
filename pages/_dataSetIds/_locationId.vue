@@ -25,6 +25,7 @@ import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
 import GraphLine from '~/components/graph-line'
 
 export default {
+  middleware: 'load-location-id',
   components: { GraphLine },
   computed: {
     ...mapGetters('map', ['activePointDataPerDataSet']),
