@@ -104,32 +104,34 @@ export const actions = {
       ? dataSetIds
       : dataSetIds.split(',')
 
-    console.log({ knownLocationIds, locationId })
     includes(locationId, knownLocationIds)
       ? commit('setActiveLocationIds', [locationId])
       : console.warn(`LocationId ${locationId} is not known.`)
 
     // prettier-ignore
-    dataSets.filter(includesIn(knownDataSetIds)).forEach(dataSetId => {
-      const parameters = {
-        locationCode: locationId,
-        startTime: '2019-03-22T00:00:00Z',
-        endTime: '2019-03-26T00:50:00Z',
-        datasetId: dataSetId,
-      }
+    dataSets
+      .filter(includesIn(knownDataSetIds))
+      .forEach(dataSetId => {
+        const parameters = {
+          locationCode: locationId,
+          startTime: '2019-03-22T00:00:00Z',
+          endTime: '2019-03-26T00:50:00Z',
+          datasetId: dataSetId,
+        }
 
-      return getFromApi('timeseries', parameters).then(({ results }) => {
-        commit('addDataSetPointData', {
-          id: dataSetId,
-          data: {
-            [locationId]: {
-              title: `${locationId}`,
-              category: getFormattedTimeStamps(results),
-              serie: getValues(results),
-            },
-          },
-        })
-      })
+        return getFromApi('timeseries', parameters)
+          .then(({ results }) => {
+            commit('addDataSetPointData', {
+              id: dataSetId,
+              data: {
+                [locationId]: {
+                  title: `${locationId}`,
+                  category: getFormattedTimeStamps(results),
+                  serie: getValues(results),
+                },
+              },
+            })
+          })
     })
   },
 }
