@@ -128,6 +128,12 @@ export default {
           type: 'line',
           showAllSymbol: true,
           data,
+          symbolSize: 5,
+          itemStyle: {
+            normal: {
+              borderWidth: 6,
+            },
+          },
         })),
       }
 

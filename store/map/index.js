@@ -64,13 +64,16 @@ export const actions = {
     commit('setActiveDataSetIds', knownIds)
 
     // prettier-ignore
-    knownIds.forEach(id =>
-      getFromApi('locations')
+    knownIds.forEach(id => {
+      const parameters = {
+        datasetId: id,
+      }
+      return getFromApi('locations', parameters)
         .then(({ results: features }) => {
           const data = { type: 'FeatureCollection', features }
           commit('addDataSetLocations', { id, data })
-        }),
-    )
+        })
+    })
   },
 
   loadPointDataForLocation({ commit, getters }, { dataSetIds, locationId }) {
@@ -101,28 +104,33 @@ export const actions = {
       ? dataSetIds
       : dataSetIds.split(',')
 
-    includes(knownLocationIds, locationId)
+    console.log({ knownLocationIds, locationId })
+    includes(locationId, knownLocationIds)
       ? commit('setActiveLocationIds', [locationId])
       : console.warn(`LocationId ${locationId} is not known.`)
 
     // prettier-ignore
-    dataSets
-      .filter(includesIn(knownDataSetIds))
-      .forEach(dataSetId =>
-        getFromApi('timeseries')
-          .then(({ results }) => {
-            commit('addDataSetPointData', {
-              id: dataSetId,
-              data: {
-                [locationId]: {
-                  title: `${locationId}`,
-                  category: getFormattedTimeStamps(results),
-                  serie: getValues(results),
-                },
-              },
-            })
-          }),
-    )
+    dataSets.filter(includesIn(knownDataSetIds)).forEach(dataSetId => {
+      const parameters = {
+        locationCode: locationId,
+        startTime: '2019-03-22T00:00:00Z',
+        endTime: '2019-03-26T00:50:00Z',
+        datasetId: dataSetId,
+      }
+
+      return getFromApi('timeseries', parameters).then(({ results }) => {
+        commit('addDataSetPointData', {
+          id: dataSetId,
+          data: {
+            [locationId]: {
+              title: `${locationId}`,
+              category: getFormattedTimeStamps(results),
+              serie: getValues(results),
+            },
+          },
+        })
+      })
+    })
   },
 }
 

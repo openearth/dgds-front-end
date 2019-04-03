@@ -18,9 +18,9 @@
   "dependencies": {
     "@nuxtjs/pwa": "3.0.0-beta.14",
     "cross-env": "^5.2.0",
+    "echarts": "^4.2.1",
     "lodash": "4.17.11",
     "mapbox-gl": "0.53.1",
-    "echarts": "^4.2.1-rc.3",
     "moment": "^2.24.0",
     "nuxt": "^2.4.0"
   },
