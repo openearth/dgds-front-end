@@ -195,7 +195,6 @@ export const getters = {
   },
   activePointDataPerDataSet(state) {
     const { activeLocationIds, activeDataSetIds, dataSets } = state
-
     const getPointDataForLocation = locationId => dataSetId =>
       pipe([
         get(`${dataSetId}.pointData[${locationId}]`),
