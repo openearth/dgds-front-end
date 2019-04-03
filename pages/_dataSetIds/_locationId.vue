@@ -8,6 +8,7 @@
       :series="[data.serie]"
       :title="data.title"
       :theme="activeTheme"
+      :collapsible="true"
     />
   </section>
 </template>
