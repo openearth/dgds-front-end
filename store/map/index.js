@@ -1,11 +1,26 @@
 import Vue from 'vue'
-import moment from 'moment'
 import isArray from 'lodash/isArray'
 import identity from 'lodash/fp/identity'
+import filter from 'lodash/fp/filter'
+import includes from 'lodash/fp/includes'
 import get from 'lodash/fp/get'
+import has from 'lodash/fp/has'
+import map from 'lodash/fp/map'
+import head from 'lodash/fp/head'
+import merge from 'lodash/fp/merge'
+import pipe from 'lodash/fp/pipe'
+import reduce from 'lodash/fp/reduce'
+import flatten from 'lodash/fp/flatten'
+import uniq from 'lodash/fp/uniq'
 import negate from 'lodash/negate'
 import getFromApi from '../../lib/request/get'
-import { includesIn } from '../../lib/utils'
+import {
+  includesIn,
+  momentFormat,
+  getIn,
+  wrapInProperty,
+  when,
+} from '../../lib/utils'
 
 export const state = () => ({
   dataSets: {
@@ -38,8 +53,8 @@ export const mutations = {
 }
 
 export const actions = {
-  loadLocationsInDataSets({ commit, state }, _ids) {
-    const knownDataSetIds = Object.keys(state.dataSets)
+  loadLocationsInDataSets({ commit, state, getters }, _ids) {
+    const { knownDataSetIds } = getters
     const ids = isArray(_ids) ? _ids : _ids.split(',')
     const knownIds = ids.filter(includesIn(knownDataSetIds))
     const unknownIds = ids.filter(negate(includesIn(knownDataSetIds)))
@@ -48,77 +63,149 @@ export const actions = {
 
     commit('setActiveDataSetIds', knownIds)
 
+    // prettier-ignore
     knownIds.forEach(id =>
-      getFromApi('locations').then(({ results: features }) => {
-        const data = { type: 'FeatureCollection', features }
-        commit('addDataSetLocations', { id, data })
-      }),
+      getFromApi('locations')
+        .then(({ results: features }) => {
+          const data = { type: 'FeatureCollection', features }
+          commit('addDataSetLocations', { id, data })
+        }),
     )
   },
-  loadPointDataForLocation({ commit, state }, { dataSetIds, locationId }) {
-    const dataSets = isArray(dataSetIds) ? dataSetIds : dataSetIds.split(',')
-    commit('setActiveLocationIds', [locationId])
 
-    dataSets.forEach(dataSetId =>
-      getFromApi('timeseries').then(res => {
-        const events = res.results.filter(x => x.events)
-        const category = events[0].events.map(event => {
-          return moment(event.timeStamp).format('MM-DD-YYYY \n HH:mm')
-        })
-        commit('addDataSetPointData', {
-          id: dataSetId,
-          data: {
-            [locationId]: {
-              title: `${locationId}`,
-              category: category,
-              serie: events[0].events.map(event => event.value),
-            },
-          },
-        })
-      }),
+  loadPointDataForLocation({ commit, getters }, { dataSetIds, locationId }) {
+    const { knownLocationIds, knownDataSetIds } = getters
+
+    // prettier-ignore
+    const getEvents = pipe([
+      filter(has('events')),
+      map(get('events')),
+      head,
+    ])
+
+    // prettier-ignore
+    const getFormattedTimeStamps = pipe([
+      getEvents,
+      map(get('timeStamp')),
+      map(momentFormat('MM-DD-YYYY \n HH:mm')),
+    ])
+
+    // prettier-ignore
+    const getValues = pipe([
+      getEvents,
+      map(get('value')),
+    ])
+
+    // prettier-ignore
+    const dataSets = isArray(dataSetIds)
+      ? dataSetIds
+      : dataSetIds.split(',')
+
+    includes(knownLocationIds, locationId)
+      ? commit('setActiveLocationIds', [locationId])
+      : console.warn(`LocationId ${locationId} is not known.`)
+
+    // prettier-ignore
+    dataSets
+      .filter(includesIn(knownDataSetIds))
+      .forEach(dataSetId =>
+        getFromApi('timeseries')
+          .then(({ results }) => {
+            commit('addDataSetPointData', {
+              id: dataSetId,
+              data: {
+                [locationId]: {
+                  title: `${locationId}`,
+                  category: getFormattedTimeStamps(results),
+                  serie: getValues(results),
+                },
+              },
+            })
+          }),
     )
   },
 }
 
 export const getters = {
+  knownDataSetIds(state) {
+    return Object.keys(state.dataSets)
+  },
+  knownLocationIds(state) {
+    const getInDataSets = getIn(state.dataSets)
+    const getLocationId = map(get('properties.locationId'))
+    const featuresInDataSets = id => getInDataSets(`${id}.locations.features`)
+    const getKnownLocationIds = pipe([
+      Object.keys,
+      filter(featuresInDataSets),
+      map(pipe([featuresInDataSets, getLocationId])),
+      flatten,
+      uniq,
+    ])
+
+    return getKnownLocationIds(state.dataSets)
+  },
+
   activeDataSets(state) {
     const { activeDataSetIds, dataSets } = state
-    const activeDataSets = activeDataSetIds
-      .map(id => dataSets[id])
+    const getInDataSets = getIn(dataSets)
+
+    // prettier-ignore
+    return activeDataSetIds
+      .map(getInDataSets)
       .filter(identity)
-    return activeDataSets
   },
-  activeDataSetsLocations(state, { activeDataSets }) {
-    const { activeLocationIds } = state
+  activeDataSetsLocations({ activeLocationIds }, { activeDataSets }) {
+    const getActiveProperty = feature =>
+      pipe([
+        get('properties.locationId'),
+        includesIn(activeLocationIds),
+        active => ({ active }),
+      ])(feature)
+
+    // prettier-ignore
+    const addActiveProperty = feature =>
+      pipe([
+        get('properties'),
+        merge(getActiveProperty(feature)),
+        wrapInProperty('properties'),
+        merge(feature),
+      ])(feature)
+
+    // prettier-ignore
+    const enhanceFeatureWithActiveState = location =>
+      pipe([
+        get('features'),
+        map(addActiveProperty),
+        wrapInProperty('features'),
+        merge(location)
+      ])(location)
+
     return activeDataSets
       .map(get('locations'))
       .filter(identity)
-      .map(locations => {
-        const features = locations.features.map(feature => {
-          const id = feature.properties.locationId
-          const active = includesIn(activeLocationIds, id)
-          const properties = { ...feature.properties }
-          if (active) {
-            properties.active = active
-          }
-          return { ...feature, properties }
-        })
-        return { ...locations, features }
-      })
+      .map(enhanceFeatureWithActiveState)
   },
   activePointDataPerDataSet(state) {
     const { activeLocationIds, activeDataSetIds, dataSets } = state
 
-    return activeLocationIds.reduce((acc, locationId) => {
-      acc[locationId] = activeDataSetIds
-        .map(dataSetId => {
-          const data = get(`${dataSetId}.pointData[${locationId}]`, dataSets)
-          const obj = { [dataSetId]: data }
-          return data ? obj : undefined
-        })
-        .filter(identity)
-        .reduce((obj, item) => ({ ...obj, ...item }), [])
-      return acc
-    }, {})
+    const getPointDataForLocation = locationId => dataSetId =>
+      pipe([
+        get(`${dataSetId}.pointData[${locationId}]`),
+        when(wrapInProperty(dataSetId), () => undefined),
+        filter(identity),
+        reduce(merge, {}),
+      ])(dataSets)
+
+    // prettier-ignore
+    const getDataForLocation = locationId =>
+      pipe([
+        map(getPointDataForLocation(locationId)),
+        wrapInProperty(locationId),
+      ])(activeDataSetIds)
+
+    return activeLocationIds.reduce(
+      (acc, locationId) => merge(acc, getDataForLocation(locationId)),
+      {},
+    )
   },
 }
