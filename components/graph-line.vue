@@ -9,11 +9,9 @@
     <figcaption class="graph-line__caption" @click="toggle">
       {{ title }}
     </figcaption>
-    <div
-      v-if="!isCollapsed"
-      v-echarts="{ data }"
-      class="graph-line__chart"
-    ></div>
+    <div v-if="!isCollapsed" class="graph-line__aspect-ratio">
+      <div v-echarts="{ data }" class="graph-line__chart" />
+    </div>
   </figure>
 </template>
 
@@ -153,7 +151,17 @@ export default {
   position: relative;
 }
 
+.graph-line__aspect-ratio {
+  height: 0;
+  overflow: hidden;
+  padding-top: 50%;
+  position: relative;
+}
+
 .graph-line__chart {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
 }

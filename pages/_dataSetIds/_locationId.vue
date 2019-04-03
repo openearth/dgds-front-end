@@ -1,9 +1,8 @@
 <template>
-  <section class="timeseries">
+  <section class="location-id">
     <GraphLine
       v-for="(data, index) in dataSets"
       :key="index"
-      class="graphs"
       :category="data.category"
       :series="[data.serie]"
       :title="data.title"
@@ -53,18 +52,13 @@ export default {
 </script>
 
 <style>
-.timeseries {
-  width: 80vw;
-  height: 80vh;
+.location-id {
+  width: 50vw;
+  height: 100vh;
   overflow-y: scroll;
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-.graphs {
-  width: 100%;
-  height: 50%;
-  margin: auto;
+  top: 0;
+  left: 0;
+  background-color: #ffffff;
 }
 </style>
