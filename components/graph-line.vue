@@ -24,22 +24,22 @@ const styleLight = {
       color: '#FFFFFF',
     },
   },
-  backgroundColor: '#202020',
-  color: '#FF33DD',
+  backgroundColor: '#ffffff',
+  color: '#cc28b0',
   textStyle: {
-    color: '#FFF',
+    color: '#000000',
   },
   xAxis: {
     axisLine: {
       lineStyle: {
-        color: '#FFFFFF',
+        color: '#000000',
       },
     },
   },
   yAxis: {
     axisLine: {
       lineStyle: {
-        color: '#FFFFFF',
+        color: '#000000',
       },
     },
   },
