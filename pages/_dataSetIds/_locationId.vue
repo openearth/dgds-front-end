@@ -1,15 +1,20 @@
 <template>
-  <section class="location-id">
-    <GraphLine
-      v-for="(data, index) in dataSets"
-      :key="index"
-      :category="data.category"
-      :series="[data.serie]"
-      :title="data.title"
-      :theme="activeTheme"
-      :collapsible="true"
-    />
-  </section>
+  <aside class="location-id">
+    <header class="location-id__header">
+      <button @click="close">Close</button>
+    </header>
+    <section class="location-id__graphs">
+      <GraphLine
+        v-for="(data, index) in dataSets"
+        :key="index"
+        :category="data.category"
+        :series="[data.serie]"
+        :title="data.title"
+        :theme="activeTheme"
+        :collapsible="true"
+      />
+    </section>
+  </aside>
 </template>
 
 <script>
@@ -47,6 +52,9 @@ export default {
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
     ...mapMutations('map', ['clearActiveLocationIds']),
+    close() {
+      this.$router.go(-1)
+    },
   },
 }
 </script>
@@ -54,11 +62,18 @@ export default {
 <style>
 .location-id {
   width: 50vw;
+  max-width: 600px;
   height: 100vh;
   overflow-y: scroll;
   position: absolute;
   top: 0;
   left: 0;
   background-color: #ffffff;
+}
+
+.location-id__header {
+  padding: 1rem;
+  display: flex;
+  justify-content: flex-end;
 }
 </style>
