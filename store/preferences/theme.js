@@ -1,5 +1,5 @@
 export const state = () => ({
-  active: 'dark',
+  active: 'light',
   available: ['light', 'dark'],
 })
 
