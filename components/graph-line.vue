@@ -9,16 +9,6 @@
 import merge from 'lodash/merge'
 
 const styleLight = {
-  toolbox: {
-    feature: {
-      dataZoom: {
-        color: '#787878',
-      },
-      restore: {
-        color: '#787878',
-      },
-    },
-  },
   backgroundColor: '#ffffff',
   color: '#cc28b0',
   textStyle: {
@@ -41,16 +31,6 @@ const styleLight = {
 }
 
 const styleDark = {
-  toolbox: {
-    feature: {
-      dataZoom: {
-        color: '#787878',
-      },
-      restore: {
-        color: '#787878',
-      },
-    },
-  },
   backgroundColor: '#202020',
   color: '#FF33DD',
   textStyle: {
@@ -73,20 +53,6 @@ const styleDark = {
 }
 
 const baseOptions = {
-  toolbox: {
-    left: 'center',
-    itemSize: 20,
-    top: 13,
-    feature: {
-      dataZoom: {
-        title: 'Zoom',
-        yAxisIndex: 'none',
-      },
-      restore: {
-        title: 'Reset',
-      },
-    },
-  },
   tooltip: {
     trigger: 'axis',
     axisPointer: {
