@@ -42,6 +42,19 @@ Vue.directive('mapbox', {
     })
 
     mapbox.on('click', 'locations', event => {
+      const { clientWidth } = mapbox.getCanvas()
+
+      // prettier-ignore
+      // the timeseries panel is max 600px wide otherwise the half of the screen
+      const visibleMapWidth = clientWidth > 1200
+        ? (clientWidth - 600) * 0.25
+        : (clientWidth / 2) * 0.5
+      const targetLocation = mapbox.unproject({
+        x: event.point.x - visibleMapWidth,
+        y: event.point.y,
+      })
+
+      mapbox.panTo(targetLocation)
       emitEvent('select-locations', event.features)
     })
 
