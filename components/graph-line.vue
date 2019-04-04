@@ -16,55 +16,30 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import merge from 'lodash/merge'
-import getColors from '../lib/styling/colors'
 
-const light = getColors('light')
-const dark = getColors('dark')
-
-const styleLight = {
-  backgroundColor: light.background,
-  color: light.pink,
+const getStyle = (colors = {}) => ({
+  backgroundColor: colors.background,
+  color: colors.pink,
   textStyle: {
-    color: light.black100,
+    color: colors.textColor,
   },
   xAxis: {
     axisLine: {
       lineStyle: {
-        color: light.black100,
+        color: colors.textColor,
       },
     },
   },
   yAxis: {
     axisLine: {
       lineStyle: {
-        color: light.black100,
+        color: colors.textColor,
       },
     },
   },
-}
-
-const styleDark = {
-  backgroundColor: dark.background,
-  color: dark.pink,
-  textStyle: {
-    color: dark.white100,
-  },
-  xAxis: {
-    axisLine: {
-      lineStyle: {
-        color: dark.white100,
-      },
-    },
-  },
-  yAxis: {
-    axisLine: {
-      lineStyle: {
-        color: dark.white100,
-      },
-    },
-  },
-}
+})
 
 const baseOptions = {
   tooltip: {
@@ -123,6 +98,7 @@ export default {
     isCollapsed: false,
   }),
   computed: {
+    ...mapGetters('preferences/theme', ['colors']),
     data() {
       const data = {
         xAxis: {
@@ -141,8 +117,7 @@ export default {
         })),
       }
 
-      const theme = this.theme === 'dark' ? styleDark : styleLight
-
+      const theme = getStyle(this.colors)
       return merge(baseOptions, theme, data)
     },
   },
