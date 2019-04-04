@@ -1,5 +1,6 @@
 import entries from 'lodash/entries'
 import identity from 'lodash/identity'
+import toLower from 'lodash/toLower'
 import getColors from '../lib/styling/colors'
 
 export default function customProperties({ store }, inject) {
@@ -7,8 +8,11 @@ export default function customProperties({ store }, inject) {
     const colors = getColors(theme)
     entries(colors)
       .map(([_key, value]) => {
-        const [, ...parts] = /([a-z]+)(\d+)?/.exec(_key)
-        const key = parts.filter(identity).join('-')
+        const [, ...parts] = /([a-z]+)([A-Za-z]+)?(\d+)?/.exec(_key)
+        const key = parts
+          .filter(identity)
+          .map(toLower)
+          .join('-')
         return [key, value]
       })
       .forEach(([key, value]) => {

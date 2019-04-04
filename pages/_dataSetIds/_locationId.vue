@@ -71,10 +71,11 @@ export default {
   top: 0;
   left: 0;
   background-color: var(--color-background);
+  box-shadow: var(--shadow);
 }
 
 .location-id__header {
-  padding: 1rem;
+  padding: var(--spacing-default);
   display: flex;
   justify-content: flex-end;
 }

@@ -6,7 +6,7 @@
     <button v-if="collapsible" class="graph-line__toggle" @click="toggle">
       Toggle
     </button>
-    <figcaption class="graph-line__caption" @click="toggle">
+    <figcaption class="graph-line__caption strong" @click="toggle">
       {{ title }}
     </figcaption>
     <div v-if="!isCollapsed" class="graph-line__aspect-ratio">
@@ -162,7 +162,7 @@ export default {
 }
 
 .graph-line__caption {
-  padding: 1rem;
-  background-color: #ffffff;
+  padding: var(--spacing-default);
+  background-color: var(--color-background);
 }
 </style>

@@ -54,17 +54,6 @@ export default {
 </script>
 
 <style>
-html {
-  box-sizing: border-box;
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
-  margin: 0;
-}
-
 .default-layout {
   width: 100vw;
   height: 100vh;
