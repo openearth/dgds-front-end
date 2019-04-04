@@ -1,3 +1,12 @@
+@font-face {
+  font-family: 'sansa_con_probold';
+  src: url('/fonts/sansaconpro-bold-webfont.woff2') format('woff2'),
+       url('/fonts/sansaconpro-bold-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   font-size: 100%;
   line-height: 1rem;
@@ -17,18 +26,21 @@
 }
 
 .h1 {
+  font-family: 'sansa_con_probold';
   font-size: 2.5rem;
   line-height: 3.75rem;
   font-weight: bold;
 }
 
 .h2 {
+  font-family: 'sansa_con_probold';
   font-size: 2rem;
   line-height: 3rem;
   font-weight: bold;
 }
 
 .h3 {
+  font-family: 'sansa_con_probold';
   font-size: 1.5rem;
   line-height: 2.25rem;
   font-weight: bold;
