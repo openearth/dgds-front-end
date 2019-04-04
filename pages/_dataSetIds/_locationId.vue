@@ -1,6 +1,7 @@
 <template>
   <aside class="location-id">
     <header class="location-id__header">
+      <h2 class="h2">Timeseries</h2>
       <button @click="close">Close</button>
     </header>
     <section class="location-id__graphs">
@@ -77,6 +78,6 @@ export default {
 .location-id__header {
   padding: var(--spacing-default);
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
 }
 </style>

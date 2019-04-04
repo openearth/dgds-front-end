@@ -65,9 +65,15 @@ const baseOptions = {
     axisLine: {
       onZero: false,
     },
+    axisLabel: {
+      fontSize: 12,
+    },
   },
   yAxis: {
     type: 'value',
+    axisLabel: {
+      fontSize: 12,
+    },
   },
 }
 
