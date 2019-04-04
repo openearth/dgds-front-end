@@ -4,22 +4,22 @@ import getFromApi from '../../../../lib/request/get'
 jest.mock('../../../../lib/request/get')
 
 describe('mutations', () => {
-  test('setActiveDataSetIds updates state.activeDataSetIds with ids in payload', () => {
+  test('setActiveDatasetIds updates state.activeDatasetIds with ids in payload', () => {
     const state = {
-      activeDataSetIds: [],
+      activeDatasetIds: [],
     }
     const ids = ['wl', 'wd']
-    mutations.setActiveDataSetIds(state, ids)
-    expect(state.activeDataSetIds).toBe(ids)
+    mutations.setActiveDatasetIds(state, ids)
+    expect(state.activeDatasetIds).toBe(ids)
   })
 
-  test('clearActiveDataSetIds clears state.activeDataSetIds', () => {
+  test('clearActiveDatasetIds clears state.activeDatasetIds', () => {
     const state = {
-      activeDataSetIds: ['wl', 'wd'],
+      activeDatasetIds: ['wl', 'wd'],
     }
     const ids = []
-    mutations.clearActiveDataSetIds(state)
-    expect(state.activeDataSetIds).toEqual(ids)
+    mutations.clearActiveDatasetIds(state)
+    expect(state.activeDatasetIds).toEqual(ids)
   })
 
   test('setActiveLocationIds updates state.setActiveLocationIds with ids in payload', () => {
@@ -40,9 +40,9 @@ describe('mutations', () => {
     expect(state.activeLocationIds).toEqual(ids)
   })
 
-  test('addDataSetLocations updates state.addDataSetLocations with payload', () => {
+  test('addDatasetLocations updates state.addDatasetLocations with payload', () => {
     const state = {
-      dataSets: {
+      datasets: {
         wl: {
           locations: {},
         },
@@ -51,13 +51,13 @@ describe('mutations', () => {
     const id = 'wl'
     const data = ['test']
 
-    mutations.addDataSetLocations(state, { id, data })
-    expect(state.dataSets[id].locations).toBe(data)
+    mutations.addDatasetLocations(state, { id, data })
+    expect(state.datasets[id].locations).toBe(data)
   })
 
-  test('addDataSetPointData updates state.addDataSetPointData with payload', () => {
+  test('addDatasetPointData updates state.addDatasetPointData with payload', () => {
     const state = {
-      dataSets: {
+      datasets: {
         wl: {
           pointData: {},
         },
@@ -66,21 +66,21 @@ describe('mutations', () => {
     const id = 'wl'
     const data = ['test']
 
-    mutations.addDataSetPointData(state, { id, data })
-    expect(state.dataSets[id].pointData).toBe(data)
+    mutations.addDatasetPointData(state, { id, data })
+    expect(state.datasets[id].pointData).toBe(data)
   })
 })
 
 describe('getters', () => {
-  test('knownDataSetIds returns object of known ids of datasets', () => {
+  test('knownDatasetIds returns object of known ids of datasets', () => {
     const state = {
-      dataSets: {
+      datasets: {
         wl: {},
         wd: {},
       },
     }
     const ids = ['wl', 'wd']
-    const result = getters.knownDataSetIds(state)
+    const result = getters.knownDatasetIds(state)
     expect(result).toHaveLength(2)
     expect(typeof result).toBe('object')
     expect(result).toEqual(ids)
@@ -88,7 +88,7 @@ describe('getters', () => {
 
   test('knownLocationIds returns object of known location ids', () => {
     const state = {
-      dataSets: {
+      datasets: {
         wl: {
           locations: {
             features: [],
@@ -104,7 +104,7 @@ describe('getters', () => {
     let result = getters.knownLocationIds(state)
     expect(result).toHaveLength(0)
     expect(typeof result).toBe('object')
-    state.dataSets.wl.locations.features.push({
+    state.datasets.wl.locations.features.push({
       properties: {
         locationId: 'WL-Loc1',
       },
@@ -113,7 +113,7 @@ describe('getters', () => {
     expect(result).toHaveLength(1)
     expect(result).toEqual(['WL-Loc1'])
 
-    state.dataSets.wd.locations.features.push({
+    state.datasets.wd.locations.features.push({
       properties: {
         locationId: 'WD-Loc2',
       },
@@ -123,33 +123,33 @@ describe('getters', () => {
     expect(result).toEqual(['WL-Loc1', 'WD-Loc2'])
   })
 
-  test('activeDataSets returns object with the active dataset', () => {
+  test('activeDatasets returns object with the active dataset', () => {
     const state = {
-      activeDataSetIds: ['wl'],
-      dataSets: {
+      activeDatasetIds: ['wl'],
+      datasets: {
         wl: {
           data: 'test-wl',
         },
         wd: {},
       },
     }
-    let result = getters.activeDataSets(state)
+    let result = getters.activeDatasets(state)
     expect(typeof result).toBe('object')
-    expect(result).toEqual([state.dataSets.wl])
+    expect(result).toEqual([state.datasets.wl])
 
-    state.activeDataSetIds.push('wd')
-    result = getters.activeDataSets(state)
-    expect(result).toEqual([state.dataSets.wl, state.dataSets.wd])
+    state.activeDatasetIds.push('wd')
+    result = getters.activeDatasets(state)
+    expect(result).toEqual([state.datasets.wl, state.datasets.wd])
 
-    // state.activeDataSetIds.push('test')
-    // result = getters.activeDataSets(state)
-    // expect(result).toEqual([state.dataSets.wl, state.dataSets.wd])
+    // state.activeDatasetIds.push('test')
+    // result = getters.activeDatasets(state)
+    // expect(result).toEqual([state.datasets.wl, state.datasets.wd])
   })
 
-  test('activeDataSetsLocations returns object of datasets for the active locations', () => {
+  test('activeDatasetsLocations returns object of datasets for the active locations', () => {
     const state = {
       activeLocationIds: ['WL-Loc1'],
-      activeDataSets: [
+      activeDatasets: [
         {
           locations: {
             features: [
@@ -171,18 +171,18 @@ describe('getters', () => {
         },
       ],
     }
-    const result = getters.activeDataSetsLocations(state, state)
+    const result = getters.activeDatasetsLocations(state, state)
     expect(typeof result).toBe('object')
     expect(result).toEqual([
       { features: [{ properties: { active: true, locationId: 'WL-Loc1' } }] },
     ])
   })
 
-  test('activePointDataPerDataSet returns object of pointdata for the active locations', () => {
+  test('activePointDataPerDataset returns object of pointdata for the active locations', () => {
     const state = {
       activeLocationIds: ['WL-Loc1'],
-      activeDataSetIds: ['wl'],
-      dataSets: {
+      activeDatasetIds: ['wl'],
+      datasets: {
         wl: {
           locations: {
             features: [
@@ -209,7 +209,7 @@ describe('getters', () => {
         },
       },
     }
-    const result = getters.activePointDataPerDataSet(state)
+    const result = getters.activePointDataPerDataset(state)
     expect(typeof result).toBe('object')
     expect(result['WL-Loc1']).toEqual([
       {
@@ -220,7 +220,7 @@ describe('getters', () => {
 })
 
 describe('actions', () => {
-  test('loadLocationsInDataSets returns object of known ids of datasets', async () => {
+  test('loadLocationsInDatasets returns object of known ids of datasets', async () => {
     const apiResult = {
       result: {
         features: 'test',
@@ -230,28 +230,28 @@ describe('actions', () => {
     const commit = jest.fn()
     const _ids = ['wl']
     const state = {
-      dataSets: {
+      datasets: {
         wl: {},
         wd: {},
       },
-      activeDataSetIds: [],
+      activeDatasetIds: [],
       activeLocationIds: [],
     }
     let get = {
-      knownDataSetIds: ['wl'],
+      knownDatasetIds: ['wl'],
     }
-    await actions.loadLocationsInDataSets({ commit, state, getters: get }, _ids)
-    expect(commit).toHaveBeenCalledWith('setActiveDataSetIds', ['wl'])
-    expect(commit).toHaveBeenCalledWith('addDataSetLocations', {
+    await actions.loadLocationsInDatasets({ commit, state, getters: get }, _ids)
+    expect(commit).toHaveBeenCalledWith('setActiveDatasetIds', ['wl'])
+    expect(commit).toHaveBeenCalledWith('addDatasetLocations', {
       data: { features: apiResult.features, type: 'FeatureCollection' },
       id: 'wl',
     })
 
     get = {
-      knownDataSetIds: [],
+      knownDatasetIds: [],
     }
-    await actions.loadLocationsInDataSets({ commit, state, getters: get }, _ids)
-    expect(commit).toHaveBeenCalledWith('setActiveDataSetIds', [])
-    expect(commit).not.toHaveBeenCalledWith('addDataSetLocations', {})
+    await actions.loadLocationsInDatasets({ commit, state, getters: get }, _ids)
+    expect(commit).toHaveBeenCalledWith('setActiveDatasetIds', [])
+    expect(commit).not.toHaveBeenCalledWith('addDatasetLocations', {})
   })
 })

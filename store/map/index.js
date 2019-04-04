@@ -58,14 +58,14 @@ export const actions = {
     const ids = isArray(_ids) ? _ids : _ids.split(',')
     const knownIds = ids.filter(includesIn(knownDatasetIds))
     const unknownIds = ids.filter(negate(includesIn(knownDatasetIds)))
-    const emptyDataSets = knownIds.filter(id => !has('locations', datasets[id]))
+    const emptyDatasets = knownIds.filter(id => !has('locations', datasets[id]))
 
     unknownIds.forEach(id => console.warn(`Data set ${id} is not known.`))
 
     commit('setActiveDatasetIds', knownIds)
 
     // prettier-ignore
-    emptyDataSets.forEach(id => {
+    emptyDatasets.forEach(id => {
       const parameters = {
         datasetId: id,
       }
@@ -191,9 +191,9 @@ export const getters = {
       .filter(identity)
       .map(enhanceFeatureWithActiveState)
   },
-  activePointDataPerDataSet(state) {
-    const { activeLocationIds, activeDataSetIds, dataSets } = state
-    const getPointDataForLocation = locationId => dataSetId =>
+  activePointDataPerDataset(state) {
+    const { activeLocationIds, activeDatasetIds, datasets } = state
+    const getPointDataForLocation = locationId => datasetId =>
       pipe([
         get(`${datasetId}.pointData[${locationId}]`),
         when(wrapInProperty(datasetId), () => undefined),
