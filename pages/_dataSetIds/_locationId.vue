@@ -2,7 +2,7 @@
   <aside class="location-id">
     <header class="location-id__header">
       <h2 class="h2">Timeseries</h2>
-      <button @click="close">Close</button>
+      <button-icon @click="close"><icon-cross /></button-icon>
     </header>
     <section class="location-id__graphs">
       <GraphLine
@@ -24,10 +24,12 @@ import get from 'lodash/fp/get'
 import identity from 'lodash/identity'
 import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
 import GraphLine from '~/components/graph-line'
+import ButtonIcon from '~/components/button-icon'
+import IconCross from '~/assets/icon-action-cross.svg'
 
 export default {
   middleware: 'load-location-id',
-  components: { GraphLine },
+  components: { GraphLine, ButtonIcon, IconCross },
   computed: {
     ...mapGetters('map', ['activePointDataPerDataset']),
     ...mapState({ activeTheme: state => state.preferences.theme.active }),

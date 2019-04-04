@@ -1,11 +1,19 @@
 <template>
   <figure
     class="graph-line"
-    :class="{ 'graph-line__collapsible': collapsible }"
+    :class="{
+      'graph-line__collapsible': collapsible,
+      'graph-line--collapsed': isCollapsed,
+    }"
   >
-    <button v-if="collapsible" class="graph-line__toggle" @click="toggle">
-      Toggle
-    </button>
+    <button-icon
+      v-if="collapsible"
+      class="graph-line__toggle"
+      label="Toggle"
+      @click="toggle"
+    >
+      <icon-chevron />
+    </button-icon>
     <figcaption class="graph-line__caption strong" @click="toggle">
       {{ title }}
     </figcaption>
@@ -18,6 +26,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import merge from 'lodash/merge'
+import ButtonIcon from '~/components/button-icon'
+import IconChevron from '~/assets/icon-action-chevron-down.svg'
 
 const getStyle = (colors = {}) => ({
   backgroundColor: colors.background,
@@ -78,6 +88,7 @@ const baseOptions = {
 }
 
 export default {
+  components: { ButtonIcon, IconChevron },
   props: {
     category: {
       type: Array,
@@ -140,6 +151,8 @@ export default {
 <style>
 .graph-line {
   position: relative;
+
+  --caption-height: 4rem;
 }
 
 .graph-line__aspect-ratio {
@@ -163,12 +176,19 @@ export default {
 
 .graph-line__toggle {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: calc(var(--caption-height) / 2);
+  right: var(--spacing-default);
+  transition: transform 0.25s ease-in-out;
+  transform: translateY(-50%);
+}
+
+.graph-line--collapsed .graph-line__toggle {
+  transform: translateY(-50%) rotate(180deg);
 }
 
 .graph-line__caption {
   padding: var(--spacing-default);
   background-color: var(--color-background);
+  height: var(--caption-height);
 }
 </style>
