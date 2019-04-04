@@ -3,6 +3,7 @@
     <div
       id="map"
       v-mapbox="mapboxOptions"
+      @load-locations="loadLocations"
       @select-locations="selectLocations"
     />
     <div style="position: absolute; top: 0; left: 0;">
@@ -21,7 +22,7 @@
 
 <script>
 import head from 'lodash/head'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
   computed: {
@@ -37,8 +38,16 @@ export default {
     },
   },
   methods: {
+    ...mapActions('map', ['loadPointDataForLocation']),
+    loadLocations({ detail }) {
+      const locationIds = detail.map(feature => feature.properties.locationId)
+      const locationId = head(locationIds)
+      const { datasetIds } = this.$route.params
+      this.loadPointDataForLocation({ datasetIds, locationId })
+    },
     selectLocations({ detail }) {
       const { datasetIds } = this.$route.params
+      console.log({ detail })
       const locationIds = detail.map(feature => feature.properties.locationId)
 
       this.$router.push({

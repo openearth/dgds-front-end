@@ -48,6 +48,7 @@ export default {
   },
   mounted() {
     const { datasetIds, locationId } = this.$route.params
+    this.setActiveLocationIds([locationId])
     this.loadPointDataForLocation({ datasetIds, locationId })
   },
   destroyed() {
@@ -55,7 +56,7 @@ export default {
   },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
-    ...mapMutations('map', ['clearActiveLocationIds']),
+    ...mapMutations('map', ['clearActiveLocationIds', 'setActiveLocationIds']),
     close() {
       const { datasetIds } = this.$route.params
       this.$router.push({ name: 'datasetIds', params: { datasetIds } })

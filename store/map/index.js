@@ -71,7 +71,7 @@ export const actions = {
       }
       return getFromApi('locations', parameters)
         .then(({ results: features }) => {
-          const data = { type: 'FeatureCollection', features }
+          const data = Object.freeze({ type: 'FeatureCollection', features })
           commit('addDatasetLocations', { id, data })
         })
     })
@@ -103,8 +103,6 @@ export const actions = {
       ? datasetIds
       : datasetIds.split(',')
 
-    commit('setActiveLocationIds', [locationId])
-
     // prettier-ignore
     datasets
       .forEach(datasetId => {
@@ -117,7 +115,7 @@ export const actions = {
 
         return getFromApi('timeseries', parameters)
           .then(({ results }) => {
-            commit('addDatasetPointData', {
+            commit('addDatasetPointData', Object.freeze({
               id: datasetId,
               data: {
                 [locationId]: {
@@ -126,7 +124,7 @@ export const actions = {
                   serie: getValues(results),
                 },
               },
-            })
+            }))
           })
     })
   },

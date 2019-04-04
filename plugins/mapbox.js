@@ -53,9 +53,11 @@ Vue.directive('mapbox', {
         x: event.point.x - visibleMapWidth,
         y: event.point.y,
       })
-
-      mapbox.panTo(targetLocation)
-      emitEvent('select-locations', event.features)
+      const duration = 500
+      const features = event.features
+      mapbox.panTo(targetLocation, { duration })
+      emitEvent('load-locations', features)
+      setTimeout(() => emitEvent('select-locations', features), duration)
     })
 
     mapbox.on('mouseenter', 'locations', function() {
