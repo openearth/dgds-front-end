@@ -9,6 +9,12 @@
       <nuxt-link to="/">Home</nuxt-link>
       <nuxt-link to="/wl">WL</nuxt-link>
     </div>
+    <div style="position: absolute; bottom: 2rem; right: 0;">
+      <select @change="setActive">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
     <nuxt />
   </div>
 </template>
@@ -16,6 +22,7 @@
 <script>
 import head from 'lodash/head'
 import { mapState, mapGetters } from 'vuex'
+
 export default {
   computed: {
     ...mapState({
@@ -38,6 +45,9 @@ export default {
         name: 'datasetIds-locationId',
         params: { datasetIds, locationId: head(locationIds) },
       })
+    },
+    setActive(event) {
+      this.$store.commit('preferences/theme/setActive', event.target.value)
     },
   },
 }

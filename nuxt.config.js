@@ -37,7 +37,11 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/mapbox', '~/plugins/echarts'],
+  plugins: [
+    '~/plugins/mapbox',
+    '~/plugins/echarts',
+    { src: '~/plugins/custom-properties', ssr: false },
+  ],
 
   /*
    ** Nuxt.js modules

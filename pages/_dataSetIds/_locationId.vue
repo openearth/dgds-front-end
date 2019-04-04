@@ -70,7 +70,7 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  background-color: #ffffff;
+  background-color: var(--color-background);
 }
 
 .location-id__header {

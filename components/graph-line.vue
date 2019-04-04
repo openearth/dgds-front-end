@@ -17,46 +17,50 @@
 
 <script>
 import merge from 'lodash/merge'
+import getColors from '../lib/styling/colors'
+
+const light = getColors('light')
+const dark = getColors('dark')
 
 const styleLight = {
-  backgroundColor: '#ffffff',
-  color: '#cc28b0',
+  backgroundColor: light.background,
+  color: light.pink,
   textStyle: {
-    color: '#000000',
+    color: light.black100,
   },
   xAxis: {
     axisLine: {
       lineStyle: {
-        color: '#000000',
+        color: light.black100,
       },
     },
   },
   yAxis: {
     axisLine: {
       lineStyle: {
-        color: '#000000',
+        color: light.black100,
       },
     },
   },
 }
 
 const styleDark = {
-  backgroundColor: '#202020',
-  color: '#FF33DD',
+  backgroundColor: dark.background,
+  color: dark.pink,
   textStyle: {
-    color: '#FFF',
+    color: dark.white100,
   },
   xAxis: {
     axisLine: {
       lineStyle: {
-        color: '#FFFFFF',
+        color: dark.white100,
       },
     },
   },
   yAxis: {
     axisLine: {
       lineStyle: {
-        color: '#FFFFFF',
+        color: dark.white100,
       },
     },
   },
