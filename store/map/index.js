@@ -54,16 +54,18 @@ export const mutations = {
 export const actions = {
   loadLocationsInDatasets({ commit, state, getters }, _ids) {
     const { knownDatasetIds } = getters
+    const datasets = state.datasets
     const ids = isArray(_ids) ? _ids : _ids.split(',')
     const knownIds = ids.filter(includesIn(knownDatasetIds))
     const unknownIds = ids.filter(negate(includesIn(knownDatasetIds)))
+    const emptyDataSets = knownIds.filter(id => !has('locations', datasets[id]))
 
     unknownIds.forEach(id => console.warn(`Data set ${id} is not known.`))
 
     commit('setActiveDatasetIds', knownIds)
 
     // prettier-ignore
-    knownIds.forEach(id => {
+    emptyDataSets.forEach(id => {
       const parameters = {
         datasetId: id,
       }
