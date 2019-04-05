@@ -1,7 +1,15 @@
+import dotEnv from 'dotenv-safe'
 import pkg from './package'
+
+dotEnv.config()
 
 export default {
   mode: 'universal',
+
+  env: {
+    MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
+    SERVER_URL: process.env.SERVER_URL,
+  },
 
   /*
    ** Headers of the page
@@ -24,12 +32,16 @@ export default {
   /*
    ** Global CSS
    */
-  css: [],
+  css: ['mapbox-gl/dist/mapbox-gl.css', '~/css/main.css', '~/css/typography'],
 
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: [],
+  plugins: [
+    '~/plugins/mapbox',
+    '~/plugins/echarts',
+    { src: '~/plugins/custom-properties', ssr: false },
+  ],
 
   /*
    ** Nuxt.js modules
@@ -44,6 +56,15 @@ export default {
      ** You can extend webpack config here
      */
     extend(config, ctx) {
+      const svgRule = config.module.rules.find(rule => rule.test.test('.svg'))
+
+      svgRule.test = /\.(png|jpe?g|gif|webp)$/
+
+      config.module.rules.push({
+        test: /\.svg$/,
+        loader: 'vue-svg-loader',
+      })
+
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {
         config.module.rules.push({

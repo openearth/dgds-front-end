@@ -10,14 +10,18 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
-      "lint:fix": "eslint --ext .js,.vue --ignore-path .gitignore . --fix",
+    "lint:fix": "eslint --ext .js,.vue --ignore-path .gitignore . --fix",
     "precommit": "npm run lint",
     "test": "jest",
-    "mock-api": "json-mock-api --port 3001 --directory api-mock"
+    "mock-api": "json-mock-api --port 3001 --directory api-mock --middleware api-mock/cors-middleware.js"
   },
   "dependencies": {
     "@nuxtjs/pwa": "3.0.0-beta.14",
     "cross-env": "^5.2.0",
+    "echarts": "^4.2.1",
+    "lodash": "4.17.11",
+    "mapbox-gl": "0.53.1",
+    "moment": "^2.24.0",
     "nuxt": "^2.4.0"
   },
   "devDependencies": {
@@ -26,6 +30,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.1.0",
+    "dotenv-safe": "6.1.0",
     "eslint": "^5.15.1",
     "eslint-config-prettier": "^4.1.0",
     "eslint-config-standard": ">=12.0.0",
@@ -42,6 +47,7 @@
     "json-mock-api": "1.0.2",
     "nodemon": "^1.18.9",
     "prettier": "^1.16.4",
-    "vue-jest": "^3.0.3"
+    "vue-jest": "^3.0.3",
+    "vue-svg-loader": "0.12.0"
   }
 }
