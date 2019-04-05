@@ -47,9 +47,9 @@ export default {
     },
   },
   mounted() {
-    const { datasetIds, locationId } = this.$route.params
+    const { dataSetIds, locationId } = this.$route.params
     this.setActiveLocationIds([locationId])
-    this.loadPointDataForLocation({ datasetIds, locationId })
+    this.loadPointDataForLocation({ dataSetIds, locationId })
   },
   destroyed() {
     this.clearActiveLocationIds()
@@ -58,8 +58,8 @@ export default {
     ...mapActions('map', ['loadPointDataForLocation']),
     ...mapMutations('map', ['clearActiveLocationIds', 'setActiveLocationIds']),
     close() {
-      const { datasetIds } = this.$route.params
-      this.$router.push({ name: 'datasetIds', params: { datasetIds } })
+      const { dataSetIds } = this.$route.params
+      this.$router.push({ name: 'dataSetIds', params: { dataSetIds } })
     },
   },
 }
@@ -70,7 +70,7 @@ export default {
   width: 50vw;
   max-width: 600px;
   height: 100vh;
-  overflow-y: scroll;
+  overflow-y: auto;
   position: absolute;
   top: 0;
   left: 0;

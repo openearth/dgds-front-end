@@ -1,8 +1,8 @@
 export default function loadDatasetIds({ route, store }) {
   if (process.client) {
-    const { datasetIds } = route.params
-    if (datasetIds) {
-      store.dispatch('map/loadLocationsInDatasets', datasetIds)
+    const { dataSetIds } = route.params
+    if (dataSetIds) {
+      store.dispatch('map/loadLocationsInDatasets', dataSetIds)
     }
   }
 }

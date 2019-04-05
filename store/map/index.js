@@ -77,7 +77,7 @@ export const actions = {
     })
   },
 
-  loadPointDataForLocation({ commit, getters }, { datasetIds, locationId }) {
+  loadPointDataForLocation({ commit, getters }, { dataSetIds, locationId }) {
     // prettier-ignore
     const getEvents = pipe([
       filter(has('events')),
@@ -99,9 +99,9 @@ export const actions = {
     ])
 
     // prettier-ignore
-    const datasets = isArray(datasetIds)
-      ? datasetIds
-      : datasetIds.split(',')
+    const datasets = isArray(dataSetIds)
+      ? dataSetIds
+      : dataSetIds.split(',')
 
     // prettier-ignore
     datasets
