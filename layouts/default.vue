@@ -42,17 +42,17 @@ export default {
     loadLocations({ detail }) {
       const locationIds = detail.map(feature => feature.properties.locationId)
       const locationId = head(locationIds)
-      const { dataSetIds } = this.$route.params
-      this.loadPointDataForLocation({ dataSetIds, locationId })
+      const { datasetIds } = this.$route.params
+      this.loadPointDataForLocation({ datasetIds, locationId })
     },
     selectLocations({ detail }) {
-      const { dataSetIds } = this.$route.params
+      const { datasetIds } = this.$route.params
       console.log({ detail })
       const locationIds = detail.map(feature => feature.properties.locationId)
 
       this.$router.push({
-        name: 'dataSetIds-locationId',
-        params: { dataSetIds, locationId: head(locationIds) },
+        name: 'datasetIds-locationId',
+        params: { datasetIds, locationId: head(locationIds) },
       })
     },
     setActive(event) {

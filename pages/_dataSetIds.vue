@@ -10,9 +10,9 @@ import { mapActions, mapMutations } from 'vuex'
 export default {
   middleware: 'load-dataset-ids',
   mounted() {
-    const { dataSetIds } = this.$route.params
-    if (dataSetIds) {
-      this.loadLocationsInDatasets(dataSetIds)
+    const { datasetIds } = this.$route.params
+    if (datasetIds) {
+      this.loadLocationsInDatasets(datasetIds)
     }
   },
   destroyed() {
