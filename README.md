@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/openearth/dgds-front-end.svg?branch=master)](https://travis-ci.org/openearth/dgds-front-end) Master build status
+
 # dgds-front-end
 
 > DGDS Front End
