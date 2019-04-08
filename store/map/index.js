@@ -12,6 +12,7 @@ import reduce from 'lodash/fp/reduce'
 import flatten from 'lodash/fp/flatten'
 import uniq from 'lodash/fp/uniq'
 import negate from 'lodash/negate'
+import moment from 'moment'
 import getFromApi from '../../lib/request/get'
 import {
   includesIn,
@@ -104,28 +105,34 @@ export const actions = {
       : datasetIds.split(',')
 
     // prettier-ignore
-    datasets
-      .forEach(datasetId => {
-        const parameters = {
-          locationCode: locationId,
-          startTime: '2019-03-22T00:00:00Z',
-          endTime: '2019-03-26T00:50:00Z',
-          datasetId: datasetId,
-        }
+    console.log(moment())
+    datasets.forEach(datasetId => {
+      const parameters = {
+        locationCode: locationId,
+        startTime: moment()
+          .subtract(3, 'days')
+          .format('YYYY-MM-DDTHH:mm:ssZ'),
+        endTime: moment()
+          .add(5, 'days')
+          .format('YYYY-MM-DDTHH:mm:ssZ'),
+        datasetId: datasetId,
+      }
 
-        return getFromApi('timeseries', parameters)
-          .then(({ results }) => {
-            commit('addDatasetPointData', Object.freeze({
-              id: datasetId,
-              data: {
-                [locationId]: {
-                  title: `${locationId}`,
-                  category: getFormattedTimeStamps(results),
-                  serie: getValues(results),
-                },
+      return getFromApi('timeseries', parameters).then(({ results }) => {
+        commit(
+          'addDatasetPointData',
+          Object.freeze({
+            id: datasetId,
+            data: {
+              [locationId]: {
+                title: `${locationId}`,
+                category: getFormattedTimeStamps(results),
+                serie: getValues(results),
               },
-            }))
-          })
+            },
+          }),
+        )
+      })
     })
   },
 }
