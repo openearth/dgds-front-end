@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import isArray from 'lodash/isArray'
 import identity from 'lodash/fp/identity'
 import filter from 'lodash/fp/filter'
@@ -23,10 +22,6 @@ import {
 } from '../../lib/utils'
 
 export const state = () => ({
-  datasets: {
-    wl: {},
-    wd: {},
-  },
   activeDatasetIds: [],
   activeLocationIds: [],
 })
@@ -43,12 +38,6 @@ export const mutations = {
   },
   clearActiveLocationIds(state) {
     state.activeLocationIds = []
-  },
-  addDatasetLocations(state, { id, data }) {
-    Vue.set(state.datasets[id], 'locations', data)
-  },
-  addDatasetPointData(state, { id, data }) {
-    Vue.set(state.datasets[id], 'pointData', data)
   },
 }
 
@@ -73,7 +62,7 @@ export const actions = {
       return getFromApi('locations', parameters)
         .then(({ results: features }) => {
           const data = Object.freeze({ type: 'FeatureCollection', features })
-          commit('addDatasetLocations', { id, data })
+          commit('datasets/addDatasetLocations', { id, data })
         })
     })
   },
@@ -105,7 +94,6 @@ export const actions = {
       : datasetIds.split(',')
 
     // prettier-ignore
-    console.log(moment())
     datasets.forEach(datasetId => {
       const parameters = {
         locationCode: locationId,
@@ -120,7 +108,7 @@ export const actions = {
 
       return getFromApi('timeseries', parameters).then(({ results }) => {
         commit(
-          'addDatasetPointData',
+          'datasets/addDatasetPointData',
           Object.freeze({
             id: datasetId,
             data: {
