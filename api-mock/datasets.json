@@ -1,0 +1,124 @@
+{
+  "Coastal management": {
+    "id": "cm",
+    "name": "Coastal management",
+    "datasets": [
+      {
+          "dataType": "timeseries",
+          "description": "To be filled by Daniel",
+          "id": "sc",
+          "name": "Shoreline changes",
+          "timeSpan": "Live",
+          "units": "m"
+      },
+      {
+          "dataType": "timeseries",
+          "description": "To be filled by Daniel",
+          "id": "fw",
+          "name": "Bathymetry and topography",
+          "timeSpan": "Live",
+          "units": "m"
+      }
+    ]
+  },
+  "Flooding": {
+    "id": "fl",
+    "name": "Flooding",
+    "datasets": [
+      {
+          "dataType": "timeseries",
+          "description": "To be filled by Daniel",
+          "id": "fw",
+          "name": "Flood warning",
+          "timeSpan": "Live",
+          "units": "N/A"
+      },
+      {
+          "dataType": "timeseries",
+          "description": "To be filled by Daniel",
+          "id": "cc",
+          "name": "Currents",
+          "timeSpan": "Live",
+          "units": "km/h"
+      },
+      {
+          "dataType": "timeseries",
+          "description": "To be filled by Daniel",
+          "id": "wl",
+          "name": "Waterlevel",
+          "timeSpan": "Live",
+          "units": "m"
+      },
+      {
+          "dataType": "timeseries",
+          "description": "To be filled by Daniel",
+          "id": "dd",
+          "name": "Discharge",
+          "timeSpan": "Live",
+          "units": "m3/s"
+      },
+      {
+          "dataType": "timeseries",
+          "description": "To be filled by Daniel",
+          "id": "sh",
+          "name": "Surge Height",
+          "timeSpan": "Live",
+          "units": "m"
+      },
+      {
+          "dataType": "timeseries",
+          "description": "To be filled by Daniel",
+          "id": "tt",
+          "name": "Tide",
+          "timeSpan": "Live",
+          "units": "m"
+      },
+      {
+          "dataType": "timeseries",
+          "description": "To be filled by Daniel",
+          "id": "wd",
+          "name": "Wind",
+          "timeSpan": "Live",
+          "units": "m/s"
+      },
+      {
+          "dataType": "timeseries",
+          "description": "To be filled by Daniel",
+          "id": "pp",
+          "name": "Precipitation",
+          "timeSpan": "Live",
+          "units": "mm/h"
+      },
+      {
+          "dataType": "timeseries",
+          "description": "To be filled by Daniel",
+          "id": "at",
+          "name": "Air temperature",
+          "timeSpan": "Live",
+          "units": "deg"
+      }
+    ]
+  },
+  "Offshore": {
+    "id": "os",
+    "name": "Offshore",
+    "datasets": [
+      {
+          "dataType": "timeseries",
+          "description": "To be filled by Daniel",
+          "id": "wv",
+          "name": "Waves",
+          "timeSpan": "Live",
+          "units": "m"
+      },
+      {
+          "dataType": "timeseries",
+          "description": "To be filled by Daniel",
+          "id": "cc",
+          "name": "Currents",
+          "timeSpan": "Live",
+          "units": "km/h"
+      }
+    ]
+  }
+}

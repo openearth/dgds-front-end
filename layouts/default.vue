@@ -47,7 +47,6 @@ export default {
     },
     selectLocations({ detail }) {
       const { datasetIds } = this.$route.params
-      console.log({ detail })
       const locationIds = detail.map(feature => feature.properties.locationId)
 
       this.$router.push({
