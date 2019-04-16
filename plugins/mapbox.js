@@ -4,18 +4,14 @@ import has from 'lodash/fp/has'
 import diff from '../lib/diff-object'
 import dispatchEvent from '../lib/dispatch-event'
 import loadModule from '../lib/load-module'
-import mapAsync from '../lib/map-async'
 import updateLayerSource from '../lib/mapbox/update-layer-source'
 import locationsLayer from '../lib/mapbox/layers/locations-layer'
 import { getUrlFromStyleWhere } from '../lib/mapbox/get-style'
 import addLayer from '../lib/mapbox/add-layer'
-import addImage from '../lib/mapbox/add-image'
-import icons from '../lib/mapbox/icons'
 
 let mapbox
 let addLayersToMap
 let updateLayerSources
-let addIcons
 let mapboxLoaded = false
 
 const layers = [locationsLayer]
@@ -30,12 +26,10 @@ Vue.directive('mapbox', {
     mapbox = new mapboxgl.Map({ container, style: styleUrl })
     mapbox.addControl(new mapboxgl.NavigationControl(), 'bottom-right')
 
-    addIcons = mapAsync(addImage(mapbox))
     addLayersToMap = map(addLayer(mapbox))
     updateLayerSources = map(updateLayerSource(mapbox))
 
-    mapbox.on('load', async () => {
-      await addIcons(icons)
+    mapbox.on('load', () => {
       addLayersToMap(layers)
       emitEvent('load')
       mapboxLoaded = true
@@ -70,7 +64,6 @@ Vue.directive('mapbox', {
 
     mapbox.on('styledataloading', _ =>
       mapbox.once('styledata', _ => {
-        addIcons(icons)
         addLayersToMap(layers)
       }),
     )
