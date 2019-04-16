@@ -10,7 +10,7 @@
       <nuxt-link to="/">Home</nuxt-link>
       <nuxt-link to="/wl">WL</nuxt-link>
     </div>
-    <div style="position: absolute; bottom: 2rem; right: 0;">
+    <div style="position: absolute; bottom: 2rem; right: 3rem;">
       <select @change="setActive">
         <option value="light">Light</option>
         <option value="dark">Dark</option>

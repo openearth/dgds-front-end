@@ -28,7 +28,7 @@ Vue.directive('mapbox', {
     mapboxgl.accessToken = process.env.MAPBOX_ACCESS_TOKEN
 
     mapbox = new mapboxgl.Map({ container, style: styleUrl })
-    mapbox.addControl(new mapboxgl.NavigationControl())
+    mapbox.addControl(new mapboxgl.NavigationControl(), 'bottom-right')
 
     addIcons = mapAsync(addImage(mapbox))
     addLayersToMap = map(addLayer(mapbox))
