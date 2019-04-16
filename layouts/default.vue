@@ -6,6 +6,7 @@
       @load-locations="loadLocations"
       @select-locations="selectLocations"
     />
+    <DataSetControlMenu class="default-layout__data-set-control-menu" />
     <div style="position: absolute; top: 0; left: 0;">
       <nuxt-link to="/">Home</nuxt-link>
       <nuxt-link to="/wl">WL</nuxt-link>
@@ -23,8 +24,10 @@
 <script>
 import head from 'lodash/head'
 import { mapState, mapGetters, mapActions } from 'vuex'
+import DataSetControlMenu from '../components/data-set-control-menu'
 
 export default {
+  components: { DataSetControlMenu },
   computed: {
     ...mapState({
       activeTheme: state => state.preferences.theme.active,
@@ -70,5 +73,13 @@ export default {
 #map {
   width: 100%;
   height: 100%;
+}
+
+.default-layout__data-set-control-menu {
+  position: absolute;
+  top: var(--spacing-default);
+  right: var(--spacing-default);
+  max-width: 20rem;
+  width: 100%;
 }
 </style>
