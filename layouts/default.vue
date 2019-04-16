@@ -6,7 +6,10 @@
       @load-locations="loadLocations"
       @select-locations="selectLocations"
     />
-    <DataSetControlMenu class="default-layout__data-set-control-menu" />
+    <DataSetControlMenu
+      class="default-layout__data-set-control-menu"
+      :datasets="datasetsInActiveTheme"
+    />
     <div style="position: absolute; top: 0; left: 0;">
       <nuxt-link to="/">Home</nuxt-link>
       <nuxt-link to="/wl">WL</nuxt-link>
@@ -32,7 +35,7 @@ export default {
     ...mapState({
       activeTheme: state => state.preferences.theme.active,
     }),
-    ...mapGetters('map', ['activeDatasetsLocations']),
+    ...mapGetters('map', ['activeDatasetsLocations', 'datasetsInActiveTheme']),
     mapboxOptions() {
       return {
         sources: this.activeDatasetsLocations,

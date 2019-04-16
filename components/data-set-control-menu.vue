@@ -2,18 +2,18 @@
   <Panel class="data-set-control-menu">
     <span class="data-set-control-menu__title h4">Theme Title</span>
     <ul class="data-set-control-menu__list">
-      <li class="data-set-control-menu__list-item">
+      <li
+        v-for="(dataset, key) in datasets"
+        :key="key"
+        class="data-set-control-menu__list-item"
+      >
         <label class="data-set-control-menu__label">
-          <Icon class="data-set-control-menu__icon" name="waterlevel" />
-          Water level
-          <Toggle :checked="true" class="data-set-control-menu__control" />
-        </label>
-      </li>
-      <li class="data-set-control-menu__list-item">
-        <label class="data-set-control-menu__label">
-          <Icon class="data-set-control-menu__icon" name="wind" />
-          Wind
-          <Toggle class="data-set-control-menu__control" />
+          <Icon class="data-set-control-menu__icon" name="placeholder" />
+          {{ dataset.name }}
+          <Toggle
+            :checked="dataset.visible"
+            class="data-set-control-menu__control"
+          />
         </label>
       </li>
     </ul>
@@ -27,6 +27,12 @@ import Icon from './icon'
 
 export default {
   components: { Panel, Toggle, Icon },
+  props: {
+    datasets: {
+      type: Array,
+      default: () => [],
+    },
+  },
 }
 </script>
 
