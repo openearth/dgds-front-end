@@ -4,14 +4,14 @@
     <ul class="data-set-control-menu__list">
       <li class="data-set-control-menu__list-item">
         <label class="data-set-control-menu__label">
-          <Icon class="data-set-control-menu__icon" name="action-cross" />
+          <Icon class="data-set-control-menu__icon" name="waterlevel" />
           Water level
           <Toggle :checked="true" class="data-set-control-menu__control" />
         </label>
       </li>
       <li class="data-set-control-menu__list-item">
         <label class="data-set-control-menu__label">
-          <Icon class="data-set-control-menu__icon" />
+          <Icon class="data-set-control-menu__icon" name="wind" />
           Wind
           <Toggle class="data-set-control-menu__control" />
         </label>
