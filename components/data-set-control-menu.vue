@@ -5,13 +5,13 @@
       <li class="data-set-control-menu__list-item">
         <label class="data-set-control-menu__label">
           Water level
-          <input type="checkbox" />
+          <Toggle :checked="true" />
         </label>
       </li>
       <li class="data-set-control-menu__list-item">
         <label class="data-set-control-menu__label">
           Wind
-          <input type="checkbox" />
+          <Toggle />
         </label>
       </li>
     </ul>
@@ -20,9 +20,10 @@
 
 <script>
 import Panel from './panel'
+import Toggle from './toggle'
 
 export default {
-  components: { Panel },
+  components: { Panel, Toggle },
 }
 </script>
 
