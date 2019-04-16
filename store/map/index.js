@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import isArray from 'lodash/isArray'
 import identity from 'lodash/fp/identity'
 import filter from 'lodash/fp/filter'
@@ -9,9 +8,10 @@ import head from 'lodash/fp/head'
 import merge from 'lodash/fp/merge'
 import pipe from 'lodash/fp/pipe'
 import reduce from 'lodash/fp/reduce'
+import values from 'lodash/fp/values'
 import flatten from 'lodash/fp/flatten'
+import update from 'lodash/fp/update'
 import uniq from 'lodash/fp/uniq'
-import negate from 'lodash/negate'
 import moment from 'moment'
 import getFromApi from '../../lib/request/get'
 import {
@@ -20,13 +20,10 @@ import {
   getIn,
   wrapInProperty,
   when,
+  applyTo,
 } from '../../lib/utils'
 
 export const state = () => ({
-  datasets: {
-    wl: {},
-    wd: {},
-  },
   activeDatasetIds: [],
   activeLocationIds: [],
 })
@@ -44,26 +41,41 @@ export const mutations = {
   clearActiveLocationIds(state) {
     state.activeLocationIds = []
   },
-  addDatasetLocations(state, { id, data }) {
-    Vue.set(state.datasets[id], 'locations', data)
-  },
-  addDatasetPointData(state, { id, data }) {
-    Vue.set(state.datasets[id], 'pointData', data)
-  },
 }
 
 export const actions = {
+  loadThemes({ commit: _commit }) {
+    const commit = path => value => _commit(path, value)
+    const addTheme = commit('themes/addTheme')
+    const addMetadata = commit('datasets/addMetadata')
+
+    // prettier-ignore
+    const storeMetadata =
+      pipe([
+        get('datasets'),
+        map(addMetadata)
+      ])
+
+    // prettier-ignore
+    const storeTheme =
+      pipe([
+        update('datasets', map(get('id'))),
+        addTheme,
+      ])
+
+    const processTheme = applyTo([storeTheme, storeMetadata])
+
+    return getFromApi('datasets')
+      .then(values)
+      .then(map(processTheme))
+  },
+
   loadLocationsInDatasets({ commit, state, getters }, _ids) {
-    const { knownDatasetIds } = getters
     const datasets = state.datasets
     const ids = isArray(_ids) ? _ids : _ids.split(',')
-    const knownIds = ids.filter(includesIn(knownDatasetIds))
-    const unknownIds = ids.filter(negate(includesIn(knownDatasetIds)))
-    const emptyDatasets = knownIds.filter(id => !has('locations', datasets[id]))
+    const emptyDatasets = ids.filter(id => !has('locations', datasets[id]))
 
-    unknownIds.forEach(id => console.warn(`Data set ${id} is not known.`))
-
-    commit('setActiveDatasetIds', knownIds)
+    commit('setActiveDatasetIds', ids)
 
     // prettier-ignore
     emptyDatasets.forEach(id => {
@@ -73,7 +85,7 @@ export const actions = {
       return getFromApi('locations', parameters)
         .then(({ results: features }) => {
           const data = Object.freeze({ type: 'FeatureCollection', features })
-          commit('addDatasetLocations', { id, data })
+          commit('datasets/addDatasetLocations', { id, data })
         })
     })
   },
@@ -105,7 +117,6 @@ export const actions = {
       : datasetIds.split(',')
 
     // prettier-ignore
-    console.log(moment())
     datasets.forEach(datasetId => {
       const parameters = {
         locationCode: locationId,
@@ -120,7 +131,7 @@ export const actions = {
 
       return getFromApi('timeseries', parameters).then(({ results }) => {
         commit(
-          'addDatasetPointData',
+          'datasets/addDatasetPointData',
           Object.freeze({
             id: datasetId,
             data: {

@@ -39,36 +39,6 @@ describe('mutations', () => {
     mutations.clearActiveLocationIds(state)
     expect(state.activeLocationIds).toEqual(ids)
   })
-
-  test('addDatasetLocations updates state.addDatasetLocations with payload', () => {
-    const state = {
-      datasets: {
-        wl: {
-          locations: {},
-        },
-      },
-    }
-    const id = 'wl'
-    const data = ['test']
-
-    mutations.addDatasetLocations(state, { id, data })
-    expect(state.datasets[id].locations).toBe(data)
-  })
-
-  test('addDatasetPointData updates state.addDatasetPointData with payload', () => {
-    const state = {
-      datasets: {
-        wl: {
-          pointData: {},
-        },
-      },
-    }
-    const id = 'wl'
-    const data = ['test']
-
-    mutations.addDatasetPointData(state, { id, data })
-    expect(state.datasets[id].pointData).toBe(data)
-  })
 })
 
 describe('getters', () => {
@@ -237,21 +207,14 @@ describe('actions', () => {
       activeDatasetIds: [],
       activeLocationIds: [],
     }
-    let get = {
+    const get = {
       knownDatasetIds: ['wl'],
     }
     await actions.loadLocationsInDatasets({ commit, state, getters: get }, _ids)
     expect(commit).toHaveBeenCalledWith('setActiveDatasetIds', ['wl'])
-    expect(commit).toHaveBeenCalledWith('addDatasetLocations', {
+    expect(commit).toHaveBeenCalledWith('datasets/addDatasetLocations', {
       data: { features: apiResult.features, type: 'FeatureCollection' },
       id: 'wl',
     })
-
-    get = {
-      knownDatasetIds: [],
-    }
-    await actions.loadLocationsInDatasets({ commit, state, getters: get }, _ids)
-    expect(commit).toHaveBeenCalledWith('setActiveDatasetIds', [])
-    expect(commit).not.toHaveBeenCalledWith('addDatasetLocations', {})
   })
 })
