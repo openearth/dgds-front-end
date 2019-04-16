@@ -4,14 +4,16 @@
     <ul class="data-set-control-menu__list">
       <li class="data-set-control-menu__list-item">
         <label class="data-set-control-menu__label">
+          <Icon class="data-set-control-menu__icon" name="action-cross" />
           Water level
-          <Toggle :checked="true" />
+          <Toggle :checked="true" class="data-set-control-menu__control" />
         </label>
       </li>
       <li class="data-set-control-menu__list-item">
         <label class="data-set-control-menu__label">
+          <Icon class="data-set-control-menu__icon" />
           Wind
-          <Toggle />
+          <Toggle class="data-set-control-menu__control" />
         </label>
       </li>
     </ul>
@@ -21,9 +23,10 @@
 <script>
 import Panel from './panel'
 import Toggle from './toggle'
+import Icon from './icon'
 
 export default {
-  components: { Panel, Toggle },
+  components: { Panel, Toggle, Icon },
 }
 </script>
 
@@ -47,7 +50,18 @@ export default {
 
 .data-set-control-menu__label {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
+  align-items: center;
   flex: 1;
+}
+
+.data-set-control-menu__icon {
+  width: var(--spacing-default);
+  height: var(--spacing-default);
+  margin-right: var(--spacing-half);
+}
+
+.data-set-control-menu__control {
+  margin-left: auto;
 }
 </style>
