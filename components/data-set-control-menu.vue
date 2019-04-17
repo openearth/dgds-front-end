@@ -8,7 +8,11 @@
         class="data-set-control-menu__list-item"
       >
         <label class="data-set-control-menu__label">
-          <Icon class="data-set-control-menu__icon" name="placeholder" />
+          <Icon
+            class="data-set-control-menu__icon"
+            :name="`dataset-${dataset.id}`"
+            fallback-name="placeholder"
+          />
           {{ dataset.name }}
           <Toggle
             :checked="dataset.visible"
