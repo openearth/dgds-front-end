@@ -1,4 +1,11 @@
-import { mutations } from '../../../../store/map/themes'
+import { mutations, state } from '../../../../store/map/themes'
+
+describe('state', () => {
+  test('Initial state', () => {
+    const initialState = {}
+    expect(state()).toEqual(initialState)
+  })
+})
 
 describe('mutations', () => {
   describe('addTheme', () => {

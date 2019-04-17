@@ -1,4 +1,11 @@
-import { mutations } from '../../../../store/map/datasets'
+import { mutations, state } from '../../../../store/map/datasets'
+
+describe('state', () => {
+  test('Initial state', () => {
+    const initialState = {}
+    expect(state()).toEqual(initialState)
+  })
+})
 
 describe('mutations', () => {
   describe('addDatasetLocations', () => {
