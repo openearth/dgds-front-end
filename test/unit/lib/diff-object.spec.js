@@ -1,4 +1,4 @@
-import diff from '../../lib/diff-object'
+import diff from '../../../lib/diff-object'
 
 describe('diff', () => {
   test('returns undefined on same objects', () => {
