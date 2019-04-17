@@ -17,6 +17,7 @@
           <Toggle
             :checked="dataset.visible"
             class="data-set-control-menu__control"
+            @change="toggleLocationDataSet(dataset.id)"
           />
         </label>
       </li>
@@ -35,6 +36,11 @@ export default {
     datasets: {
       type: Array,
       default: () => [],
+    },
+  },
+  methods: {
+    toggleLocationDataSet(id) {
+      this.$emit('toggle-location-dataset', id)
     },
   },
 }
