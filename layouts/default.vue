@@ -38,7 +38,7 @@ import isEqual from 'lodash/fp/isEqual'
 import identity from 'lodash/fp/identity'
 import { mapState, mapGetters, mapActions } from 'vuex'
 import DataSetControlMenu from '../components/data-set-control-menu'
-import { whenBy } from '../lib/utils'
+import { when } from '../lib/utils'
 
 export default {
   components: { DataSetControlMenu },
@@ -79,10 +79,10 @@ export default {
       const removeId = filter(negate(isEqual(id)))
       const toggleIdDataSets = pipe([
         split(','),
-        whenBy(includes(id), removeId, addId),
+        when(includes(id), removeId, addId),
         filter(identity),
         join(','),
-        whenBy(isEqual(''), () => undefined, identity),
+        when(isEqual(''), () => undefined, identity),
       ])
 
       this.$router.push(

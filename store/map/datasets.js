@@ -5,7 +5,7 @@ import merge from 'lodash/fp/merge'
 import identity from 'lodash/fp/identity'
 import { when } from '../../lib/utils'
 
-const getOrEpmtyObject = when(identity, () => {})
+const getOrEpmtyObject = when(identity, identity, () => {})
 const getPointData = pipe([get('pointData'), getOrEpmtyObject])
 const getLocations = pipe([get('locations'), getOrEpmtyObject])
 const getMetadata = pipe([get('metadata'), getOrEpmtyObject])

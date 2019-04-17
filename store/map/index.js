@@ -212,7 +212,7 @@ export const getters = {
     const getPointDataForLocation = locationId => datasetId =>
       pipe([
         get(`${datasetId}.pointData[${locationId}]`),
-        when(wrapInProperty(datasetId), () => undefined),
+        when(identity, wrapInProperty(datasetId), () => undefined),
         filter(identity),
         reduce(merge, {}),
       ])(datasets)
