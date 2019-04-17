@@ -78,6 +78,39 @@
               "referenceLevel": "m"
           },
           "type": "Feature"
+      },
+      {
+          "geometry": {
+              "coordinates": [
+                  59,
+                  5,
+                  0
+              ],
+              "type": "Point"
+          },
+          "properties": {
+              "crs": {
+                  "properties": {
+                      "name": "EPSG:4326"
+                  },
+                  "type": "name"
+              },
+              "locationId": "diva_id__280",
+              "locationName": "diva_id__280",
+              "node": {
+                  "id": "Deltares",
+                  "name": "Deltares Digitale Delta",
+                  "url": "http://pl-tc012.xtr.deltares.nl:8080/FewsWebServices/rest/digitaledelta/2.0/nodes/Deltares"
+              },
+              "provider": {
+                  "apiVersion": "2.0",
+                  "name": "Deltares",
+                  "responseTimestamp": "2019-03-27T13:58:52.642Z",
+                  "supportUrl": "https://www.delft-fews.nl/"
+              },
+              "referenceLevel": "m"
+          },
+          "type": "Feature"
       }
     ]
 }
