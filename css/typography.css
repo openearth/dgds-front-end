@@ -46,6 +46,13 @@
   font-weight: bold;
 }
 
+.h4 {
+  font-family: 'sansa_con_probold';
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: bold;
+}
+
 .bodytext-xl {
   font-size: 1.5rem;
   line-height: 2.25rem;

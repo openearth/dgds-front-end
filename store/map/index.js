@@ -229,4 +229,10 @@ export const getters = {
       {},
     )
   },
+  datasetsInActiveTheme(state) {
+    return values(state.datasets)
+      .map(get('metadata'))
+      .map(obj => merge(obj, { visible: obj.id }))
+      .map(update('visible', includesIn(state.activeDatasetIds)))
+  },
 }
