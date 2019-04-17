@@ -71,6 +71,8 @@ export default {
 .default-layout {
   width: 100vw;
   height: 100vh;
+
+  --map-controls-height: 122px;
 }
 
 #map {
@@ -84,5 +86,6 @@ export default {
   right: var(--spacing-default);
   max-width: 20rem;
   width: 100%;
+  max-height: calc(100vh - var(--spacing-double) - var(--map-controls-height));
 }
 </style>
