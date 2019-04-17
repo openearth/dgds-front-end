@@ -4,6 +4,7 @@ import filter from 'lodash/fp/filter'
 import get from 'lodash/fp/get'
 import has from 'lodash/fp/has'
 import map from 'lodash/fp/map'
+import set from 'lodash/fp/set'
 import head from 'lodash/fp/head'
 import merge from 'lodash/fp/merge'
 import pipe from 'lodash/fp/pipe'
@@ -136,7 +137,6 @@ export const actions = {
             id: datasetId,
             data: {
               [locationId]: {
-                title: `${locationId}`,
                 category: getFormattedTimeStamps(results),
                 serie: getValues(results),
               },
@@ -212,6 +212,7 @@ export const getters = {
     const getPointDataForLocation = locationId => datasetId =>
       pipe([
         get(`${datasetId}.pointData[${locationId}]`),
+        set('datasetName', get(`${datasetId}.metadata.name`, datasets)),
         when(identity, wrapInProperty(datasetId), () => undefined),
         filter(identity),
         reduce(merge, {}),

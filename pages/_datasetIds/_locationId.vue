@@ -10,7 +10,7 @@
         :key="index"
         :category="data.category"
         :series="[data.serie]"
-        :title="data.title"
+        :title="data.datasetName"
         :theme="activeTheme"
         :collapsible="true"
       />
