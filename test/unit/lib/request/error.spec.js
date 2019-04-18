@@ -12,8 +12,8 @@ test('Error contains statusText', () => {
 })
 
 test('Error contains statusCode', () => {
-  const result = error('Failed to fetch', { statusCode: 400 })
-  expect(result.statusCode).toBe(400)
+  const result = error('Failed to fetch', { status: 400 })
+  expect(result.status).toBe(400)
 })
 
 test('Error contains ok', () => {

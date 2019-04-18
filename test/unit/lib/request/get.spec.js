@@ -1,6 +1,3 @@
-import error from '../../../../lib/request/error'
-jest.mock('../../../../lib/request/error')
-
 test('call fetch with full url', async () => {
   const fetch = jest.fn(() => Promise.resolve({ json: jest.fn() }))
   window.fetch = fetch
@@ -38,16 +35,12 @@ test('reject when status code is 400 or higher', async () => {
       statusText: 'Bad request',
     }),
   )
-  error.mockReturnValueOnce('an error')
   window.fetch = fetch
-  let err = ''
-  try {
-    const get = (await import('../../../../lib/request/get')).default
-    await get('foo')
-  } catch (_err) {
-    err = _err
-  }
-  expect(err).toBe('an error')
+  const get = (await import('../../../../lib/request/get')).default
+  const err = await get('foo').catch(err => err)
+  expect(err.message).toBe('Failed to fetch: Bad request')
+  expect(err.status).toBe(400)
+  expect(err.statusText).toBe('Bad request')
 })
 
 test('reject when ok is false', async () => {
@@ -57,24 +50,18 @@ test('reject when ok is false', async () => {
       ok: false,
     }),
   )
-  error.mockReturnValueOnce('an error')
   window.fetch = fetch
-  let err = ''
-  try {
-    const get = (await import('../../../../lib/request/get')).default
-    await get('foo')
-  } catch (_err) {
-    err = _err
-  }
-  expect(err).toBe('an error')
+  const get = (await import('../../../../lib/request/get')).default
+  const err = await get('foo').catch(err => err)
+  expect(err.message).toBe('Failed to fetch')
+  expect(err.ok).toBe(false)
 })
 
 test('reject when fetch fails', async () => {
   const fetch = jest.fn()
   fetch.mockRejectedValue('because of reasons')
   window.fetch = fetch
-  let err = ''
   const get = (await import('../../../../lib/request/get')).default
-  await get('foo').catch(_err => (err = _err))
+  const err = await get('foo').catch(err => err)
   expect(err.message).toBe('Fetch failed: because of reasons')
 })
