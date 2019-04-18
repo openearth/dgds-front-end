@@ -108,3 +108,28 @@ describe('tap', () => {
     expect(result).toBe(1)
   })
 })
+
+describe('mapAsync', () => {
+  test('maps over an array with an async function', async () => {
+    const fn = msg =>
+      new Promise(resolve => {
+        setTimeout(() => {
+          resolve(msg.toUpperCase())
+        }, 500)
+      })
+    const arr = ['first', 'second', 'third']
+    const result = await utils.mapAsync(fn, arr)
+    expect(result).toMatchObject(['FIRST', 'SECOND', 'THIRD'])
+  })
+  test('can be called curried', async () => {
+    const fn = msg =>
+      new Promise(resolve => {
+        setTimeout(() => {
+          resolve(msg.toUpperCase())
+        }, 500)
+      })
+    const arr = ['first', 'second', 'third']
+    const result = await utils.mapAsync(fn)(arr)
+    expect(result).toMatchObject(['FIRST', 'SECOND', 'THIRD'])
+  })
+})
