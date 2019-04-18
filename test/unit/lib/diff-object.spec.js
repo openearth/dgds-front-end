@@ -56,4 +56,11 @@ describe('diff', () => {
     const result = 'two'
     expect(diff(a, b)).toEqual(result)
   })
+
+  test('keep properties uniqe to objects', () => {
+    const a = { one: 'one', two: 'two' }
+    const b = { two: 'two', three: 'three' }
+    const result = { one: 'one', three: 'three' }
+    expect(diff(a, b)).toEqual(result)
+  })
 })
