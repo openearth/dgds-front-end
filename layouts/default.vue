@@ -26,7 +26,7 @@
 
 <script>
 import head from 'lodash/head'
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import DataSetControlMenu from '../components/data-set-control-menu'
 
 export default {
@@ -45,6 +45,7 @@ export default {
   },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
+    ...mapMutations({ setActiveTheme: 'preferences/theme/setActive' }),
     loadLocations({ detail }) {
       const locationIds = detail.map(feature => feature.properties.locationId)
       const locationId = head(locationIds)
@@ -61,7 +62,7 @@ export default {
       })
     },
     setActive(event) {
-      this.$store.commit('preferences/theme/setActive', event.target.value)
+      this.setActiveTheme(event.target.value)
     },
   },
 }
