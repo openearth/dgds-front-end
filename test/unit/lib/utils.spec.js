@@ -133,3 +133,16 @@ describe('mapAsync', () => {
     expect(result).toMatchObject(['FIRST', 'SECOND', 'THIRD'])
   })
 })
+
+describe('filterBy', () => {
+  test('filters a collection based on a provided object', () => {
+    const collection = [{ a: 1, b: 2, c: 3 }, { a: 4, b: 5, c: 6 }]
+    const result = utils.filterBy({ a: 4 }, collection)
+    expect(result).toEqual([collection[1]])
+  })
+  test('can be called curried', () => {
+    const collection = [{ a: 1, b: 2, c: 3 }, { a: 4, b: 5, c: 6 }]
+    const result = utils.filterBy({ a: 4 })(collection)
+    expect(result).toEqual([collection[1]])
+  })
+})
