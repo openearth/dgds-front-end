@@ -2,7 +2,7 @@ import Vue from 'vue'
 import echarts from 'echarts'
 import throttle from 'lodash/throttle'
 
-const resizeHandlers = {}
+export const resizeHandlers = {}
 
 Vue.directive('echarts', {
   inserted(el, { value }) {
