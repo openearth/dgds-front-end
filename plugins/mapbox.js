@@ -14,7 +14,20 @@ let addLayersToMap
 let updateLayerSources
 let mapboxLoaded = false
 
-const layers = [locationsLayer]
+const layers = [
+  locationsLayer,
+  {
+    id: 'spatial',
+    type: 'raster',
+    source: {
+      type: 'raster',
+      tileSize: 256,
+      tiles: [
+        'https://tl-ng038.xtr.deltares.nl/thredds/wms/Thredds/yearly/CHL_1km_2009.nc?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&LAYERS=mean_chlorophyll&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256&FORMAT=image/png&COLORSCALERANGE=0,80&&STYLES=boxfill/msfd&TRANSPARENT=TRUE&',
+      ],
+    },
+  },
+]
 
 Vue.directive('mapbox', {
   async bind(container, args, vnode) {
