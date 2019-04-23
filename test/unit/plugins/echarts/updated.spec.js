@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import { mount } from '@vue/test-utils'
 import echarts from 'echarts'
-import { resizeHandlers } from '../../../../plugins/echarts'
 
 jest.mock('echarts', () => ({
   init: jest.fn(() => ({
