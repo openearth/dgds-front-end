@@ -10,7 +10,7 @@
         :key="index"
         :category="data.category"
         :series="[data.serie]"
-        :title="data.title"
+        :title="data.datasetName"
         :theme="activeTheme"
         :collapsible="true"
       />
@@ -76,6 +76,21 @@ export default {
   left: 0;
   background-color: var(--color-background);
   box-shadow: var(--shadow);
+  overflow-y: scroll;
+  scrollbar-color: var(--color-form-base) var(--color-background);
+}
+.location-id::-webkit-scrollbar-track {
+  background-color: var(--color-background);
+}
+
+.location-id::-webkit-scrollbar {
+  background-color: transparent;
+}
+
+.location-id::-webkit-scrollbar-thumb {
+  background-color: var(--color-form-base);
+  border-radius: 10px;
+  border: 4px solid var(--color-background);
 }
 
 .location-id__header {
