@@ -77,7 +77,7 @@ describe('Default', () => {
     })
   })
 
-  test('update url with new datasetIds on select-locations mapbox event', () => {
+  test('update url with new locationId on select-locations mapbox event', () => {
     const routerPush = jest.fn()
     const wrapper = shallowMount(Default, {
       store,
@@ -117,5 +117,74 @@ describe('Default', () => {
     expect(preferences.modules.theme.mutations.setActive.mock.calls[0][1]).toBe(
       'dark',
     )
+  })
+
+  test('updates url when datasetId is switched on', () => {
+    const routerPush = jest.fn()
+    const wrapper = shallowMount(Default, {
+      store,
+      localVue,
+      mocks: {
+        $route: { params: { datasetIds: 'cd' }, name: 'datasetIds-locationId' },
+        $router: { push: routerPush },
+      },
+    })
+
+    wrapper
+      .find('.default-layout__data-set-control-menu')
+      .vm.$emit('toggle-location-dataset', 'ab')
+
+    expect(routerPush).toHaveBeenCalledWith({
+      params: { datasetIds: 'cd,ab' },
+      name: 'datasetIds-locationId',
+    })
+  })
+
+  test('updates url when datasetId is switched off', () => {
+    const routerPush = jest.fn()
+    const wrapper = shallowMount(Default, {
+      store,
+      localVue,
+      mocks: {
+        $route: {
+          params: { datasetIds: 'cd,ab' },
+          name: 'datasetIds-locationId',
+        },
+        $router: { push: routerPush },
+      },
+    })
+
+    wrapper
+      .find('.default-layout__data-set-control-menu')
+      .vm.$emit('toggle-location-dataset', 'ab')
+
+    expect(routerPush).toHaveBeenCalledWith({
+      params: { datasetIds: 'cd' },
+      name: 'datasetIds-locationId',
+    })
+  })
+
+  test('remove locationId from route object when datasetIds is missing during url update', () => {
+    const routerPush = jest.fn()
+    const wrapper = shallowMount(Default, {
+      store,
+      localVue,
+      mocks: {
+        $route: {
+          params: { datasetIds: 'ab', locationId: 'ef' },
+          name: 'datasetIds-locationId',
+        },
+        $router: { push: routerPush },
+      },
+    })
+
+    wrapper
+      .find('.default-layout__data-set-control-menu')
+      .vm.$emit('toggle-location-dataset', 'ab')
+
+    expect(routerPush).toHaveBeenCalledWith({
+      params: { datasetIds: undefined },
+      name: 'datasetIds-locationId',
+    })
   })
 })
