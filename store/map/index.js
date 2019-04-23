@@ -91,7 +91,7 @@ export const actions = {
     })
   },
 
-  loadPointDataForLocation({ commit, getters }, { datasetIds, locationId }) {
+  loadPointDataForLocation({ commit }, { datasetIds, locationId }) {
     // prettier-ignore
     const getEvents = pipe([
       filter(has('events')),
