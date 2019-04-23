@@ -10,9 +10,11 @@ import merge from 'lodash/fp/merge'
 import pipe from 'lodash/fp/pipe'
 import reduce from 'lodash/fp/reduce'
 import values from 'lodash/fp/values'
+import negate from 'lodash/fp/negate'
 import flatten from 'lodash/fp/flatten'
 import update from 'lodash/fp/update'
 import uniq from 'lodash/fp/uniq'
+import isEmpty from 'lodash/fp/isEmpty'
 import moment from 'moment'
 import getFromApi from '../../lib/request/get'
 import {
@@ -22,7 +24,10 @@ import {
   wrapInProperty,
   when,
   applyTo,
+  tapWith,
 } from '../../lib/utils'
+
+const notEmpty = negate(isEmpty)
 
 export const state = () => ({
   activeDatasetIds: [],
@@ -209,19 +214,23 @@ export const getters = {
   },
   activePointDataPerDataset(state) {
     const { activeLocationIds, activeDatasetIds, datasets } = state
+    const setNameFromMetadata = id =>
+      set('datasetName', get(`${id}.metadata.name`, datasets))
+
     const getPointDataForLocation = locationId => datasetId =>
       pipe([
         get(`${datasetId}.pointData[${locationId}]`),
-        set('datasetName', get(`${datasetId}.metadata.name`, datasets)),
-        when(identity, wrapInProperty(datasetId), () => undefined),
-        filter(identity),
+        when(notEmpty, setNameFromMetadata(datasetId), identity),
+        when(notEmpty, wrapInProperty(datasetId), () => undefined),
         reduce(merge, {}),
+        when(notEmpty, identity, () => undefined),
       ])(datasets)
 
     // prettier-ignore
     const getDataForLocation = locationId =>
       pipe([
         map(getPointDataForLocation(locationId)),
+        filter(identity),
         wrapInProperty(locationId),
       ])(activeDatasetIds)
 
