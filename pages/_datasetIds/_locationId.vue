@@ -76,6 +76,8 @@ export default {
   left: 0;
   background-color: var(--color-background);
   box-shadow: var(--shadow);
+  padding-right: 10px;
+  overflow: overlay;
 }
 
 .location-id__header {
