@@ -70,7 +70,6 @@ export default {
   width: 50vw;
   max-width: 600px;
   height: 100vh;
-  overflow-y: auto;
   position: absolute;
   top: 0;
   left: 0;
@@ -80,6 +79,7 @@ export default {
 
 .location-id__header {
   padding: var(--spacing-default);
+  padding-right: 0;
   display: flex;
   justify-content: space-between;
 }

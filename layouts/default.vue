@@ -126,6 +126,6 @@ export default {
   right: var(--spacing-default);
   max-width: 20rem;
   width: 100%;
-  max-height: calc(100vh - var(--spacing-double) - var(--map-controls-height));
+  max-height: calc(100vh - var(--spacing-large) - var(--map-controls-height));
 }
 </style>
