@@ -63,4 +63,11 @@ describe('diff', () => {
     const result = { one: 'one', three: 'three' }
     expect(diff(a, b)).toEqual(result)
   })
+
+  test('keep uniqe items in array', () => {
+    const a = [1, 2, 3, 4]
+    const b = [1, 2, 3]
+    const result = [undefined, undefined, undefined, 3, 4]
+    expect(diff(a, b)).toEqual(result)
+  })
 })

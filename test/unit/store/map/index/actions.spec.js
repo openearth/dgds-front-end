@@ -62,6 +62,34 @@ describe('loadLocationsInDatasets', () => {
       id: 'wl',
     })
   })
+
+  test('returns object of known ids of datasets provided as string', async () => {
+    const apiResult = {
+      result: {
+        features: 'test',
+      },
+    }
+    getFromApi.mockResolvedValue(apiResult)
+    const commit = jest.fn()
+    const _ids = 'wl'
+    const state = {
+      datasets: {
+        wl: {},
+        wd: {},
+      },
+      activeDatasetIds: [],
+      activeLocationIds: [],
+    }
+    const get = {
+      knownDatasetIds: ['wl'],
+    }
+    await actions.loadLocationsInDatasets({ commit, state, getters: get }, _ids)
+    expect(commit).toHaveBeenCalledWith('setActiveDatasetIds', ['wl'])
+    expect(commit).toHaveBeenCalledWith('datasets/addDatasetLocations', {
+      data: { features: apiResult.features, type: 'FeatureCollection' },
+      id: 'wl',
+    })
+  })
 })
 
 describe('loadPointDataForLocation', () => {
@@ -84,6 +112,50 @@ describe('loadPointDataForLocation', () => {
     await actions.loadPointDataForLocation(
       { commit },
       { datasetIds: ['ab', 'cd'], locationId: 'ef' },
+    )
+    expect(getFromApi).toHaveBeenCalledWith('timeseries', {
+      datasetId: 'cd',
+      endTime: moment()
+        .add(5, 'days')
+        .format('YYYY-MM-DDTHH:mm:ssZ'),
+      locationCode: 'ef',
+      startTime: moment()
+        .subtract(3, 'days')
+        .format('YYYY-MM-DDTHH:mm:ssZ'),
+    })
+    expect(commit.mock.calls[0]).toEqual([
+      'datasets/addDatasetPointData',
+      {
+        id: 'ab',
+        data: {
+          ef: {
+            category: [moment(timestamp).format('MM-DD-YYYY \n HH:mm')],
+            serie: [1],
+          },
+        },
+      },
+    ])
+  })
+
+  test('loads point data for the specified location in string format', async () => {
+    const commit = jest.fn()
+    const timestamp = moment()
+    const apiResult = {
+      results: [
+        {
+          events: [
+            {
+              timestamp,
+              value: 1,
+            },
+          ],
+        },
+      ],
+    }
+    getFromApi.mockResolvedValue(apiResult)
+    await actions.loadPointDataForLocation(
+      { commit },
+      { datasetIds: 'ab,cd', locationId: 'ef' },
     )
     expect(getFromApi).toHaveBeenCalledWith('timeseries', {
       datasetId: 'cd',
