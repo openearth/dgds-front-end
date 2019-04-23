@@ -76,8 +76,21 @@ export default {
   left: 0;
   background-color: var(--color-background);
   box-shadow: var(--shadow);
-  padding-right: 10px;
-  overflow: overlay;
+  overflow-y: scroll;
+  scrollbar-color: var(--color-form-base) var(--color-background);
+}
+.location-id::-webkit-scrollbar-track {
+  background-color: var(--color-background);
+}
+
+.location-id::-webkit-scrollbar {
+  background-color: transparent;
+}
+
+.location-id::-webkit-scrollbar-thumb {
+  background-color: var(--color-form-base);
+  border-radius: 10px;
+  border: 4px solid var(--color-background);
 }
 
 .location-id__header {
