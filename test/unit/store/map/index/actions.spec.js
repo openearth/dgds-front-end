@@ -103,7 +103,6 @@ describe('loadPointDataForLocation', () => {
           ef: {
             category: [moment(timestamp).format('MM-DD-YYYY \n HH:mm')],
             serie: [1],
-            title: 'ef',
           },
         },
       },
