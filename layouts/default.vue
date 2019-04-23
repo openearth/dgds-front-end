@@ -54,6 +54,9 @@ export default {
       }
     },
   },
+  mounted() {
+    console.log(this.$route.name)
+  },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
     loadLocations({ detail }) {
@@ -66,7 +69,7 @@ export default {
       const { datasetIds } = this.$route.params
       const locationIds = detail.map(feature => feature.properties.locationId)
 
-      this.$router.push({
+      this.updateRoute({
         name: 'datasetIds-locationId',
         params: { datasetIds, locationId: head(locationIds) },
       })
@@ -77,7 +80,7 @@ export default {
     toggleLocationDataset(id) {
       const addId = value => concat(value, id)
       const removeId = filter(negate(isEqual(id)))
-      const toggleIdDataSets = pipe([
+      const toggleIdDatasets = pipe([
         split(','),
         when(includes(id), removeId, addId),
         filter(identity),
@@ -85,9 +88,22 @@ export default {
         when(isEqual(''), () => undefined, identity),
       ])
 
-      this.$router.push(
-        update('params.datasetIds', toggleIdDataSets, this.$route),
+      const newRouteObject = update(
+        'params.datasetIds',
+        toggleIdDatasets,
+        this.$route,
       )
+
+      this.updateRoute(newRouteObject)
+    },
+    updateRoute(routeObj) {
+      const { datasetIds, locationId } = routeObj.params
+
+      if (datasetIds === undefined && locationId !== undefined) {
+        routeObj = update('params.locationId', () => undefined, routeObj)
+      }
+
+      this.$router.push(routeObj)
     },
   },
 }
