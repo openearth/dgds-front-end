@@ -111,25 +111,25 @@ describe('applyTo', () => {
 
 describe('tap', () => {
   test('logs the value and returns it', () => {
-    console.log = jest.fn()
+    console.log = jest.fn() // eslint-disable-line
     const result = utils.tap(1)
-    expect(console.log).toHaveBeenCalledWith(1)
+    expect(console.log).toHaveBeenCalledWith(1) // eslint-disable-line
     expect(result).toBe(1)
   })
 })
 
 describe('tapWith', () => {
   test('logs the value prefixed with value and returns it', () => {
-    console.log = jest.fn()
+    console.log = jest.fn() // eslint-disable-line
     const result = utils.tapWith('prefix', 1)
-    expect(console.log).toHaveBeenCalledWith('prefix', 1)
+    expect(console.log).toHaveBeenCalledWith('prefix', 1) // eslint-disable-line
     expect(result).toBe(1)
   })
 
   test('can be called curried', () => {
-    console.log = jest.fn()
+    console.log = jest.fn() // eslint-disable-line
     const result = utils.tapWith('prefix')(1)
-    expect(console.log).toHaveBeenCalledWith('prefix', 1)
+    expect(console.log).toHaveBeenCalledWith('prefix', 1) // eslint-disable-line
     expect(result).toBe(1)
   })
 })

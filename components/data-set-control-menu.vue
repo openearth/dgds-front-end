@@ -48,7 +48,7 @@ export default {
 
 <style>
 .data-set-control-menu__title {
-  height: var(--spacing-double);
+  padding-bottom: var(--spacing-small);
   display: flex;
   align-items: center;
 }
@@ -59,7 +59,7 @@ export default {
 }
 
 .data-set-control-menu__list-item {
-  height: var(--spacing-double);
+  height: var(--spacing-large);
   display: flex;
   align-items: center;
 }
@@ -74,7 +74,7 @@ export default {
 .data-set-control-menu__icon {
   width: var(--spacing-default);
   height: var(--spacing-default);
-  margin-right: var(--spacing-half);
+  margin-right: var(--spacing-small);
 }
 
 .data-set-control-menu__control {

@@ -10,6 +10,7 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint:prod": "eslint --config .eslintrc.prod.js --ext .js,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --ext .js,.vue --ignore-path .gitignore . --fix",
     "test": "jest",
     "mock-api": "json-mock-api --port 3001 --directory api-mock --middleware api-mock/cors-middleware.js,api-mock/redirect-middleware.js"
@@ -17,7 +18,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint:fix",
-      "pre-push": "npm test"
+      "pre-push": "npm run lint:prod && npm test -- --coverage=false"
     }
   },
   "dependencies": {

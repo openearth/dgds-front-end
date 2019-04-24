@@ -118,4 +118,73 @@ describe('Default', () => {
       'dark',
     )
   })
+
+  test('updates url when datasetId is switched on', () => {
+    const routerPush = jest.fn()
+    const wrapper = shallowMount(Default, {
+      store,
+      localVue,
+      mocks: {
+        $route: { params: { datasetIds: 'cd' }, name: 'datasetIds-locationId' },
+        $router: { push: routerPush },
+      },
+    })
+
+    wrapper
+      .find('.default-layout__data-set-control-menu')
+      .vm.$emit('toggle-location-dataset', 'ab')
+
+    expect(routerPush).toHaveBeenCalledWith({
+      params: { datasetIds: 'cd,ab' },
+      name: 'datasetIds-locationId',
+    })
+  })
+
+  test('updates url when datasetId is switched off', () => {
+    const routerPush = jest.fn()
+    const wrapper = shallowMount(Default, {
+      store,
+      localVue,
+      mocks: {
+        $route: {
+          params: { datasetIds: 'cd,ab' },
+          name: 'datasetIds-locationId',
+        },
+        $router: { push: routerPush },
+      },
+    })
+
+    wrapper
+      .find('.default-layout__data-set-control-menu')
+      .vm.$emit('toggle-location-dataset', 'ab')
+
+    expect(routerPush).toHaveBeenCalledWith({
+      params: { datasetIds: 'cd' },
+      name: 'datasetIds-locationId',
+    })
+  })
+
+  test('remove locationId from route object when datasetIds is missing during url update', () => {
+    const routerPush = jest.fn()
+    const wrapper = shallowMount(Default, {
+      store,
+      localVue,
+      mocks: {
+        $route: {
+          params: { datasetIds: 'ab', locationId: 'ef' },
+          name: 'datasetIds-locationId',
+        },
+        $router: { push: routerPush },
+      },
+    })
+
+    wrapper
+      .find('.default-layout__data-set-control-menu')
+      .vm.$emit('toggle-location-dataset', 'ab')
+
+    expect(routerPush).toHaveBeenCalledWith({
+      params: { datasetIds: undefined },
+      name: 'datasetIds-locationId',
+    })
+  })
 })

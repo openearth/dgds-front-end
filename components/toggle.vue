@@ -15,7 +15,7 @@
   position: relative;
   z-index: 0;
   height: var(--spacing-default);
-  width: var(--spacing-double);
+  width: var(--spacing-large);
   display: inline-block;
 }
 
@@ -61,7 +61,7 @@
   position: absolute;
   top: calc(var(--spacing-default) * 0.15);
   left: calc(var(--spacing-default) * 0.15);
-  border-radius: var(--spacing-double);
+  border-radius: var(--spacing-large);
   transition: transform var(--speed-fast) var(--ease);
 }
 

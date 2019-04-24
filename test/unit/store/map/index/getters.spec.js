@@ -118,25 +118,24 @@ describe('activeDatasetsLocations', () => {
   })
 })
 
-describe('activeDatasetsLocations', () => {
+describe('activePointDataPerDataset', () => {
   test('ignores unknown datasets ids', () => {
     const state = {
       activeLocationIds: ['WL-Loc1'],
-      activeDatasetIds: ['wl'],
+      activeDatasetIds: ['wl', 'wd'],
       datasets: { wl: { pointData: { foo: 'bar' } } },
     }
     const result = getters.activePointDataPerDataset(state, state)
-    expect(result).toEqual({ 'WL-Loc1': [{}] })
+    expect(result).toEqual({ 'WL-Loc1': [] })
   })
-})
 
-describe('activePointDataPerDataset', () => {
   test('returns array of pointdata for the active locations', () => {
     const state = {
       activeLocationIds: ['WL-Loc1'],
       activeDatasetIds: ['wl'],
       datasets: {
         wl: {
+          metadata: { name: 'Test WL' },
           locations: {
             features: [
               {
@@ -165,6 +164,7 @@ describe('activePointDataPerDataset', () => {
     const result = getters.activePointDataPerDataset(state)
     expect(result['WL-Loc1']).toEqual([
       {
+        datasetName: 'Test WL',
         data: 'test-wl-loc1',
       },
     ])
