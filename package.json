@@ -18,7 +18,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "npm run lint:fix",
-      "pre-push": "npm run lint:prod && npm test"
+      "pre-push": "npm run lint:prod && npm test -- --coverage=false"
     }
   },
   "dependencies": {
