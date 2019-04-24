@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import head from 'lodash/head'
 import map from 'lodash/fp/map'
 import has from 'lodash/fp/has'
 import diff from '../lib/diff-object'
@@ -6,6 +7,7 @@ import dispatchEvent from '../lib/dispatch-event'
 import loadModule from '../lib/load-module'
 import updateLayerSource from '../lib/mapbox/update-layer-source'
 import locationsLayer from '../lib/mapbox/layers/locations-layer'
+import spatialLayer from '../lib/mapbox/layers/spatial-layer'
 import { getUrlFromStyleWhere } from '../lib/mapbox/get-style'
 import addLayer from '../lib/mapbox/add-layer'
 
@@ -14,7 +16,7 @@ let addLayersToMap
 let updateLayerSources
 let mapboxLoaded = false
 
-const layers = [locationsLayer]
+const layers = [locationsLayer, spatialLayer]
 
 Vue.directive('mapbox', {
   async bind(container, args, vnode) {
@@ -79,6 +81,12 @@ Vue.directive('mapbox', {
       })
     } else {
       locationsLayer.source.data.features = []
+    }
+
+    console.log(newValue.wmsUrl)
+    if (newValue.wmsUrl.length) {
+      const wms = newValue.wmsUrl
+      spatialLayer.source.tiles = [wms]
     }
 
     if (mapboxLoaded) {

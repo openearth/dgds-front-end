@@ -13,6 +13,7 @@ import values from 'lodash/fp/values'
 import flatten from 'lodash/fp/flatten'
 import update from 'lodash/fp/update'
 import uniq from 'lodash/fp/uniq'
+import omit from 'lodash/fp/omit'
 import moment from 'moment'
 import getFromApi from '../../lib/request/get'
 import {
@@ -49,11 +50,12 @@ export const actions = {
     const commit = path => value => _commit(path, value)
     const addTheme = commit('themes/addTheme')
     const addMetadata = commit('datasets/addMetadata')
-
+    const addRaster = commit('datasets/addDatasetSpatial')
     // prettier-ignore
     const storeMetadata =
       pipe([
         get('datasets'),
+        omit('wmsUrl'),
         map(addMetadata)
       ])
 
@@ -64,7 +66,13 @@ export const actions = {
         addTheme,
       ])
 
-    const processTheme = applyTo([storeTheme, storeMetadata])
+    const storeSpatial = pipe([
+      get('datasets'),
+      filter(get('wmsUrl')),
+      map(addRaster),
+    ])
+
+    const processTheme = applyTo([storeTheme, storeMetadata, storeSpatial])
 
     return getFromApi('datasets')
       .then(values)
@@ -178,14 +186,10 @@ export const getters = {
   },
 
   activeSpatialData({ activeLocationIds }, { activeDatasets }) {
-    // console.log('activeSpatialData', activeDatasets)
-    // const getSpatialLayers = activeDatasets.filter
-    //   set => !has('wmsUrl', set.metadata))
-    //   console.log('getspataiallayers', getspatiallar)
-    return {
-      wmsUrl:
-        'https://tl-ng038.xtr.deltares.nl/thredds/wms/Thredds/yearly/CHL_1km_2009.nc?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&LAYERS=mean_chlorophyll&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256&FORMAT=image/png&COLORSCALERANGE=0,80&&STYLES=boxfill/msfd&TRANSPARENT=TRUE&',
-    }
+    const spatialLayers = activeDatasets.filter(has('metadata'))
+    const tiles = get('spatial.tiles', head(spatialLayers))
+    console.log('tiles', tiles)
+    return tiles || []
   },
   activeDatasetsLocations({ activeLocationIds }, { activeDatasets }) {
     const getActiveProperty = feature =>
