@@ -9,10 +9,10 @@
     <DataSetControlMenu
       class="default-layout__data-set-control-menu"
       :datasets="datasetsInActiveTheme"
+      @toggle-location-dataset="toggleLocationDataset"
     />
     <div style="position: absolute; top: 0; left: 0;">
       <nuxt-link to="/">Home</nuxt-link>
-      <nuxt-link to="/wl">WL</nuxt-link>
     </div>
     <div style="position: absolute; bottom: 2rem; right: 3rem;">
       <select @change="setActive">
@@ -26,8 +26,19 @@
 
 <script>
 import head from 'lodash/head'
+import includes from 'lodash/fp/includes'
+import pipe from 'lodash/fp/pipe'
+import split from 'lodash/fp/split'
+import join from 'lodash/fp/join'
+import filter from 'lodash/fp/filter'
+import update from 'lodash/fp/update'
+import negate from 'lodash/fp/negate'
+import concat from 'lodash/fp/concat'
+import isEqual from 'lodash/fp/isEqual'
+import identity from 'lodash/fp/identity'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import DataSetControlMenu from '../components/data-set-control-menu'
+import { when } from '../lib/utils'
 
 export default {
   components: { DataSetControlMenu },
@@ -64,6 +75,21 @@ export default {
     setActive(event) {
       this.setActiveTheme(event.target.value)
     },
+    toggleLocationDataset(id) {
+      const addId = value => concat(value, id)
+      const removeId = filter(negate(isEqual(id)))
+      const toggleIdDataSets = pipe([
+        split(','),
+        when(includes(id), removeId, addId),
+        filter(identity),
+        join(','),
+        when(isEqual(''), () => undefined, identity),
+      ])
+
+      this.$router.push(
+        update('params.datasetIds', toggleIdDataSets, this.$route),
+      )
+    },
   },
 }
 </script>
@@ -72,6 +98,8 @@ export default {
 .default-layout {
   width: 100vw;
   height: 100vh;
+
+  --map-controls-height: 122px;
 }
 
 #map {
@@ -85,5 +113,6 @@ export default {
   right: var(--spacing-default);
   max-width: 20rem;
   width: 100%;
+  max-height: calc(100vh - var(--spacing-double) - var(--map-controls-height));
 }
 </style>

@@ -28,8 +28,14 @@ export default {
 <style>
 .panel {
   background-color: var(--color-background);
-  padding: var(--spacing-default);
   box-shadow: var(--shadow);
   border-radius: 4px;
+  display: flex;
+}
+
+.panel__body {
+  padding: var(--spacing-default);
+  overflow-y: scroll;
+  flex: 1;
 }
 </style>
