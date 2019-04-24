@@ -35,8 +35,8 @@ export default {
   css: [
     'mapbox-gl/dist/mapbox-gl.css',
     '~/css/main.css',
-    '~/css/typography',
-    '~/css/helpers',
+    '~/css/typography.css',
+    '~/css/helpers.css',
   ],
 
   /*
