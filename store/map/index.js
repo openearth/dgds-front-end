@@ -188,7 +188,6 @@ export const getters = {
   activeSpatialData({ activeLocationIds }, { activeDatasets }) {
     const spatialLayers = activeDatasets.filter(has('metadata'))
     const tiles = get('spatial.tiles', head(spatialLayers))
-    console.log('tiles', tiles)
     return tiles || []
   },
   activeDatasetsLocations({ activeLocationIds }, { activeDatasets }) {

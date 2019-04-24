@@ -20,7 +20,6 @@ export const mutations = {
     Vue.set(state[id], 'locations', merge(locations, data))
   },
   addDatasetSpatial(state, data) {
-    console.log('add spatial data ', data)
     const id = data.id
     if (!state[id]) Vue.set(state, id, {})
     const spatialData = getSpatialData(state[id])

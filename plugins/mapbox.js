@@ -74,7 +74,6 @@ Vue.directive('mapbox', {
   update(container, { value: newValue, oldValue }) {
     const changed = diff(oldValue, newValue)
     const styleIn = has('style')
-    console.log('newvalue', newValue)
     if (newValue.sources.length) {
       newValue.sources.forEach(source => {
         locationsLayer.source.data.features = source.features
@@ -83,10 +82,11 @@ Vue.directive('mapbox', {
       locationsLayer.source.data.features = []
     }
 
-    console.log(newValue.wmsUrl)
     if (newValue.wmsUrl.length) {
       const wms = newValue.wmsUrl
       spatialLayer.source.tiles = [wms]
+    } else {
+      spatialLayer.source.tiles = []
     }
 
     if (mapboxLoaded) {
