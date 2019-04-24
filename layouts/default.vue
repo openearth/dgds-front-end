@@ -46,9 +46,14 @@ export default {
     ...mapState({
       activeTheme: state => state.preferences.theme.active,
     }),
-    ...mapGetters('map', ['activeDatasetsLocations', 'datasetsInActiveTheme']),
+    ...mapGetters('map', [
+      'activeSpatialData',
+      'activeDatasetsLocations',
+      'datasetsInActiveTheme',
+    ]),
     mapboxOptions() {
       return {
+        wmsUrl: this.activeSpatialData,
         sources: this.activeDatasetsLocations,
         style: this.activeTheme,
       }

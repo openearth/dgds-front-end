@@ -176,6 +176,17 @@ export const getters = {
       .map(getInDatasets)
       .filter(identity)
   },
+
+  activeSpatialData({ activeLocationIds }, { activeDatasets }) {
+    // console.log('activeSpatialData', activeDatasets)
+    // const getSpatialLayers = activeDatasets.filter
+    //   set => !has('wmsUrl', set.metadata))
+    //   console.log('getspataiallayers', getspatiallar)
+    return {
+      wmsUrl:
+        'https://tl-ng038.xtr.deltares.nl/thredds/wms/Thredds/yearly/CHL_1km_2009.nc?SERVICE=WMS&REQUEST=GetMap&VERSION=1.3.0&LAYERS=mean_chlorophyll&CRS=EPSG:3857&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256&FORMAT=image/png&COLORSCALERANGE=0,80&&STYLES=boxfill/msfd&TRANSPARENT=TRUE&',
+    }
+  },
   activeDatasetsLocations({ activeLocationIds }, { activeDatasets }) {
     const getActiveProperty = feature =>
       pipe([
