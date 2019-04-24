@@ -24,10 +24,10 @@ import {
   wrapInProperty,
   when,
   applyTo,
-  tapWith,
 } from '../../lib/utils'
 
 const notEmpty = negate(isEmpty)
+const getId = get('id')
 
 export const state = () => ({
   activeDatasetIds: [],
@@ -242,7 +242,7 @@ export const getters = {
   datasetsInActiveTheme(state) {
     return values(state.datasets)
       .map(get('metadata'))
-      .map(obj => merge(obj, { visible: obj.id }))
+      .map(obj => merge(obj, { visible: getId(obj) }))
       .map(update('visible', includesIn(state.activeDatasetIds)))
   },
 }
