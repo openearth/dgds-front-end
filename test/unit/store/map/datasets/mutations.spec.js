@@ -3,7 +3,7 @@ import { mutations } from '../../../../../store/map/datasets'
 
 describe('addDatasetLocations', () => {
   test('updates state with payload and freeze new feature', () => {
-    const state = {}
+    const state = { wl: { metadata: 'foo' } }
     const id = 'wl'
     const data = { features: [{ properties: { locationId: 'foo' } }] }
 
