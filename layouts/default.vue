@@ -53,7 +53,7 @@ export default {
     ]),
     mapboxOptions() {
       return {
-        wmsUrl: this.activeSpatialData,
+        tiles: this.activeSpatialData,
         sources: this.activeDatasetsLocations,
         style: this.activeTheme,
       }

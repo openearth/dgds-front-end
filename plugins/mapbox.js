@@ -4,11 +4,9 @@ import has from 'lodash/fp/has'
 import diff from '../lib/diff-object'
 import dispatchEvent from '../lib/dispatch-event'
 import loadModule from '../lib/load-module'
-import updateLayerSource from '../lib/mapbox/update-layer-source'
 import locationsLayer from '../lib/mapbox/layers/locations-layer'
 import spatialLayer from '../lib/mapbox/layers/spatial-layer'
 import { getUrlFromStyleWhere } from '../lib/mapbox/get-style'
-import addLayer from '../lib/mapbox/add-layer'
 
 let mapbox
 let addLayersToMap
@@ -27,8 +25,8 @@ Vue.directive('mapbox', {
     mapbox = new mapboxgl.Map({ container, style: styleUrl })
     mapbox.addControl(new mapboxgl.NavigationControl(), 'bottom-right')
 
-    addLayersToMap = map(addLayer(mapbox))
-    updateLayerSources = map(updateLayerSource(mapbox))
+    addLayersToMap = map(layer => layer.add(mapbox))
+    updateLayerSources = map(layer => layer.update(mapbox))
 
     mapbox.on('load', () => {
       addLayersToMap(layers)
@@ -73,6 +71,7 @@ Vue.directive('mapbox', {
   update(container, { value: newValue, oldValue }) {
     const changed = diff(oldValue, newValue)
     const styleIn = has('style')
+
     if (newValue.sources.length) {
       newValue.sources.forEach(source => {
         locationsLayer.source.data.features = source.features
@@ -81,9 +80,8 @@ Vue.directive('mapbox', {
       locationsLayer.source.data.features = []
     }
 
-    if (newValue.wmsUrl.length) {
-      const wms = newValue.wmsUrl
-      spatialLayer.source.tiles = [wms]
+    if (newValue.tiles.length) {
+      spatialLayer.source.tiles = [newValue.tiles]
     } else {
       spatialLayer.source.tiles = []
     }
