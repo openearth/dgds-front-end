@@ -7,13 +7,13 @@ import {
 } from '../../../../lib/mapbox/get-style'
 
 const darkStyle = {
-  url: 'mapbox://styles/mapbox/dark-v10',
-  name: 'Mapbox Dark',
+  url: 'mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm',
+  name: 'dgds_dark',
   id: 'dark',
 }
 const lightStyle = {
-  url: 'mapbox://styles/mapbox/light-v10',
-  name: 'Mapbox Light',
+  url: 'mapbox://styles/global-data-viewer/cjtslsula05as1fppvrh7n4rv',
+  name: 'dgds_light_theme',
   id: 'light',
 }
 
