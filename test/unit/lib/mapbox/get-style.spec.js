@@ -25,13 +25,13 @@ describe('getStyle', () => {
   })
 
   test('provides dark style when name is provided', () => {
-    const query = { name: 'Mapbox Dark' }
+    const query = { name: 'dgds_dark' }
     const style = getStyle(query)
     expect(style).toEqual(darkStyle)
   })
 
   test('provides dark style when url is provided', () => {
-    const query = { url: 'mapbox://styles/mapbox/dark-v10' }
+    const query = { url: 'mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm' }
     const style = getStyle(query)
     expect(style).toEqual(darkStyle)
   })
@@ -43,13 +43,13 @@ describe('getStyle', () => {
   })
 
   test('provides light style when name is provided', () => {
-    const query = { name: 'Mapbox Light' }
+    const query = { name: 'dgds_light_theme' }
     const style = getStyle(query)
     expect(style).toEqual(lightStyle)
   })
 
   test('provides light style when url is provided', () => {
-    const query = { url: 'mapbox://styles/mapbox/light-v10' }
+    const query = { url: 'mapbox://styles/global-data-viewer/cjtslsula05as1fppvrh7n4rv' }
     const style = getStyle(query)
     expect(style).toEqual(lightStyle)
   })
@@ -64,7 +64,7 @@ describe('getCurrentStyle', () => {
   test('returns current style based on mapboxs style name', () => {
     const mapbox = {
       getStyle: () => ({
-        name: 'Mapbox Light',
+        name: 'dgds_light_theme',
       }),
     }
     const style = getCurrentStyle(mapbox)
