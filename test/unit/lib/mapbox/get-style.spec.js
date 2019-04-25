@@ -31,7 +31,9 @@ describe('getStyle', () => {
   })
 
   test('provides dark style when url is provided', () => {
-    const query = { url: 'mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm' }
+    const query = {
+      url: 'mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm',
+    }
     const style = getStyle(query)
     expect(style).toEqual(darkStyle)
   })
@@ -49,7 +51,9 @@ describe('getStyle', () => {
   })
 
   test('provides light style when url is provided', () => {
-    const query = { url: 'mapbox://styles/global-data-viewer/cjtslsula05as1fppvrh7n4rv' }
+    const query = {
+      url: 'mapbox://styles/global-data-viewer/cjtslsula05as1fppvrh7n4rv',
+    }
     const style = getStyle(query)
     expect(style).toEqual(lightStyle)
   })
