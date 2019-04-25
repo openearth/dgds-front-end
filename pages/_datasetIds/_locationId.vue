@@ -1,5 +1,5 @@
 <template>
-  <aside class="location-id">
+  <aside class="location-id scrollbar">
     <header class="location-id__header">
       <h2 class="h2">Timeseries</h2>
       <button-icon @click="close"><icon-cross /></button-icon>
@@ -70,31 +70,17 @@ export default {
   width: 50vw;
   max-width: 600px;
   height: 100vh;
-  overflow-y: auto;
   position: absolute;
   top: 0;
   left: 0;
   background-color: var(--color-background);
   box-shadow: var(--shadow);
-  overflow-y: scroll;
-  scrollbar-color: var(--color-form-base) var(--color-background);
-}
-.location-id::-webkit-scrollbar-track {
-  background-color: var(--color-background);
-}
-
-.location-id::-webkit-scrollbar {
-  background-color: transparent;
-}
-
-.location-id::-webkit-scrollbar-thumb {
-  background-color: var(--color-form-base);
-  border-radius: 10px;
-  border: 4px solid var(--color-background);
+  overflow-x: hidden;
 }
 
 .location-id__header {
   padding: var(--spacing-default);
+  padding-right: 0;
   display: flex;
   justify-content: space-between;
 }

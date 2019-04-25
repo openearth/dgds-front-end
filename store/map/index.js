@@ -10,10 +10,12 @@ import merge from 'lodash/fp/merge'
 import pipe from 'lodash/fp/pipe'
 import reduce from 'lodash/fp/reduce'
 import values from 'lodash/fp/values'
+import negate from 'lodash/fp/negate'
 import flatten from 'lodash/fp/flatten'
 import update from 'lodash/fp/update'
 import uniq from 'lodash/fp/uniq'
 import omit from 'lodash/fp/omit'
+import isEmpty from 'lodash/fp/isEmpty'
 import moment from 'moment'
 import getFromApi from '../../lib/request/get'
 import {
@@ -24,6 +26,9 @@ import {
   when,
   applyTo,
 } from '../../lib/utils'
+
+const notEmpty = negate(isEmpty)
+const getId = get('id')
 
 export const state = () => ({
   activeDatasetIds: [],
@@ -99,7 +104,7 @@ export const actions = {
     })
   },
 
-  loadPointDataForLocation({ commit, getters }, { datasetIds, locationId }) {
+  loadPointDataForLocation({ commit }, { datasetIds, locationId }) {
     // prettier-ignore
     const getEvents = pipe([
       filter(has('events')),
@@ -223,19 +228,23 @@ export const getters = {
   },
   activePointDataPerDataset(state) {
     const { activeLocationIds, activeDatasetIds, datasets } = state
+    const setNameFromMetadata = id =>
+      set('datasetName', get(`${id}.metadata.name`, datasets))
+
     const getPointDataForLocation = locationId => datasetId =>
       pipe([
         get(`${datasetId}.pointData[${locationId}]`),
-        set('datasetName', get(`${datasetId}.metadata.name`, datasets)),
-        when(identity, wrapInProperty(datasetId), () => undefined),
-        filter(identity),
+        when(notEmpty, setNameFromMetadata(datasetId), identity),
+        when(notEmpty, wrapInProperty(datasetId), () => undefined),
         reduce(merge, {}),
+        when(notEmpty, identity, () => undefined),
       ])(datasets)
 
     // prettier-ignore
     const getDataForLocation = locationId =>
       pipe([
         map(getPointDataForLocation(locationId)),
+        filter(identity),
         wrapInProperty(locationId),
       ])(activeDatasetIds)
 
@@ -247,7 +256,7 @@ export const getters = {
   datasetsInActiveTheme(state) {
     return values(state.datasets)
       .map(get('metadata'))
-      .map(obj => merge(obj, { visible: obj.id }))
+      .map(obj => merge(obj, { visible: getId(obj) }))
       .map(update('visible', includesIn(state.activeDatasetIds)))
   },
 }

@@ -21,4 +21,5 @@ export default function customProperties({ store }, inject) {
   }
   inject('setCustomProperties', setCustomProperties)
   setCustomProperties(store.state.preferences.theme.active)
+  return setCustomProperties
 }

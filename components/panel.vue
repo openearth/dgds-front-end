@@ -4,7 +4,7 @@
       <slot name="header" />
     </header>
 
-    <section class="panel__body">
+    <section class="panel__body scrollbar">
       <slot />
     </section>
 
@@ -31,10 +31,12 @@ export default {
   box-shadow: var(--shadow);
   border-radius: 4px;
   display: flex;
+  overflow: auto;
 }
 
 .panel__body {
-  padding: var(--spacing-default);
+  padding: var(--spacing-small);
+  padding-right: 6px; /* scrollbar (10px) + 6px to get to --spacing-small */
   overflow-y: scroll;
   flex: 1;
 }

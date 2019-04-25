@@ -36,7 +36,7 @@ import negate from 'lodash/fp/negate'
 import concat from 'lodash/fp/concat'
 import isEqual from 'lodash/fp/isEqual'
 import identity from 'lodash/fp/identity'
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import DataSetControlMenu from '../components/data-set-control-menu'
 import { when } from '../lib/utils'
 
@@ -61,6 +61,7 @@ export default {
   },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
+    ...mapMutations({ setActiveTheme: 'preferences/theme/setActive' }),
     loadLocations({ detail }) {
       const locationIds = detail.map(feature => feature.properties.locationId)
       const locationId = head(locationIds)
@@ -71,18 +72,18 @@ export default {
       const { datasetIds } = this.$route.params
       const locationIds = detail.map(feature => feature.properties.locationId)
 
-      this.$router.push({
+      this.updateRoute({
         name: 'datasetIds-locationId',
         params: { datasetIds, locationId: head(locationIds) },
       })
     },
     setActive(event) {
-      this.$store.commit('preferences/theme/setActive', event.target.value)
+      this.setActiveTheme(event.target.value)
     },
     toggleLocationDataset(id) {
       const addId = value => concat(value, id)
       const removeId = filter(negate(isEqual(id)))
-      const toggleIdDataSets = pipe([
+      const toggleIdDatasets = pipe([
         split(','),
         when(includes(id), removeId, addId),
         filter(identity),
@@ -90,9 +91,22 @@ export default {
         when(isEqual(''), () => undefined, identity),
       ])
 
-      this.$router.push(
-        update('params.datasetIds', toggleIdDataSets, this.$route),
+      const newRouteObject = update(
+        'params.datasetIds',
+        toggleIdDatasets,
+        this.$route,
       )
+
+      this.updateRoute(newRouteObject)
+    },
+    updateRoute(routeObj) {
+      const { datasetIds, locationId } = routeObj.params
+
+      if (datasetIds === undefined && locationId !== undefined) {
+        routeObj = update('params.locationId', () => undefined, routeObj)
+      }
+
+      this.$router.push(routeObj)
     },
   },
 }
@@ -117,6 +131,6 @@ export default {
   right: var(--spacing-default);
   max-width: 20rem;
   width: 100%;
-  max-height: calc(100vh - var(--spacing-double) - var(--map-controls-height));
+  max-height: calc(100vh - var(--spacing-large) - var(--map-controls-height));
 }
 </style>

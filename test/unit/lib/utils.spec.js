@@ -111,25 +111,63 @@ describe('applyTo', () => {
 
 describe('tap', () => {
   test('logs the value and returns it', () => {
-    console.log = jest.fn()
+    console.log = jest.fn() // eslint-disable-line
     const result = utils.tap(1)
-    expect(console.log).toHaveBeenCalledWith(1)
+    expect(console.log).toHaveBeenCalledWith(1) // eslint-disable-line
     expect(result).toBe(1)
   })
 })
 
 describe('tapWith', () => {
   test('logs the value prefixed with value and returns it', () => {
-    console.log = jest.fn()
+    console.log = jest.fn() // eslint-disable-line
     const result = utils.tapWith('prefix', 1)
-    expect(console.log).toHaveBeenCalledWith('prefix', 1)
+    expect(console.log).toHaveBeenCalledWith('prefix', 1) // eslint-disable-line
     expect(result).toBe(1)
   })
 
   test('can be called curried', () => {
-    console.log = jest.fn()
+    console.log = jest.fn() // eslint-disable-line
     const result = utils.tapWith('prefix')(1)
-    expect(console.log).toHaveBeenCalledWith('prefix', 1)
+    expect(console.log).toHaveBeenCalledWith('prefix', 1) // eslint-disable-line
     expect(result).toBe(1)
+  })
+})
+
+describe('mapAsync', () => {
+  test('maps over an array with an async function', async () => {
+    const fn = msg =>
+      new Promise(resolve => {
+        setTimeout(() => {
+          resolve(msg.toUpperCase())
+        }, 500)
+      })
+    const arr = ['first', 'second', 'third']
+    const result = await utils.mapAsync(fn, arr)
+    expect(result).toMatchObject(['FIRST', 'SECOND', 'THIRD'])
+  })
+  test('can be called curried', async () => {
+    const fn = msg =>
+      new Promise(resolve => {
+        setTimeout(() => {
+          resolve(msg.toUpperCase())
+        }, 500)
+      })
+    const arr = ['first', 'second', 'third']
+    const result = await utils.mapAsync(fn)(arr)
+    expect(result).toMatchObject(['FIRST', 'SECOND', 'THIRD'])
+  })
+})
+
+describe('filterBy', () => {
+  test('filters a collection based on a provided object', () => {
+    const collection = [{ a: 1, b: 2, c: 3 }, { a: 4, b: 5, c: 6 }]
+    const result = utils.filterBy({ a: 4 }, collection)
+    expect(result).toEqual([collection[1]])
+  })
+  test('can be called curried', () => {
+    const collection = [{ a: 1, b: 2, c: 3 }, { a: 4, b: 5, c: 6 }]
+    const result = utils.filterBy({ a: 4 })(collection)
+    expect(result).toEqual([collection[1]])
   })
 })
