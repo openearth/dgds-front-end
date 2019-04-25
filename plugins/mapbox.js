@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import head from 'lodash/head'
 import map from 'lodash/fp/map'
 import has from 'lodash/fp/has'
 import diff from '../lib/diff-object'
