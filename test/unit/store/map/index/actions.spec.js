@@ -1,6 +1,10 @@
 import moment from 'moment'
-import { actions } from '../../../../../store/map/index.js'
-import getFromApi from '../../../../../lib/request/get'
+import loadLocations from '../../../../../lib/load-locations'
+jest.mock('../../../../../lib/load-locations', () => (_, fn) => {
+  fn([{ properties: { locationId: 'foo' } }])
+})
+import { actions } from '../../../../../store/map/index.js' // eslint-disable-line
+import getFromApi from '../../../../../lib/request/get' // eslint-disable-line
 jest.mock('../../../../../lib/request/get')
 
 describe('loadThemes', () => {
@@ -70,7 +74,7 @@ describe('loadLocationsInDatasets', () => {
     expect(commit.mock.calls[1][0]).toBe('datasets/addDatasetLocations')
     expect(commit.mock.calls[1][1]).toEqual({
       data: {
-        features: apiResult.results,
+        features: apiResult.results[0].features,
         type: 'FeatureCollection',
       },
       id: 'wl',
@@ -112,7 +116,7 @@ describe('loadLocationsInDatasets', () => {
     expect(commit.mock.calls[1][0]).toBe('datasets/addDatasetLocations')
     expect(commit.mock.calls[1][1]).toEqual({
       data: {
-        features: apiResult.results,
+        features: apiResult.results[0].features,
         type: 'FeatureCollection',
       },
       id: 'wl',
