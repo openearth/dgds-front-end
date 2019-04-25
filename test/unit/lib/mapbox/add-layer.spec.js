@@ -4,11 +4,14 @@ jest.mock('../../../../lib/mapbox/get-style')
 getCurrentStyle.mockReturnValue({ id: 'dark' })
 
 test('call mapbox.addLayer with a correct layer', () => {
+  // TODO: only tests locations now
+
   const mapbox = {
     addLayer: jest.fn(),
   }
 
   const layer = {
+    id: 'locations',
     foo: 'bar',
     layout: {
       dark: { id: 'dark' },
@@ -23,6 +26,7 @@ test('call mapbox.addLayer with a correct layer', () => {
   addLayer(mapbox)(layer)
 
   expect(mapbox.addLayer).toHaveBeenCalledWith({
+    id: 'locations',
     foo: 'bar',
     layout: { id: 'dark' },
     paint: { id: 'dark' },
@@ -30,11 +34,14 @@ test('call mapbox.addLayer with a correct layer', () => {
 })
 
 test('call mapbox.addLayer with a correct layer when style cant be found', () => {
+  // TODO: only tests locations now
+
   const mapbox = {
     addLayer: jest.fn(),
   }
 
   const layer = {
+    id: 'locations',
     foo: 'bar',
     layout: {
       light: { id: 'light' },
@@ -47,6 +54,7 @@ test('call mapbox.addLayer with a correct layer when style cant be found', () =>
   addLayer(mapbox)(layer)
 
   expect(mapbox.addLayer).toHaveBeenCalledWith({
+    id: 'locations',
     foo: 'bar',
     layout: {},
     paint: {},
