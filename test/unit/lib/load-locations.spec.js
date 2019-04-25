@@ -1,5 +1,5 @@
 import loadLocations from '../../../lib/load-locations'
-import getFromApi from '../../../lib/request/get'
+import getFromApi from '../../../lib/request/get' // eslint-disable-line
 jest.mock('../../../lib/request/get', () => (_, { page, times }) => {
   const barNr = page || 1
   return new Promise(resolve => {

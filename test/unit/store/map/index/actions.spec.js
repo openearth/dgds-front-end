@@ -1,10 +1,10 @@
 import moment from 'moment'
-import loadLocations from '../../../../../lib/load-locations'
+import { actions } from '../../../../../store/map/index.js'
+import getFromApi from '../../../../../lib/request/get'
+import loadLocations from '../../../../../lib/load-locations' // eslint-disable-line
 jest.mock('../../../../../lib/load-locations', () => (_, fn) => {
   fn([{ properties: { locationId: 'foo' } }])
 })
-import { actions } from '../../../../../store/map/index.js' // eslint-disable-line
-import getFromApi from '../../../../../lib/request/get' // eslint-disable-line
 jest.mock('../../../../../lib/request/get')
 
 describe('loadThemes', () => {

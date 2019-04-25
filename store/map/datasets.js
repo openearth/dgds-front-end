@@ -1,10 +1,8 @@
 import Vue from 'vue'
 import get from 'lodash/fp/get'
 import pipe from 'lodash/fp/pipe'
-import clone from 'lodash/fp/clone'
 import merge from 'lodash/fp/merge'
 import negate from 'lodash/fp/negate'
-import includes from 'lodash/fp/includes'
 import identity from 'lodash/fp/identity'
 import { when, includesIn, freeze } from '../../lib/utils'
 
