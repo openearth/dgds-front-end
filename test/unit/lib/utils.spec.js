@@ -171,3 +171,11 @@ describe('filterBy', () => {
     expect(result).toEqual([collection[1]])
   })
 })
+
+describe('freeze', () => {
+  test('clones an object and returns it frozen', () => {
+    const a = { b: 1 }
+    const result = utils.freeze(a)
+    expect(Object.isFrozen(result)).toBe(true)
+  })
+})
