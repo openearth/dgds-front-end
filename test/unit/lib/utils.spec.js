@@ -1,3 +1,4 @@
+import identity from 'lodash/fp/identity'
 import * as utils from '../../../lib/utils'
 
 describe('includesIn', () => {
@@ -177,5 +178,13 @@ describe('freeze', () => {
     const a = { b: 1 }
     const result = utils.freeze(a)
     expect(Object.isFrozen(result)).toBe(true)
+  })
+})
+
+describe('then', () => {
+  test('executes the then method with the provided callback on a promise', async () => {
+    const promise = Promise.resolve('foo')
+    const result = await utils.then(identity, promise)
+    expect(result).toBe('foo')
   })
 })
