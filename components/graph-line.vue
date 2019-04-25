@@ -177,7 +177,7 @@ export default {
 .graph-line__toggle {
   position: absolute;
   top: calc(var(--caption-height) / 2);
-  right: var(--spacing-default);
+  right: 0;
   transition: transform 0.25s ease-in-out;
   transform: translateY(-50%);
 }

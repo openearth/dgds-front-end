@@ -1,9 +1,14 @@
 :root {
   --spacing-default: 1.5rem;
-  --spacing-double: calc(var(--spacing-default) * 2);
-  --spacing-half: calc(var(--spacing-default) / 2);
+  --spacing-large: calc(var(--spacing-default) * 2);
+  --spacing-small: 1rem;
 
   --shadow: 0px 0px 20px 0px rgba(0,0,0,0.25);
+
+  --ease: cubic-bezier(0, 0, 0.58, 1);
+  --speed-fast: 0.15s;
+  --speed-normal: 0.5s;
+  --speed-slow: 0.75s;
 }
 
 html {

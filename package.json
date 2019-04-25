@@ -10,10 +10,16 @@
     "start": "nuxt start",
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint:prod": "eslint --config .eslintrc.prod.js --ext .js,.vue --ignore-path .gitignore .",
     "lint:fix": "eslint --ext .js,.vue --ignore-path .gitignore . --fix",
-    "precommit": "npm run lint",
     "test": "jest",
-    "mock-api": "json-mock-api --port 3001 --directory api-mock --middleware api-mock/cors-middleware.js"
+    "mock-api": "json-mock-api --port 3001 --directory api-mock --middleware api-mock/cors-middleware.js,api-mock/redirect-middleware.js"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint:fix",
+      "pre-push": "npm run lint:prod && npm test -- --coverage=false"
+    }
   },
   "dependencies": {
     "@nuxtjs/pwa": "3.0.0-beta.14",
@@ -22,7 +28,7 @@
     "lodash": "4.17.11",
     "mapbox-gl": "0.53.1",
     "moment": "^2.24.0",
-    "nuxt": "^2.4.0"
+    "nuxt": "2.6.2"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^0.0.1",
@@ -30,6 +36,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.1.0",
+    "babel-plugin-dynamic-import-node": "2.2.0",
     "dotenv-safe": "6.1.0",
     "eslint": "^5.15.1",
     "eslint-config-prettier": "^4.1.0",
@@ -43,6 +50,7 @@
     "eslint-plugin-promise": ">=4.0.1",
     "eslint-plugin-standard": ">=4.0.0",
     "eslint-plugin-vue": "^5.2.2",
+    "husky": "1.3.1",
     "jest": "^24.1.0",
     "json-mock-api": "1.0.2",
     "nodemon": "^1.18.9",

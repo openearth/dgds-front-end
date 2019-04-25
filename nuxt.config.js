@@ -32,7 +32,12 @@ export default {
   /*
    ** Global CSS
    */
-  css: ['mapbox-gl/dist/mapbox-gl.css', '~/css/main.css', '~/css/typography'],
+  css: [
+    'mapbox-gl/dist/mapbox-gl.css',
+    '~/css/main.css',
+    '~/css/typography.css',
+    '~/css/helpers.css',
+  ],
 
   /*
    ** Plugins to load before mounting the App
@@ -41,6 +46,7 @@ export default {
     '~/plugins/mapbox',
     '~/plugins/echarts',
     { src: '~/plugins/custom-properties', ssr: false },
+    { src: '~/plugins/bootstrap', ssr: false },
   ],
 
   /*

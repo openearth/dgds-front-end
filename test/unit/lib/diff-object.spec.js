@@ -1,4 +1,4 @@
-import diff from '../../lib/diff-object'
+import diff from '../../../lib/diff-object'
 
 describe('diff', () => {
   test('returns undefined on same objects', () => {
@@ -54,6 +54,20 @@ describe('diff', () => {
     const a = 'one'
     const b = 'two'
     const result = 'two'
+    expect(diff(a, b)).toEqual(result)
+  })
+
+  test('keep properties uniqe to objects', () => {
+    const a = { one: 'one', two: 'two' }
+    const b = { two: 'two', three: 'three' }
+    const result = { one: 'one', three: 'three' }
+    expect(diff(a, b)).toEqual(result)
+  })
+
+  test('keep uniqe items in array', () => {
+    const a = [1, 2, 3, 4]
+    const b = [1, 2, 3]
+    const result = [undefined, undefined, undefined, 3, 4]
     expect(diff(a, b)).toEqual(result)
   })
 })
