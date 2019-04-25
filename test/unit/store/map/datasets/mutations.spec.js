@@ -1,52 +1,105 @@
+import Vue from 'vue'
 import { mutations } from '../../../../../store/map/datasets'
 
 describe('addDatasetLocations', () => {
-  test('updates state with payload', () => {
+  test('updates state with payload and freeze new feature', () => {
     const state = {}
     const id = 'wl'
-    const data = { foo: 'bar' }
+    const data = { features: [{ properties: { locationId: 'foo' } }] }
 
     mutations.addDatasetLocations(state, { id, data })
     expect(state).toMatchObject({
       wl: {
-        locations: { foo: 'bar' },
+        locations: {
+          type: 'FeatureCollection',
+          features: [{ properties: { locationId: 'foo' } }],
+        },
+      },
+    })
+    expect(Object.isFrozen(state.wl.locations.features[0])).toBe(true)
+  })
+
+  test('updates state with existing id with new (frozen) features', () => {
+    const state = {
+      wl: {
+        locations: { features: [{ properties: { locationId: 'foo' } }] },
+      },
+    }
+    const id = 'wl'
+    const data = { features: [{ properties: { locationId: 'bar' } }] }
+
+    mutations.addDatasetLocations(state, { id, data })
+    expect(state).toMatchObject({
+      wl: {
+        locations: {
+          features: [
+            { properties: { locationId: 'foo' } },
+            { properties: { locationId: 'bar' } },
+          ],
+        },
+      },
+    })
+    expect(Object.isFrozen(state.wl.locations.features[1])).toBe(true)
+  })
+
+  test('ignores new features when locationIds are already present', () => {
+    const state = {
+      wl: {
+        locations: { features: [{ properties: { locationId: 'foo' } }] },
+      },
+    }
+    const id = 'wl'
+    const data = {
+      features: [
+        { properties: { locationId: 'foo' } },
+        { properties: { locationId: 'bar' } },
+      ],
+    }
+
+    mutations.addDatasetLocations(state, { id, data })
+    expect(state).toMatchObject({
+      wl: {
+        locations: {
+          features: [
+            { properties: { locationId: 'foo' } },
+            { properties: { locationId: 'bar' } },
+          ],
+        },
       },
     })
   })
 
-  test('updates state with existing id', () => {
+  test('does not call Vue.set when there are no new features to add', () => {
     const state = {
       wl: {
-        locations: { foo: 'bar' },
+        locations: { features: [{ properties: { locationId: 'foo' } }] },
       },
     }
     const id = 'wl'
-    const data = { baz: 'blub' }
-
+    const data = {
+      features: [{ properties: { locationId: 'foo' } }],
+    }
+    const spy = jest.spyOn(Vue, 'set')
     mutations.addDatasetLocations(state, { id, data })
-    expect(state).toMatchObject({
-      wl: {
-        locations: { foo: 'bar', baz: 'blub' },
-      },
-    })
+    expect(spy).not.toHaveBeenCalled()
   })
 
   test('updates state with different id', () => {
     const state = {
       wl: {
-        locations: { foo: 'bar' },
+        locations: { features: [{ properties: { locationId: 'foo' } }] },
       },
     }
     const id = 'wd'
-    const data = { baz: 'blub' }
+    const data = { features: [{ properties: { locationId: 'bar' } }] }
 
     mutations.addDatasetLocations(state, { id, data })
     expect(state).toMatchObject({
       wl: {
-        locations: { foo: 'bar' },
+        locations: { features: [{ properties: { locationId: 'foo' } }] },
       },
       wd: {
-        locations: { baz: 'blub' },
+        locations: { features: [{ properties: { locationId: 'bar' } }] },
       },
     })
   })
