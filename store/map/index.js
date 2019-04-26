@@ -192,8 +192,8 @@ export const getters = {
 
   activeSpatialData({ activeLocationIds }, { activeDatasets }) {
     const spatialLayers = activeDatasets.filter(has('metadata'))
-    const tiles = get('spatial.tiles', head(spatialLayers))
-    return tiles || []
+    const tiles = [get('spatial.tiles', head(spatialLayers))]
+    return tiles.filter(identity)
   },
   activeDatasetsLocations({ activeLocationIds }, { activeDatasets }) {
     const getActiveProperty = feature =>

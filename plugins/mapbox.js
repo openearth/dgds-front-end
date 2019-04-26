@@ -84,7 +84,7 @@ Vue.directive('mapbox', {
     }
 
     if (newValue.tiles.length) {
-      spatialLayer.source.tiles = [newValue.tiles]
+      spatialLayer.source.tiles = newValue.tiles
     } else {
       spatialLayer.source.tiles = []
     }
