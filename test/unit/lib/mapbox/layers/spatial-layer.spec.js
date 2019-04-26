@@ -1,4 +1,4 @@
-import getSpatialLayer from '../../../../../lib/mapbox/layers/spatial-layer'
+import getSpatialLayer from '../../../../../lib/mapbox/layers/get-spatial-layer'
 
 const layer = {
   id: 'spatial',
