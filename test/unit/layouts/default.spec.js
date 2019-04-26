@@ -77,7 +77,7 @@ describe('Default', () => {
     })
   })
 
-  test('update url with new locationId on select-locations mapbox event', () => {
+  test('update url with new datasetIds on select-locations mapbox event', () => {
     const routerPush = jest.fn()
     const wrapper = shallowMount(Default, {
       store,
