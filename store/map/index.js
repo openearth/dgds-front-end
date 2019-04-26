@@ -144,7 +144,6 @@ export const actions = {
       }
 
       return getFromApi('timeseries', parameters).then(({ results }) => {
-        console.log('timeseries results', results)
         commit(
           'datasets/addDatasetPointData',
           Object.freeze({
