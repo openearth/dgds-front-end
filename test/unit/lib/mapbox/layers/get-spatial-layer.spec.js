@@ -69,7 +69,6 @@ describe('update', () => {
   })
 
   test('do not remove layer when its not defined in mapbox', () => {
-    const setData = jest.fn()
     const removeLayer = jest.fn()
     const removeSource = jest.fn()
     const addLayer = jest.fn()

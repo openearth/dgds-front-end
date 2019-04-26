@@ -110,16 +110,6 @@ describe('add', () => {
       addLayer: jest.fn(),
     }
 
-    const layer = {
-      id: 'locations',
-      foo: 'bar',
-      layout: {
-        light: { id: 'light' },
-      },
-      paint: {
-        light: { id: 'light' },
-      },
-    }
     const locationsLayer = getLocationsLayer()
     locationsLayer.add(mapbox)
 
@@ -158,11 +148,11 @@ describe('update', () => {
     const mapbox = {
       getSource: () => undefined,
     }
-    console.warn = jest.fn()
+    console.warn = jest.fn() // eslint-disable-line
     const locationsLayer = getLocationsLayer()
     locationsLayer.update(mapbox)
     expect(setData).not.toHaveBeenCalled()
-    expect(console.warn).toHaveBeenCalledWith(
+    expect(console.warn).toHaveBeenCalledWith( // eslint-disable-line
       'Source with id locations could not be found',
     )
   })
@@ -174,12 +164,12 @@ describe('update', () => {
         data: { foo: 'bar' },
       }),
     }
-    console.warn = jest.fn()
+    console.warn = jest.fn() // eslint-disable-line
     const locationsLayer = getLocationsLayer()
     locationsLayer.source = undefined
     locationsLayer.update(mapbox)
     expect(setData).not.toHaveBeenCalled()
-    expect(console.warn).toHaveBeenCalledWith(
+    expect(console.warn).toHaveBeenCalledWith( // eslint-disable-line
       'data property on layer could not be found',
       locationsLayer,
     )
