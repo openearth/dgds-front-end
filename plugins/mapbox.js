@@ -4,17 +4,19 @@ import has from 'lodash/fp/has'
 import diff from '../lib/diff-object'
 import dispatchEvent from '../lib/dispatch-event'
 import loadModule from '../lib/load-module'
-import updateLayerSource from '../lib/mapbox/update-layer-source'
-import locationsLayer from '../lib/mapbox/layers/locations-layer'
+import getLocationsLayer from '../lib/mapbox/layers/get-locations-layer'
+import getSpatialLayer from '../lib/mapbox/layers/get-spatial-layer'
 import { getUrlFromStyleWhere } from '../lib/mapbox/get-style'
-import addLayer from '../lib/mapbox/add-layer'
 
 let mapbox
 let addLayersToMap
 let updateLayerSources
 let mapboxLoaded = false
 
-const layers = [locationsLayer]
+const locationsLayer = getLocationsLayer()
+const spatialLayer = getSpatialLayer()
+
+const layers = [locationsLayer, spatialLayer]
 
 Vue.directive('mapbox', {
   async bind(container, args, vnode) {
@@ -26,8 +28,8 @@ Vue.directive('mapbox', {
     mapbox = new mapboxgl.Map({ container, style: styleUrl })
     mapbox.addControl(new mapboxgl.NavigationControl(), 'bottom-right')
 
-    addLayersToMap = map(addLayer(mapbox))
-    updateLayerSources = map(updateLayerSource(mapbox))
+    addLayersToMap = map(layer => layer.add(mapbox))
+    updateLayerSources = map(layer => layer.update(mapbox))
 
     mapbox.on('load', () => {
       addLayersToMap(layers)
@@ -79,6 +81,12 @@ Vue.directive('mapbox', {
       })
     } else {
       locationsLayer.source.data.features = []
+    }
+
+    if (newValue.tiles.length) {
+      spatialLayer.source.tiles = newValue.tiles
+    } else {
+      spatialLayer.source.tiles = []
     }
 
     if (mapboxLoaded) {

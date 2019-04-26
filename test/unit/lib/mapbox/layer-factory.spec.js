@@ -35,3 +35,42 @@ describe('geojson', () => {
     })
   })
 })
+
+describe('spatial', () => {
+  test('add spatial data structure to provided layer object', () => {
+    const layer = {
+      foo: 'bar',
+    }
+    const result = layerFactory('spatial', layer)
+
+    expect(result).toEqual({
+      foo: 'bar',
+      source: {
+        type: 'raster',
+        tileSize: 256,
+        tiles: [],
+      },
+    })
+  })
+
+  test('Keep existing source data on layer', () => {
+    const layer = {
+      foo: 'bar',
+      source: {
+        type: 'raster',
+        tileSize: 512,
+        tiles: ['path/to/tile'],
+      },
+    }
+    const result = layerFactory('spatial', layer)
+
+    expect(result).toEqual({
+      foo: 'bar',
+      source: {
+        type: 'raster',
+        tileSize: 512,
+        tiles: ['path/to/tile'],
+      },
+    })
+  })
+})
