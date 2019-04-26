@@ -14,9 +14,11 @@ const emptyLocationsObject = () => ({ features: [], type: 'FeatureCollection' })
 const getOrEmpty = empty => when(identity, identity, empty)
 const getOrEmptyLocations = getOrEmpty(emptyLocationsObject)
 const getOrEmptyPointData = getOrEmpty(emptyObject)
+const getOrEmptySpatial = getOrEmpty(emptyObject)
 const getOrEmptyMetadata = getOrEmpty(emptyObject)
 const getPointData = pipe([get('pointData'), getOrEmptyPointData])
 const getLocations = pipe([get('locations'), getOrEmptyLocations])
+const getSpatialData = pipe([get('spatial'), getOrEmptySpatial])
 const getMetadata = pipe([get('metadata'), getOrEmptyMetadata])
 
 export const state = () => ({})
@@ -40,6 +42,12 @@ export const mutations = {
         ...newFeatures,
       ])
     }
+  },
+  addDatasetSpatial(state, data) {
+    const id = data.id
+    if (!state[id]) Vue.set(state, id, {})
+    const spatialData = getSpatialData(state[id])
+    Vue.set(state[id], 'spatial', merge(spatialData, { tiles: data.wmsUrl }))
   },
   addDatasetPointData(state, { id, data }) {
     if (!state[id]) Vue.set(state, id, {})

@@ -19,6 +19,7 @@ describe('Default', () => {
       namespaced: true,
       getters: {
         activeDatasetsLocations: jest.fn(() => 'foo'),
+        activeSpatialData: jest.fn(() => 'foo'),
         datasetsInActiveTheme: jest.fn(() => ['bar']),
       },
       actions: {
@@ -57,6 +58,7 @@ describe('Default', () => {
     expect(wrapper.vm.mapboxOptions).toEqual({
       sources: map.getters.activeDatasetsLocations(),
       style: preferences.modules.theme.state.active,
+      tiles: map.getters.activeSpatialData(),
     })
   })
 

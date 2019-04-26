@@ -105,6 +105,55 @@ describe('addDatasetLocations', () => {
   })
 })
 
+describe('addDatasetSpatial', () => {
+  test('updates state with payload', () => {
+    const state = {}
+    const data = { id: 'wl', wmsUrl: 'some/url' }
+
+    mutations.addDatasetSpatial(state, data)
+    expect(state).toMatchObject({
+      wl: {
+        spatial: { tiles: 'some/url' },
+      },
+    })
+  })
+
+  test('updates state with existing id', () => {
+    const state = {
+      wl: {
+        spatial: { tiles: 'some/url' },
+      },
+    }
+    const data = { id: 'wl', wmsUrl: 'some/other/url' }
+
+    mutations.addDatasetSpatial(state, data)
+    expect(state).toMatchObject({
+      wl: {
+        spatial: { tiles: 'some/other/url' },
+      },
+    })
+  })
+
+  test('updates state with different id', () => {
+    const state = {
+      wl: {
+        spatial: { tiles: 'some/url' },
+      },
+    }
+    const data = { id: 'wd', wmsUrl: 'some/url' }
+
+    mutations.addDatasetSpatial(state, data)
+    expect(state).toMatchObject({
+      wl: {
+        spatial: { tiles: 'some/url' },
+      },
+      wd: {
+        spatial: { tiles: 'some/url' },
+      },
+    })
+  })
+})
+
 describe('addDatasetPointData', () => {
   test('updates state with payload', () => {
     const state = {}

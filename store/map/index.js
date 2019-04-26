@@ -14,6 +14,7 @@ import negate from 'lodash/fp/negate'
 import flatten from 'lodash/fp/flatten'
 import update from 'lodash/fp/update'
 import uniq from 'lodash/fp/uniq'
+import omit from 'lodash/fp/omit'
 import isEmpty from 'lodash/fp/isEmpty'
 import moment from 'moment'
 import getFromApi from '../../lib/request/get'
@@ -55,11 +56,12 @@ export const actions = {
     const commit = path => value => _commit(path, value)
     const addTheme = commit('themes/addTheme')
     const addMetadata = commit('datasets/addMetadata')
-
+    const addRaster = commit('datasets/addDatasetSpatial')
     // prettier-ignore
     const storeMetadata =
       pipe([
         get('datasets'),
+        omit('wmsUrl'),
         map(addMetadata)
       ])
 
@@ -70,7 +72,13 @@ export const actions = {
         addTheme,
       ])
 
-    const processTheme = applyTo([storeTheme, storeMetadata])
+    const storeSpatial = pipe([
+      get('datasets'),
+      filter(get('wmsUrl')),
+      map(addRaster),
+    ])
+
+    const processTheme = applyTo([storeTheme, storeMetadata, storeSpatial])
 
     return getFromApi('datasets')
       .then(values)
@@ -180,6 +188,23 @@ export const getters = {
     return activeDatasetIds
       .map(getInDatasets)
       .filter(identity)
+  },
+
+  activeTimestamp(state, { activeSpatialData }) {
+    if (activeSpatialData.length) {
+      const str = activeSpatialData[0]
+      const timestamp = str.split(/time=([^&]+)/)[1]
+      const timeDec = decodeURIComponent(timestamp)
+      const timemoment = momentFormat('MM-DD-YYYY HH:mm', timeDec)
+      return timestamp ? timemoment : ''
+    } else {
+      return ''
+    }
+  },
+  activeSpatialData({ activeLocationIds }, { activeDatasets }) {
+    const spatialLayers = activeDatasets.filter(has('metadata'))
+    const tiles = [get('spatial.tiles', head(spatialLayers))]
+    return tiles.filter(identity)
   },
   activeDatasetsLocations({ activeLocationIds }, { activeDatasets }) {
     const getActiveProperty = feature =>

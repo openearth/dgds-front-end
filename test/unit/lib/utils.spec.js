@@ -17,22 +17,21 @@ describe('includesIn', () => {
   })
 })
 
-// TODO: Uncomment this part when Travis time settings are fixed
-// describe('momentFormat', () => {
-//   test('formats a timestamp with momentjs', () => {
-//     const result = utils.momentFormat(
-//       'MM-DD-YYYY \n HH:mm',
-//       '2019-03-27T00:00:00Z',
-//     )
-//     expect(result).toBe('03-27-2019  01:00')
-//  })
-//
-//   test('can be called curried', () => {
-//    const formatAsMMDDYYY = utils.momentFormat('MM-DD-YYYY \n HH:mm')
-//
-//     expect(formatAsMMDDYYY('2019-03-27T00:00:00Z')).toBe('03-27-2019  01:00')
-//   })
-// })
+describe('momentFormat', () => {
+  test('formats a timestamp with momentjs', () => {
+    const result = utils.momentFormat(
+      'MM-DD-YYYY \n HH:mm',
+      '2019-03-27T00:00:00Z',
+    )
+    expect(result).toBe('03-27-2019  01:00')
+  })
+
+  test('can be called curried', () => {
+    const formatAsMMDDYYY = utils.momentFormat('MM-DD-YYYY \n HH:mm')
+
+    expect(formatAsMMDDYYY('2019-03-27T00:00:00Z')).toBe('03-27-2019  01:00')
+  })
+})
 
 describe('getIn', () => {
   test('gets a properties value from an object', () => {
