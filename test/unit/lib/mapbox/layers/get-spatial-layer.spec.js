@@ -35,6 +35,7 @@ describe('add', () => {
         type: 'raster',
       },
     })
+    expect(mapbox.addLayer.mock.calls[0][1]).toBe('water-border')
   })
   test('dont add when tiles are empty', () => {
     const mapbox = {
@@ -65,7 +66,7 @@ describe('update', () => {
     spatialLayer.update(mapbox)
     expect(removeLayer).toHaveBeenCalledWith('spatial')
     expect(removeSource).toHaveBeenCalledWith('spatial')
-    expect(addLayer).toHaveBeenCalledWith(spatialLayer)
+    expect(addLayer).toHaveBeenCalledWith(spatialLayer, 'water-border')
   })
 
   test('do not remove layer when its not defined in mapbox', () => {
@@ -83,7 +84,7 @@ describe('update', () => {
     spatialLayer.update(mapbox)
     expect(removeLayer).not.toHaveBeenCalledWith('spatial')
     expect(removeSource).not.toHaveBeenCalledWith('spatial')
-    expect(addLayer).toHaveBeenCalledWith(spatialLayer)
+    expect(addLayer).toHaveBeenCalledWith(spatialLayer, 'water-border')
   })
 
   test('do not add new layer when tiles are empty', () => {

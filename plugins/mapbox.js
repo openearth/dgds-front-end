@@ -16,7 +16,7 @@ let mapboxLoaded = false
 const locationsLayer = getLocationsLayer()
 const spatialLayer = getSpatialLayer()
 
-const layers = [locationsLayer, spatialLayer]
+const layers = [spatialLayer, locationsLayer]
 
 Vue.directive('mapbox', {
   async bind(container, args, vnode) {
