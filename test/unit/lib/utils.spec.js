@@ -1,3 +1,4 @@
+import identity from 'lodash/fp/identity'
 import * as utils from '../../../lib/utils'
 
 describe('includesIn', () => {
@@ -169,5 +170,21 @@ describe('filterBy', () => {
     const collection = [{ a: 1, b: 2, c: 3 }, { a: 4, b: 5, c: 6 }]
     const result = utils.filterBy({ a: 4 })(collection)
     expect(result).toEqual([collection[1]])
+  })
+})
+
+describe('freeze', () => {
+  test('clones an object and returns it frozen', () => {
+    const a = { b: 1 }
+    const result = utils.freeze(a)
+    expect(Object.isFrozen(result)).toBe(true)
+  })
+})
+
+describe('then', () => {
+  test('executes the then method with the provided callback on a promise', async () => {
+    const promise = Promise.resolve('foo')
+    const result = await utils.then(identity, promise)
+    expect(result).toBe('foo')
   })
 })
