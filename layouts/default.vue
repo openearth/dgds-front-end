@@ -11,6 +11,11 @@
       :datasets="datasetsInActiveTheme"
       @toggle-location-dataset="toggleLocationDataset"
     />
+    <TimeStamp
+      v-show="activeTimestamp !== ''"
+      class="default-layout__timestamp"
+      :timestamp="activeTimestamp"
+    />
     <div style="position: absolute; top: 0; left: 0;">
       <nuxt-link to="/">Home</nuxt-link>
     </div>
@@ -38,10 +43,11 @@ import isEqual from 'lodash/fp/isEqual'
 import identity from 'lodash/fp/identity'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import DataSetControlMenu from '../components/data-set-control-menu'
+import TimeStamp from '../components/time-stamp'
 import { when } from '../lib/utils'
 
 export default {
-  components: { DataSetControlMenu },
+  components: { DataSetControlMenu, TimeStamp },
   computed: {
     ...mapState({
       activeTheme: state => state.preferences.theme.active,
@@ -50,6 +56,7 @@ export default {
       'activeSpatialData',
       'activeDatasetsLocations',
       'datasetsInActiveTheme',
+      'activeTimestamp',
     ]),
     mapboxOptions() {
       return {
@@ -132,5 +139,13 @@ export default {
   max-width: 20rem;
   width: 100%;
   max-height: calc(100vh - var(--spacing-large) - var(--map-controls-height));
+}
+
+.default-layout__timestamp {
+  position: relative;
+  left: var(--spacing-default);
+  bottom: calc(var(--spacing-default) + 50px);
+  width: 15vw;
+  height: 50px;
 }
 </style>

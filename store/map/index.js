@@ -144,6 +144,7 @@ export const actions = {
       }
 
       return getFromApi('timeseries', parameters).then(({ results }) => {
+        console.log('timeseries results', results)
         commit(
           'datasets/addDatasetPointData',
           Object.freeze({
@@ -190,6 +191,17 @@ export const getters = {
       .filter(identity)
   },
 
+  activeTimestamp(state, { activeSpatialData }) {
+    if (activeSpatialData.length) {
+      const str = activeSpatialData[0]
+      const timestamp = str.split(/time=([^&]+)/)[1]
+      const timeDec = decodeURIComponent(timestamp)
+      const timemoment = momentFormat('MM-DD-YYYY HH:mm', timeDec)
+      return timestamp ? timemoment : ''
+    } else {
+      return ''
+    }
+  },
   activeSpatialData({ activeLocationIds }, { activeDatasets }) {
     const spatialLayers = activeDatasets.filter(has('metadata'))
     const tiles = [get('spatial.tiles', head(spatialLayers))]
