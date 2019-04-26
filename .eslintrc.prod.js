@@ -4,8 +4,8 @@ const baseConfig = require('./.eslintrc.js')
 const prodRules = {
   rules: {
     'no-console': 'error',
-    'no-unused-vars': 'error'
-  }
+    'no-unused-vars': 'error',
+  },
 }
 
 module.exports = merge(baseConfig, prodRules)

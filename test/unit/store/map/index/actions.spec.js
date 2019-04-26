@@ -1,6 +1,10 @@
 import moment from 'moment'
 import { actions } from '../../../../../store/map/index.js'
 import getFromApi from '../../../../../lib/request/get'
+import loadLocations from '../../../../../lib/load-locations' // eslint-disable-line
+jest.mock('../../../../../lib/load-locations', () => (_, fn) => {
+  fn([{ properties: { locationId: 'foo' } }])
+})
 jest.mock('../../../../../lib/request/get')
 
 describe('loadThemes', () => {
@@ -35,11 +39,20 @@ describe('loadThemes', () => {
 })
 
 describe('loadLocationsInDatasets', () => {
-  test('returns object of known ids of datasets', async () => {
+  test('loads locations for datasets and stores them', async () => {
     const apiResult = {
-      result: {
-        features: 'test',
+      paging: {
+        maxPageSize: 4,
+        minPageSize: 1,
+        next: 'http://localhost:5000/locations?&page=2&datasetId=wd',
+        prev: null,
+        totalObjectCount: 1,
       },
+      results: [
+        {
+          features: [{ properties: { locationId: 'foo' } }],
+        },
+      ],
     }
     getFromApi.mockResolvedValue(apiResult)
     const commit = jest.fn()
@@ -56,18 +69,32 @@ describe('loadLocationsInDatasets', () => {
       knownDatasetIds: ['wl'],
     }
     await actions.loadLocationsInDatasets({ commit, state, getters: get }, _ids)
-    expect(commit).toHaveBeenCalledWith('setActiveDatasetIds', ['wl'])
-    expect(commit).toHaveBeenCalledWith('datasets/addDatasetLocations', {
-      data: { features: apiResult.features, type: 'FeatureCollection' },
+    expect(commit.mock.calls[0][0]).toBe('setActiveDatasetIds')
+    expect(commit.mock.calls[0][1]).toEqual(['wl'])
+    expect(commit.mock.calls[1][0]).toBe('datasets/addDatasetLocations')
+    expect(commit.mock.calls[1][1]).toEqual({
+      data: {
+        features: apiResult.results[0].features,
+        type: 'FeatureCollection',
+      },
       id: 'wl',
     })
   })
 
   test('returns object of known ids of datasets provided as string', async () => {
     const apiResult = {
-      result: {
-        features: 'test',
+      paging: {
+        maxPageSize: 4,
+        minPageSize: 1,
+        next: 'http://localhost:5000/locations?&page=2&datasetId=wd',
+        prev: null,
+        totalObjectCount: 1,
       },
+      results: [
+        {
+          features: [{ properties: { locationId: 'foo' } }],
+        },
+      ],
     }
     getFromApi.mockResolvedValue(apiResult)
     const commit = jest.fn()
@@ -84,9 +111,14 @@ describe('loadLocationsInDatasets', () => {
       knownDatasetIds: ['wl'],
     }
     await actions.loadLocationsInDatasets({ commit, state, getters: get }, _ids)
-    expect(commit).toHaveBeenCalledWith('setActiveDatasetIds', ['wl'])
-    expect(commit).toHaveBeenCalledWith('datasets/addDatasetLocations', {
-      data: { features: apiResult.features, type: 'FeatureCollection' },
+    expect(commit.mock.calls[0][0]).toBe('setActiveDatasetIds')
+    expect(commit.mock.calls[0][1]).toEqual(['wl'])
+    expect(commit.mock.calls[1][0]).toBe('datasets/addDatasetLocations')
+    expect(commit.mock.calls[1][1]).toEqual({
+      data: {
+        features: apiResult.results[0].features,
+        type: 'FeatureCollection',
+      },
       id: 'wl',
     })
   })

@@ -18,6 +18,7 @@ import omit from 'lodash/fp/omit'
 import isEmpty from 'lodash/fp/isEmpty'
 import moment from 'moment'
 import getFromApi from '../../lib/request/get'
+import loadLocations from '../../lib/load-locations'
 import {
   includesIn,
   momentFormat,
@@ -84,24 +85,23 @@ export const actions = {
       .then(map(processTheme))
   },
 
-  loadLocationsInDatasets({ commit, state, getters }, _ids) {
+  async loadLocationsInDatasets({ commit, state, getters }, _ids) {
     const datasets = state.datasets
     const ids = isArray(_ids) ? _ids : _ids.split(',')
     const emptyDatasets = ids.filter(id => !has('locations', datasets[id]))
 
     commit('setActiveDatasetIds', ids)
 
-    // prettier-ignore
-    emptyDatasets.forEach(id => {
-      const parameters = {
-        datasetId: id,
-      }
-      return getFromApi('locations', parameters)
-        .then(({ results: features }) => {
-          const data = Object.freeze({ type: 'FeatureCollection', features })
-          commit('datasets/addDatasetLocations', { id, data })
-        })
-    })
+    const handleResponse = id => features => {
+      const data = Object.freeze({ type: 'FeatureCollection', features })
+      commit('datasets/addDatasetLocations', { id, data })
+    }
+
+    const promises = emptyDatasets.map(datasetId =>
+      loadLocations({ datasetId }, handleResponse(datasetId)),
+    )
+
+    await Promise.all(promises)
   },
 
   loadPointDataForLocation({ commit }, { datasetIds, locationId }) {
@@ -190,6 +190,17 @@ export const getters = {
       .filter(identity)
   },
 
+  activeTimestamp(state, { activeSpatialData }) {
+    if (activeSpatialData.length) {
+      const str = activeSpatialData[0]
+      const timestamp = str.split(/time=([^&]+)/)[1]
+      const timeDec = decodeURIComponent(timestamp)
+      const timemoment = momentFormat('MM-DD-YYYY HH:mm', timeDec)
+      return timestamp ? timemoment : ''
+    } else {
+      return ''
+    }
+  },
   activeSpatialData({ activeLocationIds }, { activeDatasets }) {
     const spatialLayers = activeDatasets.filter(has('metadata'))
     const tiles = [get('spatial.tiles', head(spatialLayers))]
