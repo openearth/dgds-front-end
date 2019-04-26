@@ -18,6 +18,7 @@ import omit from 'lodash/fp/omit'
 import isEmpty from 'lodash/fp/isEmpty'
 import moment from 'moment'
 import getFromApi from '../../lib/request/get'
+import loadLocations from '../../lib/load-locations'
 import {
   includesIn,
   momentFormat,
@@ -84,24 +85,23 @@ export const actions = {
       .then(map(processTheme))
   },
 
-  loadLocationsInDatasets({ commit, state, getters }, _ids) {
+  async loadLocationsInDatasets({ commit, state, getters }, _ids) {
     const datasets = state.datasets
     const ids = isArray(_ids) ? _ids : _ids.split(',')
     const emptyDatasets = ids.filter(id => !has('locations', datasets[id]))
 
     commit('setActiveDatasetIds', ids)
 
-    // prettier-ignore
-    emptyDatasets.forEach(id => {
-      const parameters = {
-        datasetId: id,
-      }
-      return getFromApi('locations', parameters)
-        .then(({ results: features }) => {
-          const data = Object.freeze({ type: 'FeatureCollection', features })
-          commit('datasets/addDatasetLocations', { id, data })
-        })
-    })
+    const handleResponse = id => features => {
+      const data = Object.freeze({ type: 'FeatureCollection', features })
+      commit('datasets/addDatasetLocations', { id, data })
+    }
+
+    const promises = emptyDatasets.map(datasetId =>
+      loadLocations({ datasetId }, handleResponse(datasetId)),
+    )
+
+    await Promise.all(promises)
   },
 
   loadPointDataForLocation({ commit }, { datasetIds, locationId }) {
