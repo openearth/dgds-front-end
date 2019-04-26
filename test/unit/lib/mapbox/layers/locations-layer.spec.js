@@ -1,4 +1,4 @@
-import locationsLayer from '../../../../../lib/mapbox/layers/locations-layer'
+import getLocationsLayer from '../../../../../lib/mapbox/layers/get-locations-layer'
 import getColors from '../../../../../lib/styling/colors'
 import { getCurrentStyle } from '../../../../../lib/mapbox/get-style'
 jest.mock('../../../../../lib/mapbox/get-style')
@@ -73,13 +73,11 @@ const layer = {
       ]
     },
   },
-  add: locationsLayer.add,
-  update: locationsLayer.update,
 }
 
 test('returns location layer', () => {
-  const result = locationsLayer
-  expect(result).toEqual(layer)
+  const locationsLayer = getLocationsLayer()
+  expect(locationsLayer).toMatchObject(layer)
 })
 
 describe('add', () => {
@@ -88,6 +86,7 @@ describe('add', () => {
       addLayer: jest.fn(),
     }
 
+    const locationsLayer = getLocationsLayer()
     locationsLayer.add(mapbox)
 
     expect(mapbox.addLayer.mock.calls[0][0]).toMatchObject({
@@ -107,8 +106,6 @@ describe('add', () => {
   })
 
   test('call mapbox.addLayer with a layer containing the correct paint colors when style cant be found', () => {
-    // TODO: only tests locations now
-
     const mapbox = {
       addLayer: jest.fn(),
     }
@@ -123,7 +120,7 @@ describe('add', () => {
         light: { id: 'light' },
       },
     }
-
+    const locationsLayer = getLocationsLayer()
     locationsLayer.add(mapbox)
 
     expect(mapbox.addLayer.mock.calls[0][0]).toMatchObject({
@@ -152,6 +149,7 @@ describe('update', () => {
         data: { foo: 'bar' },
       }),
     }
+    const locationsLayer = getLocationsLayer()
     locationsLayer.update(mapbox)
     expect(setData).toHaveBeenCalledWith(layer.source.data)
   })
@@ -161,6 +159,7 @@ describe('update', () => {
       getSource: () => undefined,
     }
     console.warn = jest.fn()
+    const locationsLayer = getLocationsLayer()
     locationsLayer.update(mapbox)
     expect(setData).not.toHaveBeenCalled()
     expect(console.warn).toHaveBeenCalledWith(
@@ -176,6 +175,7 @@ describe('update', () => {
       }),
     }
     console.warn = jest.fn()
+    const locationsLayer = getLocationsLayer()
     locationsLayer.source = undefined
     locationsLayer.update(mapbox)
     expect(setData).not.toHaveBeenCalled()
