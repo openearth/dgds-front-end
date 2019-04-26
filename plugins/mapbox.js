@@ -5,13 +5,15 @@ import diff from '../lib/diff-object'
 import dispatchEvent from '../lib/dispatch-event'
 import loadModule from '../lib/load-module'
 import locationsLayer from '../lib/mapbox/layers/locations-layer'
-import spatialLayer from '../lib/mapbox/layers/spatial-layer'
+import getSpatialLayer from '../lib/mapbox/layers/spatial-layer'
 import { getUrlFromStyleWhere } from '../lib/mapbox/get-style'
 
 let mapbox
 let addLayersToMap
 let updateLayerSources
 let mapboxLoaded = false
+
+const spatialLayer = getSpatialLayer()
 
 const layers = [locationsLayer, spatialLayer]
 
