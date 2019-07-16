@@ -16,6 +16,7 @@
           :active-theme="activeTheme"
           @select-locations="selectLocations"
         ></v-mapbox-layer-clickable>
+        <v-mapbox-raster-layer :options="spatialLayer"> </v-mapbox-raster-layer>
       </v-mapbox>
     </no-ssr>
     <DataSetControlMenu
@@ -61,13 +62,16 @@ import DataSetControlMenu from '../components/data-set-control-menu'
 import TimeStamp from '../components/time-stamp'
 import { when } from '../lib/utils'
 import getLocationsLayer from '../lib/mapbox/layers/get-locations-layer'
+import getSpatialLayer from '../lib/mapbox/layers/get-spatial-layer'
 import VMapboxLayerClickable from '../components/v-mapbox-components/v-mapbox-layer-clickable'
+import VMapboxRasterLayer from '../components/v-mapbox-components/v-mapbox-raster-layer'
 
 export default {
   components: {
     DataSetControlMenu,
     TimeStamp,
     VMapboxLayerClickable,
+    VMapboxRasterLayer,
   },
   data: () => ({
     mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
@@ -106,6 +110,11 @@ export default {
         concat('any'),
       ])
       return generateFilters(this.activeDatasets)
+    },
+    spatialLayer() {
+      const spatialLayer = getSpatialLayer().get(map)
+      spatialLayer.source.tiles = this.mapboxOptions.tiles
+      return spatialLayer
     },
   },
   watch: {
