@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   middleware: 'load-dataset-ids',
@@ -15,15 +15,11 @@ export default {
       this.loadLocationsInDatasets(datasetIds)
     }
   },
-  destroyed() {
-    this.clearActiveDatasetIds()
-  },
   methods: {
     ...mapActions('map', [
       'loadLocationsInDatasets',
       'loadPointDataForLocation',
     ]),
-    ...mapMutations('map', ['clearActiveDatasetIds']),
   },
 }
 </script>

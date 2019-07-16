@@ -68,6 +68,7 @@ export default {
   },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
+    ...mapMutations('map', ['clearActiveDatasetIds']),
     ...mapMutations({ setActiveTheme: 'preferences/theme/setActive' }),
     loadLocations({ detail }) {
       const locationIds = detail.map(feature => feature.properties.locationId)
@@ -103,6 +104,10 @@ export default {
         toggleIdDatasets,
         this.$route,
       )
+
+      if (newRouteObject.params.datasetIds === undefined) {
+        this.clearActiveDatasetIds()
+      }
 
       this.updateRoute(newRouteObject)
     },
