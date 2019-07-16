@@ -46,6 +46,7 @@ export default {
     '~/plugins/mapbox',
     '~/plugins/echarts',
     { src: '~/plugins/custom-properties', ssr: false },
+    { src: '~/plugins/vue-2-mapbox', ssr: false },
     { src: '~/plugins/bootstrap', ssr: false },
   ],
 

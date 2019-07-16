@@ -28,7 +28,8 @@
     "lodash": "4.17.11",
     "mapbox-gl": "0.53.1",
     "moment": "^2.24.0",
-    "nuxt": "2.6.2"
+    "nuxt": "2.6.2",
+    "vue2mapbox-gl": "0.7.0"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^0.0.1",

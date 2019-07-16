@@ -12,10 +12,7 @@ test('dispatch store action when on client', async () => {
 
   loadDatasetIds({ route, store })
 
-  expect(dispatch).toHaveBeenCalledWith(
-    'map/loadLocationsInDatasets',
-    datasetIds,
-  )
+  expect(dispatch).toHaveBeenCalledWith('map/storeActiveDatasets', datasetIds)
 })
 
 test('dont dispatch store action when datasets are missing', async () => {

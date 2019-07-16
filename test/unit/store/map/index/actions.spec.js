@@ -38,7 +38,7 @@ describe('loadThemes', () => {
   })
 })
 
-describe('loadLocationsInDatasets', () => {
+describe('storeActiveDatasets', () => {
   test('loads locations for datasets and stores them', async () => {
     const apiResult = {
       paging: {
@@ -68,7 +68,7 @@ describe('loadLocationsInDatasets', () => {
     const get = {
       knownDatasetIds: ['wl'],
     }
-    await actions.loadLocationsInDatasets({ commit, state, getters: get }, _ids)
+    await actions.storeActiveDatasets({ commit, state, getters: get }, _ids)
     expect(commit.mock.calls[0][0]).toBe('setActiveDatasetIds')
     expect(commit.mock.calls[0][1]).toEqual(['wl'])
     expect(commit.mock.calls[1][0]).toBe('datasets/addDatasetLocations')
@@ -110,7 +110,7 @@ describe('loadLocationsInDatasets', () => {
     const get = {
       knownDatasetIds: ['wl'],
     }
-    await actions.loadLocationsInDatasets({ commit, state, getters: get }, _ids)
+    await actions.storeActiveDatasets({ commit, state, getters: get }, _ids)
     expect(commit.mock.calls[0][0]).toBe('setActiveDatasetIds')
     expect(commit.mock.calls[0][1]).toEqual(['wl'])
     expect(commit.mock.calls[1][0]).toBe('datasets/addDatasetLocations')

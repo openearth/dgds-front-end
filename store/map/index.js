@@ -18,7 +18,6 @@ import omit from 'lodash/fp/omit'
 import isEmpty from 'lodash/fp/isEmpty'
 import moment from 'moment'
 import getFromApi from '../../lib/request/get'
-import loadLocations from '../../lib/load-locations'
 import {
   includesIn,
   momentFormat,
@@ -44,7 +43,7 @@ export const mutations = {
     state.activeDatasetIds = []
   },
   setActiveLocationIds(state, ids) {
-    state.activeLocationIds = ids
+    state.activeLocationIds = flatten(ids.map(id => id.split(',')))
   },
   clearActiveLocationIds(state) {
     state.activeLocationIds = []
@@ -85,23 +84,9 @@ export const actions = {
       .then(map(processTheme))
   },
 
-  async loadLocationsInDatasets({ commit, state, getters }, _ids) {
-    const datasets = state.datasets
+  storeActiveDatasets({ commit, state, getters }, _ids) {
     const ids = isArray(_ids) ? _ids : _ids.split(',')
-    const emptyDatasets = ids.filter(id => !has('locations', datasets[id]))
-
     commit('setActiveDatasetIds', ids)
-
-    const handleResponse = id => features => {
-      const data = Object.freeze({ type: 'FeatureCollection', features })
-      commit('datasets/addDatasetLocations', { id, data })
-    }
-
-    const promises = emptyDatasets.map(datasetId =>
-      loadLocations({ datasetId }, handleResponse(datasetId)),
-    )
-
-    await Promise.all(promises)
   },
 
   loadPointDataForLocation({ commit }, { datasetIds, locationId }) {
@@ -267,6 +252,7 @@ export const getters = {
   datasetsInActiveTheme(state) {
     return values(state.datasets)
       .map(get('metadata'))
+      .filter(has('dataServiceIds'))
       .map(obj => merge(obj, { visible: getId(obj) }))
       .map(update('visible', includesIn(state.activeDatasetIds)))
   },

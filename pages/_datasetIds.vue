@@ -5,25 +5,18 @@
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   middleware: 'load-dataset-ids',
   mounted() {
     const { datasetIds } = this.$route.params
     if (datasetIds) {
-      this.loadLocationsInDatasets(datasetIds)
+      this.storeActiveDatasets(datasetIds)
     }
   },
-  destroyed() {
-    this.clearActiveDatasetIds()
-  },
   methods: {
-    ...mapActions('map', [
-      'loadLocationsInDatasets',
-      'loadPointDataForLocation',
-    ]),
-    ...mapMutations('map', ['clearActiveDatasetIds']),
+    ...mapActions('map', ['storeActiveDatasets', 'loadPointDataForLocation']),
   },
 }
 </script>
