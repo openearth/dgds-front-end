@@ -66,8 +66,19 @@ export default {
       }
     },
   },
+  watch: {
+    $route: {
+      handler(routeObj) {
+        if (routeObj.params.datasetIds === undefined) {
+          this.clearActiveDatasetIds()
+        }
+      },
+      deep: true,
+    },
+  },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
+    ...mapMutations('map', ['clearActiveDatasetIds']),
     ...mapMutations({ setActiveTheme: 'preferences/theme/setActive' }),
     loadLocations({ detail }) {
       const locationIds = detail.map(feature => feature.properties.locationId)
@@ -103,7 +114,6 @@ export default {
         toggleIdDatasets,
         this.$route,
       )
-
       this.updateRoute(newRouteObject)
     },
     updateRoute(routeObj) {
