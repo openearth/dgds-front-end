@@ -72,7 +72,7 @@ export default {
   height: 100vh;
   position: absolute;
   top: 0;
-  left: 0;
+  left: 3rem; /* side nav width */
   background-color: var(--color-background);
   box-shadow: var(--shadow);
   overflow-x: hidden;

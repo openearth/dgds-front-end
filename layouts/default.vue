@@ -16,9 +16,6 @@
       class="default-layout__timestamp"
       :timestamp="activeTimestamp"
     />
-    <div style="position: absolute; top: 0; left: 0;">
-      <nuxt-link to="/">Home</nuxt-link>
-    </div>
     <div style="position: absolute; bottom: 2rem; right: 3rem;">
       <select @change="setActive">
         <option value="light">Light</option>
@@ -26,6 +23,7 @@
       </select>
     </div>
     <nuxt />
+    <SiteNavigation class="default-layout__site-navigation" />
   </div>
 </template>
 
@@ -43,11 +41,12 @@ import isEqual from 'lodash/fp/isEqual'
 import identity from 'lodash/fp/identity'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import DataSetControlMenu from '../components/data-set-control-menu'
+import SiteNavigation from '../components/site-navigation'
 import TimeStamp from '../components/time-stamp'
 import { when } from '../lib/utils'
 
 export default {
-  components: { DataSetControlMenu, TimeStamp },
+  components: { SiteNavigation, DataSetControlMenu, TimeStamp },
   computed: {
     ...mapState({
       activeTheme: state => state.preferences.theme.active,
@@ -133,7 +132,6 @@ export default {
 .default-layout {
   width: 100vw;
   height: 100vh;
-
   --map-controls-height: 122px;
 }
 
@@ -149,6 +147,13 @@ export default {
   max-width: 20rem;
   width: 100%;
   max-height: calc(100vh - var(--spacing-large) - var(--map-controls-height));
+}
+
+.default-layout__site-navigation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
 }
 
 .default-layout__timestamp {
