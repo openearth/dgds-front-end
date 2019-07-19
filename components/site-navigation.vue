@@ -101,7 +101,9 @@ export default {
 }
 .site-navigation__toggle-wrapper .ui-button-icon {
   color: var(--color-grey-40);
-  transform: rotate(180deg);
+}
+.site-navigation__toggle-wrapper .ui-button-icon svg {
+  transform: translate(-50%, -50%) rotate(180deg);
   transition: transform var(--speed-fast) var(--ease);
 }
 .site-navigation__toggle-wrapper:hover .ui-button-icon,
@@ -171,7 +173,10 @@ export default {
 .site-navigation--expanded:before {
   transform: translate(0);
 }
-.site-navigation--expanded .site-navigation__toggle-wrapper .ui-button-icon {
-  transform: rotate(0deg);
+.site-navigation--expanded
+  .site-navigation__toggle-wrapper
+  .ui-button-icon
+  svg {
+  transform: translate(-50%, -50%) rotate(0deg);
 }
 </style>
