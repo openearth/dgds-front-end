@@ -3,6 +3,7 @@
     class="site-navigation"
     :class="{ 'site-navigation--expanded': expanded }"
     label="site navigation"
+    @keydown.esc="collapse"
   >
     <ul class="site-navigation__list">
       <li>
@@ -41,7 +42,7 @@
     </ul>
     <div class="site-navigation__toggle-wrapper">
       <UiButtonIcon @click="toggleExpanded">
-        <Icon size="large" name="expand" fallback-name="placeholder" />
+        <Icon size="large" name="collapse" fallback-name="placeholder" />
       </UiButtonIcon>
     </div>
   </nav>
@@ -57,6 +58,12 @@ export default {
     expanded: false,
   }),
   methods: {
+    expand() {
+      this.expanded = true
+    },
+    collapse() {
+      this.expanded = false
+    },
     toggleExpanded() {
       this.expanded = !this.expanded
     },
@@ -70,41 +77,52 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+  position: relative;
+  z-index: 0;
+}
+.site-navigation:before {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
   background-color: var(--color-background);
   box-shadow: var(--shadow);
-  padding-top: var(--spacing-default);
+  transform: translate(calc(-100% + var(--site-nav-width-collapsed)));
+  transition: transform var(--speed-fast) var(--ease);
 }
 
 .site-navigation__toggle-wrapper {
   display: flex;
   justify-content: flex-end;
   border-top: 1px solid var(--color-grey-40);
+  transform: translate(calc(-100% + var(--site-nav-width-collapsed)));
+  transition: transform var(--speed-fast) var(--ease);
 }
 .site-navigation__toggle-wrapper .ui-button-icon {
   color: var(--color-grey-40);
-  transition: transform var(--speed-normal) var(--ease);
-}
-
-.site-navigation__list:hover + .site-navigation__toggle-wrapper .ui-button-icon,
-.site-navigation--expanded .site-navigation__toggle-wrapper .ui-button-icon {
   transform: rotate(180deg);
+  transition: transform var(--speed-fast) var(--ease);
+}
+.site-navigation__toggle-wrapper:hover .ui-button-icon,
+.site-navigation__toggle-wrapper .ui-button-icon:focus,
+.site-navigation__toggle-wrapper:active .ui-button-icon {
+  color: var(--color-text);
 }
 
 .site-navigation__text {
   padding-right: var(--spacing-default);
   padding-left: calc(var(--spacing-small) * 0.5);
   color: inherit;
-  display: none;
-}
-
-.site-navigation__list:hover .site-navigation__text,
-.site-navigation--expanded .site-navigation__text {
-  display: inline-block;
+  transform: translate(-100%);
+  transition: transform var(--speed-fast) var(--ease);
+  flex: 1;
 }
 
 .site-navigation__list {
   margin: 0;
   padding: 0;
+  margin-top: var(--spacing-default);
   list-style: none;
 }
 
@@ -133,6 +151,11 @@ export default {
   opacity: 1;
 }
 
+.site-navigation .icon {
+  background-color: var(--color-background);
+  z-index: 1;
+}
+
 .site-navigation .icon,
 .site-navigation .icon svg {
   color: inherit;
@@ -141,5 +164,14 @@ export default {
 .site-navigation .icon path {
   color: inherit;
   fill: currentColor;
+}
+
+.site-navigation--expanded .site-navigation__text,
+.site-navigation--expanded .site-navigation__toggle-wrapper,
+.site-navigation--expanded:before {
+  transform: translate(0);
+}
+.site-navigation--expanded .site-navigation__toggle-wrapper .ui-button-icon {
+  transform: rotate(0deg);
 }
 </style>

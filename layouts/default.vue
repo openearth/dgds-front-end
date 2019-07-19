@@ -163,4 +163,9 @@ export default {
   width: 15vw;
   height: 50px;
 }
+
+.default-layout .mapboxgl-ctrl-bottom-left {
+  left: var(--site-nav-width-collapsed);
+  z-index: 0;
+}
 </style>

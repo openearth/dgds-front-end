@@ -11,6 +11,8 @@
   --speed-slow: 0.75s;
 
   --border-radius: 4px;
+
+  --site-nav-width-collapsed: 3rem;
 }
 
 html {
