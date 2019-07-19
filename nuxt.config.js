@@ -6,11 +6,16 @@ import { generateCustomProperties } from './plugins/custom-properties'
 dotEnv.config()
 
 export default {
-  mode: 'universal',
+  mode: 'spa',
 
   env: {
     MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
     SERVER_URL: process.env.SERVER_URL,
+  },
+
+  generate: {
+    fallback: 'index.html',
+    exclude: [/ui-test/],
   },
 
   /*
@@ -49,6 +54,7 @@ export default {
     '~/plugins/echarts',
     { src: '~/plugins/custom-properties', ssr: false },
     { src: '~/plugins/bootstrap', ssr: false },
+    { src: '~/plugins/polyfills', ssr: false },
   ],
 
   /*
@@ -77,6 +83,9 @@ export default {
           ],
         },
       },
+      preset: {
+        autoprefixer: {},
+      },
     },
 
     /*
@@ -93,7 +102,7 @@ export default {
           {
             loader: 'babel-loader',
             options: {
-              plugins: ['@babel/plugin-proposal-object-rest-spread'],
+              presets: ['@babel/preset-env'],
             },
           },
           {

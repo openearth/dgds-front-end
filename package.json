@@ -21,6 +21,9 @@
       "pre-push": "npm run lint:prod && npm test -- --coverage=false"
     }
   },
+  "browserslist": [
+    "IE 11"
+  ],
   "dependencies": {
     "@nuxtjs/pwa": "3.0.0-beta.14",
     "cross-env": "^5.2.0",
@@ -28,9 +31,11 @@
     "lodash": "4.17.11",
     "mapbox-gl": "0.53.1",
     "moment": "^2.24.0",
-    "nuxt": "2.6.2"
+    "nuxt": "2.6.2",
+    "whatwg-fetch": "3.0.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "7.5.5",
     "@nuxtjs/eslint-config": "^0.0.1",
     "@vue/test-utils": "^1.0.0-beta.27",
     "babel-core": "7.0.0-bridge.0",
