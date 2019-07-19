@@ -1,5 +1,7 @@
 import dotEnv from 'dotenv-safe'
+import fromPairs from 'lodash/fromPairs'
 import pkg from './package'
+import { generateCustomProperties } from './plugins/custom-properties'
 
 dotEnv.config()
 
@@ -58,6 +60,23 @@ export default {
    ** Build configuration
    */
   build: {
+    filenames: {
+      app: ({ isDev }) => (isDev ? '[name].js' : '[name].[chunkhash].js'),
+      chunk: ({ isDev }) => (isDev ? '[name].js' : '[name].[chunkhash].js'),
+      css: ({ isDev }) => (isDev ? '[name].css' : '[name].[contenthash].css'),
+    },
+
+    postcss: {
+      plugins: {
+        'postcss-custom-properties': {
+          preserve: true,
+          importFrom: [
+            { customProperties: fromPairs(generateCustomProperties('light')) },
+          ],
+        },
+      },
+    },
+
     /*
      ** You can extend webpack config here
      */
