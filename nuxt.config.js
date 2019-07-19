@@ -64,6 +64,8 @@ export default {
       app: ({ isDev }) => (isDev ? '[name].js' : '[name].[chunkhash].js'),
       chunk: ({ isDev }) => (isDev ? '[name].js' : '[name].[chunkhash].js'),
       css: ({ isDev }) => (isDev ? '[name].css' : '[name].[contenthash].css'),
+      img: ({ isDev }) =>
+        isDev ? '[path][name].[ext]' : 'img/[name].[hash:7].[ext]',
     },
 
     postcss: {
@@ -87,7 +89,17 @@ export default {
 
       config.module.rules.push({
         test: /\.svg$/,
-        loader: 'vue-svg-loader',
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              plugins: ['@babel/plugin-proposal-object-rest-spread'],
+            },
+          },
+          {
+            loader: 'vue-svg-loader',
+          },
+        ],
       })
 
       // Run ESLint on save
