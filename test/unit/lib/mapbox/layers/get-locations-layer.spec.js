@@ -11,11 +11,7 @@ const layer = {
   id: 'locations',
   type: 'circle',
   source: {
-    data: {
-      features: [],
-      type: 'FeatureCollection',
-    },
-    type: 'geojson',
+    type: 'vector',
   },
   paint: {
     default: {
@@ -24,7 +20,7 @@ const layer = {
       // prettier-ignore
       'circle-stroke-width': [
         'case',
-        ['get', 'active'], 8,
+        ['has', 'active'], 8,
         4
       ]
     },
@@ -32,21 +28,21 @@ const layer = {
       // prettier-ignore
       'circle-color': [
         'case',
-        ['get', 'active'], dark.white100,
+        ['has', 'active'], dark.white100,
         dark.pink,
       ],
 
       // prettier-ignore
       'circle-stroke-color': [
         'case',
-        ['get', 'active'], dark.blue60,
+        ['has', 'active'], dark.blue60,
         dark.black100,
       ],
 
       // prettier-ignore
       'circle-stroke-opacity': [
         'case',
-        ['get', 'active'], 1,
+        ['has', 'active'], 1,
         0.2,
       ]
     },
@@ -54,21 +50,21 @@ const layer = {
       // prettier-ignore
       'circle-color': [
         'case',
-        ['get', 'active'], light.white100,
+        ['has', 'active'], light.white100,
         light.pink,
       ],
 
       // prettier-ignore
       'circle-stroke-color': [
         'case',
-        ['get', 'active'], light.blue60,
+        ['has', 'active'], light.blue60,
         light.white100,
       ],
 
       // prettier-ignore
       'circle-stroke-opacity': [
         'case',
-        ['get', 'active'], 1,
+        ['has', 'active'], 1,
         0.6
       ]
     },
@@ -91,16 +87,16 @@ describe('add', () => {
 
     expect(mapbox.addLayer.mock.calls[0][0]).toMatchObject({
       paint: {
-        'circle-color': ['case', ['get', 'active'], '#ffffff', '#ff33dd'],
+        'circle-color': ['case', ['has', 'active'], '#ffffff', '#ff33dd'],
         'circle-radius': 8,
         'circle-stroke-color': [
           'case',
-          ['get', 'active'],
+          ['has', 'active'],
           '#66bbdc',
           '#000000',
         ],
-        'circle-stroke-opacity': ['case', ['get', 'active'], 1, 0.2],
-        'circle-stroke-width': ['case', ['get', 'active'], 8, 4],
+        'circle-stroke-opacity': ['case', ['has', 'active'], 1, 0.2],
+        'circle-stroke-width': ['case', ['has', 'active'], 8, 4],
       },
     })
   })
@@ -115,34 +111,34 @@ describe('add', () => {
 
     expect(mapbox.addLayer.mock.calls[0][0]).toMatchObject({
       paint: {
-        'circle-color': ['case', ['get', 'active'], '#ffffff', '#ff33dd'],
+        'circle-color': ['case', ['has', 'active'], '#ffffff', '#ff33dd'],
         'circle-radius': 8,
         'circle-stroke-color': [
           'case',
-          ['get', 'active'],
+          ['has', 'active'],
           '#66bbdc',
           '#000000',
         ],
-        'circle-stroke-opacity': ['case', ['get', 'active'], 1, 0.2],
-        'circle-stroke-width': ['case', ['get', 'active'], 8, 4],
+        'circle-stroke-opacity': ['case', ['has', 'active'], 1, 0.2],
+        'circle-stroke-width': ['case', ['has', 'active'], 8, 4],
       },
     })
   })
 })
 
 describe('update', () => {
-  test('the current layer with new data', () => {
-    const setData = jest.fn()
-    const mapbox = {
-      getSource: () => ({
-        setData,
-        data: { foo: 'bar' },
-      }),
-    }
-    const locationsLayer = getLocationsLayer()
-    locationsLayer.update(mapbox)
-    expect(setData).toHaveBeenCalledWith(layer.source.data)
-  })
+  // test('the current layer with new data', () => {
+  //   const setData = jest.fn()
+  //   const mapbox = {
+  //     getSource: () => ({
+  //       setData,
+  //       data: { foo: 'bar' },
+  //     }),
+  //   }
+  //   const locationsLayer = getLocationsLayer()
+  //   locationsLayer.update(mapbox)
+  //   expect(setData).toHaveBeenCalledWith(layer.source.data)
+  // })
   test('does not call set data when mabox source is not available', () => {
     const setData = jest.fn()
     const mapbox = {

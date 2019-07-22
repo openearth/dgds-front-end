@@ -135,16 +135,6 @@ export default {
       this.locationsLayer = locationsLayer
     })
   },
-  watch: {
-    $route: {
-      handler(routeObj) {
-        if (routeObj.params.datasetIds === undefined) {
-          this.clearActiveDatasetIds()
-        }
-      },
-      deep: true,
-    },
-  },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
     ...mapMutations('map', ['clearActiveDatasetIds']),
