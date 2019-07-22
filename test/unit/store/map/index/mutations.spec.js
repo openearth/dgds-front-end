@@ -29,7 +29,7 @@ describe('setActiveLocationIds', () => {
     }
     const ids = ['wl', 'wd']
     mutations.setActiveLocationIds(state, ids)
-    expect(state.activeLocationIds).toBe(ids)
+    expect(state.activeLocationIds).toEqual(ids)
   })
 })
 
