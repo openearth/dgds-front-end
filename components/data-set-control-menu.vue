@@ -14,7 +14,7 @@
             fallback-name="placeholder"
           />
           {{ dataset.name }}
-          <Toggle
+          <UiToggle
             :checked="dataset.visible"
             class="data-set-control-menu__control"
             @change="toggleLocationDataSet(dataset.id)"
@@ -27,11 +27,11 @@
 
 <script>
 import Panel from './panel'
-import Toggle from './toggle'
+import UiToggle from './ui-toggle'
 import Icon from './icon'
 
 export default {
-  components: { Panel, Toggle, Icon },
+  components: { Panel, UiToggle, Icon },
   props: {
     datasets: {
       type: Array,

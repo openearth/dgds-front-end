@@ -21,6 +21,9 @@
       "pre-push": "npm run lint:prod && npm test -- --coverage=false"
     }
   },
+  "browserslist": [
+    "IE 11"
+  ],
   "dependencies": {
     "@nuxtjs/pwa": "3.0.0-beta.14",
     "cross-env": "^5.2.0",
@@ -29,9 +32,11 @@
     "mapbox-gl": "0.53.1",
     "moment": "^2.24.0",
     "nuxt": "2.6.2",
-    "vue2mapbox-gl": "0.7.0"
+    "vue2mapbox-gl": "0.8.1",
+    "whatwg-fetch": "3.0.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "7.5.5",
     "@nuxtjs/eslint-config": "^0.0.1",
     "@vue/test-utils": "^1.0.0-beta.27",
     "babel-core": "7.0.0-bridge.0",
@@ -55,6 +60,7 @@
     "jest": "^24.1.0",
     "json-mock-api": "1.0.2",
     "nodemon": "^1.18.9",
+    "postcss-custom-properties": "9.0.2",
     "prettier": "^1.16.4",
     "vue-jest": "^3.0.3",
     "vue-svg-loader": "0.12.0"

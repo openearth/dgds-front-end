@@ -29,9 +29,6 @@
       class="default-layout__timestamp"
       :timestamp="activeTimestamp"
     />
-    <div style="position: absolute; top: 0; left: 0;">
-      <nuxt-link to="/">Home</nuxt-link>
-    </div>
     <div style="position: absolute; bottom: 2rem; right: 3rem;">
       <select @change="setActive">
         <option value="light">Light</option>
@@ -39,6 +36,7 @@
       </select>
     </div>
     <nuxt />
+    <SiteNavigation class="default-layout__site-navigation" />
   </div>
 </template>
 
@@ -59,6 +57,7 @@ import identity from 'lodash/fp/identity'
 import flattenDeep from 'lodash/fp/flattenDeep'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import DataSetControlMenu from '../components/data-set-control-menu'
+import SiteNavigation from '../components/site-navigation'
 import TimeStamp from '../components/time-stamp'
 import { when } from '../lib/utils'
 import getLocationsLayer from '../lib/mapbox/layers/get-locations-layer'
@@ -68,6 +67,7 @@ import VMapboxRasterLayer from '../components/v-mapbox-components/v-mapbox-raste
 
 export default {
   components: {
+    SiteNavigation,
     DataSetControlMenu,
     TimeStamp,
     VMapboxLayerClickable,
@@ -135,8 +135,19 @@ export default {
       this.locationsLayer = locationsLayer
     })
   },
+  watch: {
+    $route: {
+      handler(routeObj) {
+        if (routeObj.params.datasetIds === undefined) {
+          this.clearActiveDatasetIds()
+        }
+      },
+      deep: true,
+    },
+  },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
+    ...mapMutations('map', ['clearActiveDatasetIds']),
     ...mapMutations({ setActiveTheme: 'preferences/theme/setActive' }),
     ...mapMutations('map', ['clearActiveDatasetIds']),
     loadLocations({ detail }) {
@@ -191,7 +202,6 @@ export default {
 .default-layout {
   width: 100vw;
   height: 100vh;
-
   --map-controls-height: 122px;
 }
 
@@ -209,11 +219,23 @@ export default {
   max-height: calc(100vh - var(--spacing-large) - var(--map-controls-height));
 }
 
+.default-layout__site-navigation {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+}
+
 .default-layout__timestamp {
   position: relative;
   left: var(--spacing-default);
   bottom: calc(var(--spacing-default) + 50px);
   width: 15vw;
   height: 50px;
+}
+
+.default-layout .mapboxgl-ctrl-bottom-left {
+  left: var(--site-nav-width-collapsed);
+  z-index: 0;
 }
 </style>

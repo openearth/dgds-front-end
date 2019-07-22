@@ -21,9 +21,13 @@ describe('Default', () => {
         activeDatasetsLocations: jest.fn(() => 'foo'),
         activeSpatialData: jest.fn(() => 'foo'),
         datasetsInActiveTheme: jest.fn(() => ['bar']),
+        activeTimestamp: jest.fn(),
       },
       actions: {
         loadPointDataForLocation: jest.fn(),
+      },
+      mutations: {
+        clearActiveDatasetIds: jest.fn(),
       },
     }
     preferences = {

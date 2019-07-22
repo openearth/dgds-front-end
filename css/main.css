@@ -9,6 +9,10 @@
   --speed-fast: 0.15s;
   --speed-normal: 0.5s;
   --speed-slow: 0.75s;
+
+  --border-radius: 4px;
+
+  --site-nav-width-collapsed: 3rem;
 }
 
 html {

@@ -6,14 +6,14 @@
       'graph-line--collapsed': isCollapsed,
     }"
   >
-    <button-icon
+    <ui-button-icon
       v-if="collapsible"
       class="graph-line__toggle"
       label="Toggle"
       @click="toggle"
     >
       <icon-chevron />
-    </button-icon>
+    </ui-button-icon>
     <figcaption class="graph-line__caption strong" @click="toggle">
       {{ title }}
     </figcaption>
@@ -26,7 +26,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import merge from 'lodash/merge'
-import ButtonIcon from '~/components/button-icon'
+import UiButtonIcon from '~/components/ui-button-icon'
 import IconChevron from '~/assets/icon-action-chevron-down.svg'
 
 const getStyle = (colors = {}) => ({
@@ -88,7 +88,7 @@ const baseOptions = {
 }
 
 export default {
-  components: { ButtonIcon, IconChevron },
+  components: { UiButtonIcon, IconChevron },
   props: {
     category: {
       type: Array,
