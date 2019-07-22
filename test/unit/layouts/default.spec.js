@@ -46,62 +46,62 @@ describe('Default', () => {
     })
   })
 
-  // test('mounts without issues', () => {
-  //   const wrapper = shallowMount(Default, { store, localVue })
-  //   expect(wrapper.vm.activeTheme).toBe(preferences.modules.theme.state.active)
-  //   expect(wrapper.vm.activeDatasetsLocations).toBe(
-  //     map.getters.activeDatasetsLocations(),
-  //   )
-  //   expect(wrapper.vm.datasetsInActiveTheme).toEqual(
-  //     map.getters.datasetsInActiveTheme(),
-  //   )
-  //   expect(wrapper.vm.mapboxOptions).toEqual({
-  //     sources: map.getters.activeDatasetsLocations(),
-  //     style: preferences.modules.theme.state.active,
-  //     tiles: map.getters.activeSpatialData(),
-  //   })
-  // })
-  //
-  // test('dispatches loadPointDataForLocation on load-locations mapbox event', () => {
-  //   const wrapper = shallowMount(Default, {
-  //     store,
-  //     localVue,
-  //     mocks: { $route: { params: { datasetIds: 'cd' } } },
-  //   })
-  //
-  //   wrapper.find('#map').trigger('load-locations', {
-  //     detail: [{ properties: { locationId: 'ab' } }],
-  //   })
+  test('mounts without issues', () => {
+    const wrapper = shallowMount(Default, { store, localVue })
+    expect(wrapper.vm.activeTheme).toBe(preferences.modules.theme.state.active)
+    expect(wrapper.vm.activeDatasetsLocations).toBe(
+      map.getters.activeDatasetsLocations(),
+    )
+    expect(wrapper.vm.datasetsInActiveTheme).toEqual(
+      map.getters.datasetsInActiveTheme(),
+    )
+    expect(wrapper.vm.mapboxOptions).toEqual({
+      sources: map.getters.activeDatasetsLocations(),
+      style: preferences.modules.theme.state.active,
+      tiles: map.getters.activeSpatialData(),
+    })
+  })
 
-  // expect(map.actions.loadPointDataForLocation.mock.calls[0][1]).toEqual({
-  //   datasetIds: 'cd',
-  //   locationId: 'ab',
-  // })
-  // })
+  test('dispatches loadPointDataForLocation on load-locations mapbox event', () => {
+    const wrapper = shallowMount(Default, {
+      store,
+      localVue,
+      mocks: { $route: { params: { datasetIds: 'cd' } } },
+    })
 
-  // test('update url with new datasetIds on select-locations mapbox event', () => {
-  //   const routerPush = jest.fn()
-  //   const wrapper = shallowMount(Default, {
-  //     store,
-  //     localVue,
-  //     mocks: {
-  //       $route: { params: { datasetIds: 'cd' } },
-  //       $router: { push: routerPush },
-  //     },
-  //   })
-  //
-  //   wrapper.find('#map').trigger('select-locations', {
-  //     detail: [
-  //       { properties: { locationId: 'ab' } },
-  //       { properties: { locationId: 'ef' } },
-  //     ],
-  //   })
-  //
-  //   expect(routerPush).toHaveBeenCalledWith({
-  //     name: 'datasetIds-locationId',
-  //     params: { datasetIds: 'cd', locationId: 'ab' },
-  //   })
-  // })
+    wrapper.find('#map').trigger('load-locations', {
+      detail: [{ properties: { locationId: 'ab' } }],
+    })
+
+    expect(map.actions.loadPointDataForLocation.mock.calls[0][1]).toEqual({
+      datasetIds: 'cd',
+      locationId: 'ab',
+    })
+  })
+
+  test('update url with new datasetIds on select-locations mapbox event', () => {
+    const routerPush = jest.fn()
+    const wrapper = shallowMount(Default, {
+      store,
+      localVue,
+      mocks: {
+        $route: { params: { datasetIds: 'cd' } },
+        $router: { push: routerPush },
+      },
+    })
+
+    wrapper.find('#map').trigger('select-locations', {
+      detail: [
+        { properties: { locationId: 'ab' } },
+        { properties: { locationId: 'ef' } },
+      ],
+    })
+
+    expect(routerPush).toHaveBeenCalledWith({
+      name: 'datasetIds-locationId',
+      params: { datasetIds: 'cd', locationId: 'ab' },
+    })
+  })
 
   test('commits the active theme when it changes', () => {
     const commit = jest.fn()

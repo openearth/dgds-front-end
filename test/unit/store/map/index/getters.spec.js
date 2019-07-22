@@ -197,19 +197,19 @@ describe('activePointDataPerDataset', () => {
   })
 })
 
-// describe('datasetsInActiveTheme', () => {
-//   test('returns array of datasets for the current theme', () => {
-//     const state = {
-//       activeDatasetIds: ['bar'],
-//       datasets: {
-//         foo: { metadata: { id: 'foo' } },
-//         bar: { metadata: { id: 'bar' } },
-//       },
-//     }
-//     const result = getters.datasetsInActiveTheme(state)
-//     expect(result).toEqual([
-//       { id: 'foo', visible: false },
-//       { id: 'bar', visible: true },
-//     ])
-//   })
-// })
+describe('datasetsInActiveTheme', () => {
+  test('returns array of datasets for the current theme', () => {
+    const state = {
+      activeDatasetIds: ['bar'],
+      datasets: {
+        foo: { metadata: { id: 'foo' } },
+        bar: { metadata: { id: 'bar' } },
+      },
+    }
+    const result = getters.datasetsInActiveTheme(state)
+    expect(result).toEqual([
+      { id: 'foo', visible: false },
+      { id: 'bar', visible: true },
+    ])
+  })
+})

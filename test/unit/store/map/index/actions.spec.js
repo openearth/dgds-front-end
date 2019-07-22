@@ -71,14 +71,14 @@ describe('storeActiveDatasets', () => {
     await actions.storeActiveDatasets({ commit, state, getters: get }, _ids)
     expect(commit.mock.calls[0][0]).toBe('setActiveDatasetIds')
     expect(commit.mock.calls[0][1]).toEqual(['wl'])
-    // expect(commit.mock.calls[1][0]).toBe('datasets/addDatasetLocations')
-    // expect(commit.mock.calls[1][1]).toEqual({
-    //   data: {
-    //     features: apiResult.results[0].features,
-    //     type: 'FeatureCollection',
-    //   },
-    //   id: 'wl',
-    // })
+    expect(commit.mock.calls[1][0]).toBe('datasets/addDatasetLocations')
+    expect(commit.mock.calls[1][1]).toEqual({
+      data: {
+        features: apiResult.results[0].features,
+        type: 'FeatureCollection',
+      },
+      id: 'wl',
+    })
   })
 
   test('returns object of known ids of datasets provided as string', async () => {
@@ -113,14 +113,14 @@ describe('storeActiveDatasets', () => {
     await actions.storeActiveDatasets({ commit, state, getters: get }, _ids)
     expect(commit.mock.calls[0][0]).toBe('setActiveDatasetIds')
     expect(commit.mock.calls[0][1]).toEqual(['wl'])
-    // expect(commit.mock.calls[1][0]).toBe('datasets/addDatasetLocations')
-    // expect(commit.mock.calls[1][1]).toEqual({
-    //   data: {
-    //     features: apiResult.results[0].features,
-    //     type: 'FeatureCollection',
-    //   },
-    //   id: 'wl',
-    // })
+    expect(commit.mock.calls[1][0]).toBe('datasets/addDatasetLocations')
+    expect(commit.mock.calls[1][1]).toEqual({
+      data: {
+        features: apiResult.results[0].features,
+        type: 'FeatureCollection',
+      },
+      id: 'wl',
+    })
   })
 })
 
