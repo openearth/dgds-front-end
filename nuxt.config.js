@@ -1,21 +1,28 @@
 import dotEnv from 'dotenv-safe'
+import fromPairs from 'lodash/fromPairs'
 import pkg from './package'
+import { generateCustomProperties } from './plugins/custom-properties'
 
 dotEnv.config()
 
 export default {
-  mode: 'universal',
+  mode: 'spa',
 
   env: {
     MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
     SERVER_URL: process.env.SERVER_URL,
   },
 
+  generate: {
+    fallback: 'index.html',
+    exclude: [/ui-test/],
+  },
+
   /*
    ** Headers of the page
    */
   head: {
-    title: pkg.name,
+    title: 'Deltares Global Data Services',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -47,6 +54,7 @@ export default {
     '~/plugins/echarts',
     { src: '~/plugins/custom-properties', ssr: false },
     { src: '~/plugins/bootstrap', ssr: false },
+    { src: '~/plugins/polyfills', ssr: false },
   ],
 
   /*
@@ -58,6 +66,28 @@ export default {
    ** Build configuration
    */
   build: {
+    filenames: {
+      app: ({ isDev }) => (isDev ? '[name].js' : '[name].[chunkhash].js'),
+      chunk: ({ isDev }) => (isDev ? '[name].js' : '[name].[chunkhash].js'),
+      css: ({ isDev }) => (isDev ? '[name].css' : '[name].[contenthash].css'),
+      img: ({ isDev }) =>
+        isDev ? '[path][name].[ext]' : 'img/[name].[hash:7].[ext]',
+    },
+
+    postcss: {
+      plugins: {
+        'postcss-custom-properties': {
+          preserve: true,
+          importFrom: [
+            { customProperties: fromPairs(generateCustomProperties('light')) },
+          ],
+        },
+      },
+      preset: {
+        autoprefixer: {},
+      },
+    },
+
     /*
      ** You can extend webpack config here
      */
@@ -68,7 +98,17 @@ export default {
 
       config.module.rules.push({
         test: /\.svg$/,
-        loader: 'vue-svg-loader',
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: ['@babel/preset-env'],
+            },
+          },
+          {
+            loader: 'vue-svg-loader',
+          },
+        ],
       })
 
       // Run ESLint on save
