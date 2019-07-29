@@ -31,12 +31,6 @@
       class="default-layout__timestamp"
       :timestamp="activeTimestamp"
     />
-    <div style="position: absolute; bottom: 2rem; right: 3rem;">
-      <select @change="setActive">
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </select>
-    </div>
     <nuxt />
     <SiteNavigation class="default-layout__site-navigation" />
   </div>
@@ -135,7 +129,6 @@ export default {
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
     ...mapMutations('map', ['clearActiveDatasetIds']),
-    ...mapMutations({ setActiveTheme: 'preferences/theme/setActive' }),
     ...mapMutations('map', ['clearActiveDatasetIds']),
     loadLocations({ detail }) {
       const locationIds = detail.map(feature => feature.properties.locationId)
@@ -150,9 +143,6 @@ export default {
         name: 'datasetIds-locationId',
         params: { datasetIds, locationId: head(locationIds) },
       })
-    },
-    setActive(event) {
-      this.setActiveTheme(event.target.value)
     },
     toggleLocationDataset(id) {
       const addId = value => concat(value, id)

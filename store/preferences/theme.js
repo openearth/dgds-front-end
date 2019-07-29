@@ -1,8 +1,7 @@
 import getColors from '../../lib/styling/colors'
 
 export const state = () => ({
-  active: 'light',
-  available: ['light', 'dark'],
+  active: 'dark',
 })
 
 export const mutations = {
