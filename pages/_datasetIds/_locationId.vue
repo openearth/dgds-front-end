@@ -1,7 +1,7 @@
 <template>
   <aside class="location-id scrollbar">
     <header class="location-id__header">
-      <h2 class="h2">Timeseries</h2>
+      <h2 class="h2">{{ location }}</h2>
       <ui-button-icon @click="close"><icon-cross /></ui-button-icon>
     </header>
     <section class="location-id__graphs">
@@ -45,9 +45,14 @@ export default {
         )
       return flatten(result)
     },
+    locations() {
+      const { datasetIds, locationId } = this.$route.params
+      return locationId
+    },
   },
   mounted() {
     const { datasetIds, locationId } = this.$route.params
+    this.location = locationId
     this.setActiveLocationIds([locationId])
     this.loadPointDataForLocation({ datasetIds, locationId })
   },
