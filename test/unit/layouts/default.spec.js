@@ -103,24 +103,6 @@ describe('Default', () => {
   //   })
   // })
 
-  test('commits the active theme when it changes', () => {
-    const commit = jest.fn()
-    const wrapper = shallowMount(Default, {
-      store,
-      localVue,
-      mocks: {
-        $store: commit,
-      },
-    })
-
-    wrapper.find('select').element.value = 'dark'
-    wrapper.find('select').trigger('change')
-
-    expect(preferences.modules.theme.mutations.setActive.mock.calls[0][1]).toBe(
-      'dark',
-    )
-  })
-
   test('updates url when datasetId is switched on', () => {
     const routerPush = jest.fn()
     const wrapper = shallowMount(Default, {

@@ -75,8 +75,8 @@ export default {
         this.map.setPaintProperty(this.id, 'circle-stroke-width', [
           'case',
           ['any', ...filters],
-          8,
           4,
+          1,
         ])
         this.map.setPaintProperty(this.id, 'circle-color', [
           'case',
@@ -89,12 +89,6 @@ export default {
           ['any', ...filters],
           color.blue60,
           color.white100,
-        ])
-        this.map.setPaintProperty(this.id, 'circle-stroke-opacity', [
-          'case',
-          ['any', ...filters],
-          1,
-          0.2,
         ])
       }
     },

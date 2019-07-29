@@ -2,6 +2,20 @@ import getLocationsLayer from '../../../../../lib/mapbox/layers/get-locations-la
 import getColors from '../../../../../lib/styling/colors'
 
 const color = getColors('dark')
+const locationsPaint = {
+  'circle-color': ['case', ['has', 'active'], color.white100, color.pink],
+  'circle-stroke-color': [
+    'case',
+    ['has', 'active'],
+    color.blue60,
+    color.white100,
+  ],
+  'circle-stroke-width': ['case', ['has', 'active'], 4, 1],
+  'circle-pitch-alignment': 'map',
+  'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 4, 22, 8],
+  'circle-opacity': 0.8,
+  'circle-stroke-opacity': 0.8,
+}
 
 const layer = {
   id: 'locations',
@@ -9,36 +23,7 @@ const layer = {
   source: {
     type: 'vector',
   },
-  paint: {
-    'circle-radius': 8,
-
-    // prettier-ignore
-    'circle-stroke-width': [
-      'case',
-      ['has', 'active'], 8,
-      4
-    ],
-    // prettier-ignore
-    'circle-color': [
-      'case',
-      ['has', 'active'], color.white100,
-      color.pink,
-    ],
-
-    // prettier-ignore
-    'circle-stroke-color': [
-      'case',
-      ['has', 'active'], color.blue60,
-      color.black100,
-    ],
-
-    // prettier-ignore
-    'circle-stroke-opacity': [
-      'case',
-      ['has', 'active'], 1,
-      0.2,
-    ]
-  },
+  paint: locationsPaint,
 }
 
 test('returns location layer', () => {
@@ -56,18 +41,7 @@ describe('add', () => {
     locationsLayer.add(mapbox)
 
     expect(mapbox.addLayer.mock.calls[0][0]).toMatchObject({
-      paint: {
-        'circle-color': ['case', ['has', 'active'], '#ffffff', '#ff33dd'],
-        'circle-radius': 8,
-        'circle-stroke-color': [
-          'case',
-          ['has', 'active'],
-          '#66bbdc',
-          '#000000',
-        ],
-        'circle-stroke-opacity': ['case', ['has', 'active'], 1, 0.2],
-        'circle-stroke-width': ['case', ['has', 'active'], 8, 4],
-      },
+      paint: locationsPaint,
     })
   })
 
@@ -80,18 +54,7 @@ describe('add', () => {
     locationsLayer.add(mapbox)
 
     expect(mapbox.addLayer.mock.calls[0][0]).toMatchObject({
-      paint: {
-        'circle-color': ['case', ['has', 'active'], '#ffffff', '#ff33dd'],
-        'circle-radius': 8,
-        'circle-stroke-color': [
-          'case',
-          ['has', 'active'],
-          '#66bbdc',
-          '#000000',
-        ],
-        'circle-stroke-opacity': ['case', ['has', 'active'], 1, 0.2],
-        'circle-stroke-width': ['case', ['has', 'active'], 8, 4],
-      },
+      paint: locationsPaint,
     })
   })
 })
