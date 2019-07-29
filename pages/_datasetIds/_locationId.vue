@@ -46,7 +46,7 @@ export default {
       return flatten(result)
     },
     locations() {
-      const {locationId } = this.$route.params
+      const { locationId } = this.$route.params
       return locationId
     },
   },
