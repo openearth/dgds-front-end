@@ -99,11 +99,6 @@ export default {
         style: this.activeTheme,
       }
     },
-    mapboxStyle() {
-      return this.activeTheme === 'light'
-        ? 'mapbox://styles/global-data-viewer/cjtslsula05as1fppvrh7n4rv'
-        : 'mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm'
-    },
     locationsFilter() {
       const generateFilters = pipe([
         map(get('metadata.dataServiceIds')),

@@ -1,11 +1,7 @@
 import getLocationsLayer from '../../../../../lib/mapbox/layers/get-locations-layer'
 import getColors from '../../../../../lib/styling/colors'
-import { getCurrentStyle } from '../../../../../lib/mapbox/get-style'
-jest.mock('../../../../../lib/mapbox/get-style')
-getCurrentStyle.mockReturnValue({ id: 'dark' })
 
-const light = getColors('light')
-const dark = getColors('dark')
+const color = getColors('dark')
 
 const layer = {
   id: 'locations',
@@ -14,60 +10,34 @@ const layer = {
     type: 'vector',
   },
   paint: {
-    default: {
-      'circle-radius': 8,
+    'circle-radius': 8,
 
-      // prettier-ignore
-      'circle-stroke-width': [
-        'case',
-        ['has', 'active'], 8,
-        4
-      ]
-    },
-    dark: {
-      // prettier-ignore
-      'circle-color': [
-        'case',
-        ['has', 'active'], dark.white100,
-        dark.pink,
-      ],
+    // prettier-ignore
+    'circle-stroke-width': [
+      'case',
+      ['has', 'active'], 8,
+      4
+    ],
+    // prettier-ignore
+    'circle-color': [
+      'case',
+      ['has', 'active'], color.white100,
+      color.pink,
+    ],
 
-      // prettier-ignore
-      'circle-stroke-color': [
-        'case',
-        ['has', 'active'], dark.blue60,
-        dark.black100,
-      ],
+    // prettier-ignore
+    'circle-stroke-color': [
+      'case',
+      ['has', 'active'], color.blue60,
+      color.black100,
+    ],
 
-      // prettier-ignore
-      'circle-stroke-opacity': [
-        'case',
-        ['has', 'active'], 1,
-        0.2,
-      ]
-    },
-    light: {
-      // prettier-ignore
-      'circle-color': [
-        'case',
-        ['has', 'active'], light.white100,
-        light.pink,
-      ],
-
-      // prettier-ignore
-      'circle-stroke-color': [
-        'case',
-        ['has', 'active'], light.blue60,
-        light.white100,
-      ],
-
-      // prettier-ignore
-      'circle-stroke-opacity': [
-        'case',
-        ['has', 'active'], 1,
-        0.6
-      ]
-    },
+    // prettier-ignore
+    'circle-stroke-opacity': [
+      'case',
+      ['has', 'active'], 1,
+      0.2,
+    ]
   },
 }
 
@@ -127,19 +97,19 @@ describe('add', () => {
 })
 
 describe('update', () => {
-  // test('the current layer with new data', () => {
-  //   const setData = jest.fn()
-  //   const mapbox = {
-  //     getSource: () => ({
-  //       setData,
-  //       data: { foo: 'bar' },
-  //     }),
-  //   }
-  //   const locationsLayer = getLocationsLayer()
-  //   locationsLayer.update(mapbox)
-  //   expect(setData).toHaveBeenCalledWith(layer.source.data)
-  // })
-  test('does not call set data when mabox source is not available', () => {
+  test('the current layer with new data', () => {
+    const setData = jest.fn()
+    const mapbox = {
+      getSource: () => ({
+        setData,
+        data: { foo: 'bar' },
+      }),
+    }
+    const locationsLayer = getLocationsLayer()
+    locationsLayer.update(mapbox)
+    expect(setData).toHaveBeenCalledWith(mapbox.getSource().data)
+  })
+  test('does not call setData when mapbox source is not available', () => {
     const setData = jest.fn()
     const mapbox = {
       getSource: () => undefined,
@@ -157,7 +127,6 @@ describe('update', () => {
     const mapbox = {
       getSource: () => ({
         setData,
-        data: { foo: 'bar' },
       }),
     }
     console.warn = jest.fn() // eslint-disable-line
