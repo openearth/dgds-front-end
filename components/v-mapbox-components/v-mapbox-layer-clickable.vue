@@ -5,8 +5,7 @@
 <script>
 import getColors from '../../lib/styling/colors'
 
-const dark = getColors('dark')
-const light = getColors('light')
+const color = getColors('dark')
 
 export default {
   name: 'VMapboxLayerClickable',
@@ -82,20 +81,20 @@ export default {
         this.map.setPaintProperty(this.id, 'circle-color', [
           'case',
           ['any', ...filters],
-          this.activeTheme === 'dark' ? dark.white100 : light.white100,
-          this.activeTheme === 'dark' ? dark.pink : light.pink,
+          color.white100,
+          color.pink,
         ])
         this.map.setPaintProperty(this.id, 'circle-stroke-color', [
           'case',
           ['any', ...filters],
-          this.activeTheme === 'dark' ? dark.blue60 : light.blue60,
-          this.activeTheme === 'dark' ? dark.black100 : light.white100,
+          color.blue60,
+          color.white100,
         ])
         this.map.setPaintProperty(this.id, 'circle-stroke-opacity', [
           'case',
           ['any', ...filters],
           1,
-          this.activeTheme === 'dark' ? 0.2 : 0.6,
+          0.2,
         ])
       }
     },
@@ -104,7 +103,6 @@ export default {
       if (this.options) {
         this.map.addLayer({ ...this.options, id })
         this.setActiveFilter()
-
         if (this.filter !== []) {
           this.map.setFilter(id, this.filter)
         }
