@@ -48,7 +48,6 @@ export default {
     deferredMountedTo(map) {
       this.map = map
       this.id = this.options.id
-      console.log('options', this.options)
       this.map.addSource(this.options.id, this.options.source)
     },
   },
