@@ -11,10 +11,9 @@
           position="bottom-right"
         ></v-mapbox-navigation-control>
         <v-mapbox-layer-clickable
-          id="locations"
-          :options="locationsLayer"
-          :filter="locationsFilter"
-          :active-location-ids="activeLocationIds"
+          v-for="layer in vectorLayers"
+          :key="layer.id"
+          :layer="layer"
           :active-theme="activeTheme"
           @select-locations="selectLocations"
         ></v-mapbox-layer-clickable>
@@ -37,7 +36,6 @@
 </template>
 
 <script>
-import get from 'lodash/fp/get'
 import map from 'lodash/fp/map'
 import head from 'lodash/head'
 import includes from 'lodash/fp/includes'
@@ -50,13 +48,12 @@ import negate from 'lodash/fp/negate'
 import concat from 'lodash/fp/concat'
 import isEqual from 'lodash/fp/isEqual'
 import identity from 'lodash/fp/identity'
-import flattenDeep from 'lodash/fp/flattenDeep'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import DataSetControlMenu from '../components/data-set-control-menu'
 import SiteNavigation from '../components/site-navigation'
 import TimeStamp from '../components/time-stamp'
 import { when } from '../lib/utils'
-import getLocationsLayer from '../lib/mapbox/layers/get-locations-layer'
+import getVectorLayer from '../lib/mapbox/layers/get-vector-layer'
 import getSpatialLayer from '../lib/mapbox/layers/get-spatial-layer'
 import VMapboxLayerClickable from '../components/v-mapbox-components/v-mapbox-layer-clickable'
 import VMapboxRasterLayer from '../components/v-mapbox-components/v-mapbox-raster-layer'
@@ -71,7 +68,7 @@ export default {
   },
   data: () => ({
     mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
-    locationsLayer: null,
+    locationsLayers: [],
     activeLocation: null,
   }),
   computed: {
@@ -81,31 +78,26 @@ export default {
     }),
     ...mapGetters('map', [
       'activeSpatialData',
+      'allVectorData',
       'activeDatasetsLocations',
       'datasetsInActiveTheme',
       'activeTimestamp',
       'activeDatasets',
     ]),
-    mapboxOptions() {
-      return {
-        tiles: this.activeSpatialData,
-        sources: this.activeDatasetsLocations,
-        style: this.activeTheme,
-      }
-    },
-    locationsFilter() {
-      const generateFilters = pipe([
-        map(get('metadata.dataServiceIds')),
-        flattenDeep,
-        map(concat('has')),
-        concat('any'),
-      ])
-      return generateFilters(this.activeDatasets)
-    },
     spatialLayer() {
       const spatialLayer = getSpatialLayer().get(map)
-      spatialLayer.source.tiles = this.mapboxOptions.tiles
+      spatialLayer.source.tiles = this.activeSpatialData
       return spatialLayer
+    },
+    vectorLayers() {
+      const vectorLayers = this.allVectorData
+      const defaultVectorLayer = getVectorLayer()
+      vectorLayers.forEach(layer => {
+        if (!layer.paint) {
+          layer.paint = defaultVectorLayer.paint
+        }
+      })
+      return vectorLayers
     },
   },
   watch: {
@@ -122,20 +114,20 @@ export default {
     await this.$nextTick()
     const map = this.$refs.map.map
     map.on('load', () => {
-      const locationsLayer = getLocationsLayer().get(map)
-      this.locationsLayer = locationsLayer
+      // console.log('loading')
+      // this.locationsLayers = getVectorLayer()
     })
   },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
     ...mapMutations('map', ['clearActiveDatasetIds']),
-    ...mapMutations('map', ['clearActiveDatasetIds']),
-    loadLocations({ detail }) {
-      const locationIds = detail.map(feature => feature.properties.locationId)
-      const locationId = head(locationIds)
-      const { datasetIds } = this.$route.params
-      this.loadPointDataForLocation({ datasetIds, locationId })
-    },
+    // loadLocations({ detail }) {
+    //   console.log('detail', detail)
+    //   const locationIds = detail.map(feature => feature.properties.locationId)
+    //   const locationId = head(locationIds)
+    //   const { datasetIds } = this.$route.params
+    //   this.loadPointDataForLocation({ datasetIds, locationId })
+    // },
     selectLocations(detail) {
       const { datasetIds } = this.$route.params
       const locationIds = detail.map(feature => feature.properties.locationId)

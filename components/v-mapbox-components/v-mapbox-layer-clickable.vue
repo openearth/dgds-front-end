@@ -3,104 +3,58 @@
 </template>
 
 <script>
-import getColors from '../../lib/styling/colors'
-
-const color = getColors('dark')
-
 export default {
   name: 'VMapboxLayerClickable',
   props: {
-    id: {
-      type: String,
-      required: true,
-    },
-    options: {
+    layer: {
       default: () => {
         return {}
       },
       type: Object,
-    },
-    filter: {
-      default: () => [],
-      type: Array,
-    },
-    activeLocationIds: {
-      type: Array,
-      default: () => [],
     },
     activeTheme: {
       type: String,
       required: true,
     },
   },
+  inject: ['getMap'],
   data() {
     return {
       map: null,
     }
   },
   watch: {
-    options: {
+    layer: {
       handler(newValue) {
         this.addToMap()
       },
       deep: true,
     },
-    filter: {
-      handler(newValue) {
-        if (this.map) {
-          this.map.setFilter(this.id, newValue)
-        }
-      },
-      deep: true,
-    },
-    activeLocationIds() {
-      this.setActiveFilter()
-    },
     activeTheme() {
       this.setActiveFilter()
     },
   },
+  created() {
+    this.map = this.getMap()
+    if (this.map.loaded()) {
+      this.addToMap()
+    }
+  },
+  beforeDestroy() {
+    if (this.layer.id && this.map.getLayer(this.layer.id)) {
+      this.map.removeLayer(this.layer.id)
+      this.map.removeSource(this.layer.id)
+    }
+  },
   methods: {
     deferredMountedTo(map) {
-      this.map = map
       this.addToMap()
     },
-    setActiveFilter() {
-      if (this.map) {
-        const filters = this.activeLocationIds.map(id => [
-          '==',
-          ['get', 'locationId'],
-          id,
-        ])
-        this.map.setPaintProperty(this.id, 'circle-stroke-width', [
-          'case',
-          ['any', ...filters],
-          4,
-          1,
-        ])
-        this.map.setPaintProperty(this.id, 'circle-color', [
-          'case',
-          ['any', ...filters],
-          color.white100,
-          color.pink,
-        ])
-        this.map.setPaintProperty(this.id, 'circle-stroke-color', [
-          'case',
-          ['any', ...filters],
-          color.blue60,
-          color.white100,
-        ])
-      }
-    },
     addToMap() {
-      const id = (this.options && this.options.id) || this.id
-      if (this.options) {
-        this.map.addLayer({ ...this.options, id })
-        this.setActiveFilter()
-        if (this.filter !== []) {
-          this.map.setFilter(id, this.filter)
-        }
-        this.map.on('click', id, event => {
+      if (this.layer) {
+        this.map.addLayer(this.layer)
+
+        this.map.on('click', this.layer.id, event => {
           const { clientWidth } = this.map.getCanvas()
 
           // prettier-ignore
@@ -120,11 +74,11 @@ export default {
           }, duration)
         })
 
-        this.map.on('mouseenter', 'locations', () => {
+        this.map.on('mouseenter', this.layer.id, () => {
           this.map.getCanvas().style.cursor = 'pointer'
         })
 
-        this.map.on('mouseleave', 'locations', () => {
+        this.map.on('mouseleave', this.layer.id, () => {
           this.map.getCanvas().style.cursor = ''
         })
       }

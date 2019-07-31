@@ -56,6 +56,8 @@ export const actions = {
     const addTheme = commit('themes/addTheme')
     const addMetadata = commit('datasets/addMetadata')
     const addRaster = commit('datasets/addDatasetSpatial')
+    const addVector = commit('datasets/addDatasetVector')
+
     // prettier-ignore
     const storeMetadata =
       pipe([
@@ -77,7 +79,18 @@ export const actions = {
       map(addRaster),
     ])
 
-    const processTheme = applyTo([storeTheme, storeMetadata, storeSpatial])
+    const storeVector = pipe([
+      get('datasets'),
+      filter(get('mapboxLayer')),
+      map(addVector),
+    ])
+
+    const processTheme = applyTo([
+      storeTheme,
+      storeMetadata,
+      storeSpatial,
+      storeVector,
+    ])
 
     return getFromApi('datasets')
       .then(values)
@@ -191,6 +204,13 @@ export const getters = {
     const tiles = [get('spatial.tiles', head(spatialLayers))]
     return tiles.filter(identity)
   },
+  allVectorData({ activeLocationIds }, { activeDatasets }) {
+    const vectorLayers = activeDatasets.filter(has('vector'))
+    const mapboxLayers = vectorLayers.map(layer => {
+      return get('vector.mapboxLayer', layer)
+    })
+    return mapboxLayers.filter(identity)
+  },
   activeDatasetsLocations({ activeLocationIds }, { activeDatasets }) {
     const getActiveProperty = feature =>
       pipe([
@@ -252,7 +272,6 @@ export const getters = {
   datasetsInActiveTheme(state) {
     return values(state.datasets)
       .map(get('metadata'))
-      .filter(has('dataServiceIds'))
       .map(obj => merge(obj, { visible: getId(obj) }))
       .map(update('visible', includesIn(state.activeDatasetIds)))
   },

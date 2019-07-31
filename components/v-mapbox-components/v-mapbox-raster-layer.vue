@@ -36,7 +36,7 @@ export default {
             this.map.removeSource(this.id)
           }
           if (get('options.source.tiles.length', this) > 0) {
-            this.map.addLayer(this.options, 'locations')
+            this.map.addLayer(this.options, 'water-border')
           }
         }
       },
