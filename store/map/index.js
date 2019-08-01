@@ -62,7 +62,7 @@ export const actions = {
     const storeMetadata =
       pipe([
         get('datasets'),
-        omit('wmsUrl'),
+        omit('rasterUrl'),
         map(addMetadata)
       ])
 
@@ -75,7 +75,7 @@ export const actions = {
 
     const storeSpatial = pipe([
       get('datasets'),
-      filter(get('wmsUrl')),
+      filter(get('rasterUrl')),
       map(addRaster),
     ])
 

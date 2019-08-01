@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: 'VMapboxLayerClickable',
+  name: 'VMapboxVectorLayer',
   props: {
     layer: {
       default: () => {

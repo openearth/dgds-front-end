@@ -10,13 +10,14 @@
         <v-mapbox-navigation-control
           position="bottom-right"
         ></v-mapbox-navigation-control>
-        <v-mapbox-layer-clickable
+        <v-mapbox-selected-point-layer></v-mapbox-selected-point-layer>
+        <v-mapbox-vector-layer
           v-for="layer in vectorLayers"
           :key="layer.id"
           :layer="layer"
           :active-theme="activeTheme"
           @select-locations="selectLocations"
-        ></v-mapbox-layer-clickable>
+        ></v-mapbox-vector-layer>
         <v-mapbox-raster-layer :options="spatialLayer"> </v-mapbox-raster-layer>
       </v-mapbox>
     </no-ssr>
@@ -55,16 +56,18 @@ import TimeStamp from '../components/time-stamp'
 import { when } from '../lib/utils'
 import getVectorLayer from '../lib/mapbox/layers/get-vector-layer'
 import getSpatialLayer from '../lib/mapbox/layers/get-spatial-layer'
-import VMapboxLayerClickable from '../components/v-mapbox-components/v-mapbox-layer-clickable'
+import VMapboxVectorLayer from '../components/v-mapbox-components/v-mapbox-vector-layer'
 import VMapboxRasterLayer from '../components/v-mapbox-components/v-mapbox-raster-layer'
+import VMapboxSelectedPointLayer from '../components/v-mapbox-components/v-mapbox-selected-point-layer'
 
 export default {
   components: {
     SiteNavigation,
     DataSetControlMenu,
     TimeStamp,
-    VMapboxLayerClickable,
+    VMapboxVectorLayer,
     VMapboxRasterLayer,
+    VMapboxSelectedPointLayer,
   },
   data: () => ({
     mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
