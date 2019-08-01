@@ -40,9 +40,9 @@ export default {
   },
   watch: {
     coordinates(newValue) {
-      const layer = this.map.getSource(this.selectedLayer.id)
+      const selectedLayer = this.map.getSource(this.selectedLayer.id)
       this.geojson.coordinates = newValue
-      layer.setData(this.geojson)
+      selectedLayer.setData(this.geojson)
     },
   },
   methods: {
