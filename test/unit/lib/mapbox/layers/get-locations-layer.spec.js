@@ -1,78 +1,29 @@
 import getLocationsLayer from '../../../../../lib/mapbox/layers/get-locations-layer'
 import getColors from '../../../../../lib/styling/colors'
-import { getCurrentStyle } from '../../../../../lib/mapbox/get-style'
-jest.mock('../../../../../lib/mapbox/get-style')
-getCurrentStyle.mockReturnValue({ id: 'dark' })
 
-const light = getColors('light')
-const dark = getColors('dark')
+const color = getColors('dark')
+const locationsPaint = {
+  'circle-color': ['case', ['has', 'active'], color.white100, color.pink],
+  'circle-stroke-color': [
+    'case',
+    ['has', 'active'],
+    color.blue60,
+    color.white100,
+  ],
+  'circle-stroke-width': ['case', ['has', 'active'], 4, 1],
+  'circle-pitch-alignment': 'map',
+  'circle-radius': ['interpolate', ['linear'], ['zoom'], 0, 4, 22, 8],
+  'circle-opacity': 0.8,
+  'circle-stroke-opacity': 0.8,
+}
 
 const layer = {
   id: 'locations',
   type: 'circle',
   source: {
-    data: {
-      features: [],
-      type: 'FeatureCollection',
-    },
-    type: 'geojson',
+    type: 'vector',
   },
-  paint: {
-    default: {
-      'circle-radius': 8,
-
-      // prettier-ignore
-      'circle-stroke-width': [
-        'case',
-        ['get', 'active'], 8,
-        4
-      ]
-    },
-    dark: {
-      // prettier-ignore
-      'circle-color': [
-        'case',
-        ['get', 'active'], dark.white100,
-        dark.pink,
-      ],
-
-      // prettier-ignore
-      'circle-stroke-color': [
-        'case',
-        ['get', 'active'], dark.blue60,
-        dark.black100,
-      ],
-
-      // prettier-ignore
-      'circle-stroke-opacity': [
-        'case',
-        ['get', 'active'], 1,
-        0.2,
-      ]
-    },
-    light: {
-      // prettier-ignore
-      'circle-color': [
-        'case',
-        ['get', 'active'], light.white100,
-        light.pink,
-      ],
-
-      // prettier-ignore
-      'circle-stroke-color': [
-        'case',
-        ['get', 'active'], light.blue60,
-        light.white100,
-      ],
-
-      // prettier-ignore
-      'circle-stroke-opacity': [
-        'case',
-        ['get', 'active'], 1,
-        0.6
-      ]
-    },
-  },
+  paint: locationsPaint,
 }
 
 test('returns location layer', () => {
@@ -90,18 +41,7 @@ describe('add', () => {
     locationsLayer.add(mapbox)
 
     expect(mapbox.addLayer.mock.calls[0][0]).toMatchObject({
-      paint: {
-        'circle-color': ['case', ['get', 'active'], '#ffffff', '#ff33dd'],
-        'circle-radius': 8,
-        'circle-stroke-color': [
-          'case',
-          ['get', 'active'],
-          '#66bbdc',
-          '#000000',
-        ],
-        'circle-stroke-opacity': ['case', ['get', 'active'], 1, 0.2],
-        'circle-stroke-width': ['case', ['get', 'active'], 8, 4],
-      },
+      paint: locationsPaint,
     })
   })
 
@@ -114,18 +54,7 @@ describe('add', () => {
     locationsLayer.add(mapbox)
 
     expect(mapbox.addLayer.mock.calls[0][0]).toMatchObject({
-      paint: {
-        'circle-color': ['case', ['get', 'active'], '#ffffff', '#ff33dd'],
-        'circle-radius': 8,
-        'circle-stroke-color': [
-          'case',
-          ['get', 'active'],
-          '#66bbdc',
-          '#000000',
-        ],
-        'circle-stroke-opacity': ['case', ['get', 'active'], 1, 0.2],
-        'circle-stroke-width': ['case', ['get', 'active'], 8, 4],
-      },
+      paint: locationsPaint,
     })
   })
 })
@@ -141,9 +70,9 @@ describe('update', () => {
     }
     const locationsLayer = getLocationsLayer()
     locationsLayer.update(mapbox)
-    expect(setData).toHaveBeenCalledWith(layer.source.data)
+    expect(setData).toHaveBeenCalledWith(mapbox.getSource().data)
   })
-  test('does not call set data when mabox source is not available', () => {
+  test('does not call setData when mapbox source is not available', () => {
     const setData = jest.fn()
     const mapbox = {
       getSource: () => undefined,
@@ -161,7 +90,6 @@ describe('update', () => {
     const mapbox = {
       getSource: () => ({
         setData,
-        data: { foo: 'bar' },
       }),
     }
     console.warn = jest.fn() // eslint-disable-line

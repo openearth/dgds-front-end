@@ -1,11 +1,26 @@
 <template>
   <div class="default-layout" style="position: relative;">
-    <div
-      id="map"
-      v-mapbox="mapboxOptions"
-      @load-locations="loadLocations"
-      @select-locations="selectLocations"
-    />
+    <no-ssr>
+      <v-mapbox
+        id="map"
+        ref="map"
+        :access-token="mapboxAccessToken"
+        map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
+      >
+        <v-mapbox-navigation-control
+          position="bottom-right"
+        ></v-mapbox-navigation-control>
+        <v-mapbox-layer-clickable
+          id="locations"
+          :options="locationsLayer"
+          :filter="locationsFilter"
+          :active-location-ids="activeLocationIds"
+          :active-theme="activeTheme"
+          @select-locations="selectLocations"
+        ></v-mapbox-layer-clickable>
+        <v-mapbox-raster-layer :options="spatialLayer"> </v-mapbox-raster-layer>
+      </v-mapbox>
+    </no-ssr>
     <DataSetControlMenu
       class="default-layout__data-set-control-menu"
       :datasets="datasetsInActiveTheme"
@@ -16,18 +31,14 @@
       class="default-layout__timestamp"
       :timestamp="activeTimestamp"
     />
-    <div style="position: absolute; bottom: 2rem; right: 3rem;">
-      <select @change="setActive">
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-      </select>
-    </div>
     <nuxt />
     <SiteNavigation class="default-layout__site-navigation" />
   </div>
 </template>
 
 <script>
+import get from 'lodash/fp/get'
+import map from 'lodash/fp/map'
 import head from 'lodash/head'
 import includes from 'lodash/fp/includes'
 import pipe from 'lodash/fp/pipe'
@@ -39,23 +50,41 @@ import negate from 'lodash/fp/negate'
 import concat from 'lodash/fp/concat'
 import isEqual from 'lodash/fp/isEqual'
 import identity from 'lodash/fp/identity'
+import flattenDeep from 'lodash/fp/flattenDeep'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import DataSetControlMenu from '../components/data-set-control-menu'
 import SiteNavigation from '../components/site-navigation'
 import TimeStamp from '../components/time-stamp'
 import { when } from '../lib/utils'
+import getLocationsLayer from '../lib/mapbox/layers/get-locations-layer'
+import getSpatialLayer from '../lib/mapbox/layers/get-spatial-layer'
+import VMapboxLayerClickable from '../components/v-mapbox-components/v-mapbox-layer-clickable'
+import VMapboxRasterLayer from '../components/v-mapbox-components/v-mapbox-raster-layer'
 
 export default {
-  components: { SiteNavigation, DataSetControlMenu, TimeStamp },
+  components: {
+    SiteNavigation,
+    DataSetControlMenu,
+    TimeStamp,
+    VMapboxLayerClickable,
+    VMapboxRasterLayer,
+  },
+  data: () => ({
+    mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
+    locationsLayer: null,
+    activeLocation: null,
+  }),
   computed: {
     ...mapState({
       activeTheme: state => state.preferences.theme.active,
+      activeLocationIds: state => state.map.activeLocationIds,
     }),
     ...mapGetters('map', [
       'activeSpatialData',
       'activeDatasetsLocations',
       'datasetsInActiveTheme',
       'activeTimestamp',
+      'activeDatasets',
     ]),
     mapboxOptions() {
       return {
@@ -63,6 +92,20 @@ export default {
         sources: this.activeDatasetsLocations,
         style: this.activeTheme,
       }
+    },
+    locationsFilter() {
+      const generateFilters = pipe([
+        map(get('metadata.dataServiceIds')),
+        flattenDeep,
+        map(concat('has')),
+        concat('any'),
+      ])
+      return generateFilters(this.activeDatasets)
+    },
+    spatialLayer() {
+      const spatialLayer = getSpatialLayer().get(map)
+      spatialLayer.source.tiles = this.mapboxOptions.tiles
+      return spatialLayer
     },
   },
   watch: {
@@ -75,27 +118,31 @@ export default {
       deep: true,
     },
   },
+  async mounted() {
+    await this.$nextTick()
+    const map = this.$refs.map.map
+    map.on('load', () => {
+      const locationsLayer = getLocationsLayer().get(map)
+      this.locationsLayer = locationsLayer
+    })
+  },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
     ...mapMutations('map', ['clearActiveDatasetIds']),
-    ...mapMutations({ setActiveTheme: 'preferences/theme/setActive' }),
+    ...mapMutations('map', ['clearActiveDatasetIds']),
     loadLocations({ detail }) {
       const locationIds = detail.map(feature => feature.properties.locationId)
       const locationId = head(locationIds)
       const { datasetIds } = this.$route.params
       this.loadPointDataForLocation({ datasetIds, locationId })
     },
-    selectLocations({ detail }) {
+    selectLocations(detail) {
       const { datasetIds } = this.$route.params
       const locationIds = detail.map(feature => feature.properties.locationId)
-
       this.updateRoute({
         name: 'datasetIds-locationId',
         params: { datasetIds, locationId: head(locationIds) },
       })
-    },
-    setActive(event) {
-      this.setActiveTheme(event.target.value)
     },
     toggleLocationDataset(id) {
       const addId = value => concat(value, id)

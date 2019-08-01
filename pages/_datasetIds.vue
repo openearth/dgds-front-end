@@ -12,11 +12,12 @@ export default {
   mounted() {
     const { datasetIds } = this.$route.params
     if (datasetIds) {
-      this.loadLocationsInDatasets(datasetIds)
+      this.storeActiveDatasets(datasetIds)
     }
   },
   methods: {
     ...mapActions('map', [
+      'storeActiveDatasets',
       'loadLocationsInDatasets',
       'loadPointDataForLocation',
     ]),
