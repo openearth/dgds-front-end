@@ -6,11 +6,15 @@
         ref="map"
         :access-token="mapboxAccessToken"
         map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
+        :pitch="10"
+        :bearing="10"
       >
         <v-mapbox-navigation-control
           position="bottom-right"
         ></v-mapbox-navigation-control>
-        <v-mapbox-selected-point-layer></v-mapbox-selected-point-layer>
+        <v-mapbox-selected-point-layer
+          :coordinates="coordinates"
+        ></v-mapbox-selected-point-layer>
         <v-mapbox-vector-layer
           v-for="layer in vectorLayers"
           :key="layer.id"
@@ -73,6 +77,7 @@ export default {
     mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
     locationsLayers: [],
     activeLocation: null,
+    coordinates: [],
   }),
   computed: {
     ...mapState({
@@ -117,6 +122,7 @@ export default {
     await this.$nextTick()
     const map = this.$refs.map.map
     map.on('load', () => {
+      console.log(map)
       // console.log('loading')
       // this.locationsLayers = getVectorLayer()
     })
@@ -132,8 +138,11 @@ export default {
     //   this.loadPointDataForLocation({ datasetIds, locationId })
     // },
     selectLocations(detail) {
+      this.coordinates = [detail.lngLat.lng, detail.lngLat.lat]
       const { datasetIds } = this.$route.params
-      const locationIds = detail.map(feature => feature.properties.locationId)
+      const locationIds = detail.features.map(
+        feature => feature.properties.locationId,
+      )
       this.updateRoute({
         name: 'datasetIds-locationId',
         params: { datasetIds, locationId: head(locationIds) },

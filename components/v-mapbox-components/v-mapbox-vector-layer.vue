@@ -70,7 +70,7 @@ export default {
           const features = event.features
           this.map.panTo(targetLocation, { duration })
           setTimeout(() => {
-            this.$emit('select-locations', features)
+            this.$emit('select-locations', { features, lngLat: event.lngLat })
           }, duration)
         })
 
