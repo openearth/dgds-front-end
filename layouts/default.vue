@@ -122,7 +122,6 @@ export default {
     await this.$nextTick()
     const map = this.$refs.map.map
     map.on('load', () => {
-      console.log(map)
       // console.log('loading')
       // this.locationsLayers = getVectorLayer()
     })

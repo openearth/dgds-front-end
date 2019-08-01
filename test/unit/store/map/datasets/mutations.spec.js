@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import { mutations } from '../../../../../store/map/datasets'
 
 describe('addDatasetLocations', () => {

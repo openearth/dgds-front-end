@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import get from 'lodash/fp/get'
 import getColors from '../../lib/styling/colors'
 
 const color = getColors('dark')
@@ -13,6 +12,7 @@ export default {
   props: {
     coordinates: {
       type: Array,
+      default: () => [0, 0],
     },
   },
   data() {
@@ -40,10 +40,8 @@ export default {
   },
   watch: {
     coordinates(newValue) {
-      console.log('changing coordiantes', newValue)
       const layer = this.map.getSource(this.selectedLayer.id)
       this.geojson.coordinates = newValue
-      console.log(layer, this.geojson)
       layer.setData(this.geojson)
     },
   },
