@@ -18,7 +18,7 @@ describe('Default', () => {
     map = {
       namespaced: true,
       getters: {
-        activeDatasetsLocations: jest.fn(() => 'foo'),
+        allVectorData: jest.fn(() => [{ foo: 'bar' }]),
         activeSpatialData: jest.fn(() => 'foo'),
         datasetsInActiveTheme: jest.fn(() => ['bar']),
       },

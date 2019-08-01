@@ -16,7 +16,6 @@ describe('addDatasetLocations', () => {
     expect(Object.isFrozen(state.wl.vector[0])).toBe(true)
   })
 
-
   test('updates state with existing id with new (frozen) features', () => {
     const state = {
       wl: {
@@ -26,14 +25,13 @@ describe('addDatasetLocations', () => {
       },
     }
     const id = 'wl'
-    const data = {  }
+    const data = {}
 
     mutations.addDatasetVector(state, { id, data })
     expect(state).toMatchObject({
       wl: {
         vector: {
-          mapboxLayer:
-            {foo: 'bar'},
+          mapboxLayer: { foo: 'bar' },
         },
       },
     })

@@ -19,5 +19,5 @@ const locationsPaint = {
 
 test('returns location layer with default paint', () => {
   const locationsLayer = getVectorLayer()
-  expect(locationsLayer).toMatchObject({paint: locationsPaint })
+  expect(locationsLayer).toMatchObject({ paint: locationsPaint })
 })
