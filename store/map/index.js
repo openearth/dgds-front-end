@@ -33,6 +33,7 @@ const getId = get('id')
 export const state = () => ({
   activeDatasetIds: [],
   activeLocationIds: [],
+  activeTheme: {},
 })
 
 export const mutations = {
@@ -41,6 +42,16 @@ export const mutations = {
   },
   clearActiveDatasetIds(state) {
     state.activeDatasetIds = []
+  },
+  setActiveTheme(state, id) {
+    if (state.activeTheme.id === id) {
+      state.activeTheme = {}
+    } else {
+      state.activeTheme = state.themes[id]
+    }
+  },
+  clearActiveTheme(state) {
+    state.activeTheme = {}
   },
   setActiveLocationIds(state, ids) {
     state.activeLocationIds = flatten(ids.map(id => id.split(',')))
@@ -160,6 +171,9 @@ export const actions = {
 }
 
 export const getters = {
+  getThemes(state) {
+    return state.themes
+  },
   knownDatasetIds(state) {
     return Object.keys(state.datasets)
   },
@@ -201,7 +215,8 @@ export const getters = {
   },
   activeSpatialData({ activeLocationIds }, { activeDatasets }) {
     const spatialLayers = activeDatasets.filter(has('metadata'))
-    const tiles = [get('spatial.tiles', head(spatialLayers))]
+    const activeSpatialLayer = spatialLayers.filter(layer => layer.activeRaster)
+    const tiles = [get('spatial.tiles', activeSpatialLayer)]
     return tiles.filter(identity)
   },
   allVectorData({ activeLocationIds }, { activeDatasets }) {
@@ -270,9 +285,14 @@ export const getters = {
     )
   },
   datasetsInActiveTheme(state) {
+    let ids = state.activeDatasetIds
+    if (state.activeTheme !== {}) {
+      ids = state.activeTheme.datasets
+    }
+
     return values(state.datasets)
       .map(get('metadata'))
       .map(obj => merge(obj, { visible: getId(obj) }))
-      .map(update('visible', includesIn(state.activeDatasetIds)))
+      .map(update('visible', includesIn(ids)))
   },
 }

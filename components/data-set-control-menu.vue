@@ -14,11 +14,18 @@
             fallback-name="placeholder"
           />
           {{ dataset.name }}
-          <UiToggle
-            :checked="dataset.visible"
-            class="data-set-control-menu__control"
-            @change="toggleLocationDataSet(dataset.id)"
-          />
+          <div class="data-set-control-menu__control">
+            <UiToggle
+              :checked="dataset.visible"
+              class="data-set-control-menu__control"
+              @change="toggleLocationDataset(dataset.id)"
+            />
+            <UiRadio
+              :checked="dataset.rastervisible"
+              class="data-set-control-menu__control"
+              @change="toggleRasterLayer(dataset.id)"
+            />
+          </div>
         </label>
       </li>
     </ul>
@@ -28,10 +35,11 @@
 <script>
 import Panel from './panel'
 import UiToggle from './ui-toggle'
+import UiRadio from './ui-radio'
 import Icon from './icon'
 
 export default {
-  components: { Panel, UiToggle, Icon },
+  components: { Panel, UiToggle, Icon, UiRadio },
   props: {
     datasets: {
       type: Array,
@@ -39,8 +47,11 @@ export default {
     },
   },
   methods: {
-    toggleLocationDataSet(id) {
+    toggleLocationDataset(id) {
       this.$emit('toggle-location-dataset', id)
+    },
+    toggleRasterLayer(id) {
+      this.$emit('toggle-raster-layer', id)
     },
   },
 }

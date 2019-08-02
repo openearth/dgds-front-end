@@ -29,6 +29,7 @@
       class="default-layout__data-set-control-menu"
       :datasets="datasetsInActiveTheme"
       @toggle-location-dataset="toggleLocationDataset"
+      @toggle-raster-layer="toggleRasterLayer"
     />
     <TimeStamp
       v-show="activeTimestamp !== ''"
@@ -98,6 +99,7 @@ export default {
     spatialLayer() {
       const spatialLayer = getSpatialLayer().get(map)
       spatialLayer.source.tiles = this.activeSpatialData
+      console.log('spatial layer')
       return spatialLayer
     },
     vectorLayers() {
@@ -155,6 +157,13 @@ export default {
         this.$route,
       )
       this.updateRoute(newRouteObject)
+    },
+    toggleRasterLayer(id) {
+      this.rasterId = id
+    },
+
+    changeTheme(id) {
+      console.log('changing theme', id)
     },
     updateRoute(routeObj) {
       const { datasetIds, locationId } = routeObj.params
