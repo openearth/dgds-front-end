@@ -20,7 +20,7 @@
         <div
           class="site-navigation__list-item site-navigation__list-item--active"
         >
-          <UiButtonIcon @click="setActiveTheme(theme.id)">
+          <UiButtonIcon @click="changeTheme(theme.id)">
             <Icon
               size="large"
               :name="`theme-${theme.id}`"
@@ -54,6 +54,10 @@ export default {
   },
   methods: {
     ...mapMutations('map', ['setActiveTheme']),
+    changeTheme(id) {
+      this.setActiveTheme(id)
+      this.$emit('change-theme')
+    },
     expand() {
       this.expanded = true
     },

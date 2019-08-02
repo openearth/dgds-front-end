@@ -37,7 +37,10 @@
       :timestamp="activeTimestamp"
     />
     <nuxt />
-    <SiteNavigation class="default-layout__site-navigation" />
+    <SiteNavigation
+      class="default-layout__site-navigation"
+      @change-theme="changeTheme"
+    />
   </div>
 </template>
 
@@ -95,11 +98,11 @@ export default {
       'datasetsInActiveTheme',
       'activeTimestamp',
       'activeDatasets',
+      'getActiveTheme',
     ]),
     spatialLayer() {
       const spatialLayer = getSpatialLayer().get(map)
       spatialLayer.source.tiles = this.activeSpatialData
-      console.log('spatial layer')
       return spatialLayer
     },
     vectorLayers() {
@@ -162,8 +165,15 @@ export default {
       this.rasterId = id
     },
 
-    changeTheme(id) {
-      console.log('changing theme', id)
+    changeTheme() {
+      const datasets = this.getActiveTheme.datasets
+      let newparams
+      if (datasets) {
+        newparams = datasets.join(',')
+      }
+      const newRouteObject = this.$route
+      newRouteObject.params.datasetIds = newparams
+      this.updateRoute(newRouteObject)
     },
     updateRoute(routeObj) {
       const { datasetIds, locationId } = routeObj.params
