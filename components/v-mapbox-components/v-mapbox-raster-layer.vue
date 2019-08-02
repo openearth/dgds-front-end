@@ -31,6 +31,7 @@ export default {
           if (newOptions.source.tiles) {
             if (
               source &&
+              source.tiles &&
               newOptions &&
               source.tiles[0] === newOptions.source.tiles[0]
             )
