@@ -123,7 +123,6 @@ export default {
   },
   async mounted() {
     await this.$nextTick()
-    const map = this.$refs.map.map
   },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
