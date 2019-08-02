@@ -41,7 +41,6 @@ export default {
   },
   watch: {
     geometry(newValue) {
-      console.log('geometry', newValue)
       const selectedLayer = this.map.getSource(this.selectedLayer.id)
       selectedLayer.setData(newValue)
     },
