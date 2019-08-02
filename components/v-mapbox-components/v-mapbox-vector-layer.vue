@@ -67,10 +67,14 @@ export default {
             y: event.point.y,
           })
           const duration = 500
-          const features = event.features
           this.map.panTo(targetLocation, { duration })
+
+          const features = this.map.queryRenderedFeatures(event.point)
           setTimeout(() => {
-            this.$emit('select-locations', { features, lngLat: event.lngLat })
+            this.$emit('select-locations', {
+              features,
+              geometry: features[0].geometry,
+            })
           }, duration)
         })
 

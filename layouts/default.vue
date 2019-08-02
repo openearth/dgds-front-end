@@ -13,7 +13,7 @@
           position="bottom-right"
         ></v-mapbox-navigation-control>
         <v-mapbox-selected-point-layer
-          :coordinates="coordinates"
+          :geometry="geometry"
         ></v-mapbox-selected-point-layer>
         <v-mapbox-vector-layer
           v-for="layer in vectorLayers"
@@ -77,7 +77,10 @@ export default {
     mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
     locationsLayers: [],
     activeLocation: null,
-    coordinates: [],
+    geometry: {
+      type: 'Point',
+      coordinates: [],
+    },
   }),
   computed: {
     ...mapState({
@@ -121,23 +124,12 @@ export default {
   async mounted() {
     await this.$nextTick()
     const map = this.$refs.map.map
-    map.on('load', () => {
-      // console.log('loading')
-      // this.locationsLayers = getVectorLayer()
-    })
   },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
     ...mapMutations('map', ['clearActiveDatasetIds']),
-    // loadLocations({ detail }) {
-    //   console.log('detail', detail)
-    //   const locationIds = detail.map(feature => feature.properties.locationId)
-    //   const locationId = head(locationIds)
-    //   const { datasetIds } = this.$route.params
-    //   this.loadPointDataForLocation({ datasetIds, locationId })
-    // },
     selectLocations(detail) {
-      this.coordinates = [detail.lngLat.lng, detail.lngLat.lat]
+      this.geometry = detail.geometry
       const { datasetIds } = this.$route.params
       const locationIds = detail.features.map(
         feature => feature.properties.locationId,
@@ -167,7 +159,12 @@ export default {
     },
     updateRoute(routeObj) {
       const { datasetIds, locationId } = routeObj.params
-
+      if (datasetIds === undefined) {
+        this.geometry = {
+          type: 'Point',
+          coordinates: [],
+        }
+      }
       if (datasetIds === undefined && locationId !== undefined) {
         routeObj = update('params.locationId', () => undefined, routeObj)
       }

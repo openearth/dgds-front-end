@@ -10,18 +10,19 @@ const color = getColors('dark')
 export default {
   name: 'VMapboxSelectedPointLayer',
   props: {
-    coordinates: {
-      type: Array,
-      default: () => [0, 0],
+    geometry: {
+      type: Object,
+      default: () => {
+        return {
+          type: 'Point',
+          coordinates: [],
+        }
+      },
     },
   },
   data() {
     return {
       map: null,
-      geojson: {
-        type: 'Point',
-        coordinates: [0, 0],
-      },
       selectedLayer: {
         id: 'selected_point',
         type: 'circle',
@@ -39,16 +40,16 @@ export default {
     }
   },
   watch: {
-    coordinates(newValue) {
+    geometry(newValue) {
+      console.log('geometry', newValue)
       const selectedLayer = this.map.getSource(this.selectedLayer.id)
-      this.geojson.coordinates = newValue
-      selectedLayer.setData(this.geojson)
+      selectedLayer.setData(newValue)
     },
   },
   methods: {
     deferredMountedTo(map) {
       this.map = map
-      this.selectedLayer.source.data = this.geojson
+      this.selectedLayer.source.data = this.geometry
       map.addLayer(this.selectedLayer)
     },
   },
