@@ -29,7 +29,7 @@
       class="default-layout__data-set-control-menu"
       :datasets="datasetsInActiveTheme"
       @toggle-location-dataset="toggleLocationDataset"
-      @toggle-raster-layer="toggleRasterLayer"
+      @toggle-raster-layer="rasterId = $event"
     />
     <TimeStamp
       v-show="activeTimestamp !== ''"
@@ -161,10 +161,6 @@ export default {
       )
       this.updateRoute(newRouteObject)
     },
-    toggleRasterLayer(id) {
-      this.rasterId = id
-    },
-
     changeTheme() {
       const datasets = this.getActiveTheme.datasets
       let newparams

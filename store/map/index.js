@@ -175,9 +175,6 @@ export const getters = {
   getThemes(state) {
     return state.themes
   },
-  activeDatasetIds(state) {
-    return state.activeDatasetIds
-  },
   getActiveTheme(state) {
     return state.activeTheme
   },
@@ -291,12 +288,12 @@ export const getters = {
       {},
     )
   },
-  datasetsInActiveTheme(state) {
-    let ids = state.activeDatasetIds
-    if (state.activeTheme.datasets !== undefined) {
-      ids = state.activeTheme.datasets
+  datasetsInActiveTheme({ activeTheme, datasets, activeDatasetIds }) {
+    let ids = activeDatasetIds
+    if (activeTheme.datasets !== undefined) {
+      ids = activeTheme.datasets
     }
-    const sets = values(state.datasets)
+    const sets = values(datasets)
       .map(get('metadata'))
       .map(obj => merge(obj, { visible: getId(obj) }))
       .map(update('visible', includesIn(ids)))

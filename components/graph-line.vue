@@ -134,9 +134,6 @@ export default {
   computed: {
     ...mapGetters('preferences/theme', ['colors']),
   },
-  mounted() {
-    console.log('mounted', this.title, this.series)
-  },
   methods: {
     toggle() {
       if (this.collapsible) {

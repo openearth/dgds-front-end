@@ -51,7 +51,7 @@ export default {
     },
   },
   mounted() {
-    const { datasetIds, locationId } = this.$route.params
+    const { locationId } = this.$route.params
     this.location = locationId
     this.setActiveLocationIds([locationId])
   },
