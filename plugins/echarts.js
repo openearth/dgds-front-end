@@ -9,6 +9,7 @@ Vue.directive('echarts', {
     // on bind initiate echart and set the standard tools for the echart
     const { data, renderer = 'svg' } = value
     const chart = echarts.init(el, null, { renderer })
+    // console.log('data', data.series[0].data.length)
     chart.setOption(data)
 
     const resizeHandler = throttle(chart.resize, 100)

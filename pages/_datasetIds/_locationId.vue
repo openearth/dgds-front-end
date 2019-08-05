@@ -54,7 +54,6 @@ export default {
     const { datasetIds, locationId } = this.$route.params
     this.location = locationId
     this.setActiveLocationIds([locationId])
-    this.loadPointDataForLocation({ datasetIds, locationId })
   },
   destroyed() {
     this.clearActiveLocationIds()
