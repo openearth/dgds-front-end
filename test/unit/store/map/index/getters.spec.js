@@ -85,19 +85,20 @@ describe('activeDatasets', () => {
   })
 })
 
+// TODO: fix in Feat-theming-and-toggle-raster
 // describe('activeSpatialData', () => {
-// test('returns array with the current tile for the active dataset', () => {
-//   const otherGetters = {
-//     activeDatasets: [
-//       {
-//         metadata: {},
-//         spatial: { tiles: 'some/url' },
-//       },
-//     ],
-//   }
-//   const result = getters.activeSpatialData({}, otherGetters)
-//   expect(result).toEqual(['some/url'])
-// })
+//   test('returns array with the current tile for the active dataset', () => {
+//     const otherGetters = {
+//       activeDatasets: [
+//         {
+//           metadata: {},
+//           spatial: { tiles: 'some/url' },
+//         },
+//       ],
+//     }
+//     const result = getters.activeSpatialData({}, otherGetters)
+//     expect(result).toEqual(['some/url'])
+//   })
 //   test('returns an empty array when tiles cant be found', () => {
 //     const otherGetters = {
 //       activeDatasets: [
@@ -197,19 +198,38 @@ describe('activePointDataPerDataset', () => {
   })
 })
 
-// describe('datasetsInActiveTheme', () => {
-//   test('returns array of datasets for the current theme', () => {
-//     const state = {
-//       activeDatasetIds: ['bar'],
-//       datasets: {
-//         foo: { metadata: { id: 'foo' } },
-//         bar: { metadata: { id: 'bar' } },
-//       },
-//     }
-//     const result = getters.datasetsInActiveTheme(state)
-//     expect(result).toEqual([
-//       { id: 'foo', visible: false },
-//       { id: 'bar', visible: true },
-//     ])
-//   })
-// })
+describe('datasetsInActiveTheme', () => {
+  test('returns array of datasets belonging to active theme', () => {
+    const state = {
+      activeDatasetIds: ['bar'],
+      activeTheme: {
+        datasets: ['foo'],
+      },
+      datasets: {
+        foo: { metadata: { id: 'foo' } },
+        bar: { metadata: { id: 'bar' } },
+      },
+    }
+    const result = getters.datasetsInActiveTheme(state)
+    expect(result).toEqual([
+      { id: 'foo', visible: true },
+      { id: 'bar', visible: false },
+    ])
+  })
+
+  test('returns array of datasets selected if no theme is active', () => {
+    const state = {
+      activeDatasetIds: ['bar'],
+      activeTheme: {},
+      datasets: {
+        foo: { metadata: { id: 'foo' } },
+        bar: { metadata: { id: 'bar' } },
+      },
+    }
+    const result = getters.datasetsInActiveTheme(state)
+    expect(result).toEqual([
+      { id: 'foo', visible: false },
+      { id: 'bar', visible: true },
+    ])
+  })
+})

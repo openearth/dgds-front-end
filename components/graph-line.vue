@@ -18,7 +18,11 @@
       {{ title }}
     </figcaption>
     <div v-if="!isCollapsed" class="graph-line__aspect-ratio">
-      <div v-echarts="{ data }" class="graph-line__chart" />
+      <div
+        :id="title"
+        v-echarts="{ data: graphData() }"
+        class="graph-line__chart"
+      />
     </div>
   </figure>
 </template>
@@ -129,33 +133,36 @@ export default {
   }),
   computed: {
     ...mapGetters('preferences/theme', ['colors']),
-    data() {
-      const data = {
-        xAxis: {
-          data: this.category,
-        },
-        series: this.series.map(data => ({
-          type: 'line',
-          showAllSymbol: true,
-          data,
-          // symbolSize: 5,
-          itemStyle: {
-            normal: {
-              borderWidth: 1,
-            },
-          },
-        })),
-      }
-
-      const theme = getStyle(this.colors)
-      return merge(baseOptions, theme, data)
-    },
   },
   methods: {
     toggle() {
       if (this.collapsible) {
         this.isCollapsed = !this.isCollapsed
       }
+    },
+    graphData() {
+      const dataOptions = {
+        xAxis: {
+          data: this.category,
+        },
+        series: this.series.map(serie => {
+          // console.log('serie', serie)
+          return {
+            type: 'line',
+            showAllSymbol: true,
+            data: serie,
+            // symbolSize: 5,
+            itemStyle: {
+              normal: {
+                borderWidth: 1,
+              },
+            },
+          }
+        }),
+      }
+      const theme = getStyle(this.colors)
+      const result = merge(dataOptions, baseOptions, theme)
+      return result
     },
   },
 }

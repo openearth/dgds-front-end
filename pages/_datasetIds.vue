@@ -16,11 +16,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions('map', [
-      'storeActiveDatasets',
-      'loadLocationsInDatasets',
-      'loadPointDataForLocation',
-    ]),
+    ...mapActions('map', ['storeActiveDatasets', 'loadLocationsInDatasets']),
   },
 }
 </script>

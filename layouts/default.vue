@@ -29,7 +29,7 @@
       class="default-layout__data-set-control-menu"
       :datasets="datasetsInActiveTheme"
       @toggle-location-dataset="toggleLocationDataset"
-      @toggle-raster-layer="setActiveRasterLayer"
+      @toggle-raster-layer="rasterId = $event"
     />
     <TimeStamp
       v-show="activeTimestamp !== ''"
