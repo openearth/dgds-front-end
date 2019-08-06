@@ -15,27 +15,34 @@ const getOrEmptySpatial = getOrEmpty(emptyObject)
 const getOrEmptyMetadata = getOrEmpty(emptyObject)
 const getPointData = pipe([get('pointData'), getOrEmptyPointData])
 const getVectorData = pipe([get('vector'), getOrEmptyVector])
-const getSpatialData = pipe([get('spatial'), getOrEmptySpatial])
+const getRasterData = pipe([get('raster'), getOrEmptySpatial])
 const getMetadata = pipe([get('metadata'), getOrEmptyMetadata])
 
 export const state = () => ({})
 
 export const mutations = {
   addDatasetVector(state, data) {
-    const id = data.id
+    const id = get('id', data)
+    if (!id) return
     if (!state[id]) Vue.set(state, id, {})
     const vectorData = getVectorData(state[id])
     Vue.set(
       state[id],
       'vector',
-      merge(vectorData, { mapboxLayer: data.mapboxLayer }),
+      // TODO: make generic by looping over vectorLayer
+      merge(vectorData, { mapboxLayer: get('vectorLayer.mapboxLayer', data) }),
     )
   },
-  addDatasetSpatial(state, data) {
-    const id = data.id
+  addDatasetRaster(state, data) {
+    const id = get('id', data)
+    if (!id) return
     if (!state[id]) Vue.set(state, id, {})
-    const spatialData = getSpatialData(state[id])
-    Vue.set(state[id], 'spatial', merge(spatialData, { tiles: data.rasterUrl }))
+    const spatialData = getRasterData(state[id])
+    Vue.set(
+      state[id],
+      'raster',
+      merge(spatialData, { tiles: get('rasterLayer.url', data) }),
+    )
   },
   addDatasetPointData(state, { id, data }) {
     if (!state[id]) Vue.set(state, id, {})

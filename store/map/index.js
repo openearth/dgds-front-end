@@ -67,41 +67,37 @@ export const mutations = {
 
 export const actions = {
   loadThemes({ commit: _commit }) {
-    console.log('loading themes')
     const commit = path => value => _commit(path, value)
     const addTheme = commit('themes/addTheme')
-    // const addMetadata = commit('datasets/addMetadata')
-    // const addRaster = commit('datasets/addDatasetSpatial')
-    // const addVector = commit('datasets/addDatasetVector')
+    const addMetadata = commit('datasets/addMetadata')
+    const addRaster = commit('datasets/addDatasetRaster')
+    const addVector = commit('datasets/addDatasetVector')
 
     // prettier-ignore
-    // const storeMetadata =
-    //   pipe([
-    //     get('datasets'),
-    //     omit('rasterUrl'),
-    //     map(addMetadata)
-    //   ])
 
-    // const storeSpatial = pipe([
-    //   get('datasets'),
-    //   filter(get('rasterUrl')),
-    //   map(addRaster),
-    // ])
-    //
-    // const storeVector = pipe([
-    //   get('datasets'),
-    //   filter(get('mapboxLayer')),
-    //   map(addVector),
-    // ])
-
-    const processTheme = applyTo([
-      // storeMetadata,
-      // storeSpatial,
-      // storeVector,
+    // TODO: create better construction to filter:
+    // Should be something like filter(get('rasterLayer'))
+    const storeRaster = pipe([
+      val => {
+        if (has('rasterLayer', val)) return val
+        else return {}
+      },
+      addRaster
     ])
+
+    // Should be something like filter(get('rasterLayer'))
+    const storeVector = pipe([
+      val => {
+        if (has('vectorLayer', val)) return val
+        else return {}
+      },
+      addVector,
+    ])
+    const processTheme = applyTo([addMetadata, storeRaster, storeVector])
 
     return getFromApi('datasets').then(val => {
       map(addTheme, get('themes', val))
+      map(processTheme, get('datasets', val))
     })
   },
 

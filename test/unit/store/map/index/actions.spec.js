@@ -17,20 +17,14 @@ describe('loadThemes', () => {
       'themes/addTheme',
       { id: 'theme1', name: 'theme1Name' },
     ])
-    // expect(commit.mock.calls[1]).toEqual([
-    //   'datasets/addMetadata',
-    //   {
-    //     id: 'ab',
-    //     foo: 'bar',
-    //   },
-    // ])
-    // expect(commit.mock.calls[2]).toEqual([
-    //   'datasets/addMetadata',
-    //   {
-    //     id: 'cd',
-    //     baz: 'blub',
-    //   },
-    // ])
+    expect(commit.mock.calls[1]).toEqual([
+      'datasets/addMetadata',
+      {
+        id: 'ab',
+        foo: 'bar',
+      },
+    ])
+    expect(commit.mock.calls[2]).toEqual(['datasets/addDatasetRaster', {}])
   })
 })
 
@@ -164,7 +158,6 @@ describe('loadPointDataForLocation', () => {
       },
     ])
   })
-
 
   test('loads point data for the specified location in string format', async () => {
     const commit = jest.fn()
