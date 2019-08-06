@@ -117,7 +117,7 @@ export const actions = {
     commit('setActiveDatasetIds', ids)
   },
 
-  loadPointDataForLocation({ commit, state }, { datasetIds, locationId }) {
+  loadPointDataForLocation({ commit }, { datasetIds, locationId }) {
     // prettier-ignore
     const getEvents = pipe([
       filter(has('events')),
@@ -145,8 +145,6 @@ export const actions = {
 
     // prettier-ignore
     datasets.forEach(datasetId => {
-      const check = get(`[${datasetId}].pointData[${locationId}]`, state.datasets)
-      if (check) return
       const parameters = {
         locationCode: locationId,
         startTime: moment()
@@ -157,6 +155,7 @@ export const actions = {
           .format('YYYY-MM-DDTHH:mm:ssZ'),
         datasetId: datasetId,
       }
+
       return getFromApi('timeseries', parameters).then(({ results }) => {
         commit(
           'datasets/addDatasetPointData',
@@ -214,11 +213,8 @@ export const getters = {
   },
 
   activeTimestamp(state, { activeSpatialData }) {
-    if (
-      activeSpatialData &&
-      activeSpatialData.length &&
-      activeSpatialData[0] !== ''
-    ) {
+    console.log('active spatialdata', activeSpatialData)
+    if (get('[0]', activeSpatialData)) {
       const str = activeSpatialData[0]
       const timestamp = str.split(/time=([^&]+)/)[1]
       const timeDec = decodeURIComponent(timestamp)
@@ -298,12 +294,12 @@ export const getters = {
       {},
     )
   },
-  datasetsInActiveTheme({ activeTheme, datasets, activeDatasetIds }) {
-    let ids = activeDatasetIds
-    if (activeTheme.datasets !== undefined) {
-      ids = activeTheme.datasets
+  datasetsInActiveTheme(state) {
+    let ids = state.activeDatasetIds
+    if (state.activeTheme.datasets !== undefined) {
+      ids = state.activeTheme.datasets
     }
-    const sets = values(datasets)
+    const sets = values(state.datasets)
       .map(get('metadata'))
       .map(obj => merge(obj, { visible: getId(obj) }))
       .map(update('visible', includesIn(ids)))

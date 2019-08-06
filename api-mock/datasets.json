@@ -1,34 +1,117 @@
 {
-	"version": 8,
-	"name": "DGDS",
-	"datasets": [{
-		"id": "fw",
-		"name": "Flood warning",
-		"pointData": "timeseries",
-		"units": "N/A",
-		"timeSpan": "Live",
-		"themes": [
-			"Flooding"
-		],
-		"description": "To be filled by Daniel",
-		"vectorLayer": {
-			"mapboxLayer": {
-				"id": "GLOSSIS",
-				"filterIds": [
-					"Alert.level"
-				],
-				"type": "circle",
-				"source": {
-					"type": "vector",
-					"url": "mapbox://global-data-viewer.6w19mbaw"
-				},
-				"source-layer": "pltc012flat"
-			}
-		},
-		"rasterLayer": {
-			"url": "https://earthengine.googleapis.com/map/1311df60b987b59a9aefc5ee500dd17c/{z}/{x}/{y}?token=d0872d3bfff1dc1d66d504c492cabf78",
-			"date": "",
-			"dateFormat": ""
-		}
-	}]
+ "version": 8,
+ "name": "DGDS",
+ "themes": [
+   {
+     "id": "fl",
+     "name": "Flooding"
+   },
+   {
+     "id": "cm",
+     "name": "Coastal Management"
+   },
+   {
+     "id": "os",
+     "name": "Offshore"
+   }
+ ],
+ "datasets": [
+     {
+       "id": "fw",
+       "name": "Flood warning",
+       "pointData": "timeseries",
+       "units": "N/A",
+       "timeSpan": "Live",
+       "themes": ["fl"],
+       "description": "To be filled by Daniel",
+       "vectorLayer": {
+         "mapboxLayer": {
+           "id": "GLOSSIS",
+           "filterIds": ["Alert.level"],
+           "type": "circle",
+           "source": {
+             "type": "vector",
+             "url": "mapbox://global-data-viewer.6w19mbaw"
+           },
+           "source-layer": "pltc012flat"
+         }
+       }
+     },
+     {
+       "id": "cc",
+       "name": "Currents",
+       "pointData": "timeseries",
+       "units": "km/h",
+       "timeSpan": "Live",
+       "themes": ["fl", "os"],
+       "description": "To be filled by Daniel"
+     },
+     {
+       "id": "wl",
+       "name": "Waterlevel",
+       "pointData": "timeseries",
+       "units": "m",
+       "timeSpan": "Live",
+       "themes": ["fl", "cm"],
+       "description": "To be filled by Daniel",
+       "vectorLayer": {
+         "mapboxLayer": {
+           "id": "GLOSSIS",
+           "filterIds": ["H.simulated"],
+           "type": "circle",
+           "source": {
+             "type": "vector",
+             "url": "mapbox://global-data-viewer.6w19mbaw"
+           },
+           "source-layer": "pltc012flat"
+         }
+       }
+     },
+     {
+       "id": "sh",
+       "name": "Surge Height",
+       "pointData": "timeseries",
+       "units": "m",
+       "timeSpan": "Live",
+       "themes": ["fl", "os"],
+       "description": "To be filled by Daniel",
+       "vectorLayer": {
+         "mapboxLayer": {
+           "id": "GLOSSIS",
+           "filterIds": [
+             "H.surge.simulated"
+           ],
+           "type": "circle",
+           "source": {
+             "type": "vector",
+             "url": "mapbox://global-data-viewer.6w19mbaw"
+           },
+           "source-layer": "pltc012flat"
+         }
+       }
+     },
+     {
+       "id": "tt",
+       "name": "Tide",
+       "pointData": "timeseries",
+       "units": "m",
+       "timeSpan": "Live",
+       "themes": ["fl"],
+       "description": "To be filled by Daniel",
+       "vectorLayer": {
+         "mapboxLayer": {
+           "id": "GLOSSIS",
+           "filterIds": [
+             "H.astronomical.simulated"
+           ],
+           "type": "circle",
+           "source": {
+             "type": "vector",
+             "url": "mapbox://global-data-viewer.6w19mbaw"
+           },
+           "source-layer": "pltc012flat"
+         }
+       }
+     }
+   ]
 }
