@@ -8,30 +8,29 @@ describe('loadThemes', () => {
   test('fetches datasets and stores them', async () => {
     const commit = jest.fn()
     const apiResult = {
-      coastalManagement: {
-        datasets: [{ id: 'ab', foo: 'bar' }, { id: 'cd', baz: 'blub' }],
-      },
+      themes: [{ id: 'theme1', name: 'theme1Name' }],
+      datasets: [{ id: 'ab', foo: 'bar' }, { id: 'cd', baz: 'blub' }],
     }
     getFromApi.mockResolvedValue(apiResult)
     await actions.loadThemes({ commit })
     expect(commit.mock.calls[0]).toEqual([
       'themes/addTheme',
-      { datasets: ['ab', 'cd'] },
+      { id: 'theme1', name: 'theme1Name' },
     ])
-    expect(commit.mock.calls[1]).toEqual([
-      'datasets/addMetadata',
-      {
-        id: 'ab',
-        foo: 'bar',
-      },
-    ])
-    expect(commit.mock.calls[2]).toEqual([
-      'datasets/addMetadata',
-      {
-        id: 'cd',
-        baz: 'blub',
-      },
-    ])
+    // expect(commit.mock.calls[1]).toEqual([
+    //   'datasets/addMetadata',
+    //   {
+    //     id: 'ab',
+    //     foo: 'bar',
+    //   },
+    // ])
+    // expect(commit.mock.calls[2]).toEqual([
+    //   'datasets/addMetadata',
+    //   {
+    //     id: 'cd',
+    //     baz: 'blub',
+    //   },
+    // ])
   })
 })
 
@@ -122,7 +121,7 @@ describe('storeActiveDatasets', () => {
 })
 
 describe('loadPointDataForLocation', () => {
-  test('loads point data for the specified location if not already in store (datasets)', async () => {
+  test('loads point data for the specified location', async () => {
     const commit = jest.fn()
     const timestamp = moment()
     const apiResult = {
@@ -137,18 +136,9 @@ describe('loadPointDataForLocation', () => {
         },
       ],
     }
-    const state = {
-      datasets: {
-        ab: {
-          pointData: {
-            ef: {},
-          },
-        },
-      },
-    }
     getFromApi.mockResolvedValue(apiResult)
     await actions.loadPointDataForLocation(
-      { commit, state },
+      { commit },
       { datasetIds: ['ab', 'cd'], locationId: 'ef' },
     )
     expect(getFromApi).toHaveBeenCalledWith('timeseries', {
@@ -161,20 +151,10 @@ describe('loadPointDataForLocation', () => {
         .subtract(3, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
     })
-    expect(getFromApi).not.toHaveBeenCalledWith('timeseries', {
-      datasetId: 'ab',
-      endTime: moment()
-        .add(5, 'days')
-        .format('YYYY-MM-DDTHH:mm:ssZ'),
-      locationCode: 'ef',
-      startTime: moment()
-        .subtract(3, 'days')
-        .format('YYYY-MM-DDTHH:mm:ssZ'),
-    })
     expect(commit.mock.calls[0]).toEqual([
       'datasets/addDatasetPointData',
       {
-        id: 'cd',
+        id: 'ab',
         data: {
           ef: {
             category: [moment(timestamp).format('MM-DD-YYYY \n HH:mm')],
@@ -184,6 +164,7 @@ describe('loadPointDataForLocation', () => {
       },
     ])
   })
+
 
   test('loads point data for the specified location in string format', async () => {
     const commit = jest.fn()

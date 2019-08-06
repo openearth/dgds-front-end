@@ -67,49 +67,42 @@ export const mutations = {
 
 export const actions = {
   loadThemes({ commit: _commit }) {
+    console.log('loading themes')
     const commit = path => value => _commit(path, value)
     const addTheme = commit('themes/addTheme')
-    const addMetadata = commit('datasets/addMetadata')
-    const addRaster = commit('datasets/addDatasetSpatial')
-    const addVector = commit('datasets/addDatasetVector')
+    // const addMetadata = commit('datasets/addMetadata')
+    // const addRaster = commit('datasets/addDatasetSpatial')
+    // const addVector = commit('datasets/addDatasetVector')
 
     // prettier-ignore
-    const storeMetadata =
-      pipe([
-        get('datasets'),
-        omit('rasterUrl'),
-        map(addMetadata)
-      ])
+    // const storeMetadata =
+    //   pipe([
+    //     get('datasets'),
+    //     omit('rasterUrl'),
+    //     map(addMetadata)
+    //   ])
 
-    // prettier-ignore
-    const storeTheme =
-      pipe([
-        update('datasets', map(get('id'))),
-        addTheme,
-      ])
-
-    const storeSpatial = pipe([
-      get('datasets'),
-      filter(get('rasterUrl')),
-      map(addRaster),
-    ])
-
-    const storeVector = pipe([
-      get('datasets'),
-      filter(get('mapboxLayer')),
-      map(addVector),
-    ])
+    // const storeSpatial = pipe([
+    //   get('datasets'),
+    //   filter(get('rasterUrl')),
+    //   map(addRaster),
+    // ])
+    //
+    // const storeVector = pipe([
+    //   get('datasets'),
+    //   filter(get('mapboxLayer')),
+    //   map(addVector),
+    // ])
 
     const processTheme = applyTo([
-      storeTheme,
-      storeMetadata,
-      storeSpatial,
-      storeVector,
+      // storeMetadata,
+      // storeSpatial,
+      // storeVector,
     ])
 
-    return getFromApi('datasets')
-      .then(values)
-      .then(map(processTheme))
+    return getFromApi('datasets').then(val => {
+      map(addTheme, get('themes', val))
+    })
   },
 
   storeActiveDatasets({ commit, state, getters }, _ids) {
