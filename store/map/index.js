@@ -213,7 +213,6 @@ export const getters = {
   },
 
   activeTimestamp(state, { activeSpatialData }) {
-    console.log(activeSpatialData)
     if (
       activeSpatialData &&
       activeSpatialData.length &&
@@ -307,8 +306,6 @@ export const getters = {
       .map(get('metadata'))
       .map(obj => merge(obj, { visible: getId(obj) }))
       .map(update('visible', includesIn(ids)))
-    console.log(sets, state.activeTheme)
-
     return sets
   },
 }

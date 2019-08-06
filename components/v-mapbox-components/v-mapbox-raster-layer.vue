@@ -45,7 +45,6 @@ export default {
             get('source.tiles.length', newOptions) > 0 &&
             get('source.tiles[0]', newOptions) !== ''
           ) {
-            console.log('adding new layer', newOptions.source.tiles)
             this.map.addLayer(newOptions, 'water-border')
           }
         }

@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import map from 'lodash/fp/map'
 import head from 'lodash/head'
 import includes from 'lodash/fp/includes'
 import pipe from 'lodash/fp/pipe'
