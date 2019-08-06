@@ -21,7 +21,7 @@
               @change="toggleLocationDataset(dataset.id)"
             />
             <UiRadio
-              :checked="dataset.rastervisible"
+              :checked="dataset.id === getActiveRasterLayer"
               class="data-set-control-menu__control"
               @change="toggleRasterLayer(dataset.id)"
             />
@@ -33,6 +33,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import Panel from './panel'
 import UiToggle from './ui-toggle'
 import UiRadio from './ui-radio'
@@ -45,6 +46,9 @@ export default {
       type: Array,
       default: () => [],
     },
+  },
+  computed: {
+    ...mapGetters('map', ['getActiveRasterLayer']),
   },
   methods: {
     toggleLocationDataset(id) {

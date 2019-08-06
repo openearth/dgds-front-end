@@ -29,7 +29,7 @@
       class="default-layout__data-set-control-menu"
       :datasets="datasetsInActiveTheme"
       @toggle-location-dataset="toggleLocationDataset"
-      @toggle-raster-layer="toggleRasterLayer"
+      @toggle-raster-layer="setActiveRasterLayer"
     />
     <TimeStamp
       v-show="activeTimestamp !== ''"
@@ -101,7 +101,7 @@ export default {
       'getActiveTheme',
     ]),
     spatialLayer() {
-      const spatialLayer = getSpatialLayer().get(map)
+      const spatialLayer = getSpatialLayer()
       spatialLayer.source.tiles = this.activeSpatialData
       return spatialLayer
     },
@@ -131,7 +131,7 @@ export default {
   },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
-    ...mapMutations('map', ['clearActiveDatasetIds']),
+    ...mapMutations('map', ['clearActiveDatasetIds', 'setActiveRasterLayer']),
     selectLocations(detail) {
       this.geometry = detail.geometry
       const { datasetIds } = this.$route.params
@@ -161,10 +161,6 @@ export default {
       )
       this.updateRoute(newRouteObject)
     },
-    toggleRasterLayer(id) {
-      this.rasterId = id
-    },
-
     changeTheme() {
       const datasets = this.getActiveTheme.datasets
       let newparams
