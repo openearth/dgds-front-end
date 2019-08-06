@@ -29,6 +29,7 @@
       class="default-layout__data-set-control-menu"
       :datasets="datasetsInActiveTheme"
       @toggle-location-dataset="toggleLocationDataset"
+      @toggle-raster-layer="setActiveRasterLayer"
     />
     <TimeStamp
       v-show="activeTimestamp !== ''"
@@ -36,12 +37,14 @@
       :timestamp="activeTimestamp"
     />
     <nuxt />
-    <SiteNavigation class="default-layout__site-navigation" />
+    <SiteNavigation
+      class="default-layout__site-navigation"
+      @change-theme="changeTheme"
+    />
   </div>
 </template>
 
 <script>
-import map from 'lodash/fp/map'
 import head from 'lodash/head'
 import includes from 'lodash/fp/includes'
 import pipe from 'lodash/fp/pipe'
@@ -94,9 +97,10 @@ export default {
       'datasetsInActiveTheme',
       'activeTimestamp',
       'activeDatasets',
+      'getActiveTheme',
     ]),
     spatialLayer() {
-      const spatialLayer = getSpatialLayer().get(map)
+      const spatialLayer = getSpatialLayer()
       spatialLayer.source.tiles = this.activeSpatialData
       return spatialLayer
     },
@@ -126,7 +130,7 @@ export default {
   },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
-    ...mapMutations('map', ['clearActiveDatasetIds']),
+    ...mapMutations('map', ['clearActiveDatasetIds', 'setActiveRasterLayer']),
     selectLocations(detail) {
       this.geometry = detail.geometry
       const { datasetIds } = this.$route.params
@@ -154,6 +158,16 @@ export default {
         toggleIdDatasets,
         this.$route,
       )
+      this.updateRoute(newRouteObject)
+    },
+    changeTheme() {
+      const datasets = this.getActiveTheme.datasets
+      let newparams
+      if (datasets) {
+        newparams = datasets.join(',')
+      }
+      const newRouteObject = this.$route
+      newRouteObject.params.datasetIds = newparams
       this.updateRoute(newRouteObject)
     },
     updateRoute(routeObj) {

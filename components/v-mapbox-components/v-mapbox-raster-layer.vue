@@ -28,14 +28,8 @@ export default {
           const layer = this.map.getLayer(this.id)
 
           // if the newOptions has tiles check if raster layer already active on map return
-          if (newOptions.source.tiles) {
-            if (
-              source &&
-              source.tiles &&
-              newOptions &&
-              source.tiles[0] === newOptions.source.tiles[0]
-            )
-              return
+          if (get('tiles[0]', source) === get('source.tiles[0]', newOptions)) {
+            return
           }
 
           // If not first remove layer and source before adding new raster layer
@@ -47,9 +41,11 @@ export default {
           }
 
           // Only add if tiles in source if not empty
-          if (get('options.source.tiles.length[0]', this) === 0) {
-          } else {
-            this.map.addLayer(this.options, 'water-border')
+          if (
+            get('source.tiles.length', newOptions) > 0 &&
+            get('source.tiles[0]', newOptions) !== ''
+          ) {
+            this.map.addLayer(newOptions, 'water-border')
           }
         }
       },

@@ -33,6 +33,8 @@ const getId = get('id')
 export const state = () => ({
   activeDatasetIds: [],
   activeLocationIds: [],
+  activeRasterLayerId: '',
+  activeTheme: {},
 })
 
 export const mutations = {
@@ -42,11 +44,24 @@ export const mutations = {
   clearActiveDatasetIds(state) {
     state.activeDatasetIds = []
   },
+  setActiveTheme(state, id) {
+    if (state.activeTheme.id === id) {
+      state.activeTheme = {}
+    } else {
+      state.activeTheme = state.themes[id]
+    }
+  },
+  clearActiveTheme(state) {
+    state.activeTheme = {}
+  },
   setActiveLocationIds(state, ids) {
     state.activeLocationIds = flatten(ids.map(id => id.split(',')))
   },
   clearActiveLocationIds(state) {
     state.activeLocationIds = []
+  },
+  setActiveRasterLayer(state, id) {
+    state.activeRasterLayerId = id
   },
 }
 
@@ -160,8 +175,17 @@ export const actions = {
 }
 
 export const getters = {
+  getThemes(state) {
+    return state.themes
+  },
+  getActiveTheme(state) {
+    return state.activeTheme
+  },
   knownDatasetIds(state) {
     return Object.keys(state.datasets)
+  },
+  getActiveRasterLayer(state, id) {
+    return state.activeRasterLayerId
   },
   knownLocationIds(state) {
     const getInDatasets = getIn(state.datasets)
@@ -189,7 +213,11 @@ export const getters = {
   },
 
   activeTimestamp(state, { activeSpatialData }) {
-    if (activeSpatialData.length) {
+    if (
+      activeSpatialData &&
+      activeSpatialData.length &&
+      activeSpatialData[0] !== ''
+    ) {
       const str = activeSpatialData[0]
       const timestamp = str.split(/time=([^&]+)/)[1]
       const timeDec = decodeURIComponent(timestamp)
@@ -199,10 +227,10 @@ export const getters = {
       return ''
     }
   },
-  activeSpatialData({ activeLocationIds }, { activeDatasets }) {
-    const spatialLayers = activeDatasets.filter(has('metadata'))
-    const tiles = [get('spatial.tiles', head(spatialLayers))]
-    return tiles.filter(identity)
+  activeSpatialData({ datasets, activeRasterLayerId, activeDatasets }) {
+    if (activeRasterLayerId === '') return []
+    const tiles = get(`${activeRasterLayerId}.metadata.rasterUrl`, datasets)
+    return [tiles]
   },
   allVectorData({ activeLocationIds }, { activeDatasets }) {
     const vectorLayers = activeDatasets.filter(has('vector'))
@@ -270,9 +298,14 @@ export const getters = {
     )
   },
   datasetsInActiveTheme(state) {
-    return values(state.datasets)
+    let ids = state.activeDatasetIds
+    if (state.activeTheme.datasets !== undefined) {
+      ids = state.activeTheme.datasets
+    }
+    const sets = values(state.datasets)
       .map(get('metadata'))
       .map(obj => merge(obj, { visible: getId(obj) }))
-      .map(update('visible', includesIn(state.activeDatasetIds)))
+      .map(update('visible', includesIn(ids)))
+    return sets
   },
 }
