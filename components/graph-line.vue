@@ -28,6 +28,7 @@ import { mapGetters } from 'vuex'
 import merge from 'lodash/merge'
 import UiButtonIcon from '~/components/ui-button-icon'
 import IconChevron from '~/assets/icon-action-chevron-down.svg'
+import moment from 'moment'
 
 const getStyle = (colors = {}) => ({
   backgroundColor: colors.background,
@@ -48,6 +49,11 @@ const getStyle = (colors = {}) => ({
         color: colors.textColor,
       },
     },
+    splitLine: {
+      lineStyle: {
+        color: colors.formBase,
+      },
+    },
   },
 })
 
@@ -57,6 +63,9 @@ const baseOptions = {
     axisPointer: {
       type: 'shadow',
     },
+  },
+  grid: {
+    show: true,
   },
   dataZoom: [
     {
@@ -74,9 +83,13 @@ const baseOptions = {
     type: 'category',
     axisLine: {
       onZero: false,
+      show: false,
     },
     axisLabel: {
       fontSize: 12,
+      formatter: value => {
+        return moment(value).format(`HH:mm \n DD-MM`)
+      },
     },
   },
   yAxis: {
@@ -125,10 +138,10 @@ export default {
           type: 'line',
           showAllSymbol: true,
           data,
-          symbolSize: 5,
+          // symbolSize: 5,
           itemStyle: {
             normal: {
-              borderWidth: 6,
+              borderWidth: 1,
             },
           },
         })),
