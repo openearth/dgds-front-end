@@ -1,183 +1,34 @@
 {
-  "Coastal management": {
-    "id": "cm",
-    "name": "Coastal management",
-    "datasets": [{
-        "dataType": "timeseries",
-        "description": "To be filled by Daniel",
-        "id": "sc",
-        "name": "Shoreline changes",
-        "timeSpan": "Live",
-        "units": "m"
-      },
-      {
-        "dataType": "timeseries",
-        "description": "To be filled by Daniel",
-        "id": "fw",
-        "name": "Bathymetry and topography",
-        "timeSpan": "Live",
-        "units": "m"
-      }
-    ]
-  },
-  "Flooding": {
-    "id": "fl",
-    "name": "Flooding",
-    "datasets": [{
-        "dataType": "timeseries",
-        "description": "To be filled by Daniel",
-        "id": "fw",
-        "name": "Flood warning",
-        "timeSpan": "Live",
-        "units": "N/A"
-      },
-      {
-        "dataType": "timeseries",
-        "description": "To be filled by Daniel",
-        "id": "cc",
-        "name": "Currents",
-        "timeSpan": "Live",
-        "units": "km/h",
-        "wmsUrl": "https://earthengine.googleapis.com/map/1311df60b987b59a9aefc5ee500dd17c/{z}/{x}/{y}?token=d0872d3bfff1dc1d66d504c492cabf78"
-      },
-      {
-        "dataType": "timeseries",
-        "description": "To be filled by Daniel",
-        "id": "wl",
-        "name": "Waterlevel",
-        "timeSpan": "Live",
-        "units": "m",
-        "dataServiceIds": ["H.simulated"],
-        "wmsUrl": "https://earthengine.googleapis.com/map/6e041ff999149aa6223f09403f76debb/{z}/{x}/{y}?token=6a1746b0833f2cf979233b41a5f331d0",
-        "mapboxLayer": {
-          "id": "vector_wl",
-          "type": "circle",
-          "source": {
-            "type": "vector",
-            "url": "mapbox://global-data-viewer.6w19mbaw"
-          },
-          "source-layer": "pltc012flat",
-          "filter": [
-            "all",
-            [
-              "==",
-              ["get", "H.simulated"],
-              true
-            ]
-          ]
-        }
-      },
-      {
-        "dataType": "timeseries",
-        "description": "To be filled by Daniel",
-        "id": "dd",
-        "name": "Discharge",
-        "timeSpan": "Live",
-        "units": "m3/s"
-      },
-      {
-        "dataType": "timeseries",
-        "description": "To be filled by Daniel",
-        "id": "sh",
-        "name": "Surge Height",
-        "timeSpan": "Live",
-        "units": "m",
-        "wmsUrl": "http://pl-tc012.xtr.deltares.nl:8080/FewsWebServices/wms?service=WMS&request=GetMap&version=1.3&layers=Surge%20Height&styles=&format=image%2Fpng&transparent=true&crs=EPSG%3A3857&time=2019-04-24T14%3A00%3A00.000Z&uppercase=false&width=256&height=256&bbox={bbox-epsg-3857}"
-      },
-      {
-        "dataType": "timeseries",
-        "description": "To be filled by Daniel",
-        "id": "tt",
-        "name": "Tide",
-        "timeSpan": "Live",
-        "units": "m",
-        "wmsUrl": "http://pl-tc012.xtr.deltares.nl:8080/FewsWebServices/wms?service=WMS&request=GetMap&version=1.3&layers=Astronomical%20Tide&styles=&format=image%2Fpng&transparent=true&crs=EPSG%3A3857&time=2019-04-24T14%3A00%3A00.000Z&uppercase=false&width=256&height=256&bbox={bbox-epsg-3857}"
-      },
-      {
-        "dataType": "timeseries",
-        "description": "To be filled by Daniel",
-        "id": "wd",
-        "name": "Wind test",
-        "timeSpan": "Live",
-        "units": "m/s",
-        "dataServiceIds": ["Wind.speed", "Wind.direction"],
-        "wmsUrl": "https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg",
-        "mapboxLayer": {
-          "id": "vector_wd",
-          "type": "circle",
-          "source": {
-            "type": "vector",
-            "url": "mapbox://global-data-viewer.6w19mbaw"
-          },
-          "source-layer": "pltc012flat",
-          "filter": [
-            "all",
-            [
-              "==",
-              ["get", "Wind.speed"],
-              true
-            ]
-          ]
-        }
-      },
-      {
-        "dataType": "timeseries",
-        "description": "To be filled by Daniel",
-        "id": "pp",
-        "name": "Precipitation",
-        "dataServiceIds": ["Alert.level"],
-        "timeSpan": "Live",
-        "units": "mm/h",
-        "mapboxLayer": {
-          "id": "vector_pp",
-          "type": "circle",
-          "source": {
-            "type": "vector",
-            "url": "mapbox://global-data-viewer.6w19mbaw"
-          },
-          "source-layer": "pltc012flat",
-          "filter": [
-            "all",
-            [
-              "==",
-              ["get", "H.astronomical.simulated"],
-              true
-            ]
-          ]
-        }
-      },
-      {
-        "dataType": "timeseries",
-        "description": "To be filled by Daniel",
-        "id": "at",
-        "name": "Air temperature",
-        "timeSpan": "Live",
-        "units": "deg"
-      }
-    ]
-  },
-  "Offshore": {
-    "id": "os",
-    "name": "Offshore",
-    "datasets": [{
-        "dataType": "timeseries",
-        "description": "To be filled by Daniel",
-        "id": "wv",
-        "name": "Waves",
-        "timeSpan": "Live",
-        "units": "m",
-        "wmsUrl": "http://pl-tc012.xtr.deltares.nl:8080/FewsWebServices/wms?service=WMS&request=GetMap&version=1.3&layers=Significant%20Wave%20Height&styles=&format=image%2Fpng&transparent=true&crs=EPSG%3A3857&time=2019-04-24T14%3A00%3A00.000Z&uppercase=false&width=256&height=256&bbox={bbox-epsg-3857}"
-      },
-      {
-        "dataType": "timeseries",
-        "description": "To be filled by Daniel",
-        "id": "cc",
-        "name": "Currents",
-        "timeSpan": "Live",
-        "dataServiceIds": ["currents"],
-        "units": "km/h",
-        "wmsUrl": "http://pl-tc012.xtr.deltares.nl:8080/FewsWebServices/wms?service=WMS&request=GetMap&version=1.3&layers=Current%202DH&styles=&format=image%2Fpng&transparent=true&crs=EPSG%3A3857&time=2019-04-24T14%3A00%3A00.000Z&uppercase=false&width=256&height=256&bbox={bbox-epsg-3857}"
-      }
-    ]
-  }
+	"version": 8,
+	"name": "DGDS",
+	"datasets": [{
+		"id": "fw",
+		"name": "Flood warning",
+		"pointData": "timeseries",
+		"units": "N/A",
+		"timeSpan": "Live",
+		"themes": [
+			"Flooding"
+		],
+		"description": "To be filled by Daniel",
+		"vectorLayer": {
+			"mapboxLayer": {
+				"id": "GLOSSIS",
+				"filterIds": [
+					"Alert.level"
+				],
+				"type": "circle",
+				"source": {
+					"type": "vector",
+					"url": "mapbox://global-data-viewer.6w19mbaw"
+				},
+				"source-layer": "pltc012flat"
+			}
+		},
+		"rasterLayer": {
+			"url": "https://earthengine.googleapis.com/map/1311df60b987b59a9aefc5ee500dd17c/{z}/{x}/{y}?token=d0872d3bfff1dc1d66d504c492cabf78",
+			"date": "",
+			"dateFormat": ""
+		}
+	}]
 }
