@@ -1,10 +1,7 @@
 import moment from 'moment'
 import { actions } from '../../../../../store/map/index.js'
 import getFromApi from '../../../../../lib/request/get'
-import loadLocations from '../../../../../lib/load-locations' // eslint-disable-line
-jest.mock('../../../../../lib/load-locations', () => (_, fn) => {
-  fn([{ properties: { locationId: 'foo' } }])
-})
+
 jest.mock('../../../../../lib/request/get')
 
 describe('loadThemes', () => {

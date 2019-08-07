@@ -1,7 +1,7 @@
 <template>
   <aside class="location-id scrollbar">
     <header class="location-id__header">
-      <h2 class="h2">{{ location }}</h2>
+      <h2 class="h2">{{ locations }}</h2>
       <ui-button-icon @click="close"><icon-cross /></ui-button-icon>
     </header>
     <section class="location-id__graphs">

@@ -1,114 +1,111 @@
-import Vue from 'vue'
 import { mutations } from '../../../../../store/map/datasets'
 
 describe('addDatasetLocations', () => {
-  test('updates state with payload and freeze new feature', () => {
+  test('updates state with payload', () => {
     const state = { wl: { metadata: 'foo' } }
-    const id = 'wl'
-    const data = { features: [{ properties: { locationId: 'foo' } }] }
+    const data = { id: 'wl', mapboxLayer: 'bar' }
 
-    mutations.addDatasetLocations(state, { id, data })
+    mutations.addDatasetVector(state, data)
     expect(state).toMatchObject({
       wl: {
-        locations: {
-          type: 'FeatureCollection',
-          features: [{ properties: { locationId: 'foo' } }],
-        },
+        metadata: 'foo',
+        vector: { mapboxLayer: 'bar' },
       },
     })
-    expect(Object.isFrozen(state.wl.locations.features[0])).toBe(true)
+    expect(Object.isFrozen(state.wl.vector[0])).toBe(true)
   })
 
   test('updates state with existing id with new (frozen) features', () => {
     const state = {
       wl: {
-        locations: { features: [{ properties: { locationId: 'foo' } }] },
+        vector: {
+          mapboxLayer: { foo: 'bar' },
+        },
       },
     }
     const id = 'wl'
-    const data = { features: [{ properties: { locationId: 'bar' } }] }
+    const data = {}
 
-    mutations.addDatasetLocations(state, { id, data })
+    mutations.addDatasetVector(state, { id, data })
     expect(state).toMatchObject({
       wl: {
-        locations: {
-          features: [
-            { properties: { locationId: 'foo' } },
-            { properties: { locationId: 'bar' } },
-          ],
+        vector: {
+          mapboxLayer: { foo: 'bar' },
         },
       },
     })
-    expect(Object.isFrozen(state.wl.locations.features[1])).toBe(true)
+    expect(Object.isFrozen(state.wl.vector.mapboxLayer[1])).toBe(true)
   })
 
-  test('ignores new features when locationIds are already present', () => {
-    const state = {
-      wl: {
-        locations: { features: [{ properties: { locationId: 'foo' } }] },
-      },
-    }
-    const id = 'wl'
-    const data = {
-      features: [
-        { properties: { locationId: 'foo' } },
-        { properties: { locationId: 'bar' } },
-      ],
-    }
+  // test('ignores new features when locationIds are already present', () => {
+  //   const state = {
+  //     wl: {
+  //       vector: {
+  //         mapboxLayer: {foo: 'bar'}
+  //       },
+  //     },
+  //   }
+  //   const id = 'wl'
+  //   const data = {
+  //     features: [
+  //       { properties: { locationId: 'foo' } },
+  //       { properties: { locationId: 'bar' } },
+  //     ],
+  //   }
+  //
+  //   mutations.addDatasetLocations(state, { id, data })
+  //   expect(state).toMatchObject({
+  //     wl: {
+  //       locations: {
+  //         features: [
+  //           { properties: { locationId: 'foo' } },
+  //           { properties: { locationId: 'bar' } },
+  //         ],
+  //       },
+  //     },
+  //   })
+  // })
 
-    mutations.addDatasetLocations(state, { id, data })
-    expect(state).toMatchObject({
-      wl: {
-        locations: {
-          features: [
-            { properties: { locationId: 'foo' } },
-            { properties: { locationId: 'bar' } },
-          ],
-        },
-      },
-    })
-  })
+  // test('does not call Vue.set when there are no new features to add', () => {
+  //   const state = {
+  //     wl: {
+  //       locations: { features: [{ properties: { locationId: 'foo' } }] },
+  //     },
+  //   }
+  //   const id = 'wl'
+  //   const data = {
+  //     features: [{ properties: { locationId: 'foo' } }],
+  //   }
+  //   const spy = jest.spyOn(Vue, 'set')
+  //   mutations.addDatasetLocations(state, { id, data })
+  //   expect(spy).not.toHaveBeenCalled()
+  // })
 
-  test('does not call Vue.set when there are no new features to add', () => {
-    const state = {
-      wl: {
-        locations: { features: [{ properties: { locationId: 'foo' } }] },
-      },
-    }
-    const id = 'wl'
-    const data = {
-      features: [{ properties: { locationId: 'foo' } }],
-    }
-    const spy = jest.spyOn(Vue, 'set')
-    mutations.addDatasetLocations(state, { id, data })
-    expect(spy).not.toHaveBeenCalled()
-  })
-
-  test('updates state with different id', () => {
-    const state = {
-      wl: {
-        locations: { features: [{ properties: { locationId: 'foo' } }] },
-      },
-    }
-    const id = 'wd'
-    const data = { features: [{ properties: { locationId: 'bar' } }] }
-
-    mutations.addDatasetLocations(state, { id, data })
-    expect(state).toMatchObject({
-      wl: {
-        locations: { features: [{ properties: { locationId: 'foo' } }] },
-      },
-      wd: {
-        locations: { features: [{ properties: { locationId: 'bar' } }] },
-      },
-    })
-  })
+  // test('updates state with different id', () => {
+  //   const state = {
+  //     wl: {
+  //       locations: { features: [{ properties: { locationId: 'foo' } }] },
+  //     },
+  //   }
+  //   const id = 'wd'
+  //   const data = { features: [{ properties: { locationId: 'bar' } }] }
+  //
+  //   mutations.addDatasetLocations(state, { id, data })
+  //   expect(state).toMatchObject({
+  //     wl: {
+  //       locations: { features: [{ properties: { locationId: 'foo' } }] },
+  //     },
+  //     wd: {
+  //       locations: { features: [{ properties: { locationId: 'bar' } }] },
+  //     },
+  //   })
+  // })
 })
 
 describe('addDatasetSpatial', () => {
   test('updates state with payload', () => {
     const state = {}
-    const data = { id: 'wl', wmsUrl: 'some/url' }
+    const data = { id: 'wl', rasterUrl: 'some/url' }
 
     mutations.addDatasetSpatial(state, data)
     expect(state).toMatchObject({
@@ -124,7 +121,7 @@ describe('addDatasetSpatial', () => {
         spatial: { tiles: 'some/url' },
       },
     }
-    const data = { id: 'wl', wmsUrl: 'some/other/url' }
+    const data = { id: 'wl', rasterUrl: 'some/other/url' }
 
     mutations.addDatasetSpatial(state, data)
     expect(state).toMatchObject({
@@ -140,7 +137,7 @@ describe('addDatasetSpatial', () => {
         spatial: { tiles: 'some/url' },
       },
     }
-    const data = { id: 'wd', wmsUrl: 'some/url' }
+    const data = { id: 'wd', rasterUrl: 'some/url' }
 
     mutations.addDatasetSpatial(state, data)
     expect(state).toMatchObject({

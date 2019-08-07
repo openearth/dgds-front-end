@@ -2,52 +2,40 @@ import Vue from 'vue'
 import get from 'lodash/fp/get'
 import pipe from 'lodash/fp/pipe'
 import merge from 'lodash/fp/merge'
-import negate from 'lodash/fp/negate'
 import identity from 'lodash/fp/identity'
-import { when, includesIn, freeze } from '../../lib/utils'
-
-const getLocationId = get('properties.locationId')
+import { when } from '../../lib/utils'
 
 const emptyObject = () => ({})
-const emptyLocationsObject = () => ({ features: [], type: 'FeatureCollection' })
+const emptyLocationsObject = () => ({})
 
 const getOrEmpty = empty => when(identity, identity, empty)
-const getOrEmptyLocations = getOrEmpty(emptyLocationsObject)
+const getOrEmptyVector = getOrEmpty(emptyLocationsObject)
 const getOrEmptyPointData = getOrEmpty(emptyObject)
 const getOrEmptySpatial = getOrEmpty(emptyObject)
 const getOrEmptyMetadata = getOrEmpty(emptyObject)
 const getPointData = pipe([get('pointData'), getOrEmptyPointData])
-const getLocations = pipe([get('locations'), getOrEmptyLocations])
+const getVectorData = pipe([get('vector'), getOrEmptyVector])
 const getSpatialData = pipe([get('spatial'), getOrEmptySpatial])
 const getMetadata = pipe([get('metadata'), getOrEmptyMetadata])
 
 export const state = () => ({})
 
 export const mutations = {
-  addDatasetLocations(state, { id, data }) {
-    if (!state[id]) Vue.set(state, id, { locations: emptyLocationsObject() })
-    if (!state[id].locations)
-      Vue.set(state[id], 'locations', emptyLocationsObject())
-
-    const locations = getLocations(state[id])
-    const currentLocationIds = locations.features.map(getLocationId)
-    const isCurrentLocation = includesIn(currentLocationIds)
-    const newFeatures = data.features
-      .filter(pipe([getLocationId, negate(isCurrentLocation)]))
-      .map(freeze)
-
-    if (newFeatures.length > 0) {
-      Vue.set(state[id].locations, 'features', [
-        ...locations.features,
-        ...newFeatures,
-      ])
-    }
+  addDatasetVector(state, data) {
+    const id = data.id
+    if (!state[id]) Vue.set(state, id, {})
+    const vectorData = getVectorData(state[id])
+    Vue.set(
+      state[id],
+      'vector',
+      merge(vectorData, { mapboxLayer: data.mapboxLayer }),
+    )
   },
   addDatasetSpatial(state, data) {
     const id = data.id
     if (!state[id]) Vue.set(state, id, {})
     const spatialData = getSpatialData(state[id])
-    Vue.set(state[id], 'spatial', merge(spatialData, { tiles: data.wmsUrl }))
+    Vue.set(state[id], 'spatial', merge(spatialData, { tiles: data.rasterUrl }))
   },
   addDatasetPointData(state, { id, data }) {
     if (!state[id]) Vue.set(state, id, {})
