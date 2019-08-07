@@ -6,18 +6,22 @@
         ref="map"
         :access-token="mapboxAccessToken"
         map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
+        :pitch="10"
+        :bearing="10"
       >
         <v-mapbox-navigation-control
           position="bottom-right"
         ></v-mapbox-navigation-control>
-        <v-mapbox-layer-clickable
-          id="locations"
-          :options="locationsLayer"
-          :filter="locationsFilter"
-          :active-location-ids="activeLocationIds"
+        <v-mapbox-selected-point-layer
+          :geometry="geometry"
+        ></v-mapbox-selected-point-layer>
+        <v-mapbox-vector-layer
+          v-for="layer in vectorLayers"
+          :key="layer.id"
+          :layer="layer"
           :active-theme="activeTheme"
           @select-locations="selectLocations"
-        ></v-mapbox-layer-clickable>
+        ></v-mapbox-vector-layer>
         <v-mapbox-raster-layer :options="spatialLayer"> </v-mapbox-raster-layer>
       </v-mapbox>
     </no-ssr>
@@ -37,7 +41,6 @@
 </template>
 
 <script>
-import get from 'lodash/fp/get'
 import map from 'lodash/fp/map'
 import head from 'lodash/head'
 import includes from 'lodash/fp/includes'
@@ -50,29 +53,34 @@ import negate from 'lodash/fp/negate'
 import concat from 'lodash/fp/concat'
 import isEqual from 'lodash/fp/isEqual'
 import identity from 'lodash/fp/identity'
-import flattenDeep from 'lodash/fp/flattenDeep'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import DataSetControlMenu from '../components/data-set-control-menu'
 import SiteNavigation from '../components/site-navigation'
 import TimeStamp from '../components/time-stamp'
 import { when } from '../lib/utils'
-import getLocationsLayer from '../lib/mapbox/layers/get-locations-layer'
+import getVectorLayer from '../lib/mapbox/layers/get-vector-layer'
 import getSpatialLayer from '../lib/mapbox/layers/get-spatial-layer'
-import VMapboxLayerClickable from '../components/v-mapbox-components/v-mapbox-layer-clickable'
+import VMapboxVectorLayer from '../components/v-mapbox-components/v-mapbox-vector-layer'
 import VMapboxRasterLayer from '../components/v-mapbox-components/v-mapbox-raster-layer'
+import VMapboxSelectedPointLayer from '../components/v-mapbox-components/v-mapbox-selected-point-layer'
 
 export default {
   components: {
     SiteNavigation,
     DataSetControlMenu,
     TimeStamp,
-    VMapboxLayerClickable,
+    VMapboxVectorLayer,
     VMapboxRasterLayer,
+    VMapboxSelectedPointLayer,
   },
   data: () => ({
     mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
-    locationsLayer: null,
+    locationsLayers: [],
     activeLocation: null,
+    geometry: {
+      type: 'Point',
+      coordinates: [],
+    },
   }),
   computed: {
     ...mapState({
@@ -81,31 +89,26 @@ export default {
     }),
     ...mapGetters('map', [
       'activeSpatialData',
+      'allVectorData',
       'activeDatasetsLocations',
       'datasetsInActiveTheme',
       'activeTimestamp',
       'activeDatasets',
     ]),
-    mapboxOptions() {
-      return {
-        tiles: this.activeSpatialData,
-        sources: this.activeDatasetsLocations,
-        style: this.activeTheme,
-      }
-    },
-    locationsFilter() {
-      const generateFilters = pipe([
-        map(get('metadata.dataServiceIds')),
-        flattenDeep,
-        map(concat('has')),
-        concat('any'),
-      ])
-      return generateFilters(this.activeDatasets)
-    },
     spatialLayer() {
       const spatialLayer = getSpatialLayer().get(map)
-      spatialLayer.source.tiles = this.mapboxOptions.tiles
+      spatialLayer.source.tiles = this.activeSpatialData
       return spatialLayer
+    },
+    vectorLayers() {
+      const vectorLayers = this.allVectorData
+      const defaultVectorLayer = getVectorLayer()
+      vectorLayers.forEach(layer => {
+        if (!layer.paint) {
+          layer.paint = defaultVectorLayer.paint
+        }
+      })
+      return vectorLayers
     },
   },
   watch: {
@@ -120,25 +123,16 @@ export default {
   },
   async mounted() {
     await this.$nextTick()
-    const map = this.$refs.map.map
-    map.on('load', () => {
-      const locationsLayer = getLocationsLayer().get(map)
-      this.locationsLayer = locationsLayer
-    })
   },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
     ...mapMutations('map', ['clearActiveDatasetIds']),
-    ...mapMutations('map', ['clearActiveDatasetIds']),
-    loadLocations({ detail }) {
-      const locationIds = detail.map(feature => feature.properties.locationId)
-      const locationId = head(locationIds)
-      const { datasetIds } = this.$route.params
-      this.loadPointDataForLocation({ datasetIds, locationId })
-    },
     selectLocations(detail) {
+      this.geometry = detail.geometry
       const { datasetIds } = this.$route.params
-      const locationIds = detail.map(feature => feature.properties.locationId)
+      const locationIds = detail.features.map(
+        feature => feature.properties.locationId,
+      )
       this.updateRoute({
         name: 'datasetIds-locationId',
         params: { datasetIds, locationId: head(locationIds) },
@@ -164,7 +158,12 @@ export default {
     },
     updateRoute(routeObj) {
       const { datasetIds, locationId } = routeObj.params
-
+      if (datasetIds === undefined) {
+        this.geometry = {
+          type: 'Point',
+          coordinates: [],
+        }
+      }
       if (datasetIds === undefined && locationId !== undefined) {
         routeObj = update('params.locationId', () => undefined, routeObj)
       }
