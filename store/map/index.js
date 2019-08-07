@@ -33,6 +33,7 @@ const getId = get('id')
 export const state = () => ({
   activeDatasetIds: [],
   activeLocationIds: [],
+  activeRasterLayerId: '',
   activeTheme: {},
 })
 
@@ -43,7 +44,7 @@ export const mutations = {
   clearActiveDatasetIds(state) {
     state.activeDatasetIds = []
   },
-  setActiveTheme(state, id) {
+  toggleActiveTheme(state, id) {
     if (state.activeTheme.id === id) {
       state.activeTheme = {}
     } else {
@@ -58,6 +59,9 @@ export const mutations = {
   },
   clearActiveLocationIds(state) {
     state.activeLocationIds = []
+  },
+  setActiveRasterLayer(state, id) {
+    state.activeRasterLayerId = id
   },
 }
 
@@ -181,6 +185,9 @@ export const getters = {
   knownDatasetIds(state) {
     return Object.keys(state.datasets)
   },
+  getActiveRasterLayer(state, id) {
+    return state.activeRasterLayerId
+  },
   knownLocationIds(state) {
     const getInDatasets = getIn(state.datasets)
     const getLocationId = map(get('properties.locationId'))
@@ -207,7 +214,11 @@ export const getters = {
   },
 
   activeTimestamp(state, { activeSpatialData }) {
-    if (activeSpatialData.length) {
+    if (
+      activeSpatialData &&
+      activeSpatialData.length &&
+      activeSpatialData[0] !== ''
+    ) {
       const str = activeSpatialData[0]
       const timestamp = str.split(/time=([^&]+)/)[1]
       const timeDec = decodeURIComponent(timestamp)
@@ -217,13 +228,12 @@ export const getters = {
       return ''
     }
   },
-  activeSpatialData({ activeLocationIds }, { activeDatasets }) {
-    const spatialLayers = activeDatasets.filter(has('metadata'))
-    const activeSpatialLayer = spatialLayers.filter(layer => layer.activeRaster)
-    const tiles = [get('spatial.tiles', activeSpatialLayer)]
-    return tiles.filter(identity)
+  activeSpatialData({ datasets, activeRasterLayerId, activeDatasets }) {
+    if (activeRasterLayerId === '') return []
+    const tiles = get(`${activeRasterLayerId}.metadata.rasterUrl`, datasets)
+    return [tiles]
   },
-  allVectorData({ activeLocationIds }, { activeDatasets }) {
+  activeVectorData({ activeLocationIds }, { activeDatasets }) {
     const vectorLayers = activeDatasets.filter(has('vector'))
     const mapboxLayers = vectorLayers.map(layer => {
       return get('vector.mapboxLayer', layer)

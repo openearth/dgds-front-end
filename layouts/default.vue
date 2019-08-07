@@ -29,7 +29,7 @@
       class="default-layout__data-set-control-menu"
       :datasets="datasetsInActiveTheme"
       @toggle-location-dataset="toggleLocationDataset"
-      @toggle-raster-layer="rasterId = $event"
+      @toggle-raster-layer="setActiveRasterLayer"
     />
     <TimeStamp
       v-show="activeTimestamp !== ''"
@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import map from 'lodash/fp/map'
 import head from 'lodash/head'
 import includes from 'lodash/fp/includes'
 import pipe from 'lodash/fp/pipe'
@@ -93,7 +92,7 @@ export default {
     }),
     ...mapGetters('map', [
       'activeSpatialData',
-      'allVectorData',
+      'activeVectorData',
       'activeDatasetsLocations',
       'datasetsInActiveTheme',
       'activeTimestamp',
@@ -101,12 +100,12 @@ export default {
       'getActiveTheme',
     ]),
     spatialLayer() {
-      const spatialLayer = getSpatialLayer().get(map)
+      const spatialLayer = getSpatialLayer()
       spatialLayer.source.tiles = this.activeSpatialData
       return spatialLayer
     },
     vectorLayers() {
-      const vectorLayers = this.allVectorData
+      const vectorLayers = this.activeVectorData
       const defaultVectorLayer = getVectorLayer()
       vectorLayers.forEach(layer => {
         if (!layer.paint) {
@@ -131,7 +130,7 @@ export default {
   },
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
-    ...mapMutations('map', ['clearActiveDatasetIds']),
+    ...mapMutations('map', ['clearActiveDatasetIds', 'setActiveRasterLayer']),
     selectLocations(detail) {
       this.geometry = detail.geometry
       const { datasetIds } = this.$route.params

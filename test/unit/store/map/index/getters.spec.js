@@ -85,20 +85,19 @@ describe('activeDatasets', () => {
   })
 })
 
-// TODO: fix in Feat-theming-and-toggle-raster
 // describe('activeSpatialData', () => {
-//   test('returns array with the current tile for the active dataset', () => {
-//     const otherGetters = {
-//       activeDatasets: [
-//         {
-//           metadata: {},
-//           spatial: { tiles: 'some/url' },
-//         },
-//       ],
-//     }
-//     const result = getters.activeSpatialData({}, otherGetters)
-//     expect(result).toEqual(['some/url'])
-//   })
+// test('returns array with the current tile for the active dataset', () => {
+//   const otherGetters = {
+//     activeDatasets: [
+//       {
+//         metadata: {},
+//         spatial: { tiles: 'some/url' },
+//       },
+//     ],
+//   }
+//   const result = getters.activeSpatialData({}, otherGetters)
+//   expect(result).toEqual(['some/url'])
+// })
 //   test('returns an empty array when tiles cant be found', () => {
 //     const otherGetters = {
 //       activeDatasets: [

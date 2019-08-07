@@ -22,17 +22,16 @@
 
 .ui-radio__button-wrapper {
   display: inline-block;
-  width: calc(var(--spacing-small) * 2);
-  height: calc(var(--spacing-small) * 2);
+  width: var(--spacing-default);
+  height: var(--spacing-default);
   position: relative;
   margin-right: 0.25em;
+  margin-left: 0.25rem;
 }
 
 .ui-radio__input {
   display: inline-block;
   position: absolute;
-  width: 80%;
-  height: 80%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -43,8 +42,8 @@
 .ui-radio__visual {
   display: inline-block;
   position: absolute;
-  width: 75%;
-  height: 75%;
+  width: 100%;
+  height: 100%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);

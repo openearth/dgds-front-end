@@ -4,6 +4,7 @@ test('Initial state', () => {
   const initialState = {
     activeDatasetIds: [],
     activeLocationIds: [],
+    activeRasterLayerId: '',
     activeTheme: {},
   }
   expect(state()).toEqual(initialState)
