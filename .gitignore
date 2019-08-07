@@ -1,4 +1,9 @@
 # Created by .ignore support plugin (hsz.mobi)
+
+notebooks/*.geojson
+notebooks/*.mbtiles
+
+
 ### Node template
 # Logs
 logs
