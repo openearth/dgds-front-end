@@ -50,7 +50,6 @@ export default {
    ** Plugins to load before mounting the App
    */
   plugins: [
-    '~/plugins/echarts',
     { src: '~/plugins/custom-properties', ssr: false },
     { src: '~/plugins/vue-2-mapbox', ssr: false },
     { src: '~/plugins/bootstrap', ssr: false },
@@ -87,6 +86,7 @@ export default {
         autoprefixer: {},
       },
     },
+    transpile: ['vue-echarts', 'resize-detector'],
 
     /*
      ** You can extend webpack config here

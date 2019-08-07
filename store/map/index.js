@@ -176,9 +176,6 @@ export const actions = {
 }
 
 export const getters = {
-  getThemes(state) {
-    return state.themes
-  },
   getActiveTheme(state) {
     return state.activeTheme
   },

@@ -18,9 +18,9 @@
       {{ title }}
     </figcaption>
     <div v-if="!isCollapsed" class="graph-line__aspect-ratio">
-      <div
-        :id="title"
-        v-echarts="{ data: graphData() }"
+      <v-chart
+        :options="graphData()"
+        :autoresize="true"
         class="graph-line__chart"
       />
     </div>
@@ -33,6 +33,8 @@ import merge from 'lodash/merge'
 import UiButtonIcon from '~/components/ui-button-icon'
 import IconChevron from '~/assets/icon-action-chevron-down.svg'
 import moment from 'moment'
+import ECharts from 'vue-echarts'
+import 'echarts/lib/chart/line'
 
 const getStyle = (colors = {}) => ({
   backgroundColor: colors.background,
@@ -105,7 +107,7 @@ const baseOptions = {
 }
 
 export default {
-  components: { UiButtonIcon, IconChevron },
+  components: { UiButtonIcon, IconChevron, 'v-chart': ECharts },
   props: {
     category: {
       type: Array,
@@ -146,7 +148,6 @@ export default {
           data: this.category,
         },
         series: this.series.map(serie => {
-          // console.log('serie', serie)
           return {
             type: 'line',
             showAllSymbol: true,
