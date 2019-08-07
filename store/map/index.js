@@ -201,10 +201,9 @@ export const getters = {
       .filter(identity)
   },
 
-  activeTimestamp(state, { activeSpatialData }) {
-    console.log('active spatialdata', activeSpatialData)
-    if (get('[0]', activeSpatialData)) {
-      const str = activeSpatialData[0]
+  activeTimestamp(state, { activeRasterData }) {
+    if (get('[0]', activeRasterData)) {
+      const str = activeRasterData[0]
       const timestamp = str.split(/time=([^&]+)/)[1]
       const timeDec = decodeURIComponent(timestamp)
       const timemoment = momentFormat('MM-DD-YYYY HH:mm', timeDec)
@@ -213,9 +212,9 @@ export const getters = {
       return ''
     }
   },
-  activeSpatialData({ datasets, activeRasterLayerId, activeDatasets }) {
+  activeRasterData({ datasets, activeRasterLayerId, activeDatasets }) {
     if (activeRasterLayerId === '') return []
-    const tiles = get(`${activeRasterLayerId}.metadata.rasterUrl`, datasets)
+    const tiles = get(`${activeRasterLayerId}.raster.tiles`, datasets)
     return [tiles]
   },
   allVectorData({ activeLocationIds }, { activeDatasets }) {

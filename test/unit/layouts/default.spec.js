@@ -19,7 +19,7 @@ describe('Default', () => {
       namespaced: true,
       getters: {
         allVectorData: jest.fn(() => [{ foo: 'bar' }]),
-        activeSpatialData: jest.fn(() => 'foo'),
+        activeRasterData: jest.fn(() => 'foo'),
         datasetsInActiveTheme: jest.fn(() => ['bar']),
         getActiveTheme: jest.fn(() => {
           return {

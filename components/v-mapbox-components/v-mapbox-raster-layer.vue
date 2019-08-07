@@ -23,6 +23,8 @@ export default {
   watch: {
     options: {
       handler(newOptions) {
+        console.log(newOptions)
+
         if (this.map) {
           const source = this.map.getSource(this.id)
           const layer = this.map.getLayer(this.id)

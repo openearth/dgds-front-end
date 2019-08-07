@@ -85,7 +85,7 @@ describe('addDatasetVector', () => {
   })
 })
 
-describe('addDatasetSpatial', () => {
+describe('addDatasetRaster', () => {
   test('updates state with payload', () => {
     const state = {}
     const data = { id: 'wl', rasterLayer: { url: 'some/url' } }

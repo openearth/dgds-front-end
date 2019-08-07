@@ -1,7 +1,7 @@
-import getSpatialLayer from '../../../../../lib/mapbox/layers/get-spatial-layer'
+import getRasterLayer from '../../../../../lib/mapbox/layers/get-raster-layer'
 
 const layer = {
-  id: 'spatial',
+  id: 'raster',
   type: 'raster',
   source: {
     tileSize: 256,
@@ -11,7 +11,7 @@ const layer = {
 }
 
 test('returns location layer', () => {
-  const { id, type, source } = getSpatialLayer()
+  const { id, type, source } = getRasterLayer()
   expect(id).toEqual(layer.id)
   expect(type).toEqual(layer.type)
   expect(source).toEqual(layer.source)
@@ -22,12 +22,12 @@ describe('add', () => {
     const mapbox = {
       addLayer: jest.fn(),
     }
-    const spatialLayer = getSpatialLayer()
-    spatialLayer.source.tiles.push('some/url')
-    spatialLayer.add(mapbox)
+    const rasterLayer = getRasterLayer()
+    rasterLayer.source.tiles.push('some/url')
+    rasterLayer.add(mapbox)
 
     expect(mapbox.addLayer.mock.calls[0][0]).toMatchObject({
-      id: 'spatial',
+      id: 'raster',
       type: 'raster',
       source: {
         tileSize: 256,
@@ -41,8 +41,8 @@ describe('add', () => {
     const mapbox = {
       addLayer: jest.fn(),
     }
-    const spatialLayer = getSpatialLayer()
-    spatialLayer.add(mapbox)
+    const rasterLayer = getRasterLayer()
+    rasterLayer.add(mapbox)
     expect(mapbox.addLayer).not.toHaveBeenCalled()
   })
 })
@@ -61,12 +61,12 @@ describe('update', () => {
       removeSource,
       addLayer,
     }
-    const spatialLayer = getSpatialLayer()
-    spatialLayer.source.tiles = ['some/url']
-    spatialLayer.update(mapbox)
-    expect(removeLayer).toHaveBeenCalledWith('spatial')
-    expect(removeSource).toHaveBeenCalledWith('spatial')
-    expect(addLayer).toHaveBeenCalledWith(spatialLayer, 'water-border')
+    const rasterLayer = getRasterLayer()
+    rasterLayer.source.tiles = ['some/url']
+    rasterLayer.update(mapbox)
+    expect(removeLayer).toHaveBeenCalledWith('raster')
+    expect(removeSource).toHaveBeenCalledWith('raster')
+    expect(addLayer).toHaveBeenCalledWith(rasterLayer, 'water-border')
   })
 
   test('do not remove layer when its not defined in mapbox', () => {
@@ -79,12 +79,12 @@ describe('update', () => {
       removeSource,
       addLayer,
     }
-    const spatialLayer = getSpatialLayer()
-    spatialLayer.source.tiles = ['some/url']
-    spatialLayer.update(mapbox)
-    expect(removeLayer).not.toHaveBeenCalledWith('spatial')
-    expect(removeSource).not.toHaveBeenCalledWith('spatial')
-    expect(addLayer).toHaveBeenCalledWith(spatialLayer, 'water-border')
+    const rasterLayer = getRasterLayer()
+    rasterLayer.source.tiles = ['some/url']
+    rasterLayer.update(mapbox)
+    expect(removeLayer).not.toHaveBeenCalledWith('raster')
+    expect(removeSource).not.toHaveBeenCalledWith('raster')
+    expect(addLayer).toHaveBeenCalledWith(rasterLayer, 'water-border')
   })
 
   test('do not add new layer when tiles are empty', () => {
@@ -100,10 +100,10 @@ describe('update', () => {
       removeSource,
       addLayer,
     }
-    const spatialLayer = getSpatialLayer()
-    spatialLayer.update(mapbox)
-    expect(removeLayer).toHaveBeenCalledWith('spatial')
-    expect(removeSource).toHaveBeenCalledWith('spatial')
-    expect(addLayer).not.toHaveBeenCalledWith(spatialLayer)
+    const rasterLayer = getRasterLayer()
+    rasterLayer.update(mapbox)
+    expect(removeLayer).toHaveBeenCalledWith('raster')
+    expect(removeSource).toHaveBeenCalledWith('raster')
+    expect(addLayer).not.toHaveBeenCalledWith(rasterLayer)
   })
 })

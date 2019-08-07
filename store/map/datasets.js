@@ -11,11 +11,11 @@ const emptyLocationsObject = () => ({})
 const getOrEmpty = empty => when(identity, identity, empty)
 const getOrEmptyVector = getOrEmpty(emptyLocationsObject)
 const getOrEmptyPointData = getOrEmpty(emptyObject)
-const getOrEmptySpatial = getOrEmpty(emptyObject)
+const getOrEmptyRaster = getOrEmpty(emptyObject)
 const getOrEmptyMetadata = getOrEmpty(emptyObject)
 const getPointData = pipe([get('pointData'), getOrEmptyPointData])
 const getVectorData = pipe([get('vector'), getOrEmptyVector])
-const getRasterData = pipe([get('raster'), getOrEmptySpatial])
+const getRasterData = pipe([get('raster'), getOrEmptyRaster])
 const getMetadata = pipe([get('metadata'), getOrEmptyMetadata])
 
 export const state = () => ({})
@@ -37,11 +37,12 @@ export const mutations = {
     const id = get('id', data)
     if (!id) return
     if (!state[id]) Vue.set(state, id, {})
-    const spatialData = getRasterData(state[id])
+    const rasterData = getRasterData(state[id])
+    if (!get('rasterLayer.url')) return
     Vue.set(
       state[id],
       'raster',
-      merge(spatialData, { tiles: get('rasterLayer.url', data) }),
+      merge(rasterData, { tiles: get('rasterLayer.url', data) }),
     )
   },
   addDatasetPointData(state, { id, data }) {

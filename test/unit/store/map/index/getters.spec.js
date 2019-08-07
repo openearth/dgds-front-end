@@ -86,17 +86,17 @@ describe('activeDatasets', () => {
 })
 
 // TODO: fix in Feat-theming-and-toggle-raster
-// describe('activeSpatialData', () => {
+// describe('activeRasterData', () => {
 //   test('returns array with the current tile for the active dataset', () => {
 //     const otherGetters = {
 //       activeDatasets: [
 //         {
 //           metadata: {},
-//           spatial: { tiles: 'some/url' },
+//           raster: { tiles: 'some/url' },
 //         },
 //       ],
 //     }
-//     const result = getters.activeSpatialData({}, otherGetters)
+//     const result = getters.activeRasterData({}, otherGetters)
 //     expect(result).toEqual(['some/url'])
 //   })
 //   test('returns an empty array when tiles cant be found', () => {
@@ -107,7 +107,7 @@ describe('activeDatasets', () => {
 //         },
 //       ],
 //     }
-//     const result = getters.activeSpatialData({}, otherGetters)
+//     const result = getters.activeRasterData({}, otherGetters)
 //     expect(result).toEqual([])
 //   })
 // })
