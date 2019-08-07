@@ -228,7 +228,6 @@ export const getters = {
     }
   },
   activeSpatialData({ datasets, activeRasterLayerId, activeDatasets }) {
-    console.log('activeRasterLayerId', activeRasterLayerId)
     if (activeRasterLayerId === '') return []
     const tiles = get(`${activeRasterLayerId}.metadata.rasterUrl`, datasets)
     return [tiles]
