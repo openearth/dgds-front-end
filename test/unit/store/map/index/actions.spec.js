@@ -122,7 +122,7 @@ describe('storeActiveDatasets', () => {
 })
 
 describe('loadPointDataForLocation', () => {
-  test('loads point data for the specified location', async () => {
+  test('loads point data for the specified location if not already in store (datasets)', async () => {
     const commit = jest.fn()
     const timestamp = moment()
     const apiResult = {
@@ -137,9 +137,18 @@ describe('loadPointDataForLocation', () => {
         },
       ],
     }
+    const state = {
+      datasets: {
+        ab: {
+          pointData: {
+            ef: {},
+          },
+        },
+      },
+    }
     getFromApi.mockResolvedValue(apiResult)
     await actions.loadPointDataForLocation(
-      { commit },
+      { commit, state },
       { datasetIds: ['ab', 'cd'], locationId: 'ef' },
     )
     expect(getFromApi).toHaveBeenCalledWith('timeseries', {
@@ -152,10 +161,20 @@ describe('loadPointDataForLocation', () => {
         .subtract(3, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
     })
+    expect(getFromApi).not.toHaveBeenCalledWith('timeseries', {
+      datasetId: 'ab',
+      endTime: moment()
+        .add(5, 'days')
+        .format('YYYY-MM-DDTHH:mm:ssZ'),
+      locationCode: 'ef',
+      startTime: moment()
+        .subtract(3, 'days')
+        .format('YYYY-MM-DDTHH:mm:ssZ'),
+    })
     expect(commit.mock.calls[0]).toEqual([
       'datasets/addDatasetPointData',
       {
-        id: 'ab',
+        id: 'cd',
         data: {
           ef: {
             category: [moment(timestamp).format('MM-DD-YYYY \n HH:mm')],
@@ -183,8 +202,8 @@ describe('loadPointDataForLocation', () => {
     }
     getFromApi.mockResolvedValue(apiResult)
     await actions.loadPointDataForLocation(
-      { commit },
-      { datasetIds: 'ab,cd', locationId: 'ef' },
+      { commit, state: {} },
+      { datasetIds: ['ab', 'cd'], locationId: 'ef' },
     )
     expect(getFromApi).toHaveBeenCalledWith('timeseries', {
       datasetId: 'cd',

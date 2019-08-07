@@ -21,6 +21,13 @@ describe('Default', () => {
         activeVectorData: jest.fn(() => [{ foo: 'bar' }]),
         activeSpatialData: jest.fn(() => 'foo'),
         datasetsInActiveTheme: jest.fn(() => ['bar']),
+        getActiveTheme: jest.fn(() => {
+          return {
+            datasets: ['cd', 'ef', 'gh'],
+            id: 'themeId',
+            name: 'themeName',
+          }
+        }),
       },
       actions: {
         loadPointDataForLocation: jest.fn(),
@@ -111,6 +118,28 @@ describe('Default', () => {
 
     expect(routerPush).toHaveBeenCalledWith({
       params: { datasetIds: undefined },
+      name: 'datasetIds-locationId',
+    })
+  })
+
+  test('update url when theme changes', () => {
+    const routerPush = jest.fn()
+    const wrapper = shallowMount(Default, {
+      store,
+      localVue,
+      mocks: {
+        $route: {
+          params: { datasetIds: 'ab', locationId: 'ef' },
+          name: 'datasetIds-locationId',
+        },
+        $router: { push: routerPush },
+      },
+    })
+
+    wrapper.find('.default-layout__site-navigation').vm.$emit('change-theme')
+
+    expect(routerPush).toHaveBeenCalledWith({
+      params: { datasetIds: 'cd,ef,gh', locationId: 'ef' },
       name: 'datasetIds-locationId',
     })
   })

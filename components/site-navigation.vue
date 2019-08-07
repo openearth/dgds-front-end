@@ -50,7 +50,7 @@ export default {
     expanded: false,
   }),
   computed: {
-    ...mapGetters('map', ['getThemes']),
+    ...mapGetters('map/themes', ['getThemes']),
   },
   methods: {
     ...mapMutations('map', ['toggleActiveTheme']),

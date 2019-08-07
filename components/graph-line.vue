@@ -18,7 +18,11 @@
       {{ title }}
     </figcaption>
     <div v-if="!isCollapsed" class="graph-line__aspect-ratio">
-      <div v-echarts="{ data }" class="graph-line__chart" />
+      <v-chart
+        :options="graphData()"
+        :autoresize="true"
+        class="graph-line__chart"
+      />
     </div>
   </figure>
 </template>
@@ -29,6 +33,8 @@ import merge from 'lodash/merge'
 import UiButtonIcon from '~/components/ui-button-icon'
 import IconChevron from '~/assets/icon-action-chevron-down.svg'
 import moment from 'moment'
+import ECharts from 'vue-echarts'
+import 'echarts/lib/chart/line'
 
 const getStyle = (colors = {}) => ({
   backgroundColor: colors.background,
@@ -101,7 +107,7 @@ const baseOptions = {
 }
 
 export default {
-  components: { UiButtonIcon, IconChevron },
+  components: { UiButtonIcon, IconChevron, 'v-chart': ECharts },
   props: {
     category: {
       type: Array,
@@ -129,33 +135,35 @@ export default {
   }),
   computed: {
     ...mapGetters('preferences/theme', ['colors']),
-    data() {
-      const data = {
-        xAxis: {
-          data: this.category,
-        },
-        series: this.series.map(data => ({
-          type: 'line',
-          showAllSymbol: true,
-          data,
-          // symbolSize: 5,
-          itemStyle: {
-            normal: {
-              borderWidth: 1,
-            },
-          },
-        })),
-      }
-
-      const theme = getStyle(this.colors)
-      return merge(baseOptions, theme, data)
-    },
   },
   methods: {
     toggle() {
       if (this.collapsible) {
         this.isCollapsed = !this.isCollapsed
       }
+    },
+    graphData() {
+      const dataOptions = {
+        xAxis: {
+          data: this.category,
+        },
+        series: this.series.map(serie => {
+          return {
+            type: 'line',
+            showAllSymbol: true,
+            data: serie,
+            // symbolSize: 5,
+            itemStyle: {
+              normal: {
+                borderWidth: 1,
+              },
+            },
+          }
+        }),
+      }
+      const theme = getStyle(this.colors)
+      const result = merge(dataOptions, baseOptions, theme)
+      return result
     },
   },
 }

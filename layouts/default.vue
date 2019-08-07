@@ -161,6 +161,8 @@ export default {
       this.updateRoute(newRouteObject)
     },
     changeTheme() {
+      // When new theme is chosen update the route with the datasets within
+      // this theme
       const datasets = this.getActiveTheme.datasets
       let newparams
       if (datasets) {
