@@ -6,20 +6,7 @@
     @keydown.esc="collapse"
   >
     <ul class="site-navigation__list">
-      <li>
-        <nuxt-link
-          class="site-navigation__list-item site-navigation__list-item--active"
-          to="/"
-        >
-          <Icon
-            size="large"
-            name="theme-flooding"
-            fallback-name="placeholder"
-          />
-          <span class="site-navigation__text h4">Flooding</span>
-        </nuxt-link>
-      </li>
-      <li>
+      <!-- <li>
         <nuxt-link class="site-navigation__list-item" to="/">
           <Icon
             size="large"
@@ -28,16 +15,20 @@
           />
           <span class="site-navigation__text h4">Coastal Management</span>
         </nuxt-link>
-      </li>
-      <li>
-        <nuxt-link class="site-navigation__list-item" to="/">
-          <Icon
-            size="large"
-            name="theme-offshore"
-            fallback-name="placeholder"
-          />
-          <span class="site-navigation__text h4">Offshore</span>
-        </nuxt-link>
+      </li> -->
+      <li v-for="(theme, key) in getThemes" :key="key">
+        <div
+          class="site-navigation__list-item site-navigation__list-item--active"
+        >
+          <UiButtonIcon @click="changeTheme(theme.id)">
+            <Icon
+              size="large"
+              :name="`theme-${theme.id}`"
+              fallback-name="placeholder"
+            />
+          </UiButtonIcon>
+          <span class="site-navigation__text h4">{{ theme.name }}</span>
+        </div>
       </li>
     </ul>
     <div class="site-navigation__toggle-wrapper">
@@ -49,6 +40,7 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
 import UiButtonIcon from './ui-button-icon'
 import Icon from './icon'
 
@@ -57,7 +49,15 @@ export default {
   data: () => ({
     expanded: false,
   }),
+  computed: {
+    ...mapGetters('map', ['getThemes']),
+  },
   methods: {
+    ...mapMutations('map', ['toggleActiveTheme']),
+    changeTheme(id) {
+      this.toggleActiveTheme(id)
+      this.$emit('change-theme')
+    },
     expand() {
       this.expanded = true
     },
