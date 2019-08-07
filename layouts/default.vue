@@ -92,7 +92,7 @@ export default {
     }),
     ...mapGetters('map', [
       'activeSpatialData',
-      'allVectorData',
+      'activeVectorData',
       'activeDatasetsLocations',
       'datasetsInActiveTheme',
       'activeTimestamp',
@@ -105,7 +105,7 @@ export default {
       return spatialLayer
     },
     vectorLayers() {
-      const vectorLayers = this.allVectorData
+      const vectorLayers = this.activeVectorData
       const defaultVectorLayer = getVectorLayer()
       vectorLayers.forEach(layer => {
         if (!layer.paint) {

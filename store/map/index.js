@@ -44,7 +44,7 @@ export const mutations = {
   clearActiveDatasetIds(state) {
     state.activeDatasetIds = []
   },
-  setActiveTheme(state, id) {
+  toggleActiveTheme(state, id) {
     if (state.activeTheme.id === id) {
       state.activeTheme = {}
     } else {
@@ -228,11 +228,12 @@ export const getters = {
     }
   },
   activeSpatialData({ datasets, activeRasterLayerId, activeDatasets }) {
+    console.log('activeRasterLayerId', activeRasterLayerId)
     if (activeRasterLayerId === '') return []
     const tiles = get(`${activeRasterLayerId}.metadata.rasterUrl`, datasets)
     return [tiles]
   },
-  allVectorData({ activeLocationIds }, { activeDatasets }) {
+  activeVectorData({ activeLocationIds }, { activeDatasets }) {
     const vectorLayers = activeDatasets.filter(has('vector'))
     const mapboxLayers = vectorLayers.map(layer => {
       return get('vector.mapboxLayer', layer)
