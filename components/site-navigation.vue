@@ -6,16 +6,6 @@
     @keydown.esc="collapse"
   >
     <ul class="site-navigation__list">
-      <!-- <li>
-        <nuxt-link class="site-navigation__list-item" to="/">
-          <Icon
-            size="large"
-            name="theme-coastal-management"
-            fallback-name="placeholder"
-          />
-          <span class="site-navigation__text h4">Coastal Management</span>
-        </nuxt-link>
-      </li> -->
       <li v-for="(theme, key) in getThemes" :key="key">
         <div
           class="site-navigation__list-item site-navigation__list-item--active"
