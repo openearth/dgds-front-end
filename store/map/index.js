@@ -93,7 +93,10 @@ export const actions = {
         if (_.has(set, 'vectorLayer')) commit('datasets/addDatasetVector', set)
 
         // Add rasterLayer to store.datasets if available
-        if (_.has(set, 'rasterLayer') && _.get(set, 'rasterLayer.url') !== null) {
+        if (
+          _.has(set, 'rasterLayer') &&
+          _.get(set, 'rasterLayer.url') !== null
+        ) {
           commit('datasets/addDatasetRaster', set)
         }
       })
