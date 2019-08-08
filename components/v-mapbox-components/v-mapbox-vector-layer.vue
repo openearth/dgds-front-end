@@ -26,7 +26,11 @@ export default {
   watch: {
     layer: {
       handler(newValue) {
-        this.addToMap()
+        if (this.map.getLayer(this.layer.id)) {
+          this.map.setFilter(this.layer.id, newValue.filter)
+        } else {
+          this.addToMap()
+        }
       },
       deep: true,
     },

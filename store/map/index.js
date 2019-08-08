@@ -14,8 +14,8 @@ import negate from 'lodash/fp/negate'
 import flatten from 'lodash/fp/flatten'
 import update from 'lodash/fp/update'
 import uniq from 'lodash/fp/uniq'
-import omit from 'lodash/fp/omit'
 import isEmpty from 'lodash/fp/isEmpty'
+import _ from 'lodash'
 import moment from 'moment'
 import getFromApi from '../../lib/request/get'
 import {
@@ -24,7 +24,6 @@ import {
   getIn,
   wrapInProperty,
   when,
-  applyTo,
 } from '../../lib/utils'
 
 const notEmpty = negate(isEmpty)
@@ -66,50 +65,37 @@ export const mutations = {
 }
 
 export const actions = {
-  loadThemes({ commit: _commit }) {
-    const commit = path => value => _commit(path, value)
-    const addTheme = commit('themes/addTheme')
-    const addMetadata = commit('datasets/addMetadata')
-    const addRaster = commit('datasets/addDatasetSpatial')
-    const addVector = commit('datasets/addDatasetVector')
+  loadDatasets({ commit }) {
+    return getFromApi('datasets').then(val => {
+      // Loop over datasets to get a list of available datasets per theme
+      val.themes.map(theme => {
+        theme.datasets = _.compact(
+          val.datasets.map(set => {
+            if (set.themes.includes(theme.id)) return set.id
+          }),
+        )
+        return theme
+      })
 
-    // prettier-ignore
-    const storeMetadata =
-      pipe([
-        get('datasets'),
-        omit('rasterUrl'),
-        map(addMetadata)
-      ])
+      // Add themes to store.themes
+      val.themes.forEach(theme => commit('themes/addTheme', theme))
 
-    // prettier-ignore
-    const storeTheme =
-      pipe([
-        update('datasets', map(get('id'))),
-        addTheme,
-      ])
+      val.datasets.forEach(set => {
+        // Add metadata to store.datasets (excluding vectorLayer and rasterLayer)
+        commit(
+          'datasets/addMetadata',
+          _.omit(set, ['vectorLayer', 'rasterLayer']),
+        )
 
-    const storeSpatial = pipe([
-      get('datasets'),
-      filter(get('rasterUrl')),
-      map(addRaster),
-    ])
+        // Add vectorlayer to store.datasets if available
+        if (has('vectorLayer', set)) commit('datasets/addDatasetVector', set)
 
-    const storeVector = pipe([
-      get('datasets'),
-      filter(get('mapboxLayer')),
-      map(addVector),
-    ])
-
-    const processTheme = applyTo([
-      storeTheme,
-      storeMetadata,
-      storeSpatial,
-      storeVector,
-    ])
-
-    return getFromApi('datasets')
-      .then(values)
-      .then(map(processTheme))
+        // Add rasterLayer to store.datasets if available
+        if (has('rasterLayer', set) && _.get(set, 'rasterLayer.url') !== null) {
+          commit('datasets/addDatasetRaster', set)
+        }
+      })
+    })
   },
 
   storeActiveDatasets({ commit, state, getters }, _ids) {
@@ -117,7 +103,7 @@ export const actions = {
     commit('setActiveDatasetIds', ids)
   },
 
-  loadPointDataForLocation({ commit, state }, { datasetIds, locationId }) {
+  loadPointDataForLocation({ commit }, { datasetIds, locationId }) {
     // prettier-ignore
     const getEvents = pipe([
       filter(has('events')),
@@ -145,8 +131,6 @@ export const actions = {
 
     // prettier-ignore
     datasets.forEach(datasetId => {
-      const check = get(`[${datasetId}].pointData[${locationId}]`, state.datasets)
-      if (check) return
       const parameters = {
         locationCode: locationId,
         startTime: moment()
@@ -157,6 +141,7 @@ export const actions = {
           .format('YYYY-MM-DDTHH:mm:ssZ'),
         datasetId: datasetId,
       }
+
       return getFromApi('timeseries', parameters).then(({ results }) => {
         commit(
           'datasets/addDatasetPointData',
@@ -185,6 +170,7 @@ export const getters = {
   getActiveRasterLayer(state, id) {
     return state.activeRasterLayerId
   },
+
   knownLocationIds(state) {
     const getInDatasets = getIn(state.datasets)
     const getLocationId = map(get('properties.locationId'))
@@ -210,13 +196,9 @@ export const getters = {
       .filter(identity)
   },
 
-  activeTimestamp(state, { activeSpatialData }) {
-    if (
-      activeSpatialData &&
-      activeSpatialData.length &&
-      activeSpatialData[0] !== ''
-    ) {
-      const str = activeSpatialData[0]
+  activeTimestamp(state, { activeRasterData }) {
+    if (_.head(activeRasterData)) {
+      const str = activeRasterData[0]
       const timestamp = str.split(/time=([^&]+)/)[1]
       const timeDec = decodeURIComponent(timestamp)
       const timemoment = momentFormat('MM-DD-YYYY HH:mm', timeDec)
@@ -225,9 +207,10 @@ export const getters = {
       return ''
     }
   },
-  activeSpatialData({ datasets, activeRasterLayerId, activeDatasets }) {
-    if (activeRasterLayerId === '') return []
-    const tiles = get(`${activeRasterLayerId}.metadata.rasterUrl`, datasets)
+  activeRasterData({ datasets, activeRasterLayerId, activeDatasets }) {
+    // Return the active raster data tiles (if not defined, return [])
+    if (activeRasterLayerId === '' || activeRasterLayerId === null) return []
+    const tiles = get(`${activeRasterLayerId}.raster.tiles`, datasets)
     return [tiles]
   },
   activeVectorData({ activeLocationIds }, { activeDatasets }) {
@@ -295,12 +278,12 @@ export const getters = {
       {},
     )
   },
-  datasetsInActiveTheme({ activeTheme, datasets, activeDatasetIds }) {
-    let ids = activeDatasetIds
-    if (activeTheme.datasets !== undefined) {
-      ids = activeTheme.datasets
+  datasetsInActiveTheme(state) {
+    let ids = state.activeDatasetIds
+    if (state.activeTheme.datasets !== undefined) {
+      ids = state.activeTheme.datasets
     }
-    const sets = values(datasets)
+    const sets = values(state.datasets)
       .map(get('metadata'))
       .map(obj => merge(obj, { visible: getId(obj) }))
       .map(update('visible', includesIn(ids)))

@@ -85,32 +85,6 @@ describe('activeDatasets', () => {
   })
 })
 
-// describe('activeSpatialData', () => {
-// test('returns array with the current tile for the active dataset', () => {
-//   const otherGetters = {
-//     activeDatasets: [
-//       {
-//         metadata: {},
-//         spatial: { tiles: 'some/url' },
-//       },
-//     ],
-//   }
-//   const result = getters.activeSpatialData({}, otherGetters)
-//   expect(result).toEqual(['some/url'])
-// })
-//   test('returns an empty array when tiles cant be found', () => {
-//     const otherGetters = {
-//       activeDatasets: [
-//         {
-//           metadata: {},
-//         },
-//       ],
-//     }
-//     const result = getters.activeSpatialData({}, otherGetters)
-//     expect(result).toEqual([])
-//   })
-// })
-
 describe('activeDatasetsLocations', () => {
   test('returns array of datasets for the active locations', () => {
     const state = {

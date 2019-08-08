@@ -22,6 +22,38 @@ describe('clearActiveDatasetIds', () => {
   })
 })
 
+describe('toggleActiveTheme', () => {
+  test('updates state.activeTheme with ids in payload', () => {
+    const state = {
+      activeTheme: {},
+      themes: {
+        ab: {
+          cd: 'ef',
+          id: 'ab',
+        },
+      },
+    }
+    const ids = 'ab'
+    mutations.toggleActiveTheme(state, ids)
+    expect(state.activeTheme).toEqual({
+      cd: 'ef',
+      id: 'ab',
+    })
+    mutations.toggleActiveTheme(state, ids)
+    expect(state.activeTheme).toEqual({})
+  })
+})
+
+describe('clearActiveTheme', () => {
+  test('clears state.activeTheme', () => {
+    const state = {
+      activeTheme: 'ab',
+    }
+    mutations.clearActiveTheme(state)
+    expect(state.activeTheme).toEqual({})
+  })
+})
+
 describe('setActiveLocationIds', () => {
   test('updates state.setActiveLocationIds with ids in payload', () => {
     const state = {

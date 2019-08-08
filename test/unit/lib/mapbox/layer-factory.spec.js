@@ -36,12 +36,12 @@ describe('geojson', () => {
   })
 })
 
-describe('spatial', () => {
-  test('add spatial data structure to provided layer object', () => {
+describe('raster', () => {
+  test('add raster data structure to provided layer object', () => {
     const layer = {
       foo: 'bar',
     }
-    const result = layerFactory('spatial', layer)
+    const result = layerFactory('raster', layer)
 
     expect(result).toEqual({
       foo: 'bar',
@@ -62,7 +62,7 @@ describe('spatial', () => {
         tiles: ['path/to/tile'],
       },
     }
-    const result = layerFactory('spatial', layer)
+    const result = layerFactory('raster', layer)
 
     expect(result).toEqual({
       foo: 'bar',

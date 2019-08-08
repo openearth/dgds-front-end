@@ -48,7 +48,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('map', ['getActiveRasterLayer']),
+    ...mapGetters('map', ['getActiveRasterLayer', 'getActiveTheme']),
   },
   methods: {
     toggleLocationDataset(id) {

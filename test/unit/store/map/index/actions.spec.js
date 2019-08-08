@@ -4,33 +4,45 @@ import getFromApi from '../../../../../lib/request/get'
 
 jest.mock('../../../../../lib/request/get')
 
-describe('loadThemes', () => {
+describe('loadDatasets', () => {
   test('fetches datasets and stores them', async () => {
     const commit = jest.fn()
     const apiResult = {
-      coastalManagement: {
-        datasets: [{ id: 'ab', foo: 'bar' }, { id: 'cd', baz: 'blub' }],
-      },
+      themes: [{ id: 'theme1', name: 'theme1Name' }],
+      datasets: [
+        { id: 'ab', foo: 'bar', themes: ['theme1'], vectorLayer: {} },
+        { id: 'cd', baz: 'blub', themes: ['theme2'], rasterLayer: {} },
+      ],
     }
     getFromApi.mockResolvedValue(apiResult)
-    await actions.loadThemes({ commit })
+    await actions.loadDatasets({ commit })
     expect(commit.mock.calls[0]).toEqual([
       'themes/addTheme',
-      { datasets: ['ab', 'cd'] },
+      { id: 'theme1', name: 'theme1Name', datasets: ['ab'] },
     ])
     expect(commit.mock.calls[1]).toEqual([
       'datasets/addMetadata',
       {
         id: 'ab',
         foo: 'bar',
+        themes: ['theme1'],
       },
     ])
     expect(commit.mock.calls[2]).toEqual([
+      'datasets/addDatasetVector',
+      { id: 'ab', foo: 'bar', themes: ['theme1'], vectorLayer: {} },
+    ])
+    expect(commit.mock.calls[3]).toEqual([
       'datasets/addMetadata',
       {
         id: 'cd',
         baz: 'blub',
+        themes: ['theme2'],
       },
+    ])
+    expect(commit.mock.calls[4]).toEqual([
+      'datasets/addDatasetRaster',
+      { id: 'cd', baz: 'blub', themes: ['theme2'], rasterLayer: {} },
     ])
   })
 })
@@ -68,14 +80,6 @@ describe('storeActiveDatasets', () => {
     await actions.storeActiveDatasets({ commit, state, getters: get }, _ids)
     expect(commit.mock.calls[0][0]).toBe('setActiveDatasetIds')
     expect(commit.mock.calls[0][1]).toEqual(['wl'])
-    // expect(commit.mock.calls[1][0]).toBe('datasets/addDatasetLocations')
-    // expect(commit.mock.calls[1][1]).toEqual({
-    //   data: {
-    //     features: apiResult.results[0].features,
-    //     type: 'FeatureCollection',
-    //   },
-    //   id: 'wl',
-    // })
   })
 
   test('returns object of known ids of datasets provided as string', async () => {
@@ -122,7 +126,7 @@ describe('storeActiveDatasets', () => {
 })
 
 describe('loadPointDataForLocation', () => {
-  test('loads point data for the specified location if not already in store (datasets)', async () => {
+  test('loads point data for the specified location', async () => {
     const commit = jest.fn()
     const timestamp = moment()
     const apiResult = {
@@ -137,18 +141,9 @@ describe('loadPointDataForLocation', () => {
         },
       ],
     }
-    const state = {
-      datasets: {
-        ab: {
-          pointData: {
-            ef: {},
-          },
-        },
-      },
-    }
     getFromApi.mockResolvedValue(apiResult)
     await actions.loadPointDataForLocation(
-      { commit, state },
+      { commit },
       { datasetIds: ['ab', 'cd'], locationId: 'ef' },
     )
     expect(getFromApi).toHaveBeenCalledWith('timeseries', {
@@ -161,20 +156,10 @@ describe('loadPointDataForLocation', () => {
         .subtract(3, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
     })
-    expect(getFromApi).not.toHaveBeenCalledWith('timeseries', {
-      datasetId: 'ab',
-      endTime: moment()
-        .add(5, 'days')
-        .format('YYYY-MM-DDTHH:mm:ssZ'),
-      locationCode: 'ef',
-      startTime: moment()
-        .subtract(3, 'days')
-        .format('YYYY-MM-DDTHH:mm:ssZ'),
-    })
     expect(commit.mock.calls[0]).toEqual([
       'datasets/addDatasetPointData',
       {
-        id: 'cd',
+        id: 'ab',
         data: {
           ef: {
             category: [moment(timestamp).format('MM-DD-YYYY \n HH:mm')],

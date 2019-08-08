@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import _ from 'lodash'
 import get from 'lodash/fp/get'
 import pipe from 'lodash/fp/pipe'
 import merge from 'lodash/fp/merge'
@@ -11,31 +12,41 @@ const emptyLocationsObject = () => ({})
 const getOrEmpty = empty => when(identity, identity, empty)
 const getOrEmptyVector = getOrEmpty(emptyLocationsObject)
 const getOrEmptyPointData = getOrEmpty(emptyObject)
-const getOrEmptySpatial = getOrEmpty(emptyObject)
+const getOrEmptyRaster = getOrEmpty(emptyObject)
 const getOrEmptyMetadata = getOrEmpty(emptyObject)
 const getPointData = pipe([get('pointData'), getOrEmptyPointData])
 const getVectorData = pipe([get('vector'), getOrEmptyVector])
-const getSpatialData = pipe([get('spatial'), getOrEmptySpatial])
+const getRasterData = pipe([get('raster'), getOrEmptyRaster])
 const getMetadata = pipe([get('metadata'), getOrEmptyMetadata])
 
 export const state = () => ({})
 
 export const mutations = {
   addDatasetVector(state, data) {
-    const id = data.id
+    const id = _.get(data, 'id')
+    if (!id) return
     if (!state[id]) Vue.set(state, id, {})
     const vectorData = getVectorData(state[id])
-    Vue.set(
-      state[id],
-      'vector',
-      merge(vectorData, { mapboxLayer: data.mapboxLayer }),
+
+    // TODO: make generic by looping over vectorLayer
+    const mergedVector = _.merge(
+      { mapboxLayer: _.get(data, 'vectorLayer.mapboxLayer') },
+      vectorData,
     )
+    Vue.set(state[id], 'vector', mergedVector)
   },
-  addDatasetSpatial(state, data) {
-    const id = data.id
+  addDatasetRaster(state, data) {
+    const id = _.get(data, 'id')
+    // If id already has a rasterLayer return
+    if (!id) return
+    // else add to datasets
     if (!state[id]) Vue.set(state, id, {})
-    const spatialData = getSpatialData(state[id])
-    Vue.set(state[id], 'spatial', merge(spatialData, { tiles: data.rasterUrl }))
+    const rasterData = getRasterData(state[id])
+    const vectorLayer = merge(rasterData, {
+      tiles: get('rasterLayer.url', data),
+    })
+    if (!_.get(data, 'rasterLayer.url')) return
+    Vue.set(state[id], 'raster', vectorLayer)
   },
   addDatasetPointData(state, { id, data }) {
     if (!state[id]) Vue.set(state, id, {})

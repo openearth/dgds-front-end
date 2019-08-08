@@ -22,7 +22,7 @@
           :active-theme="activeTheme"
           @select-locations="selectLocations"
         ></v-mapbox-vector-layer>
-        <v-mapbox-raster-layer :options="spatialLayer"> </v-mapbox-raster-layer>
+        <v-mapbox-raster-layer :options="rasterLayer"> </v-mapbox-raster-layer>
       </v-mapbox>
     </no-ssr>
     <DataSetControlMenu
@@ -56,13 +56,14 @@ import negate from 'lodash/fp/negate'
 import concat from 'lodash/fp/concat'
 import isEqual from 'lodash/fp/isEqual'
 import identity from 'lodash/fp/identity'
+import _ from 'lodash'
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import DataSetControlMenu from '../components/data-set-control-menu'
 import SiteNavigation from '../components/site-navigation'
 import TimeStamp from '../components/time-stamp'
 import { when } from '../lib/utils'
 import getVectorLayer from '../lib/mapbox/layers/get-vector-layer'
-import getSpatialLayer from '../lib/mapbox/layers/get-spatial-layer'
+import getRasterLayer from '../lib/mapbox/layers/get-raster-layer'
 import VMapboxVectorLayer from '../components/v-mapbox-components/v-mapbox-vector-layer'
 import VMapboxRasterLayer from '../components/v-mapbox-components/v-mapbox-raster-layer'
 import VMapboxSelectedPointLayer from '../components/v-mapbox-components/v-mapbox-selected-point-layer'
@@ -91,7 +92,7 @@ export default {
       activeLocationIds: state => state.map.activeLocationIds,
     }),
     ...mapGetters('map', [
-      'activeSpatialData',
+      'activeRasterData',
       'activeVectorData',
       'activeDatasetsLocations',
       'datasetsInActiveTheme',
@@ -99,20 +100,35 @@ export default {
       'activeDatasets',
       'getActiveTheme',
     ]),
-    spatialLayer() {
-      const spatialLayer = getSpatialLayer()
-      spatialLayer.source.tiles = this.activeSpatialData
-      return spatialLayer
+    rasterLayer() {
+      const rasterLayer = getRasterLayer()
+      rasterLayer.source.tiles = this.activeRasterData
+      return rasterLayer
     },
     vectorLayers() {
       const vectorLayers = this.activeVectorData
       const defaultVectorLayer = getVectorLayer()
-      vectorLayers.forEach(layer => {
+
+      const merged = _(vectorLayers)
+        .groupBy('id')
+        .map(g =>
+          _.mergeWith({}, ...g, (obj, src) =>
+            _.isArray(obj) ? obj.concat(src) : undefined,
+          ),
+        )
+        .value()
+
+      merged.forEach(layer => {
         if (!layer.paint) {
           layer.paint = defaultVectorLayer.paint
         }
+        const filter = ['any']
+        layer.filterIds.forEach(id => {
+          filter.push(['==', ['get', id], true])
+        })
+        layer.filter = filter
       })
-      return vectorLayers
+      return merged
     },
   },
   watch: {
