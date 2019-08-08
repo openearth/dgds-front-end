@@ -60,9 +60,7 @@ export default {
     },
     addToMap() {
       this.layers.forEach(layer => {
-        console.log('layer', layer)
         this.map.addLayer(layer)
-        console.log(layer)
         this.map.on('click', layer.id, event => {
           const { clientWidth } = this.map.getCanvas()
 
