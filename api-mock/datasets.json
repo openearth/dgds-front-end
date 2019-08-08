@@ -1,7 +1,6 @@
 {
     "datasets": [
         {
-            "description": "To be filled by Daniel",
             "id": "fw",
             "name": "Flood warning",
             "pointData": "timeseries",
@@ -16,7 +15,7 @@
             "timeSpan": "Live",
             "units": "N/A",
             "vectorLayer": {
-                "mapboxLayer": {
+                "mapboxLayer": [{
                     "filterIds": [
                         "Alert.level"
                     ],
@@ -27,11 +26,10 @@
                     },
                     "source-layer": "pltc012flat",
                     "type": "circle"
-                }
+                }]
             }
         },
         {
-            "description": "To be filled by Daniel",
             "id": "cc",
             "name": "Currents",
             "pointData": "timeseries",
@@ -48,7 +46,6 @@
             "units": "km/h"
         },
         {
-            "description": "To be filled by Daniel",
             "id": "wl",
             "name": "Waterlevel",
             "pointData": "timeseries",
@@ -64,7 +61,7 @@
             "timeSpan": "Live",
             "units": "m",
             "vectorLayer": {
-                "mapboxLayer": {
+                "mapboxLayer": [{
                     "filterIds": [
                         "H.simulated"
                     ],
@@ -75,11 +72,10 @@
                     },
                     "source-layer": "pltc012flat",
                     "type": "circle"
-                }
+                }]
             }
         },
         {
-            "description": "To be filled by Daniel",
             "id": "sh",
             "name": "Surge Height",
             "pointData": "timeseries",
@@ -95,7 +91,7 @@
             "timeSpan": "Live",
             "units": "m",
             "vectorLayer": {
-                "mapboxLayer": {
+                "mapboxLayer": [{
                     "filterIds": [
                         "H.surge.simulated"
                     ],
@@ -106,11 +102,10 @@
                     },
                     "source-layer": "pltc012flat",
                     "type": "circle"
-                }
+                }]
             }
         },
         {
-            "description": "To be filled by Daniel",
             "id": "tt",
             "name": "Tide",
             "pointData": "timeseries",
@@ -126,7 +121,7 @@
             "timeSpan": "Live",
             "units": "m",
             "vectorLayer": {
-                "mapboxLayer": {
+                "mapboxLayer": [{
                     "filterIds": [
                         "H.astronomical.simulated"
                     ],
@@ -137,11 +132,10 @@
                     },
                     "source-layer": "pltc012flat",
                     "type": "circle"
-                }
+                }]
             }
         },
         {
-            "description": "To be filled by Daniel",
             "id": "wd",
             "name": "Wind",
             "pointData": "timeseries",
@@ -156,7 +150,7 @@
             "timeSpan": "Live",
             "units": "m/s",
             "vectorLayer": {
-                "mapboxLayer": {
+                "mapboxLayer": [{
                     "filterIds": [
                         "Wind.speed",
                         "Wind.direction"
@@ -168,11 +162,10 @@
                     },
                     "source-layer": "pltc012flat",
                     "type": "circle"
-                }
+                }]
             }
         },
         {
-            "description": "To be filled by Daniel",
             "id": "wv",
             "name": "Waves",
             "pointData": "timeseries",
@@ -188,7 +181,7 @@
             "timeSpan": "Live",
             "units": "m",
             "vectorLayer": {
-                "mapboxLayer": {
+                "mapboxLayer": [{
                     "filterIds": [
                         "H.simulated"
                     ],
@@ -199,7 +192,179 @@
                     },
                     "source-layer": "pltc012flat",
                     "type": "circle"
-                }
+                }]
+            }
+        },
+        {
+            "id": "sm",
+            "name": "Shoreline Monitor",
+            "pointData": "timeseries",
+            "themes": [
+                "cm"
+            ],
+            "timeSpan": "Historic",
+            "units": "m",
+            "vectorLayer": {
+                "mapboxLayer": [
+                    {
+                        "id": "shoreline-aggregatedpointsz0",
+                        "type": "circle",
+                        "source": {
+                            "url": "mapbox://global-data-viewer.aggregatedpointsz0",
+                            "type": "vector"
+                        },
+                        "source-layer": "aggregatedpointsz0",
+                        "maxzoom": 5,
+                        "paint": {
+                            "circle-color": [
+                                "interpolate",
+                                ["linear"],
+                                ["get", "NormalizedValue"],
+                                -1,
+                                "hsl(0, 90%, 80%)",
+                                0,
+                                "hsla(55, 88%, 53%, 0.15)",
+                                1,
+                                "hsl(110, 90%, 80%)"
+                            ],
+                            "circle-radius": [
+                                "interpolate",
+                                ["linear"],
+                                ["zoom"],
+                                0,
+                                0.5,
+                                1,
+                                1,
+                                5,
+                                5
+                            ],
+                            "circle-stroke-color": "hsl(0, 72%, 100%)"
+                        }
+                    },
+                    {
+                        "id": "shoreline-aggregatedpointsz5",
+                        "type": "circle",
+                        "source": {
+                            "url": "mapbox://global-data-viewer.aggregatedpointsz5",
+                            "type": "vector"
+                        },
+                        "source-layer": "aggregatedpointsz5",
+                        "minzoom": 5,
+                        "maxzoom": 10,
+                        "layout": {},
+                        "paint": {
+                            "circle-color": [
+                                "interpolate",
+                                ["linear"],
+                                ["get", "NormalizedValue"],
+                                -1,
+                                "hsl(0, 90%, 80%)",
+                                0,
+                                "hsla(55, 88%, 53%, 0.3)",
+                                1,
+                                "hsl(110, 90%, 80%)"
+                            ],
+                            "circle-radius": [
+                                "interpolate",
+                                ["linear"],
+                                ["zoom"],
+                                0,
+                                1,
+                                5,
+                                5
+                            ],
+                            "circle-stroke-color": "hsl(0, 72%, 100%)"
+                        }
+                    },
+                    {
+                        "id": "shoreline-transectsaspoints",
+                        "type": "circle",
+                        "source": {
+                            "url": "mapbox://global-data-viewer.transectsaspoints",
+                            "type": "vector"
+                        },
+                        "source-layer": "transectsaspoints",
+                        "minzoom": 10,
+                        "layout": {},
+                        "paint": {
+                            "circle-stroke-color": "hsl(0, 100%, 100%)",
+                            "circle-stroke-width": 1,
+                            "circle-color": [
+                                "interpolate",
+                                ["linear"],
+                                ["get", "Value"],
+                                -3,
+                                "hsl(0, 90%, 80%)",
+                                0,
+                                "hsla(55, 90%, 50%, 0.3)",
+                                3,
+                                "hsl(110, 90%, 80%)"
+                            ]
+                        }
+                    },
+                    {
+                        "id": "shoreline-transectsaspoints-bar-chart",
+                        "type": "symbol",
+                        "source": {
+                            "url": "mapbox://global-data-viewer.transectsaspoints",
+                            "type": "vector"
+                        },
+                        "source-layer": "transectsaspoints",
+                        "minzoom": 10,
+                        "layout": {
+                            "text-field": [
+                                "step",
+                                ["get", "Value"],
+                                "-----",
+                                -916,
+                                "-",
+                                -460,
+                                "---",
+                                -3,
+                                "----",
+                                -2,
+                                "---",
+                                -1,
+                                "--",
+                                0,
+                                "--",
+                                1,
+                                "---",
+                                2,
+                                "----",
+                                3,
+                                "-----"
+                            ],
+                            "text-size": 50,
+                            "text-anchor": ["step", ["get", "Value"], "left", 0, "right"],
+                            "text-rotate": [
+                                "interpolate",
+                                ["linear"],
+                                ["get", "Angle"],
+                                -3.141431557712241,
+                                360,
+                                3.1413780228666,
+                                0
+                            ],
+                            "text-offset": [-0.01, -0.115],
+                            "text-letter-spacing": -0.08,
+                            "text-allow-overlap": true
+                        },
+                        "paint": {
+                            "text-color": [
+                                "interpolate",
+                                ["linear"],
+                                ["get", "Value"],
+                                -3,
+                                "hsl(0, 90%, 80%)",
+                                0,
+                                "hsla(55, 80%, 50%, 0.3)",
+                                3,
+                                "hsl(110, 80%, 90%)"
+                            ]
+                        }
+                    }
+                ]
             }
         }
     ],
