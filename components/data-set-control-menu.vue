@@ -13,16 +13,20 @@
             :name="`dataset-${dataset.id}`"
             fallback-name="placeholder"
           />
-          {{ dataset.name }}
+          <div class="data-set-control-menu__text">
+            {{ dataset.name }}
+          </div>
           <div class="data-set-control-menu__control">
             <UiToggle
+              v-if="checkVector(dataset.id)"
               :checked="dataset.visible"
-              class="data-set-control-menu__control"
               @change="toggleLocationDataset(dataset.id)"
             />
+          </div>
+          <div class="data-set-control-menu__control">
             <UiRadio
+              v-if="checkRaster(dataset.id)"
               :checked="dataset.id === getActiveRasterLayer"
-              class="data-set-control-menu__control"
               @change="toggleRasterLayer(dataset.id)"
             />
           </div>
@@ -34,6 +38,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import _ from 'lodash'
 import Panel from './panel'
 import UiToggle from './ui-toggle'
 import UiRadio from './ui-radio'
@@ -48,7 +53,11 @@ export default {
     },
   },
   computed: {
-    ...mapGetters('map', ['getActiveRasterLayer', 'getActiveTheme']),
+    ...mapGetters('map', [
+      'getActiveRasterLayer',
+      'getActiveTheme',
+      'getDatasets',
+    ]),
   },
   methods: {
     toggleLocationDataset(id) {
@@ -56,6 +65,12 @@ export default {
     },
     toggleRasterLayer(id) {
       this.$emit('toggle-raster-layer', id)
+    },
+    checkVector(id) {
+      return _.has(this.getDatasets, `${id}.vector`)
+    },
+    checkRaster(id) {
+      return _.has(this.getDatasets, `${id}.raster`)
     },
   },
 }
@@ -92,7 +107,12 @@ export default {
   margin-right: var(--spacing-small);
 }
 
+.data-set-control-menu__text {
+  flex: 5;
+}
+
 .data-set-control-menu__control {
   margin-left: auto;
+  flex: 1;
 }
 </style>

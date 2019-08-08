@@ -16,9 +16,9 @@
           :geometry="geometry"
         ></v-mapbox-selected-point-layer>
         <v-mapbox-vector-layer
-          v-for="layer in vectorLayers"
-          :key="layer.id"
-          :layer="layer"
+          v-for="vectorlayer in vectorLayers"
+          :key="vectorlayer.id"
+          :layers="vectorlayer"
           :active-theme="activeTheme"
           @select-locations="selectLocations"
         ></v-mapbox-vector-layer>
@@ -108,27 +108,36 @@ export default {
     vectorLayers() {
       const vectorLayers = this.activeVectorData
       const defaultVectorLayer = getVectorLayer()
+      const newLayers = vectorLayers.map(vectorLayer => {
+        // Get all the different mapboxlayers and merge the ones that have
+        // the same id. The properties which have a same name, but different
+        // values will be merged into an array.
+        const merged = _(vectorLayer)
+          .groupBy('id')
+          .map(g =>
+            _.mergeWith({}, ...g, (obj, src) =>
+              _.isArray(obj) ? obj.concat(src) : undefined,
+            ),
+          )
+          .value()
 
-      const merged = _(vectorLayers)
-        .groupBy('id')
-        .map(g =>
-          _.mergeWith({}, ...g, (obj, src) =>
-            _.isArray(obj) ? obj.concat(src) : undefined,
-          ),
-        )
-        .value()
+        // Adjust the paint and filterids per layer
+        merged.forEach(layer => {
+          if (!layer.paint) {
+            layer.paint = defaultVectorLayer.paint
+          }
 
-      merged.forEach(layer => {
-        if (!layer.paint) {
-          layer.paint = defaultVectorLayer.paint
-        }
-        const filter = ['any']
-        layer.filterIds.forEach(id => {
-          filter.push(['==', ['get', id], true])
+          if (_.get(layer, 'filterIds')) {
+            const filter = ['any']
+            layer.filterIds.forEach(id => {
+              filter.push(['==', ['get', id], true])
+            })
+            layer.filter = filter
+          }
         })
-        layer.filter = filter
+        return merged
       })
-      return merged
+      return newLayers
     },
   },
   watch: {
@@ -151,7 +160,8 @@ export default {
       this.geometry = detail.geometry
       const { datasetIds } = this.$route.params
       const locationIds = detail.features.map(
-        feature => feature.properties.locationId,
+        feature =>
+          feature.properties.locationId || feature.properties.Transect_id,
       )
       this.updateRoute({
         name: 'datasetIds-locationId',
