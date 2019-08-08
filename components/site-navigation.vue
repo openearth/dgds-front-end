@@ -40,12 +40,12 @@ export default {
     expanded: false,
   }),
   computed: {
-    ...mapGetters('map', ['getThemes']),
+    ...mapGetters('map/themes', ['getThemes']),
   },
   methods: {
-    ...mapMutations('map', ['setActiveTheme']),
+    ...mapMutations('map', ['toggleActiveTheme']),
     changeTheme(id) {
-      this.setActiveTheme(id)
+      this.toggleActiveTheme(id)
       this.$emit('change-theme')
     },
     expand() {

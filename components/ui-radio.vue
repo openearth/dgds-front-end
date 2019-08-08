@@ -22,8 +22,8 @@
 
 .ui-radio__button-wrapper {
   display: inline-block;
-  width: calc(var(--spacing-default));
-  height: calc(var(--spacing-default));
+  width: var(--spacing-default);
+  height: var(--spacing-default);
   position: relative;
   margin-right: 0.25em;
   margin-left: 0.25rem;

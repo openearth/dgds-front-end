@@ -8,3 +8,9 @@ export const mutations = {
     Vue.set(state, theme.id, theme)
   },
 }
+
+export const getters = {
+  getThemes(state) {
+    return state
+  },
+}

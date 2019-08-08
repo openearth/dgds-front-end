@@ -20,9 +20,9 @@ export default {
     }),
   },
   methods: {
-    ...mapMutations({ setActiveTheme: 'preferences/theme/setActive' }),
+    ...mapMutations({ toggleActiveTheme: 'preferences/theme/setActive' }),
     setActive(event) {
-      this.setActiveTheme(event.target.value)
+      this.toggleActiveTheme(event.target.value)
     },
   },
 }

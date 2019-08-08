@@ -93,7 +93,7 @@ export default {
     }),
     ...mapGetters('map', [
       'activeRasterData',
-      'allVectorData',
+      'activeVectorData',
       'activeDatasetsLocations',
       'datasetsInActiveTheme',
       'activeTimestamp',
@@ -108,7 +108,7 @@ export default {
       return rasterLayer
     },
     vectorLayers() {
-      const vectorLayers = this.allVectorData
+      const vectorLayers = this.activeVectorData
       const defaultVectorLayer = getVectorLayer()
 
       const merged = _(vectorLayers)
@@ -179,6 +179,8 @@ export default {
       this.updateRoute(newRouteObject)
     },
     changeTheme() {
+      // When new theme is chosen update the route with the datasets within
+      // this theme
       const datasets = this.getActiveTheme.datasets
       let newparams
       if (datasets) {
