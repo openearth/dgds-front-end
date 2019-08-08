@@ -162,7 +162,12 @@ export const getters = {
   getActiveRasterLayer(state, id) {
     return state.activeRasterLayerId
   },
-
+  hasVector(state, id) {
+    return _.has(state, `${id}.vector`)
+  },
+  hasRaster(state, id) {
+    return _.has(state, `${id}.raster`)
+  },
   knownLocationIds(state) {
     const getInDatasets = getIn(state.datasets)
     const getLocationId = map(get('properties.locationId'))

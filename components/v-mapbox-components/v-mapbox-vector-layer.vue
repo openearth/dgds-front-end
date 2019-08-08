@@ -6,11 +6,11 @@
 export default {
   name: 'VMapboxVectorLayer',
   props: {
-    layer: {
+    layers: {
       default: () => {
-        return {}
+        return []
       },
-      type: Object,
+      type: Array,
     },
     activeTheme: {
       type: String,
@@ -24,13 +24,15 @@ export default {
     }
   },
   watch: {
-    layer: {
+    layers: {
       handler(newValue) {
-        if (this.map.getLayer(this.layer.id)) {
-          this.map.setFilter(this.layer.id, newValue.filter)
-        } else {
-          this.addToMap()
-        }
+        newValue.forEach((newLayer, index) => {
+          if (this.map.getLayer(this.layers[index].id)) {
+            this.map.setFilter(this.layers[index].id, newLayer.filter)
+          } else {
+            this.addToMap()
+          }
+        })
       },
       deep: true,
     },
@@ -45,20 +47,23 @@ export default {
     }
   },
   beforeDestroy() {
-    if (this.layer.id && this.map.getLayer(this.layer.id)) {
-      this.map.removeLayer(this.layer.id)
-      this.map.removeSource(this.layer.id)
-    }
+    this.layers.forEach(layer => {
+      if (layer.id && this.map.getLayer(layer.id)) {
+        this.map.removeLayer(layer.id)
+        this.map.removeSource(layer.id)
+      }
+    })
   },
   methods: {
     deferredMountedTo(map) {
       this.addToMap()
     },
     addToMap() {
-      if (this.layer) {
-        this.map.addLayer(this.layer)
-
-        this.map.on('click', this.layer.id, event => {
+      this.layers.forEach(layer => {
+        console.log('layer', layer)
+        this.map.addLayer(layer)
+        console.log(layer)
+        this.map.on('click', layer.id, event => {
           const { clientWidth } = this.map.getCanvas()
 
           // prettier-ignore
@@ -82,14 +87,14 @@ export default {
           }, duration)
         })
 
-        this.map.on('mouseenter', this.layer.id, () => {
+        this.map.on('mouseenter', layer.id, () => {
           this.map.getCanvas().style.cursor = 'pointer'
         })
 
-        this.map.on('mouseleave', this.layer.id, () => {
+        this.map.on('mouseleave', layer.id, () => {
           this.map.getCanvas().style.cursor = ''
         })
-      }
+      })
     },
   },
 }
