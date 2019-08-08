@@ -67,7 +67,7 @@ export const mutations = {
 export const actions = {
   loadDatasets({ commit }) {
     return getFromApi('datasets').then(val => {
-      // store the themes and datasets from the config in the store
+      // Loop over datasets to get a list of available datasets per theme
       val.themes.map(theme => {
         theme.datasets = _.compact(
           val.datasets.map(set => {
@@ -77,15 +77,23 @@ export const actions = {
         return theme
       })
 
+      // Add themes to store.themes
       val.themes.forEach(theme => commit('themes/addTheme', theme))
+
       val.datasets.forEach(set => {
+        // Add metadata to store.datasets (excluding vectorLayer and rasterLayer)
         commit(
           'datasets/addMetadata',
           _.omit(set, ['vectorLayer', 'rasterLayer']),
         )
 
+        // Add vectorlayer to store.datasets if available
         if (has('vectorLayer', set)) commit('datasets/addDatasetVector', set)
-        if (has('rasterLayer', set)) commit('datasets/addDatasetRaster', set)
+
+        // Add rasterLayer to store.datasets if available
+        if (has('rasterLayer', set) && _.get(set, 'rasterLayer.url') !== null) {
+          commit('datasets/addDatasetRaster', set)
+        }
       })
     })
   },
@@ -189,7 +197,7 @@ export const getters = {
   },
 
   activeTimestamp(state, { activeRasterData }) {
-    if (get('[0]', activeRasterData)) {
+    if (_.head(activeRasterData)) {
       const str = activeRasterData[0]
       const timestamp = str.split(/time=([^&]+)/)[1]
       const timeDec = decodeURIComponent(timestamp)
