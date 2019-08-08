@@ -23,8 +23,6 @@ export default {
   watch: {
     options: {
       handler(newOptions) {
-        console.log(newOptions)
-
         if (this.map) {
           const source = this.map.getSource(this.id)
           const layer = this.map.getLayer(this.id)
@@ -43,10 +41,7 @@ export default {
           }
 
           // Only add if tiles in source if not empty
-          if (
-            get('source.tiles.length', newOptions) > 0 &&
-            get('source.tiles[0]', newOptions) !== ''
-          ) {
+          if (get('source.tiles[0]', newOptions)) {
             this.map.addLayer(newOptions, 'water-border')
           }
         }

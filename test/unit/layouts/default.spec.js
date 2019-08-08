@@ -18,7 +18,6 @@ describe('Default', () => {
     map = {
       namespaced: true,
       getters: {
-        activeVectorData: jest.fn(() => [{ foo: 'bar' }]),
         activeSpatialData: jest.fn(() => 'foo'),
         datasetsInActiveTheme: jest.fn(() => ['bar']),
         getActiveTheme: jest.fn(() => {
@@ -27,6 +26,20 @@ describe('Default', () => {
             id: 'themeId',
             name: 'themeName',
           }
+        }),
+        activeVectorData: jest.fn(() => {
+          return [
+            {
+              filterIds: ['H.surge.simulated'],
+              id: 'GLOSSIS',
+              source: {
+                type: 'vector',
+                url: 'mapbox://global-data-viewer.6w19mbaw',
+              },
+              'source-layer': 'pltc012flat',
+              type: 'circle',
+            },
+          ]
         }),
       },
       actions: {

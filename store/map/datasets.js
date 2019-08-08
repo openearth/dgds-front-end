@@ -35,10 +35,12 @@ export const mutations = {
   },
   addDatasetRaster(state, data) {
     const id = get('id', data)
-    if (!id) return
+    // If id already has a rasterLayer or url is not correct return
+    if (!id || data.rasterLayer.url === null) return
+    // else add to datasets
     if (!state[id]) Vue.set(state, id, {})
     const rasterData = getRasterData(state[id])
-    if (!get('rasterLayer.url')) return
+    if (!get('rasterLayer.url', data)) return
     Vue.set(
       state[id],
       'raster',

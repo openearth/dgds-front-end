@@ -21,7 +21,6 @@
               @change="toggleLocationDataset(dataset.id)"
             />
             <UiRadio
-              v-if="checkRasterLayer(dataset)"
               :checked="dataset.id === getActiveRasterLayer"
               class="data-set-control-menu__control"
               @change="toggleRasterLayer(dataset.id)"
@@ -35,7 +34,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import has from 'lodash/fp/has'
 import Panel from './panel'
 import UiToggle from './ui-toggle'
 import UiRadio from './ui-radio'
@@ -58,9 +56,6 @@ export default {
     },
     toggleRasterLayer(id) {
       this.$emit('toggle-raster-layer', id)
-    },
-    checkRasterLayer(dataset) {
-      return has('rasterLayer', dataset)
     },
   },
 }

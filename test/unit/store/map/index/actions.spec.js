@@ -4,27 +4,46 @@ import getFromApi from '../../../../../lib/request/get'
 
 jest.mock('../../../../../lib/request/get')
 
-describe('loadThemes', () => {
+describe('loadDatasets', () => {
   test('fetches datasets and stores them', async () => {
     const commit = jest.fn()
     const apiResult = {
       themes: [{ id: 'theme1', name: 'theme1Name' }],
-      datasets: [{ id: 'ab', foo: 'bar' }, { id: 'cd', baz: 'blub' }],
+      datasets: [
+        { id: 'ab', foo: 'bar', themes: ['theme1'], vectorLayer: {} },
+        { id: 'cd', baz: 'blub', themes: ['theme2'], rasterLayer: {} },
+      ],
     }
     getFromApi.mockResolvedValue(apiResult)
-    await actions.loadThemes({ commit })
+    await actions.loadDatasets({ commit })
     expect(commit.mock.calls[0]).toEqual([
       'themes/addTheme',
-      { id: 'theme1', name: 'theme1Name' },
+      { id: 'theme1', name: 'theme1Name', datasets: ['ab'] },
     ])
     expect(commit.mock.calls[1]).toEqual([
       'datasets/addMetadata',
       {
         id: 'ab',
         foo: 'bar',
+        themes: ['theme1'],
       },
     ])
-    expect(commit.mock.calls[2]).toEqual(['datasets/addDatasetRaster', {}])
+    expect(commit.mock.calls[2]).toEqual([
+      'datasets/addDatasetVector',
+      { id: 'ab', foo: 'bar', themes: ['theme1'], vectorLayer: {} },
+    ])
+    expect(commit.mock.calls[3]).toEqual([
+      'datasets/addMetadata',
+      {
+        id: 'cd',
+        baz: 'blub',
+        themes: ['theme2'],
+      },
+    ])
+    expect(commit.mock.calls[4]).toEqual([
+      'datasets/addDatasetRaster',
+      { id: 'cd', baz: 'blub', themes: ['theme2'], rasterLayer: {} },
+    ])
   })
 })
 
@@ -61,14 +80,6 @@ describe('storeActiveDatasets', () => {
     await actions.storeActiveDatasets({ commit, state, getters: get }, _ids)
     expect(commit.mock.calls[0][0]).toBe('setActiveDatasetIds')
     expect(commit.mock.calls[0][1]).toEqual(['wl'])
-    // expect(commit.mock.calls[1][0]).toBe('datasets/addDatasetLocations')
-    // expect(commit.mock.calls[1][1]).toEqual({
-    //   data: {
-    //     features: apiResult.results[0].features,
-    //     type: 'FeatureCollection',
-    //   },
-    //   id: 'wl',
-    // })
   })
 
   test('returns object of known ids of datasets provided as string', async () => {

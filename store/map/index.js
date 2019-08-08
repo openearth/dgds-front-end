@@ -14,8 +14,8 @@ import negate from 'lodash/fp/negate'
 import flatten from 'lodash/fp/flatten'
 import update from 'lodash/fp/update'
 import uniq from 'lodash/fp/uniq'
-import omit from 'lodash/fp/omit'
 import isEmpty from 'lodash/fp/isEmpty'
+import _ from 'lodash'
 import moment from 'moment'
 import getFromApi from '../../lib/request/get'
 import {
@@ -24,7 +24,6 @@ import {
   getIn,
   wrapInProperty,
   when,
-  applyTo,
 } from '../../lib/utils'
 
 const notEmpty = negate(isEmpty)
@@ -66,38 +65,28 @@ export const mutations = {
 }
 
 export const actions = {
-  loadThemes({ commit: _commit }) {
-    const commit = path => value => _commit(path, value)
-    const addTheme = commit('themes/addTheme')
-    const addMetadata = commit('datasets/addMetadata')
-    const addRaster = commit('datasets/addDatasetRaster')
-    const addVector = commit('datasets/addDatasetVector')
-
-    // prettier-ignore
-
-    // TODO: create better construction to filter:
-    // Should be something like filter(get('rasterLayer'))
-    const storeRaster = pipe([
-      val => {
-        if (has('rasterLayer', val)) return val
-        else return {}
-      },
-      addRaster
-    ])
-
-    // Should be something like filter(get('rasterLayer'))
-    const storeVector = pipe([
-      val => {
-        if (has('vectorLayer', val)) return val
-        else return {}
-      },
-      addVector,
-    ])
-    const processTheme = applyTo([addMetadata, storeRaster, storeVector])
-
+  loadDatasets({ commit }) {
     return getFromApi('datasets').then(val => {
-      map(addTheme, get('themes', val))
-      map(processTheme, get('datasets', val))
+      // store the themes and datasets from the config in the store
+      val.themes.map(theme => {
+        theme.datasets = _.compact(
+          val.datasets.map(set => {
+            if (set.themes.includes(theme.id)) return set.id
+          }),
+        )
+        return theme
+      })
+
+      val.themes.forEach(theme => commit('themes/addTheme', theme))
+      val.datasets.forEach(set => {
+        commit(
+          'datasets/addMetadata',
+          _.omit(set, ['vectorLayer', 'rasterLayer']),
+        )
+
+        if (has('vectorLayer', set)) commit('datasets/addDatasetVector', set)
+        if (has('rasterLayer', set)) commit('datasets/addDatasetRaster', set)
+      })
     })
   },
 
@@ -173,6 +162,7 @@ export const getters = {
   getActiveRasterLayer(state, id) {
     return state.activeRasterLayerId
   },
+
   knownLocationIds(state) {
     const getInDatasets = getIn(state.datasets)
     const getLocationId = map(get('properties.locationId'))
@@ -210,7 +200,8 @@ export const getters = {
     }
   },
   activeRasterData({ datasets, activeRasterLayerId, activeDatasets }) {
-    if (activeRasterLayerId === '') return []
+    // Return the active raster data tiles (if not defined, return [])
+    if (activeRasterLayerId === '' || activeRasterLayerId === null) return []
     const tiles = get(`${activeRasterLayerId}.raster.tiles`, datasets)
     return [tiles]
   },

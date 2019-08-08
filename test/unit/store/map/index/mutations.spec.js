@@ -22,7 +22,7 @@ describe('clearActiveDatasetIds', () => {
   })
 })
 
-describe('setActiveTheme', () => {
+describe('toggleActiveTheme', () => {
   test('updates state.activeTheme with ids in payload', () => {
     const state = {
       activeTheme: {},
@@ -34,12 +34,12 @@ describe('setActiveTheme', () => {
       },
     }
     const ids = 'ab'
-    mutations.setActiveTheme(state, ids)
+    mutations.toggleActiveTheme(state, ids)
     expect(state.activeTheme).toEqual({
       cd: 'ef',
       id: 'ab',
     })
-    mutations.setActiveTheme(state, ids)
+    mutations.toggleActiveTheme(state, ids)
     expect(state.activeTheme).toEqual({})
   })
 })
