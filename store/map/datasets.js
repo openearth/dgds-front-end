@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import _ from 'lodash'
 import get from 'lodash/fp/get'
 import pipe from 'lodash/fp/pipe'
 import merge from 'lodash/fp/merge'
@@ -22,30 +23,30 @@ export const state = () => ({})
 
 export const mutations = {
   addDatasetVector(state, data) {
-    const id = get('id', data)
+    const id = _.get(data, 'id')
     if (!id) return
     if (!state[id]) Vue.set(state, id, {})
     const vectorData = getVectorData(state[id])
-    Vue.set(
-      state[id],
-      'vector',
-      // TODO: make generic by looping over vectorLayer
-      merge(vectorData, { mapboxLayer: get('vectorLayer.mapboxLayer', data) }),
+
+    // TODO: make generic by looping over vectorLayer
+    const mergedVector = _.merge(
+      { mapboxLayer: _.get(data, 'vectorLayer.mapboxLayer') },
+      vectorData,
     )
+    Vue.set(state[id], 'vector', mergedVector)
   },
   addDatasetRaster(state, data) {
-    const id = get('id', data)
-    // If id already has a rasterLayer or url is not correct return
-    if (!id || data.rasterLayer.url === null) return
+    const id = _.get(data, 'id')
+    // If id already has a rasterLayer return
+    if (!id) return
     // else add to datasets
     if (!state[id]) Vue.set(state, id, {})
     const rasterData = getRasterData(state[id])
-    if (!get('rasterLayer.url', data)) return
-    Vue.set(
-      state[id],
-      'raster',
-      merge(rasterData, { tiles: get('rasterLayer.url', data) }),
-    )
+    const vectorLayer = merge(rasterData, {
+      tiles: get('rasterLayer.url', data),
+    })
+    if (!_.get(data, 'rasterLayer.url')) return
+    Vue.set(state[id], 'raster', vectorLayer)
   },
   addDatasetPointData(state, { id, data }) {
     if (!state[id]) Vue.set(state, id, {})
