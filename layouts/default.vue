@@ -109,9 +109,9 @@ export default {
       const vectorLayers = this.activeVectorData
       const defaultVectorLayer = getVectorLayer()
       const newLayers = vectorLayers.map(vectorLayer => {
-        // merge the mapboxlayers which have the same source
-
-        console.log(vectorLayer)
+        // Get all the different mapboxlayers and merge the ones that have
+        // the same id. The properties which have a same name, but different
+        // values will be merged into an array.
         const merged = _(vectorLayer)
           .groupBy('id')
           .map(g =>
@@ -120,8 +120,8 @@ export default {
             ),
           )
           .value()
-        console.log(merged)
-        // adjus the paint and filterids per layer
+
+        // Adjust the paint and filterids per layer
         merged.forEach(layer => {
           if (!layer.paint) {
             layer.paint = defaultVectorLayer.paint

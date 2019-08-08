@@ -71,7 +71,9 @@ export const actions = {
       val.themes.map(theme => {
         theme.datasets = _.compact(
           val.datasets.map(set => {
-            if (set.themes.includes(theme.id)) return set.id
+            if (set.themes.includes(theme.id)) {
+              return set.id
+            }
           }),
         )
         return theme
@@ -84,8 +86,8 @@ export const actions = {
           _.omit(set, ['vectorLayer', 'rasterLayer']),
         )
 
-        if (has('vectorLayer', set)) commit('datasets/addDatasetVector', set)
-        if (has('rasterLayer', set)) commit('datasets/addDatasetRaster', set)
+        if (_.has(set, 'vectorLayer')) commit('datasets/addDatasetVector', set)
+        if (_.has(set, 'rasterLayer')) commit('datasets/addDatasetRaster', set)
       })
     })
   },
@@ -156,17 +158,14 @@ export const getters = {
   getActiveTheme(state) {
     return state.activeTheme
   },
+  getDatasets(state) {
+    return state.datasets
+  },
   knownDatasetIds(state) {
     return Object.keys(state.datasets)
   },
   getActiveRasterLayer(state, id) {
     return state.activeRasterLayerId
-  },
-  hasVector(state, id) {
-    return _.has(state, `${id}.vector`)
-  },
-  hasRaster(state, id) {
-    return _.has(state, `${id}.raster`)
   },
   knownLocationIds(state) {
     const getInDatasets = getIn(state.datasets)
