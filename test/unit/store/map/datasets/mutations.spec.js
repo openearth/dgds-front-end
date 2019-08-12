@@ -71,7 +71,7 @@ describe('addDatasetVector', () => {
       },
     }
 
-    const data = { id: 'wd', vectorLayer: { mapboxLayer: { bar: 'foo' } } }
+    const data = { id: 'wd', vectorLayer: { mapboxLayers: { bar: 'foo' } } }
 
     mutations.addDatasetVector(state, data)
     expect(state).toMatchObject({
