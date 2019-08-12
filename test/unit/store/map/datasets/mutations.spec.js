@@ -3,7 +3,7 @@ import { mutations } from '../../../../../store/map/datasets'
 describe('addDatasetVector', () => {
   test('updates state with payload', () => {
     const state = { wl: { metadata: 'foo' } }
-    const data = { id: 'wl', vectorLayer: { mapboxLayer: 'bar' } }
+    const data = { id: 'wl', vectorLayer: { mapboxLayers: 'bar' } }
 
     mutations.addDatasetVector(state, data)
     expect(state).toMatchObject({

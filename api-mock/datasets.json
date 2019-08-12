@@ -15,7 +15,7 @@
             "timeSpan": "Live",
             "units": "N/A",
             "vectorLayer": {
-                "mapboxLayer": [{
+                "mapboxLayers": [{
                     "filterIds": [
                         "Alert.level"
                     ],
@@ -61,7 +61,7 @@
             "timeSpan": "Live",
             "units": "m",
             "vectorLayer": {
-                "mapboxLayer": [{
+                "mapboxLayers": [{
                     "filterIds": [
                         "H.simulated"
                     ],
@@ -91,7 +91,7 @@
             "timeSpan": "Live",
             "units": "m",
             "vectorLayer": {
-                "mapboxLayer": [{
+                "mapboxLayers": [{
                     "filterIds": [
                         "H.surge.simulated"
                     ],
@@ -121,7 +121,7 @@
             "timeSpan": "Live",
             "units": "m",
             "vectorLayer": {
-                "mapboxLayer": [{
+                "mapboxLayers": [{
                     "filterIds": [
                         "H.astronomical.simulated"
                     ],
@@ -150,7 +150,7 @@
             "timeSpan": "Live",
             "units": "m/s",
             "vectorLayer": {
-                "mapboxLayer": [{
+                "mapboxLayers": [{
                     "filterIds": [
                         "Wind.speed",
                         "Wind.direction"
@@ -181,7 +181,7 @@
             "timeSpan": "Live",
             "units": "m",
             "vectorLayer": {
-                "mapboxLayer": [{
+                "mapboxLayers": [{
                     "filterIds": [
                         "H.simulated"
                     ],
@@ -205,7 +205,7 @@
             "timeSpan": "Historic",
             "units": "m",
             "vectorLayer": {
-                "mapboxLayer": [
+                "mapboxLayers": [
                     {
                         "id": "shoreline-aggregatedpointsz0",
                         "type": "circle",
