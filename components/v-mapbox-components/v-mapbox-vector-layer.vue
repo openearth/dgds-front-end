@@ -62,7 +62,11 @@ export default {
       })
     },
     addToMap() {
-      console.log('waarschijnlijk gaat de boel hier fout', this.layers, this.map)
+      console.log(
+        'waarschijnlijk gaat de boel hier fout',
+        this.layers,
+        this.map,
+      )
       this.layers.forEach(layer => {
         this.map.addLayer(layer)
         this.map.on('click', layer.id, event => {
