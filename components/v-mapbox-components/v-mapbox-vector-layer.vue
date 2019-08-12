@@ -26,6 +26,7 @@ export default {
   watch: {
     layers: {
       handler(newValue) {
+        console.log('watching the layers ', newValue)
         this.updateMap()
       },
       deep: true,
@@ -35,6 +36,7 @@ export default {
     },
   },
   created() {
+    console.log('vector layers created', this.layers)
     this.map = this.getMap()
     this.updateMap()
   },
@@ -47,7 +49,9 @@ export default {
     })
   },
   methods: {
-    deferredMountedTo(map) {},
+    deferredMountedTo(map) {
+      console.log('deferredMountedTo check')
+    },
     updateMap() {
       this.layers.forEach((newLayer, index) => {
         if (this.map.getLayer(this.layers[index].id)) {
@@ -58,6 +62,7 @@ export default {
       })
     },
     addToMap() {
+      console.log('waarschijnlijk gaat de boel hier fout', this.layers, this.map)
       this.layers.forEach(layer => {
         this.map.addLayer(layer)
         this.map.on('click', layer.id, event => {

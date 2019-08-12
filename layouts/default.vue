@@ -179,6 +179,7 @@ export default {
       })
     },
     toggleLocationDataset(id) {
+      console.log('yes we made it to toggleLocationDataset: ', id)
       const addId = value => concat(value, id)
       const removeId = filter(negate(isEqual(id)))
       const toggleIdDatasets = pipe([
@@ -209,6 +210,7 @@ export default {
       this.updateRoute(newRouteObject)
     },
     updateRoute(routeObj) {
+      console.log('hoi anna, we zijn in updateroute aangekomen', routeObj)
       const { datasetIds, locationId } = routeObj.params
       if (datasetIds === undefined) {
         this.geometry = {

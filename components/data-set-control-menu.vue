@@ -61,6 +61,7 @@ export default {
   },
   methods: {
     toggleLocationDataset(id) {
+      console.log('toggling vectorlayer: ', id)
       this.$emit('toggle-location-dataset', id)
     },
     toggleRasterLayer(id) {
