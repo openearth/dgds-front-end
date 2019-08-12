@@ -36,6 +36,7 @@ export default {
   },
   created() {
     this.map = this.getMap()
+    this.updateMap()
   },
   beforeDestroy() {
     this.layers.forEach(layer => {
