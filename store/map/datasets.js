@@ -24,6 +24,7 @@ export const state = () => ({})
 export const mutations = {
   addDatasetVector(state, data) {
     const id = _.get(data, 'id')
+    console.log('adddatasetVector', id, state)
     if (!id) return
     if (!state[id]) Vue.set(state, id, {})
     const vectorData = getVectorData(state[id])

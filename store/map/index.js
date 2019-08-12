@@ -82,6 +82,7 @@ export const actions = {
       // Add themes to store.themes
       val.themes.forEach(theme => commit('themes/addTheme', theme))
 
+      console.log('loading the datastes', val.datasets)
       val.datasets.forEach(set => {
         // Add metadata to store.datasets (excluding vectorLayer and rasterLayer)
         commit(
@@ -220,7 +221,13 @@ export const getters = {
     const tiles = get(`${activeRasterLayerId}.raster.tiles`, datasets)
     return [tiles]
   },
-  activeVectorData({ activeLocationIds }, { activeDatasets }) {
+  activeVectorData(state, { activeLocationIds }, { activeDatasets }) {
+    console.log(
+      'check the store state: ',
+      state,
+      'activeDatasets: ',
+      activeDatasets,
+    )
     const vectorLayers = activeDatasets.filter(has('vector'))
     const mapboxLayers = vectorLayers.map(layer => {
       return get('vector.mapboxLayer', layer)
