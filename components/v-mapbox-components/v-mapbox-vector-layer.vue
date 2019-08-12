@@ -26,13 +26,7 @@ export default {
   watch: {
     layers: {
       handler(newValue) {
-        newValue.forEach((newLayer, index) => {
-          if (this.map.getLayer(this.layers[index].id)) {
-            this.map.setFilter(this.layers[index].id, newLayer.filter)
-          } else {
-            this.addToMap()
-          }
-        })
+        this.updateMap()
       },
       deep: true,
     },
@@ -43,7 +37,7 @@ export default {
   created() {
     this.map = this.getMap()
     if (this.map.loaded()) {
-      this.addToMap()
+      this.updateMap()
     }
   },
   beforeDestroy() {
@@ -56,7 +50,16 @@ export default {
   },
   methods: {
     deferredMountedTo(map) {
-      this.addToMap()
+      this.updateMap()
+    },
+    updateMap() {
+      this.layers.forEach((newLayer, index) => {
+        if (this.map.getLayer(this.layers[index].id)) {
+          this.map.setFilter(this.layers[index].id, newLayer.filter)
+        } else {
+          this.addToMap()
+        }
+      })
     },
     addToMap() {
       this.layers.forEach(layer => {

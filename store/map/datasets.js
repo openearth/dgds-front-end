@@ -30,7 +30,7 @@ export const mutations = {
 
     // TODO: make generic by looping over vectorLayer
     const mergedVector = _.merge(
-      { mapboxLayer: _.get(data, 'vectorLayer.mapboxLayer') },
+      { mapboxLayer: _.get(data, 'vectorLayer.mapboxLayers') },
       vectorData,
     )
     Vue.set(state[id], 'vector', mergedVector)
