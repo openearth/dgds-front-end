@@ -106,13 +106,22 @@ export default {
       return rasterLayer
     },
     vectorLayers() {
+      // Returns an array with unique mapboxlayers.
+
+      // Get active vectorlayers
       const vectorLayers = this.activeVectorData
+
+      // Get Default vector mapboxlayer
       const defaultVectorLayer = getVectorLayer()
-      const newLayers = vectorLayers.map(vectorLayer => {
-        // Get all the different mapboxlayers and merge the ones that have
-        // the same id. The properties which have a same name, but different
-        // values will be merged into an array.
-        const merged = _(vectorLayer)
+      // get all unique layerIds
+      const layerIds = vectorLayers.map(layer => layer.id)
+      const uniqueLayerIds = _.uniq(layerIds)
+
+      // for each layer id merge the mapboxlayers that have that id
+      const newLayers = uniqueLayerIds.map(id => {
+        const groupedLayers = vectorLayers.filter(layer => layer.id === id)
+        const flattenedLayers = _.flatten(groupedLayers)
+        const merged = _(flattenedLayers)
           .groupBy('id')
           .map(g =>
             _.mergeWith({}, ...g, (obj, src) =>
@@ -121,12 +130,13 @@ export default {
           )
           .value()
 
-        // Adjust the paint and filterids per layer
         merged.forEach(layer => {
+          // if no paint is defined add default paint
           if (!layer.paint) {
             layer.paint = defaultVectorLayer.paint
           }
 
+          // if there is a filterIds, concatenate the values into filter
           if (_.get(layer, 'filterIds')) {
             const filter = ['any']
             layer.filterIds.forEach(id => {

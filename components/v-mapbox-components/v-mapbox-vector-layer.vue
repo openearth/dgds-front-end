@@ -26,6 +26,7 @@ export default {
   watch: {
     layers: {
       handler(newValue) {
+        console.log('watch')
         this.updateMap()
       },
       deep: true,
@@ -36,9 +37,6 @@ export default {
   },
   created() {
     this.map = this.getMap()
-    if (this.map.loaded()) {
-      this.updateMap()
-    }
   },
   beforeDestroy() {
     this.layers.forEach(layer => {
@@ -49,13 +47,11 @@ export default {
     })
   },
   methods: {
-    deferredMountedTo(map) {
-      this.updateMap()
-    },
+    deferredMountedTo(map) {},
     updateMap() {
       this.layers.forEach((newLayer, index) => {
         if (this.map.getLayer(this.layers[index].id)) {
-          this.map.setFilter(this.layers[index].id, newLayer.filter)
+          this.map.setFilter(this.layers[index].id, this.layers[index].filter)
         } else {
           this.addToMap()
         }
