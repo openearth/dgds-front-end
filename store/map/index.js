@@ -221,13 +221,8 @@ export const getters = {
     const tiles = get(`${activeRasterLayerId}.raster.tiles`, datasets)
     return [tiles]
   },
-  activeVectorData(state, { activeLocationIds }, { activeDatasets }) {
-    console.log(
-      'check the store state: ',
-      state,
-      'activeDatasets: ',
-      activeDatasets,
-    )
+  activeVectorData({ activeLocationIds }, { activeDatasets }) {
+    console.log('check the store state: ', 'activeDatasets: ', activeDatasets)
     const vectorLayers = activeDatasets.filter(has('vector'))
     const mapboxLayers = vectorLayers.map(layer => {
       return get('vector.mapboxLayer', layer)
