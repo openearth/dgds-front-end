@@ -108,8 +108,8 @@ export default {
     vectorLayers() {
       // Returns an array with unique mapboxlayers.
 
-      // Get active vectorlayers
-      const vectorLayers = this.activeVectorData
+      // Get active vectorlayers and flatten, all mapboxlayers into 1 array
+      const vectorLayers = _.flatten(this.activeVectorData)
 
       // Get Default vector mapboxlayer
       const defaultVectorLayer = getVectorLayer()
