@@ -106,6 +106,7 @@ export default {
       return rasterLayer
     },
     vectorLayers() {
+      console.log('Ok, even de vectorlayers checken')
       // Returns an array with unique mapboxlayers.
 
       // Get active vectorlayers and flatten, all mapboxlayers into 1 array
@@ -145,8 +146,21 @@ export default {
             layer.filter = filter
           }
         })
+        console.log(
+          'for every id: ',
+          id,
+          'we have  a pretty array: ',
+          merged,
+          '😪',
+        )
         return merged
       })
+      console.log(
+        'this.activeVectorData',
+        this.activeVectorData,
+        'newLayers',
+        newLayers,
+      )
       return newLayers
     },
   },
