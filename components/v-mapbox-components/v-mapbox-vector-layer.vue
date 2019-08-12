@@ -26,7 +26,6 @@ export default {
   watch: {
     layers: {
       handler(newValue) {
-        console.log('watch')
         this.updateMap()
       },
       deep: true,
