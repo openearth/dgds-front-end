@@ -21,7 +21,6 @@
       <v-chart
         :options="graphData()"
         :autoresize="true"
-        :manual-update="true"
         class="graph-line__chart"
       />
     </div>
@@ -36,8 +35,6 @@ import IconChevron from '~/assets/icon-action-chevron-down.svg'
 import moment from 'moment'
 import ECharts from 'vue-echarts'
 import 'echarts/lib/chart/line'
-import 'echarts/lib/component/dataZoom'
-import 'echarts/lib/component/tooltip'
 
 const getStyle = (colors = {}) => ({
   backgroundColor: colors.background,
@@ -155,6 +152,7 @@ export default {
             type: 'line',
             showAllSymbol: true,
             data: serie,
+            // symbolSize: 5,
             itemStyle: {
               normal: {
                 borderWidth: 1,
