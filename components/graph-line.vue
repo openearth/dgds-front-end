@@ -139,9 +139,6 @@ export default {
   computed: {
     ...mapGetters('preferences/theme', ['colors']),
   },
-  beforeDestroy() {
-    console.log('destroying')
-  },
   methods: {
     toggle() {
       if (this.collapsible) {
