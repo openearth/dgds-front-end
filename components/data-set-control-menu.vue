@@ -1,6 +1,6 @@
 <template>
   <Panel class="data-set-control-menu">
-    <span class="data-set-control-menu__title h4">Theme Title</span>
+    <span class="data-set-control-menu__title h4">{{ themeName }}</span>
     <ul class="data-set-control-menu__list">
       <li
         v-for="(dataset, key) in datasets"
@@ -58,6 +58,9 @@ export default {
       'getActiveTheme',
       'getDatasets',
     ]),
+    themeName() {
+      return _.get(this.getActiveTheme, 'name') || 'No theme selected'
+    },
   },
   methods: {
     toggleLocationDataset(id) {
