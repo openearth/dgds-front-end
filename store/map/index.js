@@ -12,7 +12,6 @@ import reduce from 'lodash/fp/reduce'
 import values from 'lodash/fp/values'
 import negate from 'lodash/fp/negate'
 import flatten from 'lodash/fp/flatten'
-import update from 'lodash/fp/update'
 import uniq from 'lodash/fp/uniq'
 import isEmpty from 'lodash/fp/isEmpty'
 import _ from 'lodash'
@@ -286,14 +285,22 @@ export const getters = {
     )
   },
   datasetsInActiveTheme(state) {
-    let ids = state.activeDatasetIds
+    const ids = state.activeDatasetIds
+    let sets = values(state.datasets)
+
     if (state.activeTheme.datasets !== undefined) {
-      ids = state.activeTheme.datasets
+      const themeids = state.activeTheme.datasets
+      sets = values(state.datasets).filter(set => {
+        return themeids.includes(set.metadata.id)
+      })
     }
-    const sets = values(state.datasets)
-      .map(get('metadata'))
-      .map(obj => merge(obj, { visible: getId(obj) }))
-      .map(update('visible', includesIn(ids)))
-    return sets
+    const metadataSets = sets.map(set => {
+      return _.get(set, 'metadata')
+    })
+    const visible = metadataSets.map(obj => merge(obj, { visible: getId(obj) }))
+    return visible.map(set => {
+      set.visible = ids.includes(set.id)
+      return set
+    })
   },
 }

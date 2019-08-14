@@ -7,17 +7,23 @@
   >
     <ul class="site-navigation__list">
       <li v-for="(theme, key) in getThemes" :key="key">
-        <div
-          class="site-navigation__list-item site-navigation__list-item--active"
-        >
-          <UiButtonIcon @click="changeTheme(theme.id)">
+        <div class="site-navigation__list-item site-navigation__list-item">
+          <UiButtonIcon
+            :class="{ 'nav-active': checkActive(theme.id) }"
+            @click="changeTheme(theme.id)"
+          >
             <Icon
               size="large"
               :name="`theme-${theme.id}`"
               fallback-name="placeholder"
             />
           </UiButtonIcon>
-          <span class="site-navigation__text h4">{{ theme.name }}</span>
+          <span
+            class="site-navigation__text h4"
+            :class="{ 'nav-active': checkActive(theme.id) }"
+            @click="changeTheme(theme.id)"
+            >{{ theme.name }}</span
+          >
         </div>
       </li>
     </ul>
@@ -38,15 +44,24 @@ export default {
   components: { UiButtonIcon, Icon },
   data: () => ({
     expanded: false,
+    activeTheme: null,
   }),
   computed: {
-    ...mapGetters('map/themes', ['getThemes']),
+    ...mapGetters('map/themes', ['getThemes', 'getActiveTheme']),
   },
   methods: {
     ...mapMutations('map', ['toggleActiveTheme']),
+    checkActive(id) {
+      return this.activeTheme === id
+    },
     changeTheme(id) {
       this.toggleActiveTheme(id)
       this.$emit('change-theme')
+      if (this.activeTheme === id) {
+        this.activeTheme = null
+      } else {
+        this.activeTheme = id
+      }
     },
     expand() {
       this.expanded = true
@@ -109,6 +124,7 @@ export default {
   transform: translate(-100%);
   transition: transform var(--speed-fast) var(--ease);
   flex: 1;
+  cursor: pointer;
 }
 
 .site-navigation__list {
@@ -138,7 +154,8 @@ export default {
 
 .site-navigation__list-item--active:hover,
 .site-navigation__list-item--active:active,
-.site-navigation__list-item--active:focus {
+.site-navigation__list-item--active:focus,
+.nav-active {
   color: var(--color-blue-120);
   opacity: 1;
 }

@@ -184,10 +184,7 @@ describe('datasetsInActiveTheme', () => {
       },
     }
     const result = getters.datasetsInActiveTheme(state)
-    expect(result).toEqual([
-      { id: 'foo', visible: true },
-      { id: 'bar', visible: false },
-    ])
+    expect(result).toEqual([{ id: 'foo', visible: false }])
   })
 
   test('returns array of datasets selected if no theme is active', () => {

@@ -142,7 +142,7 @@ describe('Default', () => {
       localVue,
       mocks: {
         $route: {
-          params: { datasetIds: 'ab', locationId: 'ef' },
+          params: { datasetIds: 'ef' },
           name: 'datasetIds-locationId',
         },
         $router: { push: routerPush },
@@ -152,7 +152,7 @@ describe('Default', () => {
     wrapper.find('.default-layout__site-navigation').vm.$emit('change-theme')
 
     expect(routerPush).toHaveBeenCalledWith({
-      params: { datasetIds: 'cd,ef,gh', locationId: 'ef' },
+      params: { datasetIds: 'ef' },
       name: 'datasetIds-locationId',
     })
   })

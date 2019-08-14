@@ -16,9 +16,10 @@
           :geometry="geometry"
         ></v-mapbox-selected-point-layer>
         <v-mapbox-vector-layer
-          v-for="vectorlayer in vectorLayers"
-          :key="vectorlayer.id"
-          :layers="vectorlayer"
+          v-for="vectorLayer in vectorLayers"
+          :key="vectorLayer.id"
+          :name="vectorLayer.id"
+          :layer="vectorLayer"
           :active-theme="activeTheme"
           @select-locations="selectLocations"
         ></v-mapbox-vector-layer>
@@ -106,13 +107,19 @@ export default {
       return rasterLayer
     },
     vectorLayers() {
-      const vectorLayers = this.activeVectorData
+      // Returns an array with unique mapboxlayers.
+      // Get active vectorlayers and flatten, all mapboxlayers into 1 array
+      const vectorLayers = _.flatten(this.activeVectorData)
+      // Get Default vector mapboxlayer
       const defaultVectorLayer = getVectorLayer()
-      const newLayers = vectorLayers.map(vectorLayer => {
-        // Get all the different mapboxlayers and merge the ones that have
-        // the same id. The properties which have a same name, but different
-        // values will be merged into an array.
-        const merged = _(vectorLayer)
+      // get all unique layerIds
+      const layerIds = vectorLayers.map(layer => layer.id)
+      const uniqueLayerIds = _.uniq(layerIds)
+      // for each layer id merge the mapboxlayers that have that id
+      const newLayers = uniqueLayerIds.map(id => {
+        const groupedLayers = vectorLayers.filter(layer => layer.id === id)
+        const flattenedLayers = _.flatten(groupedLayers)
+        const layer = _(flattenedLayers)
           .groupBy('id')
           .map(g =>
             _.mergeWith({}, ...g, (obj, src) =>
@@ -121,21 +128,14 @@ export default {
           )
           .value()
 
-        // Adjust the paint and filterids per layer
-        merged.forEach(layer => {
-          if (!layer.paint) {
-            layer.paint = defaultVectorLayer.paint
-          }
-
-          if (_.get(layer, 'filterIds')) {
-            const filter = ['any']
-            layer.filterIds.forEach(id => {
-              filter.push(['==', ['get', id], true])
-            })
-            layer.filter = filter
-          }
-        })
-        return merged
+        const merged = _.head(layer)
+        // if no paint is defined add default paint
+        if (!merged.paint) {
+          merged.paint = defaultVectorLayer.paint
+        }
+        const mergedFilter = this.updateFilter(merged)
+        // Return the first and only merged object
+        return mergedFilter
       })
       return newLayers
     },
@@ -156,6 +156,17 @@ export default {
   methods: {
     ...mapActions('map', ['loadPointDataForLocation']),
     ...mapMutations('map', ['clearActiveDatasetIds', 'setActiveRasterLayer']),
+    updateFilter(layer) {
+      // if there is a filterIds, concatenate the values into filter
+      if (_.get(layer, 'filterIds')) {
+        const filter = ['any']
+        layer.filterIds.forEach(id => {
+          filter.push(['==', ['get', id], true])
+        })
+        layer.filter = filter
+      }
+      return layer
+    },
     selectLocations(detail) {
       this.geometry = detail.geometry
       const { datasetIds } = this.$route.params
@@ -189,12 +200,22 @@ export default {
     changeTheme() {
       // When new theme is chosen update the route with the datasets within
       // this theme
-      const datasets = this.getActiveTheme.datasets
-      let newparams
-      if (datasets) {
-        newparams = datasets.join(',')
-      }
       const newRouteObject = this.$route
+
+      const oldIds = newRouteObject.params.datasetIds
+      const datasets = this.getActiveTheme.datasets
+
+      let newparams
+      let oldIdsArray = []
+      if (oldIds) {
+        oldIdsArray = oldIds.split(',')
+      }
+
+      const newIds = _.intersection(oldIdsArray, datasets)
+
+      if (newIds.length > 0) {
+        newparams = newIds.join(',')
+      }
       newRouteObject.params.datasetIds = newparams
       this.updateRoute(newRouteObject)
     },
