@@ -162,7 +162,7 @@ describe('loadPointDataForLocation', () => {
         id: 'ab',
         data: {
           ef: {
-            category: [moment(timestamp).format('MM-DD-YYYY \n HH:mm')],
+            category: [moment(timestamp).format('MM-DD-YYYY HH:mm')],
             serie: [1],
           },
         },
@@ -206,7 +206,7 @@ describe('loadPointDataForLocation', () => {
         id: 'ab',
         data: {
           ef: {
-            category: [moment(timestamp).format('MM-DD-YYYY \n HH:mm')],
+            category: [moment(timestamp).format('MM-DD-YYYY HH:mm')],
             serie: [1],
           },
         },

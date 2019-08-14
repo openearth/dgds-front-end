@@ -67,8 +67,6 @@ export default {
       this.$emit('toggle-location-dataset', id)
     },
     toggleRasterLayer(id) {
-      console.log(this.getActiveRasterLayer, id)
-
       if (this.getActiveRasterLayer === id) {
         id = null
       }
