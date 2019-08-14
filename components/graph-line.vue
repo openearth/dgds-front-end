@@ -94,7 +94,7 @@ const baseOptions = {
     axisLabel: {
       fontSize: 12,
       formatter: value => {
-        return moment(value).format(`HH:mm \n DD-MM`)
+        return moment(value, 'MM-DD-YYYY HH:mm').format(`HH:mm DD-MM`)
       },
     },
   },

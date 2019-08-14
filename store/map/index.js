@@ -116,10 +116,11 @@ export const actions = {
     ])
 
     // prettier-ignore
+    // TODO: Now hardcoded which format, should be included in the config!!
     const getFormattedTimeStamps = pipe([
       getEvents,
       map(get('timeStamp')),
-      map(momentFormat('MM-DD-YYYY \n HH:mm')),
+      map(momentFormat('MM-DD-YYYY HH:mm')),
     ])
 
     // prettier-ignore
