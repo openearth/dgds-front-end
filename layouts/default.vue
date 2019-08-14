@@ -146,6 +146,12 @@ export default {
         if (routeObj.params.datasetIds === undefined) {
           this.clearActiveDatasetIds()
         }
+        if (routeObj.params.locationId === undefined) {
+          this.geometry = {
+            type: 'Point',
+            coordinates: [],
+          }
+        }
       },
       deep: true,
     },

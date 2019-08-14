@@ -27,7 +27,7 @@
             <UiRadio
               v-if="checkRaster(dataset.id)"
               :checked="dataset.id === getActiveRasterLayer"
-              @change="toggleRasterLayer(dataset.id)"
+              @click="toggleRasterLayer(dataset.id)"
             />
           </div>
         </label>
@@ -67,6 +67,9 @@ export default {
       this.$emit('toggle-location-dataset', id)
     },
     toggleRasterLayer(id) {
+      if (this.getActiveRasterLayer === id) {
+        id = null
+      }
       this.$emit('toggle-raster-layer', id)
     },
     checkVector(id) {

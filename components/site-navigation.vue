@@ -53,6 +53,13 @@ export default {
   computed: {
     ...mapGetters('map/themes', ['getThemes', 'getActiveTheme']),
   },
+  watch: {
+    $route(to, from) {
+      if (to.params.locationId) {
+        this.collapse()
+      }
+    },
+  },
   methods: {
     ...mapMutations('map', ['toggleActiveTheme']),
     checkActive(id) {
