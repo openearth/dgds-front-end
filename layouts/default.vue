@@ -200,12 +200,22 @@ export default {
     changeTheme() {
       // When new theme is chosen update the route with the datasets within
       // this theme
-      const datasets = this.getActiveTheme.datasets
-      let newparams
-      if (datasets) {
-        newparams = datasets.join(',')
-      }
       const newRouteObject = this.$route
+
+      const oldIds = newRouteObject.params.datasetIds
+      const datasets = this.getActiveTheme.datasets
+
+      let newparams
+      let oldIdsArray = []
+      if (oldIds) {
+        oldIdsArray = oldIds.split(',')
+      }
+
+      const newIds = _.intersection(oldIdsArray, datasets)
+
+      if (newIds.length > 0) {
+        newparams = newIds.join(',')
+      }
       newRouteObject.params.datasetIds = newparams
       this.updateRoute(newRouteObject)
     },
