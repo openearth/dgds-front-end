@@ -7,11 +7,10 @@
   >
     <ul class="site-navigation__list">
       <li v-for="(theme, key) in getThemes" :key="key">
-        <div class="site-navigation__list-item">
+        <div class="site-navigation__list-item"
+          >
           <UiButtonIcon
-            :class="{
-              'site-navigation__list-item--active': checkActive(theme.id),
-            }"
+            :class="{ 'site-navigation__list-item--active': checkActive(theme.id) }"
             @click="toggleTheme(theme.id)"
           >
             <Icon
@@ -22,9 +21,7 @@
           </UiButtonIcon>
           <span
             class="site-navigation__text h4"
-            :class="{
-              'site-navigation__list-item--active': checkActive(theme.id),
-            }"
+            :class="{ 'site-navigation__list-item--active': checkActive(theme.id) }"
             @click="toggleTheme(theme.id)"
             >{{ theme.name }}</span
           >
@@ -54,12 +51,11 @@ export default {
     ...mapGetters('map/themes', ['getThemes', 'getActiveTheme']),
     timeseriesOpen() {
       const { locationId } = this.$route.params
-      console.log(locationId)
-      if (locationId) {
+      if(locationId) {
         this.collapse()
       }
       return this.expanded
-    },
+    }
   },
   methods: {
     ...mapMutations('map', ['toggleActiveTheme']),
@@ -166,7 +162,8 @@ export default {
 
 .site-navigation__list-item--active:hover,
 .site-navigation__list-item--active:active,
-.site-navigation__list-item--active:focus {
+.site-navigation__list-item--active:focus,
+ {
   color: var(--color-blue-120);
   opacity: 1;
 }
