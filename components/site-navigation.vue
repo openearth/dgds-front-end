@@ -7,10 +7,11 @@
   >
     <ul class="site-navigation__list">
       <li v-for="(theme, key) in getThemes" :key="key">
-        <div class="site-navigation__list-item site-navigation__list-item">
+        <div class="site-navigation__list-item"
+          >
           <UiButtonIcon
-            :class="{ 'nav-active': checkActive(theme.id) }"
             @click="changeTheme(theme.id)"
+            :class="{ 'site-navigation__list-item--active': checkActive(theme.id) }"
           >
             <Icon
               size="large"
@@ -20,8 +21,8 @@
           </UiButtonIcon>
           <span
             class="site-navigation__text h4"
-            :class="{ 'nav-active': checkActive(theme.id) }"
-            @click="changeTheme(theme.id)"
+            :class="{ 'site-navigation__list-item--active': checkActive(theme.id) }"
+            @click="toggleTheme(theme.id)"
             >{{ theme.name }}</span
           >
         </div>
@@ -54,7 +55,7 @@ export default {
     checkActive(id) {
       return this.activeTheme === id
     },
-    changeTheme(id) {
+    toggleTheme(id) {
       this.toggleActiveTheme(id)
       this.$emit('change-theme')
       if (this.activeTheme === id) {
@@ -155,7 +156,7 @@ export default {
 .site-navigation__list-item--active:hover,
 .site-navigation__list-item--active:active,
 .site-navigation__list-item--active:focus,
-.nav-active {
+ {
   color: var(--color-blue-120);
   opacity: 1;
 }
