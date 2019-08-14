@@ -1,7 +1,7 @@
 <template>
   <nav
     class="site-navigation"
-    :class="{ 'site-navigation--expanded': expanded }"
+    :class="{ 'site-navigation--expanded': timeseriesOpen }"
     label="site navigation"
     @keydown.esc="collapse"
   >
@@ -52,6 +52,14 @@ export default {
   }),
   computed: {
     ...mapGetters('map/themes', ['getThemes', 'getActiveTheme']),
+    timeseriesOpen() {
+      const { locationId } = this.$route.params
+      console.log(locationId)
+      if (locationId) {
+        this.collapse()
+      }
+      return this.expanded
+    },
   },
   methods: {
     ...mapMutations('map', ['toggleActiveTheme']),
