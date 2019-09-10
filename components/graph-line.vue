@@ -22,6 +22,7 @@
         :options="graphData()"
         :autoresize="true"
         class="graph-line__chart"
+        :manual-update="true"
       />
     </div>
   </figure>
@@ -35,6 +36,8 @@ import IconChevron from '~/assets/icon-action-chevron-down.svg'
 import moment from 'moment'
 import ECharts from 'vue-echarts'
 import 'echarts/lib/chart/line'
+import 'echarts/lib/component/dataZoom'
+import 'echarts/lib/component/tooltip'
 
 const getStyle = (colors = {}) => ({
   backgroundColor: colors.background,
