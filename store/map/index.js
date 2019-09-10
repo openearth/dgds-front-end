@@ -262,7 +262,6 @@ export const getters = {
     const { activeLocationIds, activeDatasetIds, datasets } = state
     const activePointDataPerDataset = {}
 
-        when(notEmpty, identity, () => undefined),
     // Get for each active locations the pointData belonging to the available datasets
     activeLocationIds.forEach(locationId => {
       // Filter all datasets where pointdata is available from the available datasets
