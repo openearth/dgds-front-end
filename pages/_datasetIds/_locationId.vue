@@ -13,6 +13,7 @@
         :title="data.datasetName"
         :theme="activeTheme"
         :collapsible="true"
+        :units="data.units"
       />
     </section>
   </aside>
@@ -35,7 +36,7 @@ export default {
     ...mapState({ activeTheme: state => state.preferences.theme.active }),
     datasets() {
       const activePointData = this.activePointDataPerDataset
-
+      console.log(activePointData)
       // prettier-ignore
       const result = Object.keys(activePointData)
         .map(pointId =>
@@ -43,6 +44,8 @@ export default {
               .map(datasetId => get(`${pointId}.${datasetId}`, activePointData))
               .filter(identity)
         )
+
+      console.log(flatten(result))
       return flatten(result)
     },
     locations() {

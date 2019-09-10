@@ -86,7 +86,7 @@ const baseOptions = {
     x: 'center',
   },
   textStyle: {
-    fontFamily: 'sans-serif',
+    fontFamily: 'Helvetica',
   },
   xAxis: {
     type: 'category',
@@ -95,7 +95,7 @@ const baseOptions = {
       show: false,
     },
     axisLabel: {
-      fontSize: 12,
+      fontSize: 14,
       formatter: value => {
         return moment(value, 'MM-DD-YYYY HH:mm').format(`HH:mm DD-MM`)
       },
@@ -104,7 +104,13 @@ const baseOptions = {
   yAxis: {
     type: 'value',
     axisLabel: {
-      fontSize: 12,
+      fontSize: 14,
+    },
+    nameLocation: 'middle',
+    nameGap: 30,
+    nameTextStyle: {
+      fontSize: 14,
+      fontFamily: 'Helvetica',
     },
   },
 }
@@ -131,6 +137,10 @@ export default {
     collapsible: {
       type: Boolean,
       default: false,
+    },
+    units: {
+      type: String,
+      default: '-',
     },
   },
   data: () => ({
@@ -163,6 +173,9 @@ export default {
             },
           }
         }),
+        yAxis: {
+          name: `${this.title} [${this.units}]`,
+        },
       }
       const theme = getStyle(this.colors)
       const result = merge(dataOptions, baseOptions, theme)
