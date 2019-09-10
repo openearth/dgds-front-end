@@ -1,6 +1,6 @@
 <template>
   <Panel class="data-set-control-menu">
-    <span class="data-set-control-menu__title h4">Theme Title</span>
+    <span class="data-set-control-menu__title h4">{{ themeName }}</span>
     <ul class="data-set-control-menu__list">
       <li
         v-for="(dataset, key) in datasets"
@@ -27,7 +27,7 @@
             <UiRadio
               v-if="checkRaster(dataset.id)"
               :checked="dataset.id === getActiveRasterLayer"
-              @change="toggleRasterLayer(dataset.id)"
+              @click="toggleRasterLayer(dataset.id)"
             />
           </div>
         </label>
@@ -58,12 +58,18 @@ export default {
       'getActiveTheme',
       'getDatasets',
     ]),
+    themeName() {
+      return _.get(this.getActiveTheme, 'name') || 'No theme selected'
+    },
   },
   methods: {
     toggleLocationDataset(id) {
       this.$emit('toggle-location-dataset', id)
     },
     toggleRasterLayer(id) {
+      if (this.getActiveRasterLayer === id) {
+        id = null
+      }
       this.$emit('toggle-raster-layer', id)
     },
     checkVector(id) {

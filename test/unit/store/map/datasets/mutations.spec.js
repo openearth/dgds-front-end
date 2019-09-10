@@ -215,6 +215,22 @@ describe('addMetadata', () => {
     })
   })
 
+  test('does not updates state without id', () => {
+    const state = {
+      wl: {
+        metadata: { id: 'wl', foo: 'bar' },
+      },
+    }
+    const data = { baz: 'blub' }
+
+    mutations.addMetadata(state, data)
+    expect(state).toMatchObject({
+      wl: {
+        metadata: { id: 'wl', foo: 'bar' },
+      },
+    })
+  })
+
   test('updates state with different id', () => {
     const state = {
       wl: {

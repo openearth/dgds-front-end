@@ -4,13 +4,12 @@
 
 <script>
 export default {
-  name: 'VMapboxVectorLayer',
   props: {
-    layers: {
+    layer: {
       default: () => {
-        return []
+        return {}
       },
-      type: Array,
+      type: Object,
     },
     activeTheme: {
       type: String,
@@ -24,7 +23,7 @@ export default {
     }
   },
   watch: {
-    layers: {
+    layer: {
       handler(newValue) {
         this.updateMap()
       },
@@ -34,67 +33,64 @@ export default {
       this.setActiveFilter()
     },
   },
-  created() {
+  mounted() {
     this.map = this.getMap()
     if (this.map.loaded()) {
       this.updateMap()
     }
   },
   beforeDestroy() {
-    this.layers.forEach(layer => {
-      if (layer.id && this.map.getLayer(layer.id)) {
-        this.map.removeLayer(layer.id)
-        this.map.removeSource(layer.id)
-      }
-    })
+    const layer = this.layer
+    if (layer.id && this.map.getLayer(layer.id)) {
+      this.map.off('click', layer.id)
+      this.map.removeLayer(layer.id)
+      this.map.removeSource(layer.id)
+    }
   },
   methods: {
     deferredMountedTo(map) {
       this.updateMap()
     },
     updateMap() {
-      this.layers.forEach((newLayer, index) => {
-        if (this.map.getLayer(this.layers[index].id)) {
-          this.map.setFilter(this.layers[index].id, newLayer.filter)
-        } else {
-          this.addToMap()
-        }
-      })
+      if (this.map.getLayer(this.layer.id)) {
+        this.map.setFilter(this.layer.id, this.layer.filter)
+      } else {
+        this.addToMap()
+      }
     },
     addToMap() {
-      this.layers.forEach(layer => {
-        this.map.addLayer(layer)
-        this.map.on('click', layer.id, event => {
-          const { clientWidth } = this.map.getCanvas()
+      const layer = this.layer
+      this.map.addLayer(layer)
+      this.map.on('click', layer.id, event => {
+        const { clientWidth } = this.map.getCanvas()
 
-          // prettier-ignore
-          // the timeseries panel is max 600px wide otherwise the half of the screen
-          const visibleMapWidth = clientWidth > 1200
-            ? (clientWidth - 600) * 0.25
-            : (clientWidth / 2) * 0.5
-          const targetLocation = this.map.unproject({
-            x: event.point.x - visibleMapWidth,
-            y: event.point.y,
+        // prettier-ignore
+        // the timeseries panel is max 600px wide otherwise the half of the screen
+        const visibleMapWidth = clientWidth > 1200
+          ? (clientWidth - 600) * 0.25
+          : (clientWidth / 2) * 0.5
+        const targetLocation = this.map.unproject({
+          x: event.point.x - visibleMapWidth,
+          y: event.point.y,
+        })
+        const duration = 500
+        this.map.panTo(targetLocation, { duration })
+
+        const features = this.map.queryRenderedFeatures(event.point)
+        setTimeout(() => {
+          this.$emit('select-locations', {
+            features,
+            geometry: features[0].geometry,
           })
-          const duration = 500
-          this.map.panTo(targetLocation, { duration })
+        }, duration)
+      })
 
-          const features = this.map.queryRenderedFeatures(event.point)
-          setTimeout(() => {
-            this.$emit('select-locations', {
-              features,
-              geometry: features[0].geometry,
-            })
-          }, duration)
-        })
+      this.map.on('mouseenter', layer.id, () => {
+        this.map.getCanvas().style.cursor = 'pointer'
+      })
 
-        this.map.on('mouseenter', layer.id, () => {
-          this.map.getCanvas().style.cursor = 'pointer'
-        })
-
-        this.map.on('mouseleave', layer.id, () => {
-          this.map.getCanvas().style.cursor = ''
-        })
+      this.map.on('mouseleave', layer.id, () => {
+        this.map.getCanvas().style.cursor = ''
       })
     },
   },
