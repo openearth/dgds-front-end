@@ -24,6 +24,9 @@
         class="graph-line__chart"
         :manual-update="true"
       />
+      <ui-button class="download-btn" kind="quiet" @click="download()"
+        >DOWNLOAD</ui-button
+      >
     </div>
   </figure>
 </template>
@@ -32,9 +35,11 @@
 import { mapGetters } from 'vuex'
 import merge from 'lodash/merge'
 import UiButtonIcon from '~/components/ui-button-icon'
+import UiButton from '~/components/ui-button'
 import IconChevron from '~/assets/icon-action-chevron-down.svg'
 import moment from 'moment'
 import ECharts from 'vue-echarts'
+import { saveAs } from 'file-saver'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/component/dataZoom'
 import 'echarts/lib/component/tooltip'
@@ -116,7 +121,7 @@ const baseOptions = {
 }
 
 export default {
-  components: { UiButtonIcon, IconChevron, 'v-chart': ECharts },
+  components: { UiButtonIcon, IconChevron, 'v-chart': ECharts, UiButton },
   props: {
     category: {
       type: Array,
@@ -181,6 +186,24 @@ export default {
       const result = merge(dataOptions, baseOptions, theme)
       return result
     },
+    download() {
+      const fileName = `${this.title}.json`
+
+      const data = {
+        title: this.title,
+        timeseries: this.series,
+        units: this.units,
+        dates: this.category,
+      }
+      // Create a blob of the data
+      const fileToSave = new Blob([JSON.stringify(data)], {
+        type: 'application/json',
+        name: fileName,
+      })
+
+      // Save the file
+      saveAs(fileToSave, fileName)
+    },
   },
 }
 </script>
@@ -195,7 +218,7 @@ export default {
 .graph-line__aspect-ratio {
   height: 0;
   overflow: hidden;
-  padding-top: 50%;
+  padding-top: 60%;
   position: relative;
 }
 
@@ -204,7 +227,7 @@ export default {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100%;
+  height: 90%;
 }
 
 .graph-line__collapsible .graph-line__caption {
@@ -227,5 +250,15 @@ export default {
   padding: var(--spacing-default);
   background-color: var(--color-background);
   height: var(--caption-height);
+}
+
+#btn-div {
+  height: 10%;
+  position: absolute;
+}
+.download-btn {
+  right: 0;
+  bottom: 0;
+  position: absolute;
 }
 </style>

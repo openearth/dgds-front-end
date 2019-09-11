@@ -4,16 +4,12 @@ import filter from 'lodash/fp/filter'
 import get from 'lodash/fp/get'
 import has from 'lodash/fp/has'
 import map from 'lodash/fp/map'
-import set from 'lodash/fp/set'
 import head from 'lodash/fp/head'
 import merge from 'lodash/fp/merge'
 import pipe from 'lodash/fp/pipe'
-import reduce from 'lodash/fp/reduce'
 import values from 'lodash/fp/values'
-import negate from 'lodash/fp/negate'
 import flatten from 'lodash/fp/flatten'
 import uniq from 'lodash/fp/uniq'
-import isEmpty from 'lodash/fp/isEmpty'
 import _ from 'lodash'
 import moment from 'moment'
 import getFromApi from '../../lib/request/get'
@@ -22,10 +18,8 @@ import {
   momentFormat,
   getIn,
   wrapInProperty,
-  when,
 } from '../../lib/utils'
 
-const notEmpty = negate(isEmpty)
 const getId = get('id')
 
 export const state = () => ({
