@@ -131,7 +131,7 @@ export const actions = {
     // prettier-ignore
     datasets.forEach(datasetId => {
       const parameters = {
-        locationCode: locationId,
+        locationId: locationId,
         startTime: moment()
           .subtract(3, 'days')
           .format('YYYY-MM-DDTHH:mm:ssZ'),
