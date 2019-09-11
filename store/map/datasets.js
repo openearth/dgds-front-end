@@ -28,7 +28,7 @@ export const mutations = {
     if (!state[id]) Vue.set(state, id, {})
     const vectorData = getVectorData(state[id])
 
-    const mapboxLayers = _.get(data, 'vectorLayer.mapboxLayers')
+    const mapboxLayers = _.get(data, 'vectorLayer.mapboxLayers') || []
     const newMapboxLayers = mapboxLayers.map(layer => {
       layer.metadata = {
         locationIdField: _.get(data, 'locationIdField'),

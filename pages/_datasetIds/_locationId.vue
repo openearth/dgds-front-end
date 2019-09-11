@@ -14,6 +14,7 @@
         :theme="activeTheme"
         :collapsible="true"
         :units="data.units"
+        :type="data.type"
       />
     </section>
   </aside>
@@ -43,7 +44,6 @@ export default {
               .map(datasetId => get(`${pointId}.${datasetId}`, activePointData))
               .filter(identity)
         )
-
       return flatten(result)
     },
     locations() {

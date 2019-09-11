@@ -151,7 +151,7 @@ describe('loadPointDataForLocation', () => {
       endTime: moment()
         .add(5, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
-      locationCode: 'ef',
+      locationId: 'ef',
       startTime: moment()
         .subtract(3, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
@@ -195,7 +195,7 @@ describe('loadPointDataForLocation', () => {
       endTime: moment()
         .add(5, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
-      locationCode: 'ef',
+      locationId: 'ef',
       startTime: moment()
         .subtract(3, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),

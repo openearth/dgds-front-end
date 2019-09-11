@@ -58,7 +58,7 @@ import concat from 'lodash/fp/concat'
 import isEqual from 'lodash/fp/isEqual'
 import identity from 'lodash/fp/identity'
 import _ from 'lodash'
-import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import DataSetControlMenu from '../components/data-set-control-menu'
 import SiteNavigation from '../components/site-navigation'
 import TimeStamp from '../components/time-stamp'
@@ -160,7 +160,6 @@ export default {
     await this.$nextTick()
   },
   methods: {
-    ...mapActions('map', ['loadPointDataForLocation']),
     ...mapMutations('map', ['clearActiveDatasetIds', 'setActiveRasterLayer']),
     updateFilter(layer) {
       // if there is a filterIds, concatenate the values into filter
@@ -183,7 +182,6 @@ export default {
           locationIds.push(feature.properties[locId])
         }
       })
-      console.log(locationIds)
       this.updateRoute({
         name: 'datasetIds-locationId',
         params: { datasetIds, locationId: head(locationIds) },

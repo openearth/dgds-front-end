@@ -40,6 +40,7 @@ import moment from 'moment'
 import ECharts from 'vue-echarts'
 import { saveAs } from 'file-saver'
 import 'echarts/lib/chart/line'
+import 'echarts/lib/chart/scatter'
 import 'echarts/lib/component/dataZoom'
 import 'echarts/lib/component/tooltip'
 
@@ -146,6 +147,10 @@ export default {
       type: String,
       default: '-',
     },
+    type: {
+      type: String,
+      default: 'line',
+    },
   },
   data: () => ({
     isCollapsed: false,
@@ -166,7 +171,7 @@ export default {
         },
         series: this.series.map(serie => {
           return {
-            type: 'line',
+            type: this.type,
             showAllSymbol: true,
             data: serie,
             // symbolSize: 5,

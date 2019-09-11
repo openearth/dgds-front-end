@@ -3,13 +3,13 @@ import { mutations } from '../../../../../store/map/datasets'
 describe('addDatasetVector', () => {
   test('updates state with payload', () => {
     const state = { wl: { metadata: 'foo' } }
-    const data = { id: 'wl', vectorLayer: { mapboxLayers: 'bar' } }
+    const data = { id: 'wl', vectorLayer: { mapboxLayers: [{ foo: 'bar' }] } }
 
     mutations.addDatasetVector(state, data)
     expect(state).toMatchObject({
       wl: {
         metadata: 'foo',
-        vector: { mapboxLayer: 'bar' },
+        vector: { mapboxLayer: [{ foo: 'bar' }] },
       },
     })
     expect(Object.isFrozen(state.wl.vector[0])).toBe(true)
@@ -19,7 +19,7 @@ describe('addDatasetVector', () => {
     const state = {
       wl: {
         vector: {
-          mapboxLayer: { foo: 'bar' },
+          mapboxLayer: [{ foo: 'bar' }],
         },
       },
     }
@@ -30,7 +30,7 @@ describe('addDatasetVector', () => {
     expect(state).toMatchObject({
       wl: {
         vector: {
-          mapboxLayer: { foo: 'bar' },
+          mapboxLayer: [{ foo: 'bar' }],
         },
       },
     })
@@ -41,16 +41,18 @@ describe('addDatasetVector', () => {
     const state = {
       wl: {
         vector: {
-          mapboxLayer: { foo: 'bar' },
+          mapboxLayer: [{ foo: 'bar' }],
         },
       },
     }
     const id = 'wl'
     const data = {
       vectorLayer: {
-        mapboxLayer: {
-          bar: 'foo',
-        },
+        mapboxLayers: [
+          {
+            bar: 'foo',
+          },
+        ],
       },
     }
 
@@ -58,7 +60,7 @@ describe('addDatasetVector', () => {
     expect(state).toMatchObject({
       wl: {
         vector: {
-          mapboxLayer: { foo: 'bar' },
+          mapboxLayer: [{ foo: 'bar' }],
         },
       },
     })
@@ -67,19 +69,26 @@ describe('addDatasetVector', () => {
   test('updates state with different id', () => {
     const state = {
       wl: {
-        vector: { mapboxLayer: { foo: 'bar' } },
+        vector: { mapboxLayer: [{ foo: 'bar' }] },
       },
     }
 
-    const data = { id: 'wd', vectorLayer: { mapboxLayers: { bar: 'foo' } } }
+    const data = { id: 'wd', vectorLayer: { mapboxLayers: [{ bar: 'foo' }] } }
 
     mutations.addDatasetVector(state, data)
     expect(state).toMatchObject({
       wl: {
-        vector: { mapboxLayer: { foo: 'bar' } },
+        vector: { mapboxLayer: [{ foo: 'bar' }] },
       },
       wd: {
-        vector: { mapboxLayer: { bar: 'foo' } },
+        vector: {
+          mapboxLayer: [
+            {
+              bar: 'foo',
+              metadata: { datasetId: undefined, locationIdField: undefined },
+            },
+          ],
+        },
       },
     })
   })
