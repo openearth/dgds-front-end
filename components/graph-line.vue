@@ -22,7 +22,6 @@
         :options="graphData()"
         :autoresize="true"
         class="graph-line__chart"
-        :manual-update="true"
       />
       <ui-button class="download-btn" kind="quiet" @click="download()"
         >DOWNLOAD</ui-button
