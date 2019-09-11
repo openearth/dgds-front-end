@@ -4,16 +4,12 @@ import filter from 'lodash/fp/filter'
 import get from 'lodash/fp/get'
 import has from 'lodash/fp/has'
 import map from 'lodash/fp/map'
-import set from 'lodash/fp/set'
 import head from 'lodash/fp/head'
 import merge from 'lodash/fp/merge'
 import pipe from 'lodash/fp/pipe'
-import reduce from 'lodash/fp/reduce'
 import values from 'lodash/fp/values'
-import negate from 'lodash/fp/negate'
 import flatten from 'lodash/fp/flatten'
 import uniq from 'lodash/fp/uniq'
-import isEmpty from 'lodash/fp/isEmpty'
 import _ from 'lodash'
 import moment from 'moment'
 import getFromApi from '../../lib/request/get'
@@ -22,10 +18,8 @@ import {
   momentFormat,
   getIn,
   wrapInProperty,
-  when,
 } from '../../lib/utils'
 
-const notEmpty = negate(isEmpty)
 const getId = get('id')
 
 export const state = () => ({
@@ -260,30 +254,25 @@ export const getters = {
   },
   activePointDataPerDataset(state) {
     const { activeLocationIds, activeDatasetIds, datasets } = state
-    const setNameFromMetadata = id =>
-      set('datasetName', get(`${id}.metadata.name`, datasets))
+    const activePointDataPerDataset = {}
 
-    const getPointDataForLocation = locationId => datasetId =>
-      pipe([
-        get(`${datasetId}.pointData[${locationId}]`),
-        when(notEmpty, setNameFromMetadata(datasetId), identity),
-        when(notEmpty, wrapInProperty(datasetId), () => undefined),
-        reduce(merge, {}),
-        when(notEmpty, identity, () => undefined),
-      ])(datasets)
+    // Get for each active locations the pointData belonging to the available datasets
+    activeLocationIds.forEach(locationId => {
+      // Filter all datasets where pointdata is available from the available datasets
+      const activePointData = activeDatasetIds.filter(datasetId => {
+        return _.get(datasets, `${datasetId}.pointData.${locationId}`)
+      })
 
-    // prettier-ignore
-    const getDataForLocation = locationId =>
-      pipe([
-        map(getPointDataForLocation(locationId)),
-        filter(identity),
-        wrapInProperty(locationId),
-      ])(activeDatasetIds)
-
-    return activeLocationIds.reduce(
-      (acc, locationId) => merge(acc, getDataForLocation(locationId)),
-      {},
-    )
+      // Create object with pointdata for each location
+      activePointDataPerDataset[locationId] = activePointData.map(datasetId => {
+        const data = _.get(datasets, `${datasetId}`)
+        const locData = _.get(data, `pointData.${locationId}`)
+        locData.datasetName = _.get(data, 'metadata.name')
+        locData.units = _.get(data, 'metadata.units')
+        return locData
+      })
+    })
+    return activePointDataPerDataset
   },
   datasetsInActiveTheme(state) {
     const ids = state.activeDatasetIds

@@ -13,6 +13,7 @@
         :title="data.datasetName"
         :theme="activeTheme"
         :collapsible="true"
+        :units="data.units"
       />
     </section>
   </aside>
@@ -22,7 +23,7 @@
 import flatten from 'lodash/flatten'
 import get from 'lodash/fp/get'
 import identity from 'lodash/identity'
-import { mapState, mapActions, mapMutations, mapGetters } from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 import GraphLine from '~/components/graph-line'
 import UiButtonIcon from '~/components/ui-button-icon'
 import IconCross from '~/assets/icon-action-cross.svg'
@@ -35,7 +36,6 @@ export default {
     ...mapState({ activeTheme: state => state.preferences.theme.active }),
     datasets() {
       const activePointData = this.activePointDataPerDataset
-
       // prettier-ignore
       const result = Object.keys(activePointData)
         .map(pointId =>
@@ -43,6 +43,7 @@ export default {
               .map(datasetId => get(`${pointId}.${datasetId}`, activePointData))
               .filter(identity)
         )
+
       return flatten(result)
     },
     locations() {
@@ -59,7 +60,6 @@ export default {
     this.clearActiveLocationIds()
   },
   methods: {
-    ...mapActions('map', ['loadPointDataForLocation']),
     ...mapMutations('map', ['clearActiveLocationIds', 'setActiveLocationIds']),
     close() {
       const { datasetIds } = this.$route.params
