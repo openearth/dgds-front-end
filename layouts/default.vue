@@ -176,10 +176,14 @@ export default {
     selectLocations(detail) {
       this.geometry = detail.geometry
       const { datasetIds } = this.$route.params
-      const locationIds = detail.features.map(
-        feature =>
-          feature.properties.locationId || feature.properties.Transect_id,
-      )
+      const locationIds = []
+      detail.features.forEach(feature => {
+        const locId = _.get(feature, 'layer.metadata.locationIdField')
+        if (locId) {
+          locationIds.push(feature.properties[locId])
+        }
+      })
+      console.log(locationIds)
       this.updateRoute({
         name: 'datasetIds-locationId',
         params: { datasetIds, locationId: head(locationIds) },

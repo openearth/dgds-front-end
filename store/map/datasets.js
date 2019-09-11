@@ -28,11 +28,16 @@ export const mutations = {
     if (!state[id]) Vue.set(state, id, {})
     const vectorData = getVectorData(state[id])
 
+    const mapboxLayers = _.get(data, 'vectorLayer.mapboxLayers')
+    const newMapboxLayers = mapboxLayers.map(layer => {
+      layer.metadata = {
+        locationIdField: _.get(data, 'locationIdField'),
+        datasetId: _.get(layer, 'id'),
+      }
+      return layer
+    })
     // TODO: make generic by looping over vectorLayer
-    const mergedVector = _.merge(
-      { mapboxLayer: _.get(data, 'vectorLayer.mapboxLayers') },
-      vectorData,
-    )
+    const mergedVector = _.merge({ mapboxLayer: newMapboxLayers }, vectorData)
     Vue.set(state[id], 'vector', mergedVector)
   },
   addDatasetRaster(state, data) {
