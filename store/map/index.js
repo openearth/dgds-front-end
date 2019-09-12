@@ -131,7 +131,7 @@ export const actions = {
     // prettier-ignore
     datasets.forEach(datasetId => {
       const parameters = {
-        locationCode: locationId,
+        locationId: locationId,
         startTime: moment()
           .subtract(3, 'days')
           .format('YYYY-MM-DDTHH:mm:ssZ'),
@@ -269,6 +269,7 @@ export const getters = {
         const locData = _.get(data, `pointData.${locationId}`)
         locData.datasetName = _.get(data, 'metadata.name')
         locData.units = _.get(data, 'metadata.units')
+        locData.type = _.get(data, 'metadata.pointData')
         return locData
       })
     })
