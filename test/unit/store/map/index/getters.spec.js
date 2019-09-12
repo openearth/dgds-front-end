@@ -86,17 +86,16 @@ describe('activeDatasets', () => {
 })
 
 describe('activeTimestamp', () => {
-
   test('returns empty when no activeRasterData is available', () => {
     const state = {
-      activeRasterData: []
+      activeRasterData: [],
     }
     const result = getters.activeTimestamp(state)
     expect(result).toBe('')
   })
   test('returns date when activeRasterData is available and a correct time string', () => {
     const state = {
-      activeRasterData: ['test/time=01-01-2019 00:00']
+      activeRasterData: ['test/time=01-01-2019 00:00'],
     }
     const result = getters.activeTimestamp(state)
     expect(result).toBe('01-01-2019 00:00')
@@ -104,7 +103,7 @@ describe('activeTimestamp', () => {
 
   test('returns date when activeRasterData is available and not a correct time string', () => {
     const state = {
-      activeRasterData: ['foo']
+      activeRasterData: ['foo'],
     }
     const result = getters.activeTimestamp(state)
     expect(result).toBe('')
@@ -117,10 +116,10 @@ describe('activeRasterData', () => {
     datasets: {
       foo: {
         raster: {
-          tiles: 'bar'
-        }
-      }
-    }
+          tiles: 'bar',
+        },
+      },
+    },
   }
   test('return empty array when no active raster data', () => {
     const result = getters.activeRasterData(state)
@@ -143,9 +142,9 @@ describe('activeRasterLegendData', () => {
           linearGradient: 'LG',
           min: 'min',
           max: 'max',
-        }
-      }
-    }
+        },
+      },
+    },
   }
   test('return empty array when no active raster data', () => {
     const result = getters.activeRasterLegendData(state)
@@ -165,18 +164,19 @@ describe('activeRasterLegendData', () => {
 describe('activeVectorData', () => {
   const state = {
     activeLocationIds: ['loc1'],
-    activeDatasets: [{
-      vector: {
-        mapboxLayer: 'mblayer'
-      }
-    }],
+    activeDatasets: [
+      {
+        vector: {
+          mapboxLayer: 'mblayer',
+        },
+      },
+    ],
   }
   test('return active vector data', () => {
     const result = getters.activeVectorData(state, state)
     expect(result).toEqual(['mblayer'])
   })
 })
-
 
 describe('activeDatasetsLocations', () => {
   test('returns array of datasets for the active locations', () => {
