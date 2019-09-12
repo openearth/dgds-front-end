@@ -218,7 +218,6 @@ export const getters = {
     // Return the active raster data tiles (if not defined, return [])
     if (activeRasterLayerId === '' || activeRasterLayerId === null) return []
     const raster = get(`${activeRasterLayerId}.raster`, datasets)
-    console.log(raster)
     return {
       linearGradient: raster.linearGradient,
       min: raster.min,
