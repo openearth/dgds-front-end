@@ -197,7 +197,7 @@ export const getters = {
       .filter(identity)
   },
 
-  activeTimestamp(state, { activeRasterData }) {
+  activeTimestamp({ activeRasterData }) {
     if (_.head(activeRasterData)) {
       const str = activeRasterData[0]
       const timestamp = str.split(/time=([^&]+)/)[1]

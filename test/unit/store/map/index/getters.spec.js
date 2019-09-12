@@ -85,6 +85,99 @@ describe('activeDatasets', () => {
   })
 })
 
+describe('activeTimestamp', () => {
+
+  test('returns empty when no activeRasterData is available', () => {
+    const state = {
+      activeRasterData: []
+    }
+    const result = getters.activeTimestamp(state)
+    expect(result).toBe('')
+  })
+  test('returns date when activeRasterData is available and a correct time string', () => {
+    const state = {
+      activeRasterData: ['test/time=01-01-2019 00:00']
+    }
+    const result = getters.activeTimestamp(state)
+    expect(result).toBe('01-01-2019 00:00')
+  })
+
+  test('returns date when activeRasterData is available and not a correct time string', () => {
+    const state = {
+      activeRasterData: ['foo']
+    }
+    const result = getters.activeTimestamp(state)
+    expect(result).toBe('')
+  })
+})
+
+describe('activeRasterData', () => {
+  const state = {
+    activeRasterLayerId: '',
+    datasets: {
+      foo: {
+        raster: {
+          tiles: 'bar'
+        }
+      }
+    }
+  }
+  test('return empty array when no active raster data', () => {
+    const result = getters.activeRasterData(state)
+    expect(result).toEqual([])
+  })
+
+  test('return the tiles of the active raster data', () => {
+    state.activeRasterLayerId = 'foo'
+    const result = getters.activeRasterData(state)
+    expect(result).toEqual(['bar'])
+  })
+})
+
+describe('activeRasterLegendData', () => {
+  const state = {
+    activeRasterLayerId: '',
+    datasets: {
+      foo: {
+        raster: {
+          linearGradient: 'LG',
+          min: 'min',
+          max: 'max',
+        }
+      }
+    }
+  }
+  test('return empty array when no active raster data', () => {
+    const result = getters.activeRasterLegendData(state)
+    expect(result).toEqual([])
+  })
+  test('return the tiles of the active raster data', () => {
+    state.activeRasterLayerId = 'foo'
+    const result = getters.activeRasterLegendData(state)
+    expect(result).toEqual({
+      linearGradient: 'LG',
+      min: 'min',
+      max: 'max',
+    })
+  })
+})
+
+describe('activeVectorData', () => {
+  const state = {
+    activeLocationIds: ['loc1'],
+    activeDatasets: [{
+      vector: {
+        mapboxLayer: 'mblayer'
+      }
+    }],
+  }
+  test('return active vector data', () => {
+    const result = getters.activeVectorData(state, state)
+    expect(result).toEqual(['mblayer'])
+  })
+})
+
+
 describe('activeDatasetsLocations', () => {
   test('returns array of datasets for the active locations', () => {
     const state = {
