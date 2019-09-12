@@ -214,6 +214,17 @@ export const getters = {
     const tiles = get(`${activeRasterLayerId}.raster.tiles`, datasets)
     return [tiles]
   },
+  activeRasterLegendData({ datasets, activeRasterLayerId, activeDatasets }) {
+    // Return the active raster data tiles (if not defined, return [])
+    if (activeRasterLayerId === '' || activeRasterLayerId === null) return []
+    const raster = get(`${activeRasterLayerId}.raster`, datasets)
+    console.log(raster)
+    return {
+      linearGradient: raster.linearGradient,
+      min: raster.min,
+      max: raster.max,
+    }
+  },
   activeVectorData({ activeLocationIds }, { activeDatasets }) {
     const vectorLayers = activeDatasets.filter(has('vector'))
     const mapboxLayers = vectorLayers.map(layer => {
