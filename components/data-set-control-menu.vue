@@ -1,36 +1,49 @@
 <template>
   <Panel class="data-set-control-menu">
-    <span class="data-set-control-menu__title h4">{{ themeName }}</span>
+    <span class="data-set-control-menu__title h4 unselectable">{{
+      themeName
+    }}</span>
     <ul class="data-set-control-menu__list">
       <li
         v-for="(dataset, key) in datasets"
         :key="key"
         class="data-set-control-menu__list-item"
       >
-        <label class="data-set-control-menu__label">
-          <Icon
-            class="data-set-control-menu__icon"
-            :name="`dataset-${dataset.id}`"
-            fallback-name="placeholder"
-          />
-          <div class="data-set-control-menu__text">
-            {{ dataset.name }}
-          </div>
-          <div class="data-set-control-menu__control">
-            <UiToggle
-              v-if="checkVector(dataset.id)"
-              :checked="dataset.visible"
-              @change="toggleLocationDataset(dataset.id)"
+        <div id="menu-control">
+          <label class="data-set-control-menu__label">
+            <Icon
+              class="data-set-control-menu__icon"
+              :name="`dataset-${dataset.id}`"
+              fallback-name="placeholder"
             />
+            <div class="data-set-control-menu__text unselectable">
+              {{ dataset.name }}
+            </div>
+            <div class="data-set-control-menu__control">
+              <UiToggle
+                v-if="checkVector(dataset.id)"
+                :checked="dataset.visible"
+                @change="toggleLocationDataset(dataset.id)"
+              />
+            </div>
+            <div class="data-set-control-menu__control">
+              <UiRadio
+                v-if="checkRaster(dataset.id)"
+                :checked="dataset.id === getActiveRasterLayer"
+                @click="toggleRasterLayer(dataset.id)"
+              />
+            </div>
+          </label>
+        </div>
+        <div
+          v-if="getActiveRasterLayer === dataset.id"
+          class="default-layout__legend"
+        >
+          <LayerLegend id="layer-legend" />
+          <div id="units">
+            {{ ` [${dataset.units}]` }}
           </div>
-          <div class="data-set-control-menu__control">
-            <UiRadio
-              v-if="checkRaster(dataset.id)"
-              :checked="dataset.id === getActiveRasterLayer"
-              @click="toggleRasterLayer(dataset.id)"
-            />
-          </div>
-        </label>
+        </div>
       </li>
     </ul>
   </Panel>
@@ -43,9 +56,10 @@ import Panel from './panel'
 import UiToggle from './ui-toggle'
 import UiRadio from './ui-radio'
 import Icon from './icon'
+import LayerLegend from './layer-legend.vue'
 
 export default {
-  components: { Panel, UiToggle, Icon, UiRadio },
+  components: { Panel, UiToggle, Icon, UiRadio, LayerLegend },
   props: {
     datasets: {
       type: Array,
@@ -57,6 +71,7 @@ export default {
       'getActiveRasterLayer',
       'getActiveTheme',
       'getDatasets',
+      'activeRasterData',
     ]),
     themeName() {
       return _.get(this.getActiveTheme, 'name') || 'No theme selected'
@@ -95,8 +110,7 @@ export default {
 }
 
 .data-set-control-menu__list-item {
-  height: var(--spacing-large);
-  display: flex;
+  min-height: var(--spacing-large);
   align-items: center;
 }
 
@@ -120,5 +134,24 @@ export default {
 .data-set-control-menu__control {
   margin-left: auto;
   flex: 1;
+}
+
+.default-layout__legend {
+  padding-right: 4px;
+  margin-top: var(--spacing-small);
+  margin-bottom: var(--spacing-small);
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+#layer-legend {
+  flex-grow: inherit;
+  margin-right: 4px;
+  width: 100%;
+}
+#units {
+  height: 100%;
+  margin-top: auto;
 }
 </style>

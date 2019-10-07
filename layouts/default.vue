@@ -280,8 +280,8 @@ export default {
 
 .default-layout__timestamp {
   position: relative;
-  left: var(--spacing-default);
-  bottom: calc(var(--spacing-default) + 50px);
+  left: calc(var(--spacing-default) + var(--spacing-large));
+  bottom: calc(var(--spacing-default) + var(--spacing-large));
   width: 15vw;
   height: 50px;
 }

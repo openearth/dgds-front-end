@@ -197,7 +197,9 @@ export const getters = {
       .filter(identity)
   },
 
-  activeTimestamp(state, { activeRasterData }) {
+  activeTimestamp({ activeRasterData }) {
+    // Retrieve the timestamp according to the current selected Raster layer
+    // TODO: this function still works with the old fews url sources
     if (_.head(activeRasterData)) {
       const str = activeRasterData[0]
       const timestamp = str.split(/time=([^&]+)/)[1]
@@ -214,7 +216,18 @@ export const getters = {
     const tiles = get(`${activeRasterLayerId}.raster.tiles`, datasets)
     return [tiles]
   },
+  activeRasterLegendData({ datasets, activeRasterLayerId, activeDatasets }) {
+    // Return the active raster data tiles (if not defined, return [])
+    if (activeRasterLayerId === '' || activeRasterLayerId === null) return []
+    const raster = get(`${activeRasterLayerId}.raster`, datasets)
+    return {
+      linearGradient: raster.linearGradient,
+      min: raster.min,
+      max: raster.max,
+    }
+  },
   activeVectorData({ activeLocationIds }, { activeDatasets }) {
+    // Retrieve for active layers where vector data is available the data
     const vectorLayers = activeDatasets.filter(has('vector'))
     const mapboxLayers = vectorLayers.map(layer => {
       return get('vector.mapboxLayer', layer)
@@ -222,6 +235,7 @@ export const getters = {
     return mapboxLayers.filter(identity)
   },
   activeDatasetsLocations({ activeLocationIds }, { activeDatasets }) {
+    // Retrieve for the active datasets the locations
     const getActiveProperty = feature =>
       pipe([
         get('properties.locationId'),
