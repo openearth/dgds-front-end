@@ -150,6 +150,10 @@ export default {
     type: {
       type: String,
       default: 'line',
+      validator: function(value) {
+        // The value must match one of these strings
+        return ['line', 'scatter'].indexOf(value) !== -1
+      },
     },
   },
   data: () => ({

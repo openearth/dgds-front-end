@@ -173,10 +173,14 @@ export default {
       return layer
     },
     selectLocations(detail) {
+      // On the selection (by mouse event on map) of a location update the
+      // route accordingly
       this.geometry = detail.geometry
       const { datasetIds } = this.$route.params
       const locationIds = []
       detail.features.forEach(feature => {
+        // When a layer has a metadata with locationIdField use this layer and
+        // get the locationId usin this field
         const locId = _.get(feature, 'layer.metadata.locationIdField')
         if (locId) {
           locationIds.push(feature.properties[locId])
@@ -228,6 +232,7 @@ export default {
       this.updateRoute(newRouteObject)
     },
     updateRoute(routeObj) {
+      // Update route with route object
       const { datasetIds, locationId } = routeObj.params
       if (datasetIds === undefined) {
         this.geometry = {
