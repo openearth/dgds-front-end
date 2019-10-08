@@ -44,6 +44,14 @@ import 'echarts/lib/chart/scatter'
 import 'echarts/lib/component/dataZoom'
 import 'echarts/lib/component/tooltip'
 
+const past = moment()
+  .subtract(3, 'days')
+  .format('MM-DD-YYYY HH:mm')
+const future = moment()
+  .add(5, 'days')
+  .format('MM-DD-YYYY HH:mm')
+const present = moment().format('MM-DD-YYYY HH:mm')
+
 const getStyle = (colors = {}) => ({
   backgroundColor: colors.background,
   color: colors.pink,
@@ -102,7 +110,7 @@ const baseOptions = {
     axisLabel: {
       fontSize: 14,
       formatter: value => {
-        return moment(value, 'MM-DD-YYYY HH:mm').format(`HH:mm DD-MM`)
+        return moment(value, 'MM-DD-YYYY HH:mm').format(`DD-MM`)
       },
     },
   },
@@ -169,23 +177,37 @@ export default {
       }
     },
     graphData() {
-      const dataOptions = {
-        xAxis: {
-          data: this.category,
-        },
-        series: this.series.map(serie => {
-          return {
-            type: this.type,
-            showAllSymbol: true,
-            data: serie,
-            // symbolSize: 5,
-            itemStyle: {
-              normal: {
-                borderWidth: 1,
-              },
+      console.log(past, future)
+      const series = this.series.map(serie => {
+        const data = serie.map((col, i) => [this.category[i], col])
+        return {
+          type: this.type,
+          showAllSymbol: true,
+          data: data,
+          itemStyle: {
+            normal: {
+              borderWidth: 1,
             },
-          }
-        }),
+          },
+        }
+      })
+
+      series.push({
+        type: 'scatter',
+        data: [[past, 0], [future, 0]],
+      })
+      series.push({
+        name: 'present-line',
+        type: 'line',
+        data: [[present, 0], [present, 10]],
+        lineStyle: {
+          color: 'white',
+        },
+      })
+
+      console.log(series)
+      const dataOptions = {
+        series: series,
         yAxis: {
           name: `${this.title} [${this.units}]`,
         },
