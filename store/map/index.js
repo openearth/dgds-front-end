@@ -101,35 +101,13 @@ export const actions = {
     commit('setActiveDatasetIds', ids)
   },
 
-  loadPointDataForLocation({ commit }, { datasetIds, locationId }) {
-    // prettier-ignore
-    const getEvents = pipe([
-      filter(has('events')),
-      map(get('events')),
-      head,
-    ])
-
-    // prettier-ignore
-    // TODO: Now hardcoded which format, should be included in the config!!
-    const getFormattedTimeStamps = pipe([
-      getEvents,
-      map(get('timeStamp')),
-      map(momentFormat('MM-DD-YYYY HH:mm')),
-    ])
-
-    // prettier-ignore
-    const getValues = pipe([
-      getEvents,
-      map(get('value')),
-    ])
-
-    // prettier-ignore
-    const datasets = isArray(datasetIds)
-      ? datasetIds
-      : datasetIds.split(',')
-
-    // prettier-ignore
+  loadPointDataForLocation({ commit, state }, { datasetIds, locationId }) {
+    const datasets = isArray(datasetIds) ? datasetIds : datasetIds.split(',')
     datasets.forEach(datasetId => {
+      if (_.get(state.datasets[datasetId], 'pointdata[locationId]')) {
+        return
+      }
+
       const parameters = {
         locationId: locationId,
         startTime: moment()
@@ -140,20 +118,54 @@ export const actions = {
           .format('YYYY-MM-DDTHH:mm:ssZ'),
         datasetId: datasetId,
       }
-
-      return getFromApi('timeseries', parameters).then(({ results }) => {
-        commit(
-          'datasets/addDatasetPointData',
-          Object.freeze({
-            id: datasetId,
-            data: {
-              [locationId]: {
-                category: getFormattedTimeStamps(results),
-                serie: getValues(results),
-              },
-            },
-          }),
+      getFromApi('timeseries', parameters).then(response => {
+        const pointDataType = _.get(
+          state.datasets[datasetId].metadata,
+          'pointData',
         )
+
+        if (pointDataType === 'images') {
+          commit(
+            'datasets/addDatasetPointData',
+            Object.freeze({
+              id: datasetId,
+              data: {
+                [locationId]: {
+                  imageUrl:
+                    'https://storage.cloud.google.com/dgds-metocean-svg/173.00E_60.50N.svg',
+                },
+              },
+            }),
+          )
+        } else {
+          let category = []
+          let serie = []
+          const eventResults = response.results.filter(res =>
+            _.has(res, 'events'),
+          )
+
+          eventResults.forEach(res => {
+            serie = serie.concat(res.events.map(event => event.value))
+            category = category.concat(
+              res.events.map(event =>
+                moment(event.timeStamp).format('MM-DD-YYYY HH:mm'),
+              ),
+            )
+          })
+
+          commit(
+            'datasets/addDatasetPointData',
+            Object.freeze({
+              id: datasetId,
+              data: {
+                [locationId]: {
+                  category: category,
+                  serie: serie,
+                },
+              },
+            }),
+          )
+        }
       })
     })
   },
