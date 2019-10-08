@@ -19,10 +19,12 @@
     </figcaption>
     <div v-if="!isCollapsed" class="graph-line__aspect-ratio">
       <v-chart
+        v-if="type === 'line' || type === 'scatter'"
         :options="graphData()"
         :autoresize="true"
         class="graph-line__chart"
       />
+      <img v-if="type === 'images'" :src="imageUrl" class="graph-line__chart" />
       <ui-button class="download-btn" kind="quiet" @click="download()"
         >DOWNLOAD</ui-button
       >
@@ -123,6 +125,10 @@ const baseOptions = {
 export default {
   components: { UiButtonIcon, IconChevron, 'v-chart': ECharts, UiButton },
   props: {
+    imageUrl: {
+      type: String,
+      default: () => '',
+    },
     category: {
       type: Array,
       default: () => [],
@@ -152,7 +158,7 @@ export default {
       default: 'line',
       validator: function(value) {
         // The value must match one of these strings
-        return ['line', 'scatter'].indexOf(value) !== -1
+        return ['line', 'scatter', 'images'].indexOf(value) !== -1
       },
     },
   },
@@ -219,15 +225,14 @@ export default {
 <style>
 .graph-line {
   position: relative;
-
   --caption-height: 4rem;
 }
 
 .graph-line__aspect-ratio {
   height: 0;
   overflow: hidden;
-  padding-top: 60%;
   position: relative;
+  padding-top: 60%;
 }
 
 .graph-line__chart {

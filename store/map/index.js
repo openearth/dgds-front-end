@@ -286,13 +286,14 @@ export const getters = {
     activeLocationIds.forEach(locationId => {
       // Filter all datasets where pointdata is available from the available datasets
       const activePointData = activeDatasetIds.filter(datasetId => {
-        return _.get(datasets, `${datasetId}.pointData.${locationId}`)
+        const apData = _.get(datasets, `${datasetId}.pointData`)
+        return _.get(apData, [locationId])
       })
 
       // Create object with pointdata for each location
       activePointDataPerDataset[locationId] = activePointData.map(datasetId => {
         const data = _.get(datasets, `${datasetId}`)
-        const locData = _.get(data, `pointData.${locationId}`)
+        const locData = _.get(data.pointData, [locationId])
         locData.datasetName = _.get(data, 'metadata.name')
         locData.units = _.get(data, 'metadata.units')
         locData.type = _.get(data, 'metadata.pointData')
