@@ -22,6 +22,7 @@
         v-if="type === 'line' || type === 'scatter'"
         :options="graphData()"
         :autoresize="true"
+        height="100%"
         class="graph-line__chart"
       />
       <object
@@ -88,6 +89,10 @@ const baseOptions = {
   },
   grid: {
     show: true,
+    top: 10,
+    bottom: 50,
+    right: 20,
+    left: 90,
   },
   dataZoom: [
     {
@@ -95,9 +100,6 @@ const baseOptions = {
       realtime: true,
     },
   ],
-  title: {
-    x: 'center',
-  },
   textStyle: {
     fontFamily: 'Helvetica',
   },
@@ -120,7 +122,7 @@ const baseOptions = {
       fontSize: 14,
     },
     nameLocation: 'middle',
-    nameGap: 30,
+    nameGap: 55,
     nameTextStyle: {
       fontSize: 14,
       fontFamily: 'Helvetica',
@@ -235,14 +237,20 @@ export default {
   background-size: 50% 100%;
 }
 
+.echarts {
+  width: 100%;
+  height: 100%;
+}
+
 .graph-line {
   position: relative;
-  --caption-height: 4rem;
+  --caption-height: 3rem;
 }
 
 .graph-line__aspect-ratio {
   height: 0;
   overflow: hidden;
+  padding-top: 50%;
   position: relative;
   padding-top: 60%;
 }
@@ -272,7 +280,7 @@ export default {
 }
 
 .graph-line__caption {
-  padding: var(--spacing-default);
+  padding: var(--spacing-small);
   background-color: var(--color-background);
   height: var(--caption-height);
 }

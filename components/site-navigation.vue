@@ -21,6 +21,7 @@
             />
           </UiButtonIcon>
           <span
+            v-if="expanded"
             class="site-navigation__text h4"
             :class="{
               'site-navigation__list-item--active': checkActive(theme.id),

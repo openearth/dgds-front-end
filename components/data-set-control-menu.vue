@@ -26,14 +26,14 @@
                 @change="toggleLocationDataset(dataset.id)"
               />
             </div>
-            <div class="data-set-control-menu__control">
-              <UiRadio
-                v-if="checkRaster(dataset.id)"
-                :checked="dataset.id === getActiveRasterLayer"
-                @click="toggleRasterLayer(dataset.id)"
-              />
-            </div>
           </label>
+          <div class="data-set-control-radio">
+            <UiRadio
+              v-if="checkRaster(dataset.id)"
+              :checked="dataset.id === getActiveRasterLayer"
+              @click="toggleRasterLayer(dataset.id)"
+            />
+          </div>
         </div>
         <div
           v-if="getActiveRasterLayer === dataset.id"
@@ -118,7 +118,7 @@ export default {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  flex: 1;
+  flex-grow: 1;
 }
 
 .data-set-control-menu__icon {
@@ -131,9 +131,14 @@ export default {
   flex: 5;
 }
 
-.data-set-control-menu__control {
+#menu-control {
+  display: flex;
+}
+
+.data-set-control-radio {
   margin-left: auto;
-  flex: 1;
+  flex-shrink: 1;
+  width: 35px;
 }
 
 .default-layout__legend {

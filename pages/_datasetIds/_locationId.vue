@@ -80,8 +80,9 @@ export default {
 }
 
 .location-id__header {
-  padding: var(--spacing-default);
-  padding-right: 0;
+  padding-left: var(--spacing-small);
+  padding-top: var(--spacing-small);
+
   display: flex;
   justify-content: space-between;
 }
