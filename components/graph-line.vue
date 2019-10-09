@@ -19,9 +19,18 @@
     </figcaption>
     <div v-if="!isCollapsed" class="graph-line__aspect-ratio">
       <v-chart
+        v-if="type === 'line' || type === 'scatter'"
         :options="graphData()"
         :autoresize="true"
+        height="100%"
         class="graph-line__chart"
+      />
+      <object
+        v-if="type === 'images'"
+        id="graphImage"
+        :data="imageUrl"
+        class="graph-line__chart"
+        type="image/svg+xml"
       />
       <ui-button class="download-btn" kind="quiet" @click="download()"
         >DOWNLOAD</ui-button
@@ -88,6 +97,10 @@ const baseOptions = {
   },
   grid: {
     show: true,
+    top: 10,
+    bottom: 50,
+    right: 20,
+    left: 90,
   },
   dataZoom: [
     {
@@ -95,9 +108,6 @@ const baseOptions = {
       realtime: true,
     },
   ],
-  title: {
-    x: 'center',
-  },
   textStyle: {
     fontFamily: 'Helvetica',
   },
@@ -120,7 +130,7 @@ const baseOptions = {
       fontSize: 14,
     },
     nameLocation: 'middle',
-    nameGap: 30,
+    nameGap: 55,
     nameTextStyle: {
       fontSize: 14,
       fontFamily: 'Helvetica',
@@ -131,6 +141,10 @@ const baseOptions = {
 export default {
   components: { UiButtonIcon, IconChevron, 'v-chart': ECharts, UiButton },
   props: {
+    imageUrl: {
+      type: String,
+      default: () => '',
+    },
     category: {
       type: Array,
       default: () => [],
@@ -160,7 +174,7 @@ export default {
       default: 'line',
       validator: function(value) {
         // The value must match one of these strings
-        return ['line', 'scatter'].indexOf(value) !== -1
+        return ['line', 'scatter', 'images'].indexOf(value) !== -1
       },
     },
   },
@@ -232,17 +246,28 @@ export default {
 </script>
 
 <style>
+#graphImage {
+  background-image: url('../assets/not-found.png');
+  background-repeat: no-repeat;
+  background-size: 50% 100%;
+}
+
+.echarts {
+  width: 100%;
+  height: 100%;
+}
+
 .graph-line {
   position: relative;
-
-  --caption-height: 4rem;
+  --caption-height: 3rem;
 }
 
 .graph-line__aspect-ratio {
   height: 0;
   overflow: hidden;
-  padding-top: 60%;
+  padding-top: 50%;
   position: relative;
+  padding-top: 60%;
 }
 
 .graph-line__chart {
@@ -270,7 +295,7 @@ export default {
 }
 
 .graph-line__caption {
-  padding: var(--spacing-default);
+  padding: var(--spacing-small);
   background-color: var(--color-background);
   height: var(--caption-height);
 }

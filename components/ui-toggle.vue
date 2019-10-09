@@ -72,7 +72,7 @@
 .ui-toggle__checkbox:hover + .ui-toggle__visual:before {
   background-color: var(--color-primary-hover);
 }
-.ui-toggle__checkbox:focus + .ui-toggle__visual:before {
+.ui-toggle__checkbox:hover + .ui-toggle__visual:before {
   background-color: var(--color-primary-focus);
 }
 .ui-toggle__checkbox:active + .ui-toggle__visual:before {
@@ -84,14 +84,12 @@
 }
 .ui-toggle__checkbox[disabled] + .ui-toggle__visual:before,
 .ui-toggle__checkbox[disabled]:hover + .ui-toggle__visual:before,
-.ui-toggle__checkbox[disabled]:focus + .ui-toggle__visual:before,
 .ui-toggle__checkbox[disabled]:active + .ui-toggle__visual:before {
   opacity: 0.3;
   background-color: var(--color-form-base);
 }
 .ui-toggle__checkbox[disabled][checked] + .ui-toggle__visual:before,
 .ui-toggle__checkbox[disabled][checked]:hover + .ui-toggle__visual:before,
-.ui-toggle__checkbox[disabled][checked]:focus + .ui-toggle__visual:before,
 .ui-toggle__checkbox[disabled][checked]:active + .ui-toggle__visual:before {
   opacity: 0.3;
   background-color: var(--color-form-active);

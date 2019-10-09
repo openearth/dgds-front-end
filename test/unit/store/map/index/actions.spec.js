@@ -126,7 +126,24 @@ describe('storeActiveDatasets', () => {
 })
 
 describe('loadPointDataForLocation', () => {
-  test('loads point data for the specified location', async () => {
+  const state = {
+    datasets: {
+      ab: {},
+      cd: {
+        pointData: {
+          loc1: {
+            foo: 'bar',
+          },
+        },
+      },
+      ef: {
+        metadata: {
+          pointData: 'images',
+        },
+      },
+    },
+  }
+  test('loads point data for line and scatter plots for the specified location', async () => {
     const commit = jest.fn()
     const timestamp = moment()
     const apiResult = {
@@ -143,15 +160,15 @@ describe('loadPointDataForLocation', () => {
     }
     getFromApi.mockResolvedValue(apiResult)
     await actions.loadPointDataForLocation(
-      { commit },
-      { datasetIds: ['ab', 'cd'], locationId: 'ef' },
+      { commit, state },
+      { datasetIds: ['ab', 'cd'], locationId: 'loc1' },
     )
     expect(getFromApi).toHaveBeenCalledWith('timeseries', {
       datasetId: 'cd',
       endTime: moment()
         .add(5, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
-      locationId: 'ef',
+      locationId: 'loc1',
       startTime: moment()
         .subtract(3, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
@@ -161,9 +178,54 @@ describe('loadPointDataForLocation', () => {
       {
         id: 'ab',
         data: {
-          ef: {
+          loc1: {
             category: [moment(timestamp).format('MM-DD-YYYY HH:mm')],
             serie: [1],
+          },
+        },
+      },
+    ])
+    expect(commit.mock.calls[1]).toEqual([
+      'datasets/addDatasetPointData',
+      {
+        data: {
+          loc1: {
+            category: [moment(timestamp).format('MM-DD-YYYY HH:mm')],
+            serie: [1],
+          },
+        },
+        id: 'cd',
+      },
+    ])
+  })
+
+  test('loads point data for images plots for the specified location', async () => {
+    const commit = jest.fn()
+    const apiResult = 'testUrl'
+
+    getFromApi.mockResolvedValue(apiResult)
+    await actions.loadPointDataForLocation(
+      { commit, state },
+      { datasetIds: ['ef'], locationId: 'loc1' },
+    )
+    expect(getFromApi).toHaveBeenCalledWith('timeseries', {
+      datasetId: 'ef',
+      endTime: moment()
+        .add(5, 'days')
+        .format('YYYY-MM-DDTHH:mm:ssZ'),
+      locationId: 'loc1',
+      startTime: moment()
+        .subtract(3, 'days')
+        .format('YYYY-MM-DDTHH:mm:ssZ'),
+    })
+
+    expect(commit.mock.calls[0]).toEqual([
+      'datasets/addDatasetPointData',
+      {
+        id: 'ef',
+        data: {
+          loc1: {
+            imageUrl: 'testUrl',
           },
         },
       },
@@ -187,29 +249,29 @@ describe('loadPointDataForLocation', () => {
     }
     getFromApi.mockResolvedValue(apiResult)
     await actions.loadPointDataForLocation(
-      { commit, state: {} },
-      { datasetIds: ['ab', 'cd'], locationId: 'ef' },
+      { commit, state },
+      { datasetIds: ['ab', 'cd'], locationId: 'loc1' },
     )
     expect(getFromApi).toHaveBeenCalledWith('timeseries', {
       datasetId: 'cd',
       endTime: moment()
         .add(5, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
-      locationId: 'ef',
+      locationId: 'loc1',
       startTime: moment()
         .subtract(3, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
     })
-    expect(commit.mock.calls[0]).toEqual([
+    expect(commit.mock.calls[1]).toEqual([
       'datasets/addDatasetPointData',
       {
-        id: 'ab',
         data: {
-          ef: {
+          loc1: {
             category: [moment(timestamp).format('MM-DD-YYYY HH:mm')],
             serie: [1],
           },
         },
+        id: 'cd',
       },
     ])
   })

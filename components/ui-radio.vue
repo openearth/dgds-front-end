@@ -83,13 +83,8 @@
   border-color: var(--color-primary-hover);
 }
 
-.ui-radio__input:focus + .ui-radio__visual:before,
-.ui-radio__input:focus + .ui-radio__visual:after {
-  border-color: var(--color-primary-focus);
-}
-
-.ui-radio__input:active + .ui-radio__visual:before,
-.ui-radio__input:active + .ui-radio__visual:after {
+.ui-radio__input:hover + .ui-radio__visual:before,
+.ui-radio__input:hover + .ui-radio__visual:after {
   border-color: var(--color-primary-pressed);
 }
 
