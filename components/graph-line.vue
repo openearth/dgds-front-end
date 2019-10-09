@@ -24,7 +24,13 @@
         :autoresize="true"
         class="graph-line__chart"
       />
-      <img v-if="type === 'images'" :src="imageUrl" class="graph-line__chart" />
+      <object
+        v-if="type === 'images'"
+        id="graphImage"
+        :data="imageUrl"
+        class="graph-line__chart"
+        type="image/svg+xml"
+      />
       <ui-button class="download-btn" kind="quiet" @click="download()"
         >DOWNLOAD</ui-button
       >
