@@ -131,8 +131,7 @@ export const actions = {
               id: datasetId,
               data: {
                 [locationId]: {
-                  imageUrl:
-                    'https://storage.cloud.google.com/dgds-metocean-svg/173.00E_60.50N.svg',
+                  imageUrl: response,
                 },
               },
             }),
