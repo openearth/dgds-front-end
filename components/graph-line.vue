@@ -102,16 +102,16 @@ const baseOptions = {
     fontFamily: 'Helvetica',
   },
   xAxis: {
-    type: 'category',
+    type: 'time',
+    min: moment()
+      .subtract(3, 'days')
+      .format(),
+    max: moment()
+      .add(5, 'days')
+      .format(),
     axisLine: {
       onZero: false,
       show: false,
-    },
-    axisLabel: {
-      fontSize: 14,
-      formatter: value => {
-        return moment(value, 'MM-DD-YYYY HH:mm').format(`DD-MM`)
-      },
     },
   },
   yAxis: {
@@ -177,7 +177,6 @@ export default {
       }
     },
     graphData() {
-      console.log(past, future)
       const series = this.series.map(serie => {
         const data = serie.map((col, i) => [this.category[i], col])
         return {
@@ -193,19 +192,12 @@ export default {
       })
 
       series.push({
-        type: 'scatter',
-        data: [[past, 0], [future, 0]],
-      })
-      series.push({
         name: 'present-line',
         type: 'line',
-        data: [[present, 0], [present, 10]],
-        lineStyle: {
-          color: 'white',
-        },
+        data: [[moment().format(), 0], [moment().format(), 10]],
+        lineStyle: { color: 'white' },
       })
 
-      console.log(series)
       const dataOptions = {
         series: series,
         yAxis: {
@@ -214,6 +206,7 @@ export default {
       }
       const theme = getStyle(this.colors)
       const result = merge(dataOptions, baseOptions, theme)
+
       return result
     },
     download() {
