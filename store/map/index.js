@@ -91,6 +91,9 @@ export const actions = {
           _.get(set, 'rasterLayer.url') !== null
         ) {
           commit('datasets/addDatasetRaster', set)
+          if (_.get(set, 'rasterActiveOnLoad')) {
+            commit('setActiveRasterLayer', set.id)
+          }
         }
       })
     })
