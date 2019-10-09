@@ -21,6 +21,7 @@
       <v-chart
         :options="graphData()"
         :autoresize="true"
+        height="100%"
         class="graph-line__chart"
       />
       <ui-button class="download-btn" kind="quiet" @click="download()"
@@ -80,6 +81,10 @@ const baseOptions = {
   },
   grid: {
     show: true,
+    top: 10,
+    bottom: 50,
+    right: 20,
+    left: 90,
   },
   dataZoom: [
     {
@@ -87,9 +92,6 @@ const baseOptions = {
       realtime: true,
     },
   ],
-  title: {
-    x: 'center',
-  },
   textStyle: {
     fontFamily: 'Helvetica',
   },
@@ -112,7 +114,7 @@ const baseOptions = {
       fontSize: 14,
     },
     nameLocation: 'middle',
-    nameGap: 30,
+    nameGap: 55,
     nameTextStyle: {
       fontSize: 14,
       fontFamily: 'Helvetica',
@@ -217,16 +219,20 @@ export default {
 </script>
 
 <style>
+.echarts {
+  width: 100%;
+  height: 100%;
+}
+
 .graph-line {
   position: relative;
-
-  --caption-height: 4rem;
+  --caption-height: 3rem;
 }
 
 .graph-line__aspect-ratio {
   height: 0;
   overflow: hidden;
-  padding-top: 60%;
+  padding-top: 50%;
   position: relative;
 }
 
@@ -255,7 +261,7 @@ export default {
 }
 
 .graph-line__caption {
-  padding: var(--spacing-default);
+  padding: var(--spacing-small);
   background-color: var(--color-background);
   height: var(--caption-height);
 }
