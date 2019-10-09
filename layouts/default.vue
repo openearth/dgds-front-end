@@ -104,7 +104,6 @@ export default {
     rasterLayer() {
       const rasterLayer = getRasterLayer()
       rasterLayer.source.tiles = this.activeRasterData
-      console.log('rasterlayer', rasterLayer, this.activeRasterData)
       return rasterLayer
     },
     vectorLayers() {
