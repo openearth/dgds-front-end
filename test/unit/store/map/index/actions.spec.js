@@ -201,7 +201,6 @@ describe('loadPointDataForLocation', () => {
 
   test('loads point data for images plots for the specified location', async () => {
     const commit = jest.fn()
-    const timestamp = moment()
     const apiResult = 'testUrl'
 
     getFromApi.mockResolvedValue(apiResult)

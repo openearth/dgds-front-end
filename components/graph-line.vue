@@ -229,6 +229,12 @@ export default {
 </script>
 
 <style>
+#graphImage {
+  background-image: url('../assets/not-found.png');
+  background-repeat: no-repeat;
+  background-size: 50% 100%;
+}
+
 .graph-line {
   position: relative;
   --caption-height: 4rem;

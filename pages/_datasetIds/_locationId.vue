@@ -23,8 +23,6 @@
 
 <script>
 import flatten from 'lodash/flatten'
-import get from 'lodash/fp/get'
-import identity from 'lodash/identity'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import GraphLine from '~/components/graph-line'
 import UiButtonIcon from '~/components/ui-button-icon'
@@ -40,7 +38,6 @@ export default {
     datasets() {
       const activePointData = this.activePointDataPerDataset
 
-      const activeIds = Object.keys(activePointData)
       // prettier-ignore
       const result = Object.keys(activePointData)
         .map(pointId => _.get(activePointData, [pointId][0]))
