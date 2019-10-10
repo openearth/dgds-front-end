@@ -10,39 +10,39 @@ describe('loadDatasets', () => {
     const apiResult = {
       themes: [{ id: 'theme1', name: 'theme1Name' }],
       datasets: [
-        { id: 'ab', foo: 'bar', themes: ['theme1'], vectorLayer: {} },
-        { id: 'cd', baz: 'blub', themes: ['theme2'], rasterLayer: {} },
+        { id: 'par1', foo: 'bar', themes: ['theme1'], vectorLayer: {} },
+        { id: 'par2', baz: 'blub', themes: ['theme2'], rasterLayer: {} },
       ],
     }
     getFromApi.mockResolvedValue(apiResult)
     await actions.loadDatasets({ commit })
     expect(commit.mock.calls[0]).toEqual([
       'themes/addTheme',
-      { id: 'theme1', name: 'theme1Name', datasets: ['ab'] },
+      { id: 'theme1', name: 'theme1Name', datasets: ['par1'] },
     ])
     expect(commit.mock.calls[1]).toEqual([
       'datasets/addMetadata',
       {
-        id: 'ab',
+        id: 'par1',
         foo: 'bar',
         themes: ['theme1'],
       },
     ])
     expect(commit.mock.calls[2]).toEqual([
       'datasets/addDatasetVector',
-      { id: 'ab', foo: 'bar', themes: ['theme1'], vectorLayer: {} },
+      { id: 'par1', foo: 'bar', themes: ['theme1'], vectorLayer: {} },
     ])
     expect(commit.mock.calls[3]).toEqual([
       'datasets/addMetadata',
       {
-        id: 'cd',
+        id: 'par2',
         baz: 'blub',
         themes: ['theme2'],
       },
     ])
     expect(commit.mock.calls[4]).toEqual([
       'datasets/addDatasetRaster',
-      { id: 'cd', baz: 'blub', themes: ['theme2'], rasterLayer: {} },
+      { id: 'par2', baz: 'blub', themes: ['theme2'], rasterLayer: {} },
     ])
   })
 })
@@ -128,15 +128,15 @@ describe('storeActiveDatasets', () => {
 describe('loadPointDataForLocation', () => {
   const state = {
     datasets: {
-      ab: {},
-      cd: {
+      par1: {},
+      par2: {
         pointData: {
           loc1: {
             foo: 'bar',
           },
         },
       },
-      ef: {
+      par3: {
         metadata: {
           pointData: 'images',
         },
@@ -161,10 +161,10 @@ describe('loadPointDataForLocation', () => {
     getFromApi.mockResolvedValue(apiResult)
     await actions.loadPointDataForLocation(
       { commit, state },
-      { datasetIds: ['ab', 'cd'], locationId: 'loc1' },
+      { datasetIds: ['par1', 'par2'], locationId: 'loc1' },
     )
     expect(getFromApi).toHaveBeenCalledWith('timeseries', {
-      datasetId: 'cd',
+      datasetId: 'par2',
       endTime: moment()
         .add(5, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
@@ -176,7 +176,7 @@ describe('loadPointDataForLocation', () => {
     expect(commit.mock.calls[0]).toEqual([
       'datasets/addDatasetPointData',
       {
-        id: 'ab',
+        id: 'par1',
         data: {
           loc1: {
             category: [moment(timestamp).format('MM-DD-YYYY HH:mm')],
@@ -194,7 +194,7 @@ describe('loadPointDataForLocation', () => {
             serie: [1],
           },
         },
-        id: 'cd',
+        id: 'par2',
       },
     ])
   })
@@ -206,10 +206,10 @@ describe('loadPointDataForLocation', () => {
     getFromApi.mockResolvedValue(apiResult)
     await actions.loadPointDataForLocation(
       { commit, state },
-      { datasetIds: ['ef'], locationId: 'loc1' },
+      { datasetIds: ['par3'], locationId: 'loc1' },
     )
     expect(getFromApi).toHaveBeenCalledWith('timeseries', {
-      datasetId: 'ef',
+      datasetId: 'par3',
       endTime: moment()
         .add(5, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
@@ -222,7 +222,7 @@ describe('loadPointDataForLocation', () => {
     expect(commit.mock.calls[0]).toEqual([
       'datasets/addDatasetPointData',
       {
-        id: 'ef',
+        id: 'par3',
         data: {
           loc1: {
             imageUrl: 'testUrl',
@@ -250,10 +250,10 @@ describe('loadPointDataForLocation', () => {
     getFromApi.mockResolvedValue(apiResult)
     await actions.loadPointDataForLocation(
       { commit, state },
-      { datasetIds: ['ab', 'cd'], locationId: 'loc1' },
+      { datasetIds: ['par2'], locationId: 'loc1' },
     )
     expect(getFromApi).toHaveBeenCalledWith('timeseries', {
-      datasetId: 'cd',
+      datasetId: 'par2',
       endTime: moment()
         .add(5, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
@@ -262,7 +262,8 @@ describe('loadPointDataForLocation', () => {
         .subtract(3, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
     })
-    expect(commit.mock.calls[1]).toEqual([
+
+    expect(commit.mock.calls[0]).toEqual([
       'datasets/addDatasetPointData',
       {
         data: {
@@ -271,7 +272,7 @@ describe('loadPointDataForLocation', () => {
             serie: [1],
           },
         },
-        id: 'cd',
+        id: 'par2',
       },
     ])
   })

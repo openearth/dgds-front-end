@@ -129,18 +129,18 @@ export const actions = {
           'pointData',
         )
 
+        // Depending on the pointDataType different responses are expected.
+        // images -> just an url to a svg image
+        // line or scatter -> data to create echarts graph
         if (pointDataType === 'images') {
-          commit(
-            'datasets/addDatasetPointData',
-            Object.freeze({
-              id: datasetId,
-              data: {
-                [locationId]: {
-                  imageUrl: response,
-                },
+          commit('datasets/addDatasetPointData', {
+            id: datasetId,
+            data: {
+              [locationId]: {
+                imageUrl: response,
               },
-            }),
-          )
+            },
+          })
         } else {
           let category = []
           let serie = []
@@ -157,18 +157,15 @@ export const actions = {
             )
           })
 
-          commit(
-            'datasets/addDatasetPointData',
-            Object.freeze({
-              id: datasetId,
-              data: {
-                [locationId]: {
-                  category: category,
-                  serie: serie,
-                },
+          commit('datasets/addDatasetPointData', {
+            id: datasetId,
+            data: {
+              [locationId]: {
+                category: category,
+                serie: serie,
               },
-            }),
-          )
+            },
+          })
         }
       })
     })
