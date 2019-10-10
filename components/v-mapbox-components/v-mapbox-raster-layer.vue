@@ -40,7 +40,7 @@ export default {
             this.map.removeSource(this.id)
           }
 
-          // Only add if tiles in source if not empty
+          // Only add if tiles in source are not empty
           if (get('source.tiles[0]', newOptions)) {
             this.map.addLayer(newOptions, 'water-border')
           }
@@ -49,12 +49,11 @@ export default {
       deep: true,
     },
   },
-  mounted() {},
   methods: {
     deferredMountedTo(map) {
       this.map = map
       this.id = this.options.id
-      this.map.addSource(this.options.id, this.options.source)
+      this.map.addLayer(this.options, 'water-border')
     },
   },
 }

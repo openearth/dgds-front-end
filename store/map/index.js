@@ -90,6 +90,12 @@ export const actions = {
           _.get(set, 'rasterLayer.url') !== null
         ) {
           commit('datasets/addDatasetRaster', set)
+
+          // If key rasterActiveOnLoad is true, turn this layer on on load
+          const rasterActive = _.get(set, 'rasterActiveOnLoad')
+          if (rasterActive) {
+            commit('setActiveRasterLayer', set.id)
+          }
         }
       })
     })
