@@ -20,6 +20,7 @@
     <div v-if="!isCollapsed" class="graph-line__aspect-ratio">
       <v-chart
         v-if="type === 'line' || type === 'scatter'"
+        :ref="title"
         :options="graphData()"
         :autoresize="true"
         height="100%"
@@ -52,14 +53,7 @@ import 'echarts/lib/chart/line'
 import 'echarts/lib/chart/scatter'
 import 'echarts/lib/component/dataZoom'
 import 'echarts/lib/component/tooltip'
-
-const past = moment()
-  .subtract(3, 'days')
-  .format('MM-DD-YYYY HH:mm')
-const future = moment()
-  .add(5, 'days')
-  .format('MM-DD-YYYY HH:mm')
-const present = moment().format('MM-DD-YYYY HH:mm')
+import 'echarts/lib/component/markLine'
 
 const getStyle = (colors = {}) => ({
   backgroundColor: colors.background,
@@ -97,7 +91,7 @@ const baseOptions = {
   },
   grid: {
     show: true,
-    top: 10,
+    top: 30,
     bottom: 50,
     right: 20,
     left: 90,
@@ -113,12 +107,6 @@ const baseOptions = {
   },
   xAxis: {
     type: 'time',
-    min: moment()
-      .subtract(3, 'days')
-      .format(),
-    max: moment()
-      .add(5, 'days')
-      .format(),
     axisLine: {
       onZero: false,
       show: false,
@@ -191,8 +179,14 @@ export default {
       }
     },
     graphData() {
-      const series = this.series.map(serie => {
-        const data = serie.map((col, i) => [this.category[i], col])
+      let series = []
+      series = this.series.map(serie => {
+        let data = serie.map((col, i) => [this.category[i], col])
+
+        // Make sure that all data is in chronological order to plot it correctly
+        data = data.sort((colA, colB) => {
+          return moment(colA[0]) - moment(colB[0])
+        })
         return {
           type: this.type,
           showAllSymbol: true,
@@ -206,12 +200,17 @@ export default {
       })
 
       series.push({
-        name: 'present-line',
         type: 'line',
-        data: [[moment().format(), 0], [moment().format(), 10]],
-        lineStyle: { color: 'white' },
+        markLine: {
+          silent: true,
+          data: [
+            {
+              xAxis: moment().format(),
+            },
+          ],
+          lineStyle: { color: 'white' },
+        },
       })
-
       const dataOptions = {
         series: series,
         yAxis: {
@@ -220,7 +219,6 @@ export default {
       }
       const theme = getStyle(this.colors)
       const result = merge(dataOptions, baseOptions, theme)
-
       return result
     },
     download() {
