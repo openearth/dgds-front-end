@@ -4,7 +4,6 @@ import filter from 'lodash/fp/filter'
 import get from 'lodash/fp/get'
 import has from 'lodash/fp/has'
 import map from 'lodash/fp/map'
-import head from 'lodash/fp/head'
 import merge from 'lodash/fp/merge'
 import pipe from 'lodash/fp/pipe'
 import values from 'lodash/fp/values'
@@ -107,35 +106,13 @@ export const actions = {
     commit('setActiveDatasetIds', ids)
   },
 
-  loadPointDataForLocation({ commit }, { datasetIds, locationId }) {
-    // prettier-ignore
-    const getEvents = pipe([
-      filter(has('events')),
-      map(get('events')),
-      head,
-    ])
-
-    // prettier-ignore
-    // TODO: Now hardcoded which format, should be included in the config!!
-    const getFormattedTimeStamps = pipe([
-      getEvents,
-      map(get('timeStamp')),
-      map(momentFormat('MM-DD-YYYY HH:mm')),
-    ])
-
-    // prettier-ignore
-    const getValues = pipe([
-      getEvents,
-      map(get('value')),
-    ])
-
-    // prettier-ignore
-    const datasets = isArray(datasetIds)
-      ? datasetIds
-      : datasetIds.split(',')
-
-    // prettier-ignore
+  loadPointDataForLocation({ commit, state }, { datasetIds, locationId }) {
+    const datasets = isArray(datasetIds) ? datasetIds : datasetIds.split(',')
     datasets.forEach(datasetId => {
+      if (_.get(state.datasets[datasetId], 'pointdata[locationId]')) {
+        return
+      }
+
       const parameters = {
         locationId: locationId,
         startTime: moment()
@@ -146,20 +123,50 @@ export const actions = {
           .format('YYYY-MM-DDTHH:mm:ssZ'),
         datasetId: datasetId,
       }
+      getFromApi('timeseries', parameters).then(response => {
+        const pointDataType = _.get(
+          state.datasets[datasetId].metadata,
+          'pointData',
+        )
 
-      return getFromApi('timeseries', parameters).then(({ results }) => {
-        commit(
-          'datasets/addDatasetPointData',
-          Object.freeze({
+        // Depending on the pointDataType different responses are expected.
+        // images -> just an url to a svg image
+        // line or scatter -> data to create echarts graph
+        if (pointDataType === 'images') {
+          commit('datasets/addDatasetPointData', {
             id: datasetId,
             data: {
               [locationId]: {
-                category: getFormattedTimeStamps(results),
-                serie: getValues(results),
+                imageUrl: response,
               },
             },
-          }),
-        )
+          })
+        } else {
+          let category = []
+          let serie = []
+          const eventResults = response.results.filter(res =>
+            _.has(res, 'events'),
+          )
+
+          eventResults.forEach(res => {
+            serie = serie.concat(res.events.map(event => event.value))
+            category = category.concat(
+              res.events.map(event =>
+                moment(event.timeStamp).format('MM-DD-YYYY HH:mm'),
+              ),
+            )
+          })
+
+          commit('datasets/addDatasetPointData', {
+            id: datasetId,
+            data: {
+              [locationId]: {
+                category: category,
+                serie: serie,
+              },
+            },
+          })
+        }
       })
     })
   },
@@ -280,13 +287,14 @@ export const getters = {
     activeLocationIds.forEach(locationId => {
       // Filter all datasets where pointdata is available from the available datasets
       const activePointData = activeDatasetIds.filter(datasetId => {
-        return _.get(datasets, `${datasetId}.pointData.${locationId}`)
+        const apData = _.get(datasets, `${datasetId}.pointData`)
+        return _.get(apData, [locationId])
       })
 
       // Create object with pointdata for each location
       activePointDataPerDataset[locationId] = activePointData.map(datasetId => {
         const data = _.get(datasets, `${datasetId}`)
-        const locData = _.get(data, `pointData.${locationId}`)
+        const locData = _.get(data.pointData, [locationId])
         locData.datasetName = _.get(data, 'metadata.name')
         locData.units = _.get(data, 'metadata.units')
         locData.type = _.get(data, 'metadata.pointData')

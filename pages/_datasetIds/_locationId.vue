@@ -8,6 +8,7 @@
       <GraphLine
         v-for="(data, index) in datasets"
         :key="index"
+        :image-url="data.imageUrl"
         :category="data.category"
         :series="[data.serie]"
         :title="data.datasetName"
@@ -22,12 +23,11 @@
 
 <script>
 import flatten from 'lodash/flatten'
-import get from 'lodash/fp/get'
-import identity from 'lodash/identity'
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import GraphLine from '~/components/graph-line'
 import UiButtonIcon from '~/components/ui-button-icon'
 import IconCross from '~/assets/icon-action-cross.svg'
+import _ from 'lodash'
 
 export default {
   middleware: 'load-location-id',
@@ -37,13 +37,10 @@ export default {
     ...mapState({ activeTheme: state => state.preferences.theme.active }),
     datasets() {
       const activePointData = this.activePointDataPerDataset
+
       // prettier-ignore
       const result = Object.keys(activePointData)
-        .map(pointId =>
-            Object.keys(activePointData[pointId])
-              .map(datasetId => get(`${pointId}.${datasetId}`, activePointData))
-              .filter(identity)
-        )
+        .map(pointId => _.get(activePointData, [pointId][0]))
       return flatten(result)
     },
     locations() {
