@@ -56,6 +56,8 @@ export const mutations = {
     state.activeRasterLayerId = id
   },
   toggleCollapsedDataset(state, id) {
+    // Updates the collapsedDatasets array, when id already exists in this Array
+    // it will be removed from the array, otherwise it will be added.
     if (state.collapsedDatasets.includes(id)) {
       state.collapsedDatasets = state.collapsedDatasets.filter(
         set => set !== id,
