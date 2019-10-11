@@ -16,6 +16,7 @@
         :collapsible="true"
         :units="data.units"
         :type="data.type"
+        :parameter-id="data.id"
       />
     </section>
   </aside>

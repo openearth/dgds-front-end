@@ -1,6 +1,26 @@
 import update from 'lodash/fp/update'
 import { getters } from '../../../../../store/map/index.js'
 
+describe('getActiveTheme', () => {
+  test('returns activeTheme', () => {
+    const state = {
+      activeTheme: 'theme1',
+    }
+    const result = getters.getActiveTheme(state)
+    expect(result).toEqual('theme1')
+  })
+})
+
+describe('getDatasets', () => {
+  test('returns datasets', () => {
+    const state = {
+      datasets: 'wl',
+    }
+    const result = getters.getDatasets(state)
+    expect(result).toEqual('wl')
+  })
+})
+
 describe('knownDatasetIds', () => {
   test('returns array of known dataset ids', () => {
     const state = {

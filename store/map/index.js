@@ -26,6 +26,7 @@ export const state = () => ({
   activeLocationIds: [],
   activeRasterLayerId: '',
   activeTheme: {},
+  collapsedDatasets: [],
 })
 
 export const mutations = {
@@ -53,6 +54,17 @@ export const mutations = {
   },
   setActiveRasterLayer(state, id) {
     state.activeRasterLayerId = id
+  },
+  toggleCollapsedDataset(state, id) {
+    // Updates the collapsedDatasets array, when id already exists in this Array
+    // it will be removed from the array, otherwise it will be added.
+    if (state.collapsedDatasets.includes(id)) {
+      state.collapsedDatasets = state.collapsedDatasets.filter(
+        set => set !== id,
+      )
+    } else {
+      state.collapsedDatasets.push(id)
+    }
   },
 }
 
@@ -185,6 +197,9 @@ export const getters = {
   getActiveRasterLayer(state, id) {
     return state.activeRasterLayerId
   },
+  getCollapsedDatasets(state) {
+    return state.collapsedDatasets
+  },
   knownLocationIds(state) {
     const getInDatasets = getIn(state.datasets)
     const getLocationId = map(get('properties.locationId'))
@@ -298,6 +313,7 @@ export const getters = {
         locData.datasetName = _.get(data, 'metadata.name')
         locData.units = _.get(data, 'metadata.units')
         locData.type = _.get(data, 'metadata.pointData')
+        locData.id = _.get(data, 'metadata.id')
         return locData
       })
     })
