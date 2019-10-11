@@ -75,3 +75,26 @@ describe('setActiveLocationIds', () => {
     expect(state.activeLocationIds).toEqual(ids)
   })
 })
+
+describe('setActiveRasterLayer', () => {
+  test('set state.activeRasterLayerId with id in payload', () => {
+    const state = {
+      activeRasterLayerId: 'wl',
+    }
+    mutations.setActiveRasterLayer(state, 'wd')
+    expect(state.activeRasterLayerId).toEqual('wd')
+  })
+})
+
+describe('toggleCollapsedDataset', () => {
+  test('add or remove id from state.collapsedDatasets with id in payload', () => {
+    const state = {
+      collapsedDatasets: [],
+    }
+    mutations.toggleCollapsedDataset(state, 'wd')
+    expect(state.collapsedDatasets).toEqual(['wd'])
+
+    mutations.toggleCollapsedDataset(state, 'wd')
+    expect(state.collapsedDatasets).toEqual([])
+  })
+})

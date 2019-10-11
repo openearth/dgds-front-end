@@ -10,11 +10,14 @@
       v-if="collapsible"
       class="graph-line__toggle"
       label="Toggle"
-      @click="toggle"
+      @click="toggleCollapsedDataset(parameterId)"
     >
       <icon-chevron />
     </ui-button-icon>
-    <figcaption class="graph-line__caption strong" @click="toggle">
+    <figcaption
+      class="graph-line__caption strong"
+      @click="toggleCollapsedDataset(parameterId)"
+    >
       {{ title }}
     </figcaption>
     <div v-if="!isCollapsed" class="graph-line__aspect-ratio">
@@ -41,7 +44,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import merge from 'lodash/merge'
 import UiButtonIcon from '~/components/ui-button-icon'
 import UiButton from '~/components/ui-button'
@@ -165,19 +168,20 @@ export default {
         return ['line', 'scatter', 'images'].indexOf(value) !== -1
       },
     },
+    parameterId: {
+      type: String,
+      default: '',
+    },
   },
-  data: () => ({
-    isCollapsed: false,
-  }),
   computed: {
     ...mapGetters('preferences/theme', ['colors']),
+    ...mapGetters('map', ['getCollapsedDatasets']),
+    isCollapsed() {
+      return this.getCollapsedDatasets.includes(this.parameterId)
+    },
   },
   methods: {
-    toggle() {
-      if (this.collapsible) {
-        this.isCollapsed = !this.isCollapsed
-      }
-    },
+    ...mapMutations('map', ['toggleCollapsedDataset']),
     graphData() {
       let series = []
       series = this.series.map(serie => {
