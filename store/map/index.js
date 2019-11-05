@@ -163,9 +163,7 @@ export const actions = {
           eventResults.forEach(res => {
             serie = serie.concat(res.events.map(event => event.value))
             category = category.concat(
-              res.events.map(event =>
-                moment(event.timeStamp).format('MM-DD-YYYY HH:mm'),
-              ),
+              res.events.map(event => moment(event.timeStamp).format()),
             )
           })
 
