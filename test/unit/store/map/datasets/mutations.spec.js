@@ -97,12 +97,29 @@ describe('addDatasetVector', () => {
 describe('addDatasetRaster', () => {
   test('updates state with payload', () => {
     const state = {}
-    const data = { id: 'wl', rasterLayer: { url: 'some/url' } }
+    const data = {
+      id: 'wl',
+      rasterLayer: {
+        url: 'some/url',
+        date: '01-01-2011',
+        dateFormat: 'DD-MM-YYYY',
+        linearGradient: 'some/gradient',
+        max: 100,
+        min: 0,
+      },
+    }
 
     mutations.addDatasetRaster(state, data)
     expect(state).toMatchObject({
       wl: {
-        raster: { tiles: 'some/url' },
+        raster: {
+          tiles: ['some/url'],
+          date: '01-01-2011',
+          dateFormat: 'DD-MM-YYYY',
+          linearGradient: 'some/gradient',
+          max: 100,
+          min: 0,
+        },
       },
     })
   })
@@ -110,7 +127,14 @@ describe('addDatasetRaster', () => {
   test('updates state with existing id', () => {
     const state = {
       wl: {
-        raster: { tiles: 'some/url' },
+        raster: {
+          tiles: ['some/url'],
+          date: '01-01-2011',
+          dateFormat: 'DD-MM-YYYY',
+          linearGradient: 'some/gradient',
+          max: 100,
+          min: 0,
+        },
       },
     }
     const data = { id: 'wl', rasterLayer: { url: 'some/other/url' } }
@@ -118,7 +142,14 @@ describe('addDatasetRaster', () => {
     mutations.addDatasetRaster(state, data)
     expect(state).toMatchObject({
       wl: {
-        raster: { tiles: 'some/other/url' },
+        raster: {
+          tiles: ['some/other/url'],
+          date: '01-01-2011',
+          dateFormat: 'DD-MM-YYYY',
+          linearGradient: 'some/gradient',
+          max: 100,
+          min: 0,
+        },
       },
     })
   })
@@ -126,7 +157,14 @@ describe('addDatasetRaster', () => {
   test('updates state with different id', () => {
     const state = {
       wl: {
-        raster: { tiles: 'some/url' },
+        raster: {
+          tiles: ['some/url'],
+          date: '01-01-2011',
+          dateFormat: 'DD-MM-YYYY',
+          linearGradient: 'some/gradient',
+          max: 100,
+          min: 0,
+        },
       },
     }
     const data = { id: 'wd', rasterLayer: { url: 'some/url' } }
@@ -134,10 +172,24 @@ describe('addDatasetRaster', () => {
     mutations.addDatasetRaster(state, data)
     expect(state).toMatchObject({
       wl: {
-        raster: { tiles: 'some/url' },
+        raster: {
+          tiles: ['some/url'],
+          date: '01-01-2011',
+          dateFormat: 'DD-MM-YYYY',
+          linearGradient: 'some/gradient',
+          max: 100,
+          min: 0,
+        },
       },
       wd: {
-        raster: { tiles: 'some/url' },
+        raster: {
+          tiles: ['some/url'],
+          date: undefined,
+          dateFormat: undefined,
+          linearGradient: undefined,
+          max: undefined,
+          min: undefined,
+        },
       },
     })
   })

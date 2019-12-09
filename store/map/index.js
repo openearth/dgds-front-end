@@ -12,12 +12,7 @@ import uniq from 'lodash/fp/uniq'
 import _ from 'lodash'
 import moment from 'moment'
 import getFromApi from '../../lib/request/get'
-import {
-  includesIn,
-  momentFormat,
-  getIn,
-  wrapInProperty,
-} from '../../lib/utils'
+import { includesIn, getIn, wrapInProperty } from '../../lib/utils'
 
 const getId = get('id')
 
@@ -227,8 +222,9 @@ export const getters = {
     // Retrieve the timestamp from te activeRasterData and combine this into a string
     // using the dateformat given
     const date = _.get(activeRasterData, 'date')
-    if (date) {
-      const dateFormat = _.get(activeRasterData, 'dateFormat')
+    const dateFormat = _.get(activeRasterData, 'dateFormat')
+
+    if (date && dateFormat) {
       const timeStamp = moment(date, dateFormat).format('DD-MM-YYYY')
       return timeStamp
     } else {
