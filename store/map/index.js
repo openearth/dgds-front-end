@@ -239,8 +239,7 @@ export const getters = {
   activeRasterData({ datasets, activeRasterLayerId, activeDatasets }) {
     // Return the active raster data tiles (if not defined, return [])
     if (activeRasterLayerId === '' || activeRasterLayerId === null) return []
-    const tiles = get(`${activeRasterLayerId}.raster.tiles`, datasets)
-    return [tiles]
+    return _.get(datasets, `${activeRasterLayerId}.raster`)
   },
   activeRasterLegendData({ datasets, activeRasterLayerId, activeDatasets }) {
     // Return the active raster data tiles (if not defined, return [])

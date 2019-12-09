@@ -103,7 +103,7 @@ export default {
     ]),
     rasterLayer() {
       const rasterLayer = getRasterLayer()
-      rasterLayer.source.tiles = this.activeRasterData
+      rasterLayer.source.tiles = this.activeRasterData.tiles
       return rasterLayer
     },
     vectorLayers() {
