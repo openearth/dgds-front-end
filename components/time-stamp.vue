@@ -1,12 +1,11 @@
 <template>
   <Panel class="timestamp">
-    <span class="timestamp__title">{{ timestamp }}</span>
+    <span class="timestamp__title">Date raster layer: {{ timestamp }}</span>
   </Panel>
 </template>
 
 <script>
 import Panel from './panel'
-
 export default {
   components: { Panel },
   props: {

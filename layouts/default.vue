@@ -266,9 +266,9 @@ export default {
   position: absolute;
   top: var(--spacing-default);
   right: var(--spacing-default);
-  max-width: 20rem;
-  width: 100%;
+  width: 20rem;
   max-height: calc(100vh - var(--spacing-large) - var(--map-controls-height));
+  margin-left: calc(var(--spacing-default) * 3);
 }
 
 .default-layout__site-navigation {
@@ -278,12 +278,21 @@ export default {
   height: 100vh;
 }
 
-.default-layout__timestamp {
+/* Bottom left */
+/* .default-layout__timestamp {
   position: relative;
-  left: calc(var(--spacing-default) + var(--spacing-large));
-  bottom: calc(var(--spacing-default) + var(--spacing-large));
-  width: 15vw;
-  height: 50px;
+  left: calc(var(--spacing-default) * 2 + 10px);
+  bottom: calc(var(--spacing-default) + var(--spacing-large) + 28px);
+  width: 20vw;
+} */
+
+/* Top left */
+.default-layout__timestamp {
+  position: absolute;
+  left: calc(var(--spacing-default) * 3);
+  top: calc(var(--spacing-default));
+  margin-right: calc(var(--spacing-default));
+  max-width: 20rem;
 }
 
 .default-layout .mapboxgl-ctrl-bottom-left {
