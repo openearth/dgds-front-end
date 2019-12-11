@@ -103,6 +103,11 @@ export default {
     ]),
     rasterLayer() {
       const rasterLayer = getRasterLayer()
+      console.log(
+        'rasterlayers',
+        _.get(this.activeRasterData, 'tiles'),
+        this.activeRasterData,
+      )
       rasterLayer.source.tiles = _.get(this.activeRasterData, 'tiles')
       return rasterLayer
     },
@@ -277,22 +282,13 @@ export default {
   height: 100vh;
 }
 
-/* Bottom left */
 .default-layout__timestamp {
-  position: relative;
-  left: calc(var(--spacing-default) * 2 + 10px);
-  bottom: calc(var(--spacing-default) + var(--spacing-large) + 28px);
-  width: 20vw;
-}
-
-/* Top left */
-/* .default-layout__timestamp {
   position: absolute;
   left: calc(var(--spacing-default) * 3);
   top: calc(var(--spacing-default));
   margin-right: calc(var(--spacing-default));
   max-width: 20rem;
-} */
+}
 
 .default-layout .mapboxgl-ctrl-bottom-left {
   left: var(--site-nav-width-collapsed);
