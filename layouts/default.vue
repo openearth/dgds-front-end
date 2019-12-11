@@ -103,11 +103,6 @@ export default {
     ]),
     rasterLayer() {
       const rasterLayer = getRasterLayer()
-      console.log(
-        'rasterlayers',
-        _.get(this.activeRasterData, 'tiles'),
-        this.activeRasterData,
-      )
       rasterLayer.source.tiles = _.get(this.activeRasterData, 'tiles')
       return rasterLayer
     },
