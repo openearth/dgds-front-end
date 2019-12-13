@@ -43,6 +43,7 @@ export default {
     geometry(newValue) {
       const selectedLayer = this.map.getSource(this.selectedLayer.id)
       selectedLayer.setData(newValue)
+      this.map.moveLayer(this.selectedLayer.id)
     },
   },
   methods: {
@@ -50,6 +51,7 @@ export default {
       this.map = map
       this.selectedLayer.source.data = this.geometry
       map.addLayer(this.selectedLayer)
+      this.map.moveLayer(this.selectedLayer.id)
     },
   },
 }
