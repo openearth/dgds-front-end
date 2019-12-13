@@ -4,6 +4,8 @@
 
 <script>
 import _ from 'lodash'
+import distance from '@turf/distance'
+import { point } from '@turf/turf'
 
 export default {
   props: {
@@ -22,6 +24,7 @@ export default {
   data() {
     return {
       map: null,
+      layerToZoomTo: '',
     }
   },
   watch: {
@@ -64,17 +67,6 @@ export default {
       const layer = this.layer
       this.map.addLayer(layer)
       this.map.on('click', layer.id, event => {
-        console.log('clicked on lyaer', layer)
-        // Remove this when datasets config is updated with onclick event
-        layer.onClick = {}
-        if (layer.id === 'shoreline-aggregatedpointsz0') {
-          layer.onClick.method = 'zoomToLayer'
-          layer.onClick.zoomTo = 10
-          layer.onClick.layerToZoomTo = 'shoreline-transectsaspoints'
-        } else {
-          layer.onClick.method = 'showGraph'
-        }
-
         this[layer.onClick.method](layer, event)
       })
 
@@ -86,9 +78,9 @@ export default {
         this.map.getCanvas().style.cursor = ''
       })
     },
+
     showGraph(layer, event) {
-      console.log(layer.id, 'showGraph')
-      this.adjustMap(layer, event)
+      this.adjustMap(event, 500)
 
       const features = this.map.queryRenderedFeatures(event.point)
       this.$emit('select-locations', {
@@ -96,7 +88,7 @@ export default {
         geometry: features[0].geometry,
       })
     },
-    adjustMap(layer, event) {
+    adjustMap(event, duration) {
       const { clientWidth } = this.map.getCanvas()
 
       // prettier-ignore
@@ -108,26 +100,59 @@ export default {
         x: event.point.x - visibleMapWidth,
         y: event.point.y,
       })
-      const duration = 500
       this.map.panTo(targetLocation, { duration })
     },
-    zoomToLayer(layer, event) {
+    zoomTo(layer, event) {
+      // Use zoomto and the click event to zoom in on the map and display the
+      // features of the layertozoomto
       const zoomLevel = _.get(layer, 'onClick.zoomTo')
-      console.log(event.point.x, event.point.y)
-      const bound = 10
-      const bbox = [
-        [event.point.x - bound, event.point.y - bound],
-        [event.point.x + bound, event.point.y + bound],
-      ]
+      const duration = 500
 
-      console.log(_.get(layer, 'onClick.layerToZoomTo'))
-      console.log(bbox, this.map)
-      const features = this.map.queryRenderedFeatures(bbox, {
-        layers: ['shoreline-aggregatedpointsz5'],
+      this.map.flyTo({
+        center: event.lngLat,
+        zoom: zoomLevel,
       })
-      console.log('features', features)
-      this.adjustMap(features[0], event)
-      this.map.setZoom(zoomLevel)
+
+      setTimeout(() => {
+        const bbox = this.getBbox(event.lngLat)
+        // Get all features from the new center point with a small bounding box
+        const features = this.map.queryRenderedFeatures(bbox)
+        const from = point([event.lngLat.lng, event.lngLat.lat])
+
+        // filter out the features belonging to the layertozoomto
+        const feats = features.filter(feat => {
+          return (
+            _.get(feat, 'layer.id') === _.get(layer, 'onClick.layerToZoomTo')
+          )
+        })
+
+        // calculate all distances from new center point to these features
+        const distances = feats.map(f => {
+          const to = point(_.get(f, 'geometry.coordinates'))
+          return distance(from, to)
+        })
+
+        // and take the feature nearest to center..
+        const index = distances.indexOf(Math.min.apply(null, distances))
+        const nextFeat = feats[index]
+        this.$emit('select-locations', {
+          features: [nextFeat],
+          geometry: nextFeat.geometry,
+        })
+      }, duration * 9)
+    },
+
+    getBbox(lngLat) {
+      const bound = 0.1
+      // Get bounding box of the current view
+      const N = lngLat.lat + bound
+      const E = lngLat.lng + bound
+      const S = lngLat.lat - bound
+      const W = lngLat.lng - bound
+      return {
+        type: 'Polygon',
+        coordinates: [[[W, N], [W, S], [E, S], [E, N], [W, N]]],
+      }
     },
   },
 }

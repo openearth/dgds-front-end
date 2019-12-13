@@ -6,8 +6,6 @@
         ref="map"
         :access-token="mapboxAccessToken"
         map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
-        :pitch="10"
-        :bearing="10"
       >
         <v-mapbox-navigation-control
           position="bottom-right"
