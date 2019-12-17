@@ -5,8 +5,8 @@
     }}</span>
     <ul class="data-set-control-menu__list">
       <li
-        v-for="(dataset, key) in datasets"
-        :key="key"
+        v-for="dataset in datasets"
+        :key="dataset.id"
         class="data-set-control-menu__list-item"
       >
         <div id="menu-control">
