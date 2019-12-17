@@ -12,12 +12,7 @@ import uniq from 'lodash/fp/uniq'
 import _ from 'lodash'
 import moment from 'moment'
 import getFromApi from '../../lib/request/get'
-import {
-  includesIn,
-  momentFormat,
-  getIn,
-  wrapInProperty,
-} from '../../lib/utils'
+import { includesIn, getIn, wrapInProperty } from '../../lib/utils'
 
 const getId = get('id')
 
@@ -223,24 +218,24 @@ export const getters = {
       .filter(identity)
   },
 
-  activeTimestamp({ activeRasterData }) {
-    // Retrieve the timestamp according to the current selected Raster layer
-    // TODO: this function still works with the old fews url sources
-    if (_.head(activeRasterData)) {
-      const str = activeRasterData[0]
-      const timestamp = str.split(/time=([^&]+)/)[1]
-      const timeDec = decodeURIComponent(timestamp)
-      const timemoment = momentFormat('MM-DD-YYYY HH:mm', timeDec)
-      return timestamp ? timemoment : ''
+  activeTimestamp({ state }, { activeRasterData }) {
+    // Retrieve the timestamp from te activeRasterData and combine this into a string
+    // using the dateformat given
+    const date = _.get(activeRasterData, 'date')
+    const dateFormat = _.get(activeRasterData, 'dateFormat')
+
+    if (date && dateFormat) {
+      const timeStamp = moment(date, dateFormat).format('DD-MM-YYYY')
+      return timeStamp
     } else {
       return ''
     }
   },
+
   activeRasterData({ datasets, activeRasterLayerId, activeDatasets }) {
     // Return the active raster data tiles (if not defined, return [])
     if (activeRasterLayerId === '' || activeRasterLayerId === null) return []
-    const tiles = get(`${activeRasterLayerId}.raster.tiles`, datasets)
-    return [tiles]
+    return _.get(datasets, `${activeRasterLayerId}.raster`)
   },
   activeRasterLegendData({ datasets, activeRasterLayerId, activeDatasets }) {
     // Return the active raster data tiles (if not defined, return [])
