@@ -48,7 +48,9 @@ export const mutations = {
     if (!state[id]) Vue.set(state, id, {})
     const rasterData = getRasterData(state[id])
     const rasterLayer = merge(rasterData, {
-      tiles: get('rasterLayer.url', data),
+      date: _.get(data, 'rasterLayer.date'),
+      dateFormat: _.get(data, 'rasterLayer.dateFormat'),
+      tiles: [_.get(data, 'rasterLayer.url')],
       linearGradient: _.get(data, 'rasterLayer.linearGradient'),
       min: _.get(data, 'rasterLayer.min'),
       max: _.get(data, 'rasterLayer.max'),

@@ -110,22 +110,45 @@ describe('activeTimestamp', () => {
     const state = {
       activeRasterData: [],
     }
-    const result = getters.activeTimestamp(state)
+    const result = getters.activeTimestamp({}, state)
     expect(result).toBe('')
   })
-  test('returns date when activeRasterData is available and a correct time string', () => {
+  test('returns date in DD-MM-YYYY when activeRasterData is available and a correct time string', () => {
     const state = {
-      activeRasterData: ['test/time=01-01-2019 00:00'],
+      activeRasterData: {
+        date: '2011-12-01',
+        dateFormat: 'YYYY-MM-DD',
+      },
     }
-    const result = getters.activeTimestamp(state)
-    expect(result).toBe('01-01-2019 00:00')
+    const result = getters.activeTimestamp({}, state)
+    expect(result).toBe('01-12-2011')
+  })
+
+  test('returns empty when date is not defined', () => {
+    const state = {
+      activeRasterData: {
+        dateFormat: 'YYYY-MM-DD',
+      },
+    }
+    const result = getters.activeTimestamp({}, state)
+    expect(result).toBe('')
+  })
+
+  test('returns empty when dateFormat is not defined', () => {
+    const state = {
+      activeRasterData: {
+        date: '2011-12-01',
+      },
+    }
+    const result = getters.activeTimestamp({}, state)
+    expect(result).toBe('')
   })
 
   test('returns date when activeRasterData is available and not a correct time string', () => {
     const state = {
       activeRasterData: ['foo'],
     }
-    const result = getters.activeTimestamp(state)
+    const result = getters.activeTimestamp({}, state)
     expect(result).toBe('')
   })
 })
@@ -136,7 +159,7 @@ describe('activeRasterData', () => {
     datasets: {
       foo: {
         raster: {
-          tiles: 'bar',
+          tiles: ['bar'],
         },
       },
     },
@@ -149,7 +172,7 @@ describe('activeRasterData', () => {
   test('return the tiles of the active raster data', () => {
     state.activeRasterLayerId = 'foo'
     const result = getters.activeRasterData(state)
-    expect(result).toEqual(['bar'])
+    expect(result).toEqual({ tiles: ['bar'] })
   })
 })
 
