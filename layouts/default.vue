@@ -21,7 +21,7 @@
           :active-theme="activeTheme"
           @select-locations="selectLocations"
         ></v-mapbox-vector-layer>
-        <v-mapbox-raster-layer :options="rasterLayer"> </v-mapbox-raster-layer>
+        <v-mapbox-raster-layer :options="rasterLayer" @click="getFeatureInfo" />
       </v-mapbox>
     </no-ssr>
     <DataSetControlMenu
@@ -169,6 +169,9 @@ export default {
         layer.filter = filter
       }
       return layer
+    },
+    getFeatureInfo(event) {
+      console.log('event', event)
     },
     selectLocations(detail) {
       // On the selection (by mouse event on map) of a location update the
