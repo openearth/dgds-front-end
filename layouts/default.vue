@@ -101,7 +101,7 @@ export default {
     ]),
     rasterLayer() {
       const rasterLayer = getRasterLayer()
-      rasterLayer.source.tiles = this.activeRasterData
+      rasterLayer.source.tiles = _.get(this.activeRasterData, 'tiles')
       return rasterLayer
     },
     vectorLayers() {
@@ -259,14 +259,13 @@ export default {
   width: 100%;
   height: 100%;
 }
-
 .default-layout__data-set-control-menu {
   position: absolute;
   top: var(--spacing-default);
   right: var(--spacing-default);
-  max-width: 20rem;
-  width: 100%;
+  width: 20rem;
   max-height: calc(100vh - var(--spacing-large) - var(--map-controls-height));
+  margin-left: calc(var(--spacing-default) * 3);
 }
 
 .default-layout__site-navigation {
@@ -277,11 +276,11 @@ export default {
 }
 
 .default-layout__timestamp {
-  position: relative;
-  left: calc(var(--spacing-default) + var(--spacing-large));
-  bottom: calc(var(--spacing-default) + var(--spacing-large));
-  width: 15vw;
-  height: 50px;
+  position: absolute;
+  left: calc(var(--spacing-default) * 3);
+  top: calc(var(--spacing-default));
+  margin-right: calc(var(--spacing-default));
+  max-width: 20rem;
 }
 
 .default-layout .mapboxgl-ctrl-bottom-left {
