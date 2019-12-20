@@ -13,6 +13,10 @@
         <v-mapbox-selected-point-layer
           :geometry="geometry"
         ></v-mapbox-selected-point-layer>
+        <v-mapbox-info-text-layer
+          :geometry="infoTextGeometry"
+          :message="mapboxMessage"
+        ></v-mapbox-info-text-layer>
         <v-mapbox-vector-layer
           v-for="vectorLayer in vectorLayers"
           :key="vectorLayer.id"
@@ -21,14 +25,17 @@
           :active-theme="activeTheme"
           @select-locations="selectLocations"
         ></v-mapbox-vector-layer>
-        <v-mapbox-raster-layer :options="rasterLayer" @click="getFeatureInfo" />
+        <v-mapbox-raster-layer
+          :options="rasterLayer"
+          @click:raster="getFeatureInfo"
+        />
       </v-mapbox>
     </no-ssr>
     <DataSetControlMenu
       class="default-layout__data-set-control-menu"
       :datasets="datasetsInActiveTheme"
       @toggle-location-dataset="toggleLocationDataset"
-      @toggle-raster-layer="setActiveRasterLayer"
+      @toggle-raster-layer="toggleRasterLayer"
     />
     <TimeStamp
       v-show="activeTimestamp !== ''"
@@ -66,7 +73,20 @@ import getRasterLayer from '../lib/mapbox/layers/get-raster-layer'
 import VMapboxVectorLayer from '../components/v-mapbox-components/v-mapbox-vector-layer'
 import VMapboxRasterLayer from '../components/v-mapbox-components/v-mapbox-raster-layer'
 import VMapboxSelectedPointLayer from '../components/v-mapbox-components/v-mapbox-selected-point-layer'
+import VMapboxInfoTextLayer from '../components/v-mapbox-components/v-mapbox-info-text-layer'
 
+const bands = {
+  cc: 'magnitude',
+  dd: 'discharge_routed_simulated',
+  gb: 'elevation',
+  mt: 'mean_temperature',
+  pp: 'daily_precipitation',
+  tt: 'astronomical_tide',
+  wd: 'magnitude',
+  wl: 'water_level',
+  sh: 'water_level_surge',
+  wv: 'waveheight',
+}
 export default {
   components: {
     SiteNavigation,
@@ -75,6 +95,7 @@ export default {
     VMapboxVectorLayer,
     VMapboxRasterLayer,
     VMapboxSelectedPointLayer,
+    VMapboxInfoTextLayer,
   },
   data: () => ({
     mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
@@ -84,6 +105,11 @@ export default {
       type: 'Point',
       coordinates: [],
     },
+    infoTextGeometry: {
+      type: 'Point',
+      coordinates: [],
+    },
+    mapboxMessage: '',
   }),
   computed: {
     ...mapState({
@@ -98,6 +124,8 @@ export default {
       'activeTimestamp',
       'activeDatasets',
       'getActiveTheme',
+      'getActiveRasterLayer',
+      'getDatasets',
     ]),
     rasterLayer() {
       const rasterLayer = getRasterLayer()
@@ -159,6 +187,12 @@ export default {
   },
   methods: {
     ...mapMutations('map', ['clearActiveDatasetIds', 'setActiveRasterLayer']),
+    removeInfoText() {
+      this.infoTextGeometry = {
+        type: 'Point',
+        coordinates: [],
+      }
+    },
     updateFilter(layer) {
       // if there is a filterIds, concatenate the values into filter
       if (_.get(layer, 'filterIds')) {
@@ -170,8 +204,40 @@ export default {
       }
       return layer
     },
-    getFeatureInfo(event) {
-      console.log('event', event)
+    getFeatureInfo(bbox) {
+      if (!this.getActiveRasterLayer) {
+        this.removeInfoText()
+        return
+      }
+      const parameters = {
+        imageId: this.activeRasterData.imageId,
+        bbox: bbox,
+        band: bands[this.getActiveRasterLayer],
+      }
+      fetch(`${process.env.HYDRO_ENGINE}/get_feature_info`, {
+        method: 'POST',
+        body: JSON.stringify(parameters),
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then(response => response.json())
+        .then(resp => {
+          if (resp.value) {
+            const units = _.get(
+              this.getDatasets,
+              `${this.getActiveRasterLayer}.metadata.units`,
+            )
+            this.mapboxMessage = `${resp.value} [${units}]`
+            this.infoTextGeometry = bbox
+          } else {
+            this.removeInfoText()
+          }
+        })
+        .catch(() => {
+          this.removeInfoText()
+        })
     },
     selectLocations(detail) {
       // On the selection (by mouse event on map) of a location update the
@@ -191,6 +257,10 @@ export default {
         name: 'datasetIds-locationId',
         params: { datasetIds, locationId: head(locationIds) },
       })
+    },
+    toggleRasterLayer(event) {
+      this.setActiveRasterLayer(event)
+      this.removeInfoText()
     },
     toggleLocationDataset(id) {
       const addId = value => concat(value, id)
