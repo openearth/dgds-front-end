@@ -24,7 +24,6 @@ export default {
   data() {
     return {
       map: null,
-      layerToZoomTo: '',
     }
   },
   watch: {
@@ -80,7 +79,7 @@ export default {
     },
 
     showGraph(layer, event) {
-      this.adjustMap(event, 500)
+      this.mapPanTo(event, 500)
 
       const features = this.map.queryRenderedFeatures(event.point)
       this.$emit('select-locations', {
@@ -88,7 +87,7 @@ export default {
         geometry: features[0].geometry,
       })
     },
-    adjustMap(event, duration) {
+    mapPanTo(event, duration) {
       const { clientWidth } = this.map.getCanvas()
 
       // prettier-ignore
@@ -114,7 +113,7 @@ export default {
       })
 
       setTimeout(() => {
-        const bbox = this.getBbox(event.lngLat)
+        const bbox = this.getBBox(event.lngLat)
         // Get all features from the new center point with a small bounding box
         const features = this.map.queryRenderedFeatures(bbox)
         const from = point([event.lngLat.lng, event.lngLat.lat])
@@ -142,7 +141,7 @@ export default {
       }, duration * 9)
     },
 
-    getBbox(lngLat) {
+    getBBox(lngLat) {
       const bound = 0.1
       // Get bounding box of the current view
       const N = lngLat.lat + bound
