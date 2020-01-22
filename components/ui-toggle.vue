@@ -5,7 +5,7 @@
       type="checkbox"
       v-bind="$attrs"
       v-on="$listeners"
-    />
+    >
     <span class="ui-toggle__visual" />
   </span>
 </template>

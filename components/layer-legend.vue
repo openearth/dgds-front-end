@@ -11,10 +11,10 @@
               'stop-color': stop.color,
               'stop-opacity': stop.opacity,
             }"
-          ></stop>
+          />
         </linearGradient>
       </defs>
-      <rect width="100" height="10" x="0" y="0" fill="url('#gradient')"></rect>
+      <rect width="100" height="10" x="0" y="0" fill="url('#gradient')" />
     </svg>
     <div id="legend-span" class="unselectable">
       {{ `${activeRasterLegendData.min} ${activeRasterLegendData.max}` }}
@@ -27,8 +27,8 @@ import { mapGetters } from 'vuex'
 
 export default {
   computed: {
-    ...mapGetters('map', ['activeRasterLegendData']),
-  },
+    ...mapGetters('map', ['activeRasterLegendData'])
+  }
 }
 </script>
 

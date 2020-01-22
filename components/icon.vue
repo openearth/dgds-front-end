@@ -1,36 +1,60 @@
 <template>
   <span class="icon" :class="{ 'icon--large': size === 'large' }">
-    <component :is="icon" />
+    <img :src="icon">
   </span>
 </template>
 
 <script>
+
+const availableIcons = [
+  'action-chevron-down',
+  'action-cross',
+  'collapse',
+  'dataset-cc',
+  'dataset-dd',
+  'dataset-gb',
+  'dataset-mo_50',
+  'dataset-mt',
+  'dataset-pp',
+  'dataset-sh',
+  'dataset-sm',
+  'dataset-tt',
+  'dataset-wd',
+  'dataset-wl',
+  'dataset-wl0',
+  'dataset-wv',
+  'empty',
+  'placeholder',
+  'theme-cm',
+  'theme-fl',
+  'theme-os'
+]
+
 export default {
   props: {
     name: {
       type: String,
-      default: '',
+      default: ''
     },
     fallbackName: {
       type: String,
-      default: 'empty',
+      default: 'empty'
     },
     size: {
       type: String,
-      default: null,
-    },
+      default: null
+    }
   },
   computed: {
-    icon() {
-      return () =>
-        // prettier-ignore
-        // eslint-disable-next-line
-        import(`~/assets/icon-${this.name}.svg`)
-          .catch(() =>
-            import(`~/assets/icon-${this.fallbackName}.svg`)
-          )
-    },
-  },
+    icon () {
+      let url = `~/assets/icon-${this.name}.svg`
+
+      if (!availableIcons.includes(this.name)) {
+        url = '~/assets/icon-empty.svg'
+      }
+      return url
+    }
+  }
 }
 </script>
 

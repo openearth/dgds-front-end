@@ -11,18 +11,18 @@ export default {
       default: () => {
         return {}
       },
-      type: Object,
-    },
+      type: Object
+    }
   },
-  data() {
+  data () {
     return {
       map: undefined,
-      id: undefined,
+      id: undefined
     }
   },
   watch: {
     options: {
-      handler(newOptions) {
+      handler (newOptions) {
         if (this.map) {
           const source = this.map.getSource(this.id)
           const layer = this.map.getLayer(this.id)
@@ -46,15 +46,15 @@ export default {
           }
         }
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   methods: {
-    deferredMountedTo(map) {
+    deferredMountedTo (map) {
       this.map = map
       this.id = this.options.id
       this.map.addLayer(this.options, 'water-border')
-    },
-  },
+    }
+  }
 }
 </script>

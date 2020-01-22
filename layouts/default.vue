@@ -9,10 +9,10 @@
       >
         <v-mapbox-navigation-control
           position="bottom-right"
-        ></v-mapbox-navigation-control>
+        />
         <v-mapbox-selected-point-layer
           :geometry="geometry"
-        ></v-mapbox-selected-point-layer>
+        />
         <v-mapbox-vector-layer
           v-for="vectorLayer in vectorLayers"
           :key="vectorLayer.id"
@@ -20,8 +20,8 @@
           :layer="vectorLayer"
           :active-theme="activeTheme"
           @select-locations="selectLocations"
-        ></v-mapbox-vector-layer>
-        <v-mapbox-raster-layer :options="rasterLayer"> </v-mapbox-raster-layer>
+        />
+        <v-mapbox-raster-layer :options="rasterLayer" />
       </v-mapbox>
     </no-ssr>
     <DataSetControlMenu
@@ -74,7 +74,7 @@ export default {
     TimeStamp,
     VMapboxVectorLayer,
     VMapboxRasterLayer,
-    VMapboxSelectedPointLayer,
+    VMapboxSelectedPointLayer
   },
   data: () => ({
     mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
@@ -82,13 +82,13 @@ export default {
     activeLocation: null,
     geometry: {
       type: 'Point',
-      coordinates: [],
-    },
+      coordinates: []
+    }
   }),
   computed: {
     ...mapState({
       activeTheme: state => state.preferences.theme.active,
-      activeLocationIds: state => state.map.activeLocationIds,
+      activeLocationIds: state => state.map.activeLocationIds
     }),
     ...mapGetters('map', [
       'activeRasterData',
@@ -97,14 +97,14 @@ export default {
       'datasetsInActiveTheme',
       'activeTimestamp',
       'activeDatasets',
-      'getActiveTheme',
+      'getActiveTheme'
     ]),
-    rasterLayer() {
+    rasterLayer () {
       const rasterLayer = getRasterLayer()
       rasterLayer.source.tiles = _.get(this.activeRasterData, 'tiles')
       return rasterLayer
     },
-    vectorLayers() {
+    vectorLayers () {
       // Returns an array with unique mapboxlayers.
       // Get active vectorlayers and flatten, all mapboxlayers into 1 array
       const vectorLayers = _.flatten(this.activeVectorData)
@@ -114,15 +114,15 @@ export default {
       const layerIds = vectorLayers.map(layer => layer.id)
       const uniqueLayerIds = _.uniq(layerIds)
       // for each layer id merge the mapboxlayers that have that id
-      const newLayers = uniqueLayerIds.map(id => {
+      const newLayers = uniqueLayerIds.map((id) => {
         const groupedLayers = vectorLayers.filter(layer => layer.id === id)
         const flattenedLayers = _.flatten(groupedLayers)
         const layer = _(flattenedLayers)
           .groupBy('id')
           .map(g =>
             _.mergeWith({}, ...g, (obj, src) =>
-              _.isArray(obj) ? obj.concat(src) : undefined,
-            ),
+              _.isArray(obj) ? obj.concat(src) : undefined
+            )
           )
           .value()
 
@@ -136,47 +136,47 @@ export default {
         return mergedFilter
       })
       return newLayers
-    },
+    }
   },
   watch: {
     $route: {
-      handler(routeObj) {
+      handler (routeObj) {
         if (routeObj.params.datasetIds === undefined) {
           this.clearActiveDatasetIds()
         }
         if (routeObj.params.locationId === undefined) {
           this.geometry = {
             type: 'Point',
-            coordinates: [],
+            coordinates: []
           }
         }
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
-  async mounted() {
+  async mounted () {
     await this.$nextTick()
   },
   methods: {
     ...mapMutations('map', ['clearActiveDatasetIds', 'setActiveRasterLayer']),
-    updateFilter(layer) {
+    updateFilter (layer) {
       // if there is a filterIds, concatenate the values into filter
       if (_.get(layer, 'filterIds')) {
         const filter = ['any']
-        layer.filterIds.forEach(id => {
+        layer.filterIds.forEach((id) => {
           filter.push(['==', ['get', id], true])
         })
         layer.filter = filter
       }
       return layer
     },
-    selectLocations(detail) {
+    selectLocations (detail) {
       // On the selection (by mouse event on map) of a location update the
       // route accordingly
       this.geometry = detail.geometry
       const { datasetIds } = this.$route.params
       const locationIds = []
-      detail.features.forEach(feature => {
+      detail.features.forEach((feature) => {
         // When a layer has a metadata with locationIdField use this layer and
         // get the locationId usin this field
         const locId = _.get(feature, 'layer.metadata.locationIdField')
@@ -186,10 +186,10 @@ export default {
       })
       this.updateRoute({
         name: 'datasetIds-locationId',
-        params: { datasetIds, locationId: head(locationIds) },
+        params: { datasetIds, locationId: head(locationIds) }
       })
     },
-    toggleLocationDataset(id) {
+    toggleLocationDataset (id) {
       const addId = value => concat(value, id)
       const removeId = filter(negate(isEqual(id)))
       const toggleIdDatasets = pipe([
@@ -197,17 +197,17 @@ export default {
         when(includes(id), removeId, addId),
         filter(identity),
         join(','),
-        when(isEqual(''), () => undefined, identity),
+        when(isEqual(''), () => undefined, identity)
       ])
 
       const newRouteObject = update(
         'params.datasetIds',
         toggleIdDatasets,
-        this.$route,
+        this.$route
       )
       this.updateRoute(newRouteObject)
     },
-    changeTheme() {
+    changeTheme () {
       // When new theme is chosen update the route with the datasets within
       // this theme
       const newRouteObject = this.$route
@@ -229,13 +229,13 @@ export default {
       newRouteObject.params.datasetIds = newparams
       this.updateRoute(newRouteObject)
     },
-    updateRoute(routeObj) {
+    updateRoute (routeObj) {
       // Update route with route object
       const { datasetIds, locationId } = routeObj.params
       if (datasetIds === undefined) {
         this.geometry = {
           type: 'Point',
-          coordinates: [],
+          coordinates: []
         }
       }
       if (datasetIds === undefined && locationId !== undefined) {
@@ -243,8 +243,8 @@ export default {
       }
 
       this.$router.push(routeObj)
-    },
-  },
+    }
+  }
 }
 </script>
 

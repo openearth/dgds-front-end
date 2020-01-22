@@ -9,15 +9,15 @@ import { mapActions } from 'vuex'
 
 export default {
   middleware: 'load-dataset-ids',
-  mounted() {
+  mounted () {
     const { datasetIds } = this.$route.params
     if (datasetIds) {
       this.storeActiveDatasets(datasetIds)
     }
   },
   methods: {
-    ...mapActions('map', ['storeActiveDatasets', 'loadLocationsInDatasets']),
-  },
+    ...mapActions('map', ['storeActiveDatasets', 'loadLocationsInDatasets'])
+  }
 }
 </script>
 
