@@ -1,3 +1,7 @@
+<template>
+  <div />
+</template>
+
 <script>
 export default {
   name: 'VMapboxSelectedPointLayer',
@@ -14,6 +18,7 @@ export default {
     },
     message: {
       type: String,
+      required: true,
     },
   },
   data() {
