@@ -8,31 +8,21 @@
 
 import _ from 'lodash'
 
-// Extend this list when you need a new icon.
-// Imports should not be based on an expression.
-const availableIcons = {
-  'action-chevron-down': import('~/assets/icons/icon-action-chevron-down.svg'),
-  'action-cross': import('~/assets/icons/icon-action-cross.svg'),
-  collapse: import('~/assets/icons/icon-collapse.svg'),
-  'dataset-cc': import('~/assets/icons/icon-dataset-cc.svg'),
-  'dataset-dd': import('~/assets/icons/icon-dataset-dd.svg'),
-  'dataset-gb': import('~/assets/icons/icon-dataset-gb.svg'),
-  'dataset-mo_50': import('~/assets/icons/icon-dataset-mo_50.svg'),
-  'dataset-mt': import('~/assets/icons/icon-dataset-mt.svg'),
-  'dataset-pp': import('~/assets/icons/icon-dataset-pp.svg'),
-  'dataset-sh': import('~/assets/icons/icon-dataset-sh.svg'),
-  'dataset-sm': import('~/assets/icons/icon-dataset-sm.svg'),
-  'dataset-tt': import('~/assets/icons/icon-dataset-tt.svg'),
-  'dataset-wd': import('~/assets/icons/icon-dataset-wd.svg'),
-  'dataset-wl': import('~/assets/icons/icon-dataset-wl.svg'),
-  'dataset-wl0': import('~/assets/icons/icon-dataset-wl0.svg'),
-  'dataset-wv': import('~/assets/icons/icon-dataset-wv.svg'),
-  empty: import('~/assets/icons/icon-empty.svg'),
-  placeholder: import('~/assets/icons/icon-placeholder.svg'),
-  'theme-cm': import('~/assets/icons/icon-theme-cm.svg'),
-  'theme-fl': import('~/assets/icons/icon-theme-fl.svg'),
-  'theme-os': import('~/assets/icons/icon-theme-os.svg')
-}
+// Use node-js to create components for all icons
+// Search for all  icons in the icons folder
+const requires = require.context('~/assets/icons', true, /^(.*\.(svg$))[^.]*$/im)
+// Lookup the name
+const nameRe = /icon-(.*)\.svg/
+// store  them in a dictionary, make available
+export const icons = {}
+
+// fill the icons
+requires.keys().forEach(function (key) {
+  const name = nameRe.exec(key)[1] || 'empty'
+  icons[name] = requires(key)
+})
+
+console.log('icons', icons)
 
 export default {
   props: {
@@ -51,12 +41,9 @@ export default {
   },
   computed: {
     icon () {
-      const icon = _.get(availableIcons, this.name, availableIcons.empty)
-
-      // this is a hack to produce inline svg...
-      // It should be possible without, but this does not work
-      // https://calebporzio.com/using-inline-svgs-in-vue-compoments/
-      return () => icon
+      const icon = _.get(icons, this.name, icons.empty)
+      // return the module
+      return icon.default
     }
   }
 }
