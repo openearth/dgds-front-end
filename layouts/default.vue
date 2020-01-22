@@ -8,6 +8,7 @@
         map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
         :pitch="10"
         :bearing="10"
+        :preserve-drawing-buffer="true"
       >
         <v-mapbox-navigation-control
           position="bottom-right"
@@ -15,6 +16,7 @@
         <v-mapbox-selected-point-layer
           :geometry="geometry"
         ></v-mapbox-selected-point-layer>
+        <v-mapbox-canvas-layer :layer="'uv'"></v-mapbox-canvas-layer>
         <v-mapbox-vector-layer
           v-for="vectorLayer in vectorLayers"
           :key="vectorLayer.id"
@@ -67,6 +69,7 @@ import getVectorLayer from '../lib/mapbox/layers/get-vector-layer'
 import getRasterLayer from '../lib/mapbox/layers/get-raster-layer'
 import VMapboxVectorLayer from '../components/v-mapbox-components/v-mapbox-vector-layer'
 import VMapboxRasterLayer from '../components/v-mapbox-components/v-mapbox-raster-layer'
+import VMapboxCanvasLayer from '../components/v-mapbox-components/v-mapbox-canvas-layer'
 import VMapboxSelectedPointLayer from '../components/v-mapbox-components/v-mapbox-selected-point-layer'
 
 export default {
@@ -74,6 +77,7 @@ export default {
     SiteNavigation,
     DataSetControlMenu,
     TimeStamp,
+    VMapboxCanvasLayer,
     VMapboxVectorLayer,
     VMapboxRasterLayer,
     VMapboxSelectedPointLayer,
