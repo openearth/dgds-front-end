@@ -94,6 +94,7 @@ export default {
     extend(config, ctx) {
       const svgRule = config.module.rules.find(rule => rule.test.test('.svg'))
 
+      // TODO: what is this....
       svgRule.test = /\.(png|jpe?g|gif|webp)$/
 
       config.module.rules.push({
@@ -111,6 +112,12 @@ export default {
         ],
       })
 
+      config.module.rules.push({
+        test: /\.glsl$/,
+        loader: 'webpack-glsl-loader',
+        exclude: /(node_modules)/,
+      })
+
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {
         config.module.rules.push({
@@ -119,6 +126,10 @@ export default {
           loader: 'eslint-loader',
           exclude: /(node_modules)/,
         })
+      }
+
+      if (ctx.isClient) {
+        config.devtool = '#source-map'
       }
     },
   },
