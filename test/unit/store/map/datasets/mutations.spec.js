@@ -9,8 +9,8 @@ describe('addDatasetVector', () => {
     expect(state).toMatchObject({
       wl: {
         metadata: 'foo',
-        vector: { mapboxLayer: [{ foo: 'bar' }] },
-      },
+        vector: { mapboxLayer: [{ foo: 'bar' }] }
+      }
     })
     expect(Object.isFrozen(state.wl.vector[0])).toBe(true)
   })
@@ -19,9 +19,9 @@ describe('addDatasetVector', () => {
     const state = {
       wl: {
         vector: {
-          mapboxLayer: [{ foo: 'bar' }],
-        },
-      },
+          mapboxLayer: [{ foo: 'bar' }]
+        }
+      }
     }
     const id = 'wl'
     const data = {}
@@ -30,9 +30,9 @@ describe('addDatasetVector', () => {
     expect(state).toMatchObject({
       wl: {
         vector: {
-          mapboxLayer: [{ foo: 'bar' }],
-        },
-      },
+          mapboxLayer: [{ foo: 'bar' }]
+        }
+      }
     })
     expect(Object.isFrozen(state.wl.vector.mapboxLayer[1])).toBe(true)
   })
@@ -41,36 +41,36 @@ describe('addDatasetVector', () => {
     const state = {
       wl: {
         vector: {
-          mapboxLayer: [{ foo: 'bar' }],
-        },
-      },
+          mapboxLayer: [{ foo: 'bar' }]
+        }
+      }
     }
     const id = 'wl'
     const data = {
       vectorLayer: {
         mapboxLayers: [
           {
-            bar: 'foo',
-          },
-        ],
-      },
+            bar: 'foo'
+          }
+        ]
+      }
     }
 
     mutations.addDatasetVector(state, { id, data })
     expect(state).toMatchObject({
       wl: {
         vector: {
-          mapboxLayer: [{ foo: 'bar' }],
-        },
-      },
+          mapboxLayer: [{ foo: 'bar' }]
+        }
+      }
     })
   })
 
   test('updates state with different id', () => {
     const state = {
       wl: {
-        vector: { mapboxLayer: [{ foo: 'bar' }] },
-      },
+        vector: { mapboxLayer: [{ foo: 'bar' }] }
+      }
     }
 
     const data = { id: 'wd', vectorLayer: { mapboxLayers: [{ bar: 'foo' }] } }
@@ -78,18 +78,18 @@ describe('addDatasetVector', () => {
     mutations.addDatasetVector(state, data)
     expect(state).toMatchObject({
       wl: {
-        vector: { mapboxLayer: [{ foo: 'bar' }] },
+        vector: { mapboxLayer: [{ foo: 'bar' }] }
       },
       wd: {
         vector: {
           mapboxLayer: [
             {
               bar: 'foo',
-              metadata: { datasetId: undefined, locationIdField: undefined },
-            },
-          ],
-        },
-      },
+              metadata: { datasetId: undefined, locationIdField: undefined }
+            }
+          ]
+        }
+      }
     })
   })
 })
@@ -105,8 +105,8 @@ describe('addDatasetRaster', () => {
         dateFormat: 'DD-MM-YYYY',
         linearGradient: 'some/gradient',
         max: 100,
-        min: 0,
-      },
+        min: 0
+      }
     }
 
     mutations.addDatasetRaster(state, data)
@@ -118,9 +118,9 @@ describe('addDatasetRaster', () => {
           dateFormat: 'DD-MM-YYYY',
           linearGradient: 'some/gradient',
           max: 100,
-          min: 0,
-        },
-      },
+          min: 0
+        }
+      }
     })
   })
 
@@ -133,9 +133,9 @@ describe('addDatasetRaster', () => {
           dateFormat: 'DD-MM-YYYY',
           linearGradient: 'some/gradient',
           max: 100,
-          min: 0,
-        },
-      },
+          min: 0
+        }
+      }
     }
     const data = { id: 'wl', rasterLayer: { url: 'some/other/url' } }
 
@@ -148,9 +148,9 @@ describe('addDatasetRaster', () => {
           dateFormat: 'DD-MM-YYYY',
           linearGradient: 'some/gradient',
           max: 100,
-          min: 0,
-        },
-      },
+          min: 0
+        }
+      }
     })
   })
 
@@ -163,9 +163,9 @@ describe('addDatasetRaster', () => {
           dateFormat: 'DD-MM-YYYY',
           linearGradient: 'some/gradient',
           max: 100,
-          min: 0,
-        },
-      },
+          min: 0
+        }
+      }
     }
     const data = { id: 'wd', rasterLayer: { url: 'some/url' } }
 
@@ -178,8 +178,8 @@ describe('addDatasetRaster', () => {
           dateFormat: 'DD-MM-YYYY',
           linearGradient: 'some/gradient',
           max: 100,
-          min: 0,
-        },
+          min: 0
+        }
       },
       wd: {
         raster: {
@@ -188,9 +188,9 @@ describe('addDatasetRaster', () => {
           dateFormat: undefined,
           linearGradient: undefined,
           max: undefined,
-          min: undefined,
-        },
-      },
+          min: undefined
+        }
+      }
     })
   })
 })
@@ -204,16 +204,16 @@ describe('addDatasetPointData', () => {
     mutations.addDatasetPointData(state, { id, data })
     expect(state).toMatchObject({
       wl: {
-        pointData: { foo: 'bar' },
-      },
+        pointData: { foo: 'bar' }
+      }
     })
   })
 
   test('updates state with existing id', () => {
     const state = {
       wl: {
-        pointData: { foo: 'bar' },
-      },
+        pointData: { foo: 'bar' }
+      }
     }
     const id = 'wl'
     const data = { baz: 'blub' }
@@ -221,16 +221,16 @@ describe('addDatasetPointData', () => {
     mutations.addDatasetPointData(state, { id, data })
     expect(state).toMatchObject({
       wl: {
-        pointData: { foo: 'bar', baz: 'blub' },
-      },
+        pointData: { foo: 'bar', baz: 'blub' }
+      }
     })
   })
 
   test('updates state with different id', () => {
     const state = {
       wl: {
-        pointData: { foo: 'bar' },
-      },
+        pointData: { foo: 'bar' }
+      }
     }
     const id = 'wd'
     const data = { baz: 'blub' }
@@ -238,11 +238,11 @@ describe('addDatasetPointData', () => {
     mutations.addDatasetPointData(state, { id, data })
     expect(state).toMatchObject({
       wl: {
-        pointData: { foo: 'bar' },
+        pointData: { foo: 'bar' }
       },
       wd: {
-        pointData: { baz: 'blub' },
-      },
+        pointData: { baz: 'blub' }
+      }
     })
   })
 })
@@ -255,59 +255,59 @@ describe('addMetadata', () => {
     mutations.addMetadata(state, data)
     expect(state).toMatchObject({
       wl: {
-        metadata: { id: 'wl', foo: 'bar' },
-      },
+        metadata: { id: 'wl', foo: 'bar' }
+      }
     })
   })
 
   test('updates state with existing id', () => {
     const state = {
       wl: {
-        metadata: { id: 'wl', foo: 'bar' },
-      },
+        metadata: { id: 'wl', foo: 'bar' }
+      }
     }
     const data = { id: 'wl', baz: 'blub' }
 
     mutations.addMetadata(state, data)
     expect(state).toMatchObject({
       wl: {
-        metadata: { id: 'wl', foo: 'bar', baz: 'blub' },
-      },
+        metadata: { id: 'wl', foo: 'bar', baz: 'blub' }
+      }
     })
   })
 
   test('does not updates state without id', () => {
     const state = {
       wl: {
-        metadata: { id: 'wl', foo: 'bar' },
-      },
+        metadata: { id: 'wl', foo: 'bar' }
+      }
     }
     const data = { baz: 'blub' }
 
     mutations.addMetadata(state, data)
     expect(state).toMatchObject({
       wl: {
-        metadata: { id: 'wl', foo: 'bar' },
-      },
+        metadata: { id: 'wl', foo: 'bar' }
+      }
     })
   })
 
   test('updates state with different id', () => {
     const state = {
       wl: {
-        metadata: { id: 'wl', foo: 'bar' },
-      },
+        metadata: { id: 'wl', foo: 'bar' }
+      }
     }
     const data = { id: 'wd', baz: 'blub' }
 
     mutations.addMetadata(state, data)
     expect(state).toMatchObject({
       wl: {
-        metadata: { id: 'wl', foo: 'bar' },
+        metadata: { id: 'wl', foo: 'bar' }
       },
       wd: {
-        metadata: { id: 'wd', baz: 'blub' },
-      },
+        metadata: { id: 'wd', baz: 'blub' }
+      }
     })
   })
 })

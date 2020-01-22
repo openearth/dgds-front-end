@@ -11,27 +11,27 @@ export default {
       default: () => {
         return {}
       },
-      type: Object,
-    },
+      type: Object
+    }
   },
-  data() {
+  data () {
     return {
       map: undefined,
       // TODO: id or options.id? choose 1
-      id: undefined,
+      id: undefined
     }
   },
   computed: {
-    layer() {
+    layer () {
       return this.map.getLayer(this.options.id)
     },
-    source() {
+    source () {
       return this.map.getSource(this.options.id)
-    },
+    }
   },
   watch: {
     options: {
-      handler(newOptions) {
+      handler (newOptions) {
         if (this.map) {
           const source = this.map.getSource(this.id)
           const layer = this.map.getLayer(this.id)
@@ -55,10 +55,10 @@ export default {
           }
         }
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
-  beforeDestroy() {
+  beforeDestroy () {
     const layer = this.layer
     if (layer.id && this.map.getLayer(layer.id)) {
       this.map.removeLayer(layer.id)
@@ -66,18 +66,18 @@ export default {
     }
   },
   methods: {
-    deferredMountedTo(map) {
+    deferredMountedTo (map) {
       this.map = map
       this.id = this.options.id
       this.map.addLayer(this.options, 'water-border')
-      this.map.on('click', event => {
+      this.map.on('click', (event) => {
         const bbox = {
           type: 'Point',
-          coordinates: [event.lngLat.lng, event.lngLat.lat],
+          coordinates: [event.lngLat.lng, event.lngLat.lat]
         }
         this.$emit('click', bbox)
       })
-    },
-  },
+    }
+  }
 }
 </script>

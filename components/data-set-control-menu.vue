@@ -63,37 +63,37 @@ export default {
   props: {
     datasets: {
       type: Array,
-      default: () => [],
-    },
+      default: () => []
+    }
   },
   computed: {
     ...mapGetters('map', [
       'getActiveRasterLayer',
       'getActiveTheme',
       'getDatasets',
-      'activeRasterData',
+      'activeRasterData'
     ]),
-    themeName() {
+    themeName () {
       return _.get(this.getActiveTheme, 'name') || 'No theme selected'
-    },
+    }
   },
   methods: {
-    toggleLocationDataset(id) {
+    toggleLocationDataset (id) {
       this.$emit('toggle-location-dataset', id)
     },
-    toggleRasterLayer(id) {
+    toggleRasterLayer (id) {
       if (this.getActiveRasterLayer === id) {
         id = null
       }
       this.$emit('toggle-raster-layer', id)
     },
-    checkVector(id) {
+    checkVector (id) {
       return _.has(this.getDatasets, `${id}.vector`)
     },
-    checkRaster(id) {
+    checkRaster (id) {
       return _.has(this.getDatasets, `${id}.raster`)
-    },
-  },
+    }
+  }
 }
 </script>
 

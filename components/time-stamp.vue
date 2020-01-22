@@ -11,9 +11,9 @@ export default {
   props: {
     timestamp: {
       type: String,
-      default: () => '',
-    },
-  },
+      default: () => ''
+    }
+  }
 }
 </script>
 

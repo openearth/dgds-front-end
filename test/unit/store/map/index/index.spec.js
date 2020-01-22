@@ -6,7 +6,7 @@ test('Initial state', () => {
     activeLocationIds: [],
     activeRasterLayerId: '',
     activeTheme: {},
-    collapsedDatasets: [],
+    collapsedDatasets: []
   }
   expect(state()).toEqual(initialState)
 })
