@@ -1,7 +1,3 @@
-<template>
-  <div />
-</template>
-
 <script>
 import _ from 'lodash'
 import distance from '@turf/distance'
@@ -20,8 +16,7 @@ export default {
       required: true
     }
   },
-  inject: ['getMap'],
-  data () {
+  data() {
     return {
       map: null
     }
@@ -152,7 +147,11 @@ export default {
         type: 'Polygon',
         coordinates: [[[W, N], [W, S], [E, S], [E, N], [W, N]]]
       }
-    }
-  }
+    },
+  },
+  render() {
+    return null
+  },
+  inject: ['getMap']
 }
 </script>
