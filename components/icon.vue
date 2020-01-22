@@ -6,11 +6,12 @@
 
 <script>
 
+import Vue from 'vue'
 import _ from 'lodash'
 
 // Use node-js to create components for all icons
 // Search for all  icons in the icons folder
-const requires = require.context('~/assets/icons', true, /^(.*\.(svg$))[^.]*$/im)
+const requires = require.context('../assets/icons', true, /^(.*\.(svg$))[^.]*$/im)
 // Lookup the name
 const nameRe = /icon-(.*)\.svg/
 // store  them in a dictionary, make available
@@ -19,7 +20,11 @@ export const icons = {}
 // fill the icons
 requires.keys().forEach(function (key) {
   const name = nameRe.exec(key)[1] || 'empty'
-  icons[name] = requires(key)
+  try {
+    icons[name] = requires(key)
+  } catch (e) {
+    icons[name] = Vue.component('icon-' + name, {})
+  }
 })
 
 export default {
