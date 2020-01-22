@@ -20,7 +20,11 @@
     >
       {{ title }}
     </figcaption>
-    <div v-if="!isCollapsed" class="graph-line__aspect-ratio">
+    <div
+      v-if="!isCollapsed"
+      class="graph-line__aspect-ratio"
+      :class="{ image: type === 'images' }"
+    >
       <v-chart
         v-if="type === 'line' || type === 'scatter'"
         :ref="title"
@@ -29,12 +33,11 @@
         height="100%"
         class="graph-line__chart"
       />
-      <object
+      <img
         v-if="type === 'images'"
         id="graphImage"
-        :data="imageUrl"
+        :src="imageUrl"
         class="graph-line__chart"
-        type="image/svg+xml"
       />
       <ui-button class="download-btn" kind="quiet" @click="download()"
         >DOWNLOAD</ui-button
@@ -248,10 +251,14 @@ export default {
 </script>
 
 <style>
+.graph-line__aspect-ratio.image {
+  height: 600px;
+}
+
 #graphImage {
-  background-image: url('../assets/not-found.png');
   background-repeat: no-repeat;
   background-size: 50% 100%;
+  height: 600px;
 }
 
 .echarts {
@@ -270,6 +277,7 @@ export default {
   padding-top: 50%;
   position: relative;
   padding-top: 60%;
+  height: ;
 }
 
 .graph-line__chart {
