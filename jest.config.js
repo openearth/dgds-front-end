@@ -6,6 +6,9 @@ module.exports = {
     '^vue$': 'vue/dist/vue.common.js'
   },
   moduleFileExtensions: ['js', 'vue', 'json'],
+  setupFiles: [
+    '<rootDir>/.jest/register-context.js'
+  ],
   transform: {
     '^.+\\.js$': 'babel-jest',
     '.*\\.(vue)$': 'vue-jest'
