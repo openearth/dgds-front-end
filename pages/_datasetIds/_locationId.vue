@@ -5,7 +5,7 @@
         {{ locations }}
       </h2>
       <ui-button-icon @click="close">
-        <icon-cross />
+        <icon name="cross" />
       </ui-button-icon>
     </header>
     <section class="location-id__graphs">
@@ -32,11 +32,11 @@ import { mapState, mapMutations, mapGetters } from 'vuex'
 import _ from 'lodash'
 import GraphLine from '~/components/graph-line'
 import UiButtonIcon from '~/components/ui-button-icon'
-import IconCross from '~/assets/icon-action-cross.svg'
+import Icon from '~/components/icon'
 
 export default {
   middleware: 'load-location-id',
-  components: { GraphLine, UiButtonIcon, IconCross },
+  components: { GraphLine, UiButtonIcon, Icon },
   computed: {
     ...mapGetters('map', ['activePointDataPerDataset']),
     ...mapState({ activeTheme: state => state.preferences.theme.active }),

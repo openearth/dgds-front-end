@@ -29,7 +29,7 @@
         Buttons icon
       </h2>
       <ui-button-icon>
-        <icon-chevron />
+        <icon name="chevron" />
       </ui-button-icon>
     </section>
     <section class="section">
@@ -101,7 +101,7 @@ import UiToggle from '../components/ui-toggle'
 import UiRadio from '../components/ui-radio'
 import UiCheckbox from '../components/ui-checkbox'
 import UiButtonIcon from '../components/ui-button-icon'
-import IconChevron from '~/assets/icon-action-chevron-down.svg'
+import Icon from '~/components/icon'
 
 export default {
   layout: 'ui-test',
@@ -111,7 +111,7 @@ export default {
     UiToggle,
     UiRadio,
     UiCheckbox,
-    IconChevron
+    Icon
   }
 }
 </script>

@@ -12,7 +12,7 @@
       label="Toggle"
       @click="toggleCollapsedDataset(parameterId)"
     >
-      <icon-chevron />
+      <icon name="chevron" />
     </ui-button-icon>
     <figcaption
       class="graph-line__caption strong"
@@ -58,7 +58,7 @@ import ECharts from 'vue-echarts'
 import { saveAs } from 'file-saver'
 import UiButtonIcon from '~/components/ui-button-icon'
 import UiButton from '~/components/ui-button'
-import IconChevron from '~/assets/icon-action-chevron-down.svg'
+import Icon from '~/components/icon'
 import 'echarts/lib/chart/line'
 import 'echarts/lib/chart/scatter'
 import 'echarts/lib/component/dataZoom'
@@ -137,7 +137,7 @@ const baseOptions = {
 }
 
 export default {
-  components: { UiButtonIcon, IconChevron, 'v-chart': ECharts, UiButton },
+  components: { UiButtonIcon, Icon, 'v-chart': ECharts, UiButton },
   props: {
     imageUrl: {
       type: String,
