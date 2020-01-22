@@ -1,9 +1,6 @@
 <script>
 export default {
   name: 'VMapboxSelectedPointLayer',
-  render() {
-    return null
-  },
   props: {
     geometry: {
       type: Object,
@@ -56,6 +53,9 @@ export default {
       map.addLayer(this.selectedLayer)
       this.map.moveLayer(this.selectedLayer.id)
     },
+  },
+  render() {
+    return null
   },
 }
 </script>
