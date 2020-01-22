@@ -1,6 +1,6 @@
 <template>
   <span class="icon" :class="{ 'icon--large': size === 'large' }">
-    <img :src="icon">
+    <component :is="icon" />
   </span>
 </template>
 
@@ -11,27 +11,27 @@ import _ from 'lodash'
 // Extend this list when you need a new icon.
 // Imports should not be based on an expression.
 const availableIcons = {
-  'action-chevron-down': '/icons/icon-action-chevron-down.svg',
-  'action-cross': '/icons/icon-action-cross.svg',
-  collapse: '/icons/icon-collapse.svg',
-  'dataset-cc': '/icons/icon-dataset-cc.svg',
-  'dataset-dd': '/icons/icon-dataset-dd.svg',
-  'dataset-gb': '/icons/icon-dataset-gb.svg',
-  'dataset-mo_50': '/icons/icon-dataset-mo_50.svg',
-  'dataset-mt': '/icons/icon-dataset-mt.svg',
-  'dataset-pp': '/icons/icon-dataset-pp.svg',
-  'dataset-sh': '/icons/icon-dataset-sh.svg',
-  'dataset-sm': '/icons/icon-dataset-sm.svg',
-  'dataset-tt': '/icons/icon-dataset-tt.svg',
-  'dataset-wd': '/icons/icon-dataset-wd.svg',
-  'dataset-wl': '/icons/icon-dataset-wl.svg',
-  'dataset-wl0': '/icons/icon-dataset-wl0.svg',
-  'dataset-wv': '/icons/icon-dataset-wv.svg',
-  empty: '/icons/icon-empty.svg',
-  placeholder: '/icons/icon-placeholder.svg',
-  'theme-cm': '/icons/icon-theme-cm.svg',
-  'theme-fl': '/icons/icon-theme-fl.svg',
-  'theme-os': '/icons/icon-theme-os.svg'
+  'action-chevron-down': import('~/assets/icons/icon-action-chevron-down.svg'),
+  'action-cross': import('~/assets/icons/icon-action-cross.svg'),
+  collapse: import('~/assets/icons/icon-collapse.svg'),
+  'dataset-cc': import('~/assets/icons/icon-dataset-cc.svg'),
+  'dataset-dd': import('~/assets/icons/icon-dataset-dd.svg'),
+  'dataset-gb': import('~/assets/icons/icon-dataset-gb.svg'),
+  'dataset-mo_50': import('~/assets/icons/icon-dataset-mo_50.svg'),
+  'dataset-mt': import('~/assets/icons/icon-dataset-mt.svg'),
+  'dataset-pp': import('~/assets/icons/icon-dataset-pp.svg'),
+  'dataset-sh': import('~/assets/icons/icon-dataset-sh.svg'),
+  'dataset-sm': import('~/assets/icons/icon-dataset-sm.svg'),
+  'dataset-tt': import('~/assets/icons/icon-dataset-tt.svg'),
+  'dataset-wd': import('~/assets/icons/icon-dataset-wd.svg'),
+  'dataset-wl': import('~/assets/icons/icon-dataset-wl.svg'),
+  'dataset-wl0': import('~/assets/icons/icon-dataset-wl0.svg'),
+  'dataset-wv': import('~/assets/icons/icon-dataset-wv.svg'),
+  empty: import('~/assets/icons/icon-empty.svg'),
+  placeholder: import('~/assets/icons/icon-placeholder.svg'),
+  'theme-cm': import('~/assets/icons/icon-theme-cm.svg'),
+  'theme-fl': import('~/assets/icons/icon-theme-fl.svg'),
+  'theme-os': import('~/assets/icons/icon-theme-os.svg')
 }
 
 export default {
@@ -52,7 +52,11 @@ export default {
   computed: {
     icon () {
       const icon = _.get(availableIcons, this.name, availableIcons.empty)
-      return icon
+
+      // this is a hack to produce inline svg...
+      // It should be possible without, but this does not work
+      // https://calebporzio.com/using-inline-svgs-in-vue-compoments/
+      return () => icon
     }
   }
 }
