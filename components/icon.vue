@@ -22,8 +22,6 @@ requires.keys().forEach(function (key) {
   icons[name] = requires(key)
 })
 
-console.log('icons', icons)
-
 export default {
   props: {
     name: {
