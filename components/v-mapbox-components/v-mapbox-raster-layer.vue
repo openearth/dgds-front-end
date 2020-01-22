@@ -22,12 +22,12 @@ export default {
     }
   },
   computed: {
-    layer() {
+    layer () {
       return this.map.getLayer(this.options.id)
     },
-    source() {
+    source () {
       return this.map.getSource(this.options.id)
-    },
+    }
   },
   watch: {
     options: {
@@ -58,7 +58,7 @@ export default {
       deep: true
     }
   },
-  beforeDestroy() {
+  beforeDestroy () {
     const layer = this.layer
     if (layer.id && this.map.getLayer(layer.id)) {
       this.map.removeLayer(layer.id)
@@ -70,10 +70,10 @@ export default {
       this.map = map
       this.id = this.options.id
       this.map.addLayer(this.options, 'water-border')
-      this.map.on('click', event => {
+      this.map.on('click', (event) => {
         const bbox = {
           type: 'Point',
-          coordinates: [event.lngLat.lng, event.lngLat.lat],
+          coordinates: [event.lngLat.lng, event.lngLat.lat]
         }
         this.$emit('click', bbox)
       })

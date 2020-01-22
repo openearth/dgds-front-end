@@ -16,7 +16,7 @@ export default {
       required: true
     }
   },
-  data() {
+  data () {
     return {
       map: null
     }
@@ -147,9 +147,9 @@ export default {
         type: 'Polygon',
         coordinates: [[[W, N], [W, S], [E, S], [E, N], [W, N]]]
       }
-    },
+    }
   },
-  render() {
+  render () {
     return null
   },
   inject: ['getMap']

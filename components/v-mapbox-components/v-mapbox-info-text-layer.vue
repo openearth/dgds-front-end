@@ -8,16 +8,16 @@ export default {
       default: () => {
         return {
           type: 'Point',
-          coordinates: [],
+          coordinates: []
         }
-      },
+      }
     },
     message: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
-  data() {
+  data () {
     return {
       map: null,
       selectedLayer: {
@@ -25,38 +25,38 @@ export default {
         type: 'symbol',
         source: {
           type: 'geojson',
-          data: {},
+          data: {}
         },
         paint: {
           'text-halo-color': 'white',
           'text-halo-width': 2,
-          'text-halo-blur': 2,
-        },
-      },
+          'text-halo-blur': 2
+        }
+      }
     }
   },
   watch: {
-    geometry(newValue) {
+    geometry (newValue) {
       const selectedLayer = this.map.getSource(this.selectedLayer.id)
       selectedLayer.setData(newValue)
       this.map.setLayoutProperty(
         this.selectedLayer.id,
         'text-field',
-        this.message,
+        this.message
       )
       this.map.moveLayer(this.selectedLayer.id)
-    },
+    }
   },
   methods: {
-    deferredMountedTo(map) {
+    deferredMountedTo (map) {
       this.map = map
       this.selectedLayer.source.data = this.geometry
       map.addLayer(this.selectedLayer)
       this.map.moveLayer(this.selectedLayer.id)
-    },
+    }
   },
-  render() {
+  render () {
     return null
-  },
+  }
 }
 </script>
