@@ -54,6 +54,7 @@ export const mutations = {
       linearGradient: _.get(data, 'rasterLayer.linearGradient'),
       min: _.get(data, 'rasterLayer.min'),
       max: _.get(data, 'rasterLayer.max'),
+      imageId: _.get(data, 'rasterLayer.imageId'),
     })
     if (!_.get(data, 'rasterLayer.url')) return
     Vue.set(state[id], 'raster', rasterLayer)

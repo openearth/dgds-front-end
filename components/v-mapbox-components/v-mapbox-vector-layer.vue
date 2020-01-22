@@ -1,7 +1,3 @@
-<template>
-  <div />
-</template>
-
 <script>
 import _ from 'lodash'
 import distance from '@turf/distance'
@@ -20,7 +16,6 @@ export default {
       required: true,
     },
   },
-  inject: ['getMap'],
   data() {
     return {
       map: null,
@@ -154,5 +149,9 @@ export default {
       }
     },
   },
+  render() {
+    return null
+  },
+  inject: ['getMap'],
 }
 </script>

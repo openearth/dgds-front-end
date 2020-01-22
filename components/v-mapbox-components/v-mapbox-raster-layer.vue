@@ -17,8 +17,17 @@ export default {
   data() {
     return {
       map: undefined,
+      // TODO: id or options.id? choose 1
       id: undefined,
     }
+  },
+  computed: {
+    layer() {
+      return this.map.getLayer(this.options.id)
+    },
+    source() {
+      return this.map.getSource(this.options.id)
+    },
   },
   watch: {
     options: {
@@ -49,11 +58,25 @@ export default {
       deep: true,
     },
   },
+  beforeDestroy() {
+    const layer = this.layer
+    if (layer.id && this.map.getLayer(layer.id)) {
+      this.map.removeLayer(layer.id)
+      this.map.removeSource(layer.id)
+    }
+  },
   methods: {
     deferredMountedTo(map) {
       this.map = map
       this.id = this.options.id
       this.map.addLayer(this.options, 'water-border')
+      this.map.on('click', event => {
+        const bbox = {
+          type: 'Point',
+          coordinates: [event.lngLat.lng, event.lngLat.lat],
+        }
+        this.$emit('click', bbox)
+      })
     },
   },
 }
