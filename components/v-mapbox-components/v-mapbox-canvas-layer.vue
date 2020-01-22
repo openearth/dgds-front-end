@@ -1,13 +1,12 @@
 <template>
   <div class="offscreen">
     <!-- <img src="~/assets/glossis-uv.png" class="uv" /> -->
-    <canvas id="uv" width="1024" height="1024"></canvas>
+    <canvas id="uv" width="1024" height="1023"></canvas>
   </div>
 </template>
 <script>
 // https://github.com/mapbox/webgl-wind
-import get from 'lodash/fp/get'
-import WindGL from '@/lib/styling/windgl.js'
+// import WindGL from '@/lib/styling/windgl.js'
 
 export default {
   name: 'VMapboxCanvasLayer',
@@ -16,8 +15,8 @@ export default {
       default: () => {
         return {}
       },
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {}
@@ -36,7 +35,7 @@ export default {
         200,
         50,
         0,
-        Math.PI * 2
+        Math.PI * 2,
       )
       ctx.fillStyle = 'red'
       ctx.fill()
@@ -52,23 +51,23 @@ export default {
           [1, 55], //
           [8, 55],
           [8, 52],
-          [1, 52]
+          [1, 52],
         ],
-        animate: true
+        animate: true,
       }
 
       map.addLayer({
         id: 'test-canvas',
         type: 'raster',
         source,
-        paint: {}
+        paint: {},
       })
-    }
+    },
   },
   render() {
     return null
   },
-  inject: ['getMap']
+  inject: ['getMap'],
 }
 </script>
 <style>
