@@ -75,7 +75,7 @@ export default {
           type: 'Point',
           coordinates: [event.lngLat.lng, event.lngLat.lat],
         }
-        this.$emit('click:raster', bbox)
+        this.$emit('click', bbox)
       })
     },
   },

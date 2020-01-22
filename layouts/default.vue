@@ -25,10 +25,7 @@
           :active-theme="activeTheme"
           @select-locations="selectLocations"
         ></v-mapbox-vector-layer>
-        <v-mapbox-raster-layer
-          :options="rasterLayer"
-          @click:raster="getFeatureInfo"
-        />
+        <v-mapbox-raster-layer :options="rasterLayer" @click="getFeatureInfo" />
       </v-mapbox>
     </no-ssr>
     <DataSetControlMenu

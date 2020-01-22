@@ -1,13 +1,13 @@
-<template>
-  <div />
-</template>
-
 <script>
 export default {
   name: 'VMapboxSelectedPointLayer',
+  render() {
+    return null
+  },
   props: {
     geometry: {
       type: Object,
+      required: true,
       default: () => {
         return {
           type: 'Point',
