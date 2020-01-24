@@ -35,6 +35,7 @@
       class="default-layout__timestamp"
       :timestamp="activeTimestamp"
     />
+    <Disclaimer />
     <nuxt />
     <SiteNavigation
       class="default-layout__site-navigation"
@@ -66,6 +67,7 @@ import getRasterLayer from '../lib/mapbox/layers/get-raster-layer'
 import VMapboxVectorLayer from '../components/v-mapbox-components/v-mapbox-vector-layer'
 import VMapboxRasterLayer from '../components/v-mapbox-components/v-mapbox-raster-layer'
 import VMapboxSelectedPointLayer from '../components/v-mapbox-components/v-mapbox-selected-point-layer'
+import Disclaimer from '../components/disclaimer'
 
 export default {
   components: {
@@ -75,6 +77,7 @@ export default {
     VMapboxVectorLayer,
     VMapboxRasterLayer,
     VMapboxSelectedPointLayer,
+    Disclaimer,
   },
   data: () => ({
     mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
