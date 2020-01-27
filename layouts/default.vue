@@ -214,7 +214,7 @@ export default {
         bbox,
         band: bands[this.getActiveRasterLayer]
       }
-      fetch(`${process.env.HYDRO_ENGINE}/get_feature_info`, {
+      fetch(`${process.env.HYDRO_ENGINE_URL}/get_feature_info`, {
         method: 'POST',
         body: JSON.stringify(parameters),
         mode: 'cors',

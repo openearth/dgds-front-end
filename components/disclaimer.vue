@@ -8,12 +8,11 @@
         <VueMarkdown
           class="modal-content-text__markdown"
           :source="userAgreements"
-        >
-        </VueMarkdown>
+        />
         <span class="modal-content__title h3 unselectable">
           Cookies
         </span>
-        <VueMarkdown :source="userAgreements"> </VueMarkdown>
+        <VueMarkdown :source="userAgreements" />
       </div>
       <template v-slot:footer>
         <div class="modal-content__actions form-group">
@@ -57,17 +56,17 @@ export default {
     UiCheckbox,
     VueMarkdown,
     UiButton,
-    Panel,
+    Panel
   },
-  data() {
+  data () {
     return {
       open: true,
       userAgreements: '',
       agree: false,
-      cookie: false,
+      cookie: false
     }
   },
-  created() {
+  created () {
     this.cookie = Cookies.get('cookie') === 'true'
     this.agree = Cookies.get('agree') === 'true'
     if (this.agree) {
@@ -76,35 +75,35 @@ export default {
   },
   validations: {
     cookie: {
-      required,
+      required
     },
     agree: {
-      required,
-    },
+      required
+    }
   },
-  mounted() {
+  mounted () {
     fetch('user-agreements.md')
-      .then(res => {
+      .then((res) => {
         return res.text()
       })
-      .then(response => {
+      .then((response) => {
         this.userAgreements = response
       })
   },
 
   methods: {
-    setAgreementTartget(evt, target) {
+    setAgreementTartget (evt, target) {
       this[target] = evt.target.checked
       this.$v[target].$touch()
     },
-    submit(evt) {
+    submit (evt) {
       if (this.cookie) {
         Cookies.set('agree', this.agree)
         Cookies.set('cookie', this.cookie)
       }
       this.open = false
-    },
-  },
+    }
+  }
 }
 </script>
 
