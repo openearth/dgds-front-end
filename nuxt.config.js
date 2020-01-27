@@ -54,6 +54,7 @@ export default {
     { src: '~/plugins/vue-2-mapbox', ssr: false },
     { src: '~/plugins/bootstrap', ssr: false },
     { src: '~/plugins/polyfills', ssr: false },
+    { src: '~/plugins/vuelidate', ssr: false },
   ],
 
   /*

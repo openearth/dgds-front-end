@@ -36,9 +36,11 @@
     "mapbox-gl": "^1.1.1",
     "moment": "^2.24.0",
     "nuxt": "2.6.2",
+    "tiny-cookie": "^2.3.1",
     "vue-echarts": "^4.0.3",
     "vue-markdown": "^2.2.4",
     "vue2mapbox-gl": "^0.8.3",
+    "vuelidate": "^0.7.5",
     "whatwg-fetch": "3.0.0"
   },
   "devDependencies": {

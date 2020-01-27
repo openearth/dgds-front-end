@@ -1,28 +1,38 @@
 <template>
-  <div v-if="agreed" class="modal">
-    <Panel class="modal-content">
+  <div v-if="open" class="modal disclaimer">
+    <Panel class="modal-content unselectable">
       <div class="modal-content__text">
-        <span class="modal-content__title h3 unselectable">
+        <span class="modal-content__title h3">
           Conditions of use
         </span>
-        <VueMarkdown :source="userAgreements"> </VueMarkdown>
+        <VueMarkdown
+          class="modal-content-text__markdown"
+          :source="userAgreements"
+        >
+        </VueMarkdown>
         <span class="modal-content__title h3 unselectable">
           Cookies
         </span>
         <VueMarkdown :source="userAgreements"> </VueMarkdown>
       </div>
       <template v-slot:footer>
-        <div class="modal-content__actions">
+        <div class="modal-content__actions form-group">
           <div class="modal-content-actions__checkboxes">
-            <UiCheckbox>
+            <UiCheckbox
+              @input="setAgreementTarget($event, 'agree')"
+              :checked="agree"
+            >
               I agree with the Conditions of Use
             </UiCheckbox>
-            <UiCheckbox>
+            <UiCheckbox
+              @input="setAgreementTarget($event, 'cookie')"
+              :checked="cookie"
+            >
               I consent with the use of cookies
             </UiCheckbox>
           </div>
           <div class="modal-content-actions__agree-button">
-            <UiButton @click="agreed = false">
+            <UiButton @click="submit" :disabled="!$v.agree.$model">
               I Agree
             </UiButton>
           </div>
@@ -34,11 +44,14 @@
 
 <script>
 import VueMarkdown from 'vue-markdown'
+import { required, and } from 'vuelidate/lib/validators'
+import * as Cookies from 'tiny-cookie'
 
 import Panel from './Panel'
 import UiCheckbox from './ui-checkbox.vue'
 import UiButton from './ui-button.vue'
 
+const mustBeTrue = val => val === true
 export default {
   components: {
     UiCheckbox,
@@ -48,12 +61,27 @@ export default {
   },
   data() {
     return {
-      modalOpen: true,
+      open: true,
       userAgreements: '',
-      agreed: true,
+      agree: false,
+      cookie: false,
     }
   },
-
+  created() {
+    this.cookie = Cookies.get('cookie') === 'true'
+    this.agree = Cookies.get('agree') === 'true'
+    if (this.agree) {
+      this.open = false
+    }
+  },
+  validations: {
+    cookie: {
+      required,
+    },
+    agree: {
+      required,
+    },
+  },
   mounted() {
     fetch('user-agreements.md')
       .then(res => {
@@ -61,11 +89,22 @@ export default {
       })
       .then(response => {
         this.userAgreements = response
-        console.log('response', response)
       })
   },
 
-  methods: {},
+  methods: {
+    setAgreementTartget(evt, target) {
+      this[target] = evt.target.checked
+      this.$v[target].$touch()
+    },
+    submit(evt) {
+      if (this.cookie) {
+        Cookies.set('agree', this.agree)
+        Cookies.set('cookie', this.cookie)
+      }
+      this.open = false
+    },
+  },
 }
 </script>
 
@@ -80,6 +119,11 @@ export default {
   overflow: auto;
   background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.4);
+}
+
+.disclaimer section.panel__body {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .modal-content {
@@ -103,6 +147,10 @@ export default {
   flex-grow: 1;
 }
 
+.modal-content-text__markdown {
+  padding-bottom: var(--spacing-small);
+}
+
 .modal-content__actions {
   flex-grow: 1;
   display: flex;
@@ -116,6 +164,6 @@ export default {
 }
 
 .modal-content-actions__agree-button {
-  flex-grow: 1;
+  margin-top: auto;
 }
 </style>
