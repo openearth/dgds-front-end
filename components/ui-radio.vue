@@ -6,7 +6,7 @@
         type="radio"
         v-bind="$attrs"
         v-on="$listeners"
-      />
+      >
       <span class="ui-radio__visual" />
     </span>
     <slot />

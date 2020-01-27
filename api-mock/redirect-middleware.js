@@ -1,6 +1,6 @@
 const path = require('path')
 
-module.exports = function(req, res, next) {
+module.exports = function (req, res, next) {
   if (req.path === '/timeseries') {
     res.redirect(`${req.path}/${req.query.locationCode}/${req.query.datasetId}`)
   } else if (req.path === '/locations') {
@@ -8,8 +8,8 @@ module.exports = function(req, res, next) {
     res.sendFile(
       path.join(
         __dirname,
-        `${req.path}/${req.query.datasetId}${paginated}.json`,
-      ),
+        `${req.path}/${req.query.datasetId}${paginated}.json`
+      )
     )
   } else {
     next()

@@ -21,7 +21,7 @@ describe('momentFormat', () => {
   test('formats a timestamp with momentjs', () => {
     const result = utils.momentFormat(
       'MM-DD-YYYY \n HH:mm',
-      '2019-03-27T00:00:00Z',
+      '2019-03-27T00:00:00Z'
     )
     expect(result).toBe('03-27-2019  01:00')
   })
@@ -137,7 +137,7 @@ describe('tapWith', () => {
 describe('mapAsync', () => {
   test('maps over an array with an async function', async () => {
     const fn = msg =>
-      new Promise(resolve => {
+      new Promise((resolve) => {
         setTimeout(() => {
           resolve(msg.toUpperCase())
         }, 500)
@@ -148,7 +148,7 @@ describe('mapAsync', () => {
   })
   test('can be called curried', async () => {
     const fn = msg =>
-      new Promise(resolve => {
+      new Promise((resolve) => {
         setTimeout(() => {
           resolve(msg.toUpperCase())
         }, 500)

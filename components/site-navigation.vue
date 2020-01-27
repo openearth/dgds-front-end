@@ -27,8 +27,7 @@
               'site-navigation__list-item--active': checkActive(theme.id),
             }"
             @click="toggleTheme(theme.id)"
-            >{{ theme.name }}</span
-          >
+          >{{ theme.name }}</span>
         </div>
       </li>
     </ul>
@@ -49,24 +48,24 @@ export default {
   components: { UiButtonIcon, Icon },
   data: () => ({
     expanded: false,
-    activeTheme: null,
+    activeTheme: null
   }),
   computed: {
-    ...mapGetters('map/themes', ['getThemes', 'getActiveTheme']),
+    ...mapGetters('map/themes', ['getThemes', 'getActiveTheme'])
   },
   watch: {
-    $route(to, from) {
+    $route (to, from) {
       if (to.params.locationId) {
         this.collapse()
       }
-    },
+    }
   },
   methods: {
     ...mapMutations('map', ['toggleActiveTheme']),
-    checkActive(id) {
+    checkActive (id) {
       return this.activeTheme === id
     },
-    toggleTheme(id) {
+    toggleTheme (id) {
       this.toggleActiveTheme(id)
       this.$emit('change-theme')
       if (this.activeTheme === id) {
@@ -75,16 +74,16 @@ export default {
         this.activeTheme = id
       }
     },
-    expand() {
+    expand () {
       this.expanded = true
     },
-    collapse() {
+    collapse () {
       this.expanded = false
     },
-    toggleExpanded() {
+    toggleExpanded () {
       this.expanded = !this.expanded
-    },
-  },
+    }
+  }
 }
 </script>
 

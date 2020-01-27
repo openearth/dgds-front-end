@@ -5,32 +5,50 @@
 </template>
 
 <script>
+
+import Vue from 'vue'
+import _ from 'lodash'
+
+// Use node-js to create components for all icons
+// Search for all  icons in the icons folder
+const requires = require.context('../assets/icons', true, /^(.*\.(svg$))[^.]*$/im)
+// Lookup the name
+const nameRe = /icon-(.*)\.svg/
+// store  them in a dictionary, make available
+export const icons = {}
+
+// fill the icons
+requires.keys().forEach(function (key) {
+  const name = nameRe.exec(key)[1] || 'empty'
+  try {
+    icons[name] = requires(key)
+  } catch (e) {
+    icons[name] = Vue.component('icon-' + name, {})
+  }
+})
+
 export default {
   props: {
     name: {
       type: String,
-      default: '',
+      default: ''
     },
     fallbackName: {
       type: String,
-      default: 'empty',
+      default: 'empty'
     },
     size: {
       type: String,
-      default: null,
-    },
+      default: null
+    }
   },
   computed: {
-    icon() {
-      return () =>
-        // prettier-ignore
-        // eslint-disable-next-line
-        import(`~/assets/icon-${this.name}.svg`)
-          .catch(() =>
-            import(`~/assets/icon-${this.fallbackName}.svg`)
-          )
-    },
-  },
+    icon () {
+      const icon = _.get(icons, this.name, icons.empty)
+      // return the module
+      return icon.default
+    }
+  }
 }
 </script>
 

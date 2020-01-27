@@ -11,11 +11,12 @@ export default {
   env: {
     MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
     SERVER_URL: process.env.SERVER_URL,
+    HYDRO_ENGINE_URL: process.env.HYDRO_ENGINE_URL
   },
 
   generate: {
     fallback: 'index.html',
-    exclude: [/ui-test/],
+    exclude: [/ui-test/]
   },
 
   /*
@@ -26,9 +27,9 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description },
+      { hid: 'description', name: 'description', content: pkg.description }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
 
   /*
@@ -43,7 +44,7 @@ export default {
     'mapbox-gl/dist/mapbox-gl.css',
     '~/css/main.css',
     '~/css/typography.css',
-    '~/css/helpers.css',
+    '~/css/helpers.css'
   ],
 
   /*
@@ -71,7 +72,7 @@ export default {
       chunk: ({ isDev }) => (isDev ? '[name].js' : '[name].[chunkhash].js'),
       css: ({ isDev }) => (isDev ? '[name].css' : '[name].[contenthash].css'),
       img: ({ isDev }) =>
-        isDev ? '[path][name].[ext]' : 'img/[name].[hash:7].[ext]',
+        isDev ? '[path][name].[ext]' : 'img/[name].[hash:7].[ext]'
     },
 
     postcss: {
@@ -79,20 +80,20 @@ export default {
         'postcss-custom-properties': {
           preserve: true,
           importFrom: [
-            { customProperties: fromPairs(generateCustomProperties('light')) },
-          ],
-        },
+            { customProperties: fromPairs(generateCustomProperties('light')) }
+          ]
+        }
       },
       preset: {
-        autoprefixer: {},
-      },
+        autoprefixer: {}
+      }
     },
     transpile: ['vue-echarts', 'resize-detector'],
 
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {
+    extend (config, ctx) {
       const svgRule = config.module.rules.find(rule => rule.test.test('.svg'))
 
       svgRule.test = /\.(png|jpe?g|gif|webp)$/
@@ -103,13 +104,13 @@ export default {
           {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env'],
-            },
+              presets: ['@babel/preset-env']
+            }
           },
           {
-            loader: 'vue-svg-loader',
-          },
-        ],
+            loader: 'vue-svg-loader'
+          }
+        ]
       })
 
       // Run ESLint on save
@@ -118,9 +119,9 @@ export default {
           enforce: 'pre',
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
-          exclude: /(node_modules)/,
+          exclude: /(node_modules)/
         })
       }
-    },
-  },
+    }
+  }
 }

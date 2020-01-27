@@ -1,7 +1,3 @@
-<template>
-  <div />
-</template>
-
 <script>
 import _ from 'lodash'
 import distance from '@turf/distance'
@@ -13,37 +9,36 @@ export default {
       default: () => {
         return {}
       },
-      type: Object,
+      type: Object
     },
     activeTheme: {
       type: String,
-      required: true,
-    },
+      required: true
+    }
   },
-  inject: ['getMap'],
-  data() {
+  data () {
     return {
-      map: null,
+      map: null
     }
   },
   watch: {
     layer: {
-      handler(newValue) {
+      handler (newValue) {
         this.updateMap()
       },
-      deep: true,
+      deep: true
     },
-    activeTheme() {
+    activeTheme () {
       this.setActiveFilter()
-    },
+    }
   },
-  mounted() {
+  mounted () {
     this.map = this.getMap()
     if (this.map.loaded()) {
       this.updateMap()
     }
   },
-  beforeDestroy() {
+  beforeDestroy () {
     const layer = this.layer
     if (layer.id && this.map.getLayer(layer.id)) {
       this.map.off('click', layer.id)
@@ -52,20 +47,20 @@ export default {
     }
   },
   methods: {
-    deferredMountedTo(map) {
+    deferredMountedTo (map) {
       this.updateMap()
     },
-    updateMap() {
+    updateMap () {
       if (this.map.getLayer(this.layer.id)) {
         this.map.setFilter(this.layer.id, this.layer.filter)
       } else {
         this.addToMap()
       }
     },
-    addToMap() {
+    addToMap () {
       const layer = this.layer
       this.map.addLayer(layer)
-      this.map.on('click', layer.id, event => {
+      this.map.on('click', layer.id, (event) => {
         this[layer.onClick.method](layer, event)
       })
 
@@ -78,16 +73,16 @@ export default {
       })
     },
 
-    showGraph(layer, event) {
+    showGraph (layer, event) {
       this.mapPanTo(event, 500)
 
       const features = this.map.queryRenderedFeatures(event.point)
       this.$emit('select-locations', {
         features,
-        geometry: features[0].geometry,
+        geometry: features[0].geometry
       })
     },
-    mapPanTo(event, duration) {
+    mapPanTo (event, duration) {
       const { clientWidth } = this.map.getCanvas()
 
       // prettier-ignore
@@ -97,11 +92,11 @@ export default {
         : (clientWidth / 2) * 0.5
       const targetLocation = this.map.unproject({
         x: event.point.x - visibleMapWidth,
-        y: event.point.y,
+        y: event.point.y
       })
       this.map.panTo(targetLocation, { duration })
     },
-    zoomTo(layer, event) {
+    zoomTo (layer, event) {
       // Use zoomto and the click event to zoom in on the map and display the
       // features of the layertozoomto
       const zoomLevel = _.get(layer, 'onClick.zoomTo')
@@ -109,7 +104,7 @@ export default {
 
       this.map.flyTo({
         center: event.lngLat,
-        zoom: zoomLevel,
+        zoom: zoomLevel
       })
 
       setTimeout(() => {
@@ -119,14 +114,14 @@ export default {
         const from = point([event.lngLat.lng, event.lngLat.lat])
 
         // filter out the features belonging to the layertozoomto
-        const feats = features.filter(feat => {
+        const feats = features.filter((feat) => {
           return (
             _.get(feat, 'layer.id') === _.get(layer, 'onClick.layerToZoomTo')
           )
         })
 
         // calculate all distances from new center point to these features
-        const distances = feats.map(f => {
+        const distances = feats.map((f) => {
           const to = point(_.get(f, 'geometry.coordinates'))
           return distance(from, to)
         })
@@ -136,12 +131,12 @@ export default {
         const nextFeat = feats[index]
         this.$emit('select-locations', {
           features: [nextFeat],
-          geometry: nextFeat.geometry,
+          geometry: nextFeat.geometry
         })
       }, duration * 9)
     },
 
-    getBBox(lngLat) {
+    getBBox (lngLat) {
       const bound = 0.1
       // Get bounding box of the current view
       const N = lngLat.lat + bound
@@ -150,9 +145,13 @@ export default {
       const W = lngLat.lng - bound
       return {
         type: 'Polygon',
-        coordinates: [[[W, N], [W, S], [E, S], [E, N], [W, N]]],
+        coordinates: [[[W, N], [W, S], [E, S], [E, N], [W, N]]]
       }
-    },
+    }
   },
+  render () {
+    return null
+  },
+  inject: ['getMap']
 }
 </script>

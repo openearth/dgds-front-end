@@ -18,9 +18,9 @@ export default {
   props: {
     kind: {
       type: String,
-      default: 'primary',
-    },
-  },
+      default: 'primary'
+    }
+  }
 }
 </script>
 
