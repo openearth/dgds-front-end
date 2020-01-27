@@ -19,20 +19,20 @@
         <div class="modal-content__actions form-group">
           <div class="modal-content-actions__checkboxes">
             <UiCheckbox
-              @input="setAgreementTarget($event, 'agree')"
               :checked="agree"
+              @input="setAgreementTarget($event, 'agree')"
             >
               I agree with the Conditions of Use
             </UiCheckbox>
             <UiCheckbox
-              @input="setAgreementTarget($event, 'cookie')"
               :checked="cookie"
+              @input="setAgreementTarget($event, 'cookie')"
             >
               I consent with the use of cookies
             </UiCheckbox>
           </div>
           <div class="modal-content-actions__agree-button">
-            <UiButton @click="submit" :disabled="!$v.agree.$model">
+            <UiButton :disabled="!$v.agree.$model" @click="submit">
               I Agree
             </UiButton>
           </div>
