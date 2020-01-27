@@ -47,7 +47,7 @@ import VueMarkdown from 'vue-markdown'
 import { required, and } from 'vuelidate/lib/validators'
 import * as Cookies from 'tiny-cookie'
 
-import Panel from './Panel'
+import Panel from './panel'
 import UiCheckbox from './ui-checkbox.vue'
 import UiButton from './ui-button.vue'
 
