@@ -92,7 +92,7 @@ export default {
   },
 
   methods: {
-    setAgreementTartget (evt, target) {
+    setAgreementTarget (evt, target) {
       this[target] = evt.target.checked
       this.$v[target].$touch()
     },
