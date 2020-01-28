@@ -55,7 +55,8 @@ export const mutations = {
       min: _.get(data, 'rasterLayer.min'),
       max: _.get(data, 'rasterLayer.max'),
       imageId: _.get(data, 'rasterLayer.imageId'),
-      featureinfoUrl: _.get(data, 'rasterLayer.featureinfoUrl')
+      // TODO: backend is still featureinfoUrl! CHange when backend is changed to featureInfoUrl
+      featureInfoUrl: _.get(data, 'rasterLayer.featureinfoUrl')
     })
     if (!_.get(data, 'rasterLayer.url')) return
     Vue.set(state[id], 'raster', rasterLayer)

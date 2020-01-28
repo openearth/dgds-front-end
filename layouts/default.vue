@@ -211,7 +211,7 @@ export default {
         bbox,
         band: bands[this.getActiveRasterLayer]
       }
-      fetch(this.activeRasterData.featureinfoUrl, {
+      fetch(this.activeRasterData.featureInfoUrl, {
         method: 'POST',
         body: JSON.stringify(parameters),
         mode: 'cors',
