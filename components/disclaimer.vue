@@ -2,17 +2,14 @@
   <div v-if="open" class="modal disclaimer">
     <Panel class="modal-content unselectable">
       <div class="modal-content__text">
-        <span class="modal-content__title h3">
-          Conditions of use
-        </span>
         <VueMarkdown
+          id="user-agreements"
           class="modal-content-text__markdown"
           :source="userAgreements"
         />
-        <span class="modal-content__title h3 unselectable">
-          Cookies
-        </span>
-        <VueMarkdown :source="userAgreements" />
+        <VueMarkdown
+        class="modal-content-text__markdown"
+        :source="cookieAgreement" />
       </div>
       <template v-slot:footer>
         <div class="modal-content__actions form-group">
@@ -62,6 +59,7 @@ export default {
     return {
       open: true,
       userAgreements: '',
+      cookieAgreement: '',
       agree: false,
       cookie: false
     }
@@ -82,12 +80,19 @@ export default {
     }
   },
   mounted () {
-    fetch('user-agreements.md')
+    fetch('docs/user-agreements.md')
       .then((res) => {
         return res.text()
       })
       .then((response) => {
         this.userAgreements = response
+      })
+    fetch('docs/cookie-agreements.md')
+      .then((res) => {
+        return res.text()
+      })
+      .then((response) => {
+        this.cookieAgreement = response
       })
   },
 
@@ -150,6 +155,10 @@ export default {
   padding-bottom: var(--spacing-small);
 }
 
+.modal-content__text {
+  font-size: unset;
+}
+
 .modal-content__actions {
   flex-grow: 1;
   display: flex;
@@ -165,4 +174,5 @@ export default {
 .modal-content-actions__agree-button {
   margin-top: auto;
 }
+
 </style>
