@@ -112,6 +112,12 @@ export default {
         ]
       })
 
+      // add frontmatter-markdown-loader
+      config.module.rules.push({
+        test: /\.md$/,
+        loader: 'frontmatter-markdown-loader'
+      })
+
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {
         config.module.rules.push({
