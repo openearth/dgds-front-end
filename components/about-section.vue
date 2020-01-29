@@ -1,11 +1,11 @@
 <template>
-  <aside class="about-id scrollbar">
-    <header class="about-id__header">
+  <aside class="about-section scrollbar">
+    <header class="about-section__header">
       <h2 class="h2">
         About
       </h2>
     </header>
-    <section class="about-id__section">
+    <section class="about-section__section">
       <VueMarkdown
         class="about-text"
         :source="require('~/assets/docs/about-text.md').html"
@@ -31,7 +31,7 @@ export default {
 </script>
 
 <style>
-.about-id {
+.about-section {
   width: 50vw;
   max-width: 600px;
   height: 100vh;
@@ -43,7 +43,7 @@ export default {
   overflow-x: hidden;
 }
 
-.about-id__header {
+.about-section__header {
   padding-left: var(--spacing-small);
   padding-top: var(--spacing-small);
 
@@ -51,7 +51,7 @@ export default {
   justify-content: space-between;
 }
 
-.about-id__section {
+.about-section__section {
   padding: var(--spacing-small);
 }
 </style>
