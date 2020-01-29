@@ -1,6 +1,6 @@
 module.exports = {
   moduleNameMapper: {
-    "\\.md$": "<rootDir>/__mocks__/fileMock.js",
+    '\\.md$': '<rootDir>/__mocks__/fileMock.js',
     '^~\\/(.*)(icon-.+\\.svg)$': '<rootDir>/$1/icon-empty.svg',
     '^@/(.*)$': '<rootDir>/$1',
     '^~/(.*)$': '<rootDir>/$1',
