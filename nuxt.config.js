@@ -51,9 +51,10 @@ export default {
    */
   plugins: [
     { src: '~/plugins/custom-properties', ssr: false },
-    { src: '~/plugins/vue-2-mapbox', ssr: false },
+    { src: '~/plugins/vue2mapbox-gl', ssr: false },
     { src: '~/plugins/bootstrap', ssr: false },
-    { src: '~/plugins/polyfills', ssr: false }
+    { src: '~/plugins/polyfills', ssr: false },
+    { src: '~/plugins/vuelidate', ssr: false }
   ],
 
   /*
@@ -109,6 +110,12 @@ export default {
             loader: 'vue-svg-loader'
           }
         ]
+      })
+
+      // add frontmatter-markdown-loader
+      config.module.rules.push({
+        test: /\.md$/,
+        loader: 'frontmatter-markdown-loader'
       })
 
       // Run ESLint on save
