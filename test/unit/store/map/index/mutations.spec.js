@@ -3,7 +3,7 @@ import { mutations } from '../../../../../store/map/index.js'
 describe('setActiveDatasetIds', () => {
   test('updates state.activeDatasetIds with ids in payload', () => {
     const state = {
-      activeDatasetIds: [],
+      activeDatasetIds: []
     }
     const ids = ['wl', 'wd']
     mutations.setActiveDatasetIds(state, ids)
@@ -14,7 +14,7 @@ describe('setActiveDatasetIds', () => {
 describe('clearActiveDatasetIds', () => {
   test('clears state.activeDatasetIds', () => {
     const state = {
-      activeDatasetIds: ['wl', 'wd'],
+      activeDatasetIds: ['wl', 'wd']
     }
     const ids = []
     mutations.clearActiveDatasetIds(state)
@@ -29,15 +29,15 @@ describe('toggleActiveTheme', () => {
       themes: {
         ab: {
           cd: 'ef',
-          id: 'ab',
-        },
-      },
+          id: 'ab'
+        }
+      }
     }
     const ids = 'ab'
     mutations.toggleActiveTheme(state, ids)
     expect(state.activeTheme).toEqual({
       cd: 'ef',
-      id: 'ab',
+      id: 'ab'
     })
     mutations.toggleActiveTheme(state, ids)
     expect(state.activeTheme).toEqual({})
@@ -47,7 +47,7 @@ describe('toggleActiveTheme', () => {
 describe('clearActiveTheme', () => {
   test('clears state.activeTheme', () => {
     const state = {
-      activeTheme: 'ab',
+      activeTheme: 'ab'
     }
     mutations.clearActiveTheme(state)
     expect(state.activeTheme).toEqual({})
@@ -57,7 +57,7 @@ describe('clearActiveTheme', () => {
 describe('setActiveLocationIds', () => {
   test('updates state.setActiveLocationIds with ids in payload', () => {
     const state = {
-      activeLocationIds: [],
+      activeLocationIds: []
     }
     const ids = ['wl', 'wd']
     mutations.setActiveLocationIds(state, ids)
@@ -68,7 +68,7 @@ describe('setActiveLocationIds', () => {
 describe('setActiveLocationIds', () => {
   test('clears state.activeLocationIds', () => {
     const state = {
-      activeLocationIds: ['wl', 'wd'],
+      activeLocationIds: ['wl', 'wd']
     }
     const ids = []
     mutations.clearActiveLocationIds(state)
@@ -79,7 +79,7 @@ describe('setActiveLocationIds', () => {
 describe('setActiveRasterLayer', () => {
   test('set state.activeRasterLayerId with id in payload', () => {
     const state = {
-      activeRasterLayerId: 'wl',
+      activeRasterLayerId: 'wl'
     }
     mutations.setActiveRasterLayer(state, 'wd')
     expect(state.activeRasterLayerId).toEqual('wd')
@@ -89,7 +89,7 @@ describe('setActiveRasterLayer', () => {
 describe('toggleCollapsedDataset', () => {
   test('add or remove id from state.collapsedDatasets with id in payload', () => {
     const state = {
-      collapsedDatasets: [],
+      collapsedDatasets: []
     }
     mutations.toggleCollapsedDataset(state, 'wd')
     expect(state.collapsedDatasets).toEqual(['wd'])

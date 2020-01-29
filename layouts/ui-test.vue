@@ -2,8 +2,12 @@
   <div class="ui-test-layout" style="position: relative;">
     <div style="position: absolute; bottom: 2rem; right: 3rem;">
       <select @change="setActive">
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
+        <option value="light">
+          Light
+        </option>
+        <option value="dark">
+          Dark
+        </option>
       </select>
     </div>
     <nuxt />
@@ -16,15 +20,15 @@ import { mapState, mapMutations } from 'vuex'
 export default {
   computed: {
     ...mapState({
-      activeTheme: state => state.preferences.theme.active,
-    }),
+      activeTheme: state => state.preferences.theme.active
+    })
   },
   methods: {
     ...mapMutations({ toggleActiveTheme: 'preferences/theme/setActive' }),
-    setActive(event) {
+    setActive (event) {
       this.toggleActiveTheme(event.target.value)
-    },
-  },
+    }
+  }
 }
 </script>
 

@@ -1,7 +1,10 @@
 {
   "env": {
     "test": {
-      "plugins": ["dynamic-import-node"],
+      "plugins": [
+        "dynamic-import-node",
+        "require-context-hook"
+      ],
       "presets": [
         [
           "@babel/preset-env",

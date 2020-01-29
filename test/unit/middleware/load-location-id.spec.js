@@ -18,7 +18,7 @@ test('dispatch store action when on client', async () => {
 
   expect(dispatch).toHaveBeenCalledWith('map/loadPointDataForLocation', {
     datasetIds,
-    locationId,
+    locationId
   })
 })
 

@@ -1,40 +1,36 @@
-<template>
-  <div />
-</template>
-
 <script>
-import getColors from '../../lib/styling/colors'
-
-const color = getColors('dark')
-
 export default {
   name: 'VMapboxSelectedPointLayer',
   props: {
     geometry: {
       type: Object,
+      required: true,
       default: () => {
         return {
           type: 'Point',
           coordinates: []
         }
       }
+    },
+    message: {
+      type: String,
+      required: true
     }
   },
   data () {
     return {
       map: null,
       selectedLayer: {
-        id: 'selected_point',
-        type: 'circle',
+        id: 'info_text_layer',
+        type: 'symbol',
         source: {
           type: 'geojson',
           data: {}
         },
         paint: {
-          'circle-stroke-width': 8,
-          'circle-color': color.white100,
-          'circle-stroke-color': color.blue60,
-          'circle-stroke-opacity': 0.6
+          'text-halo-color': 'white',
+          'text-halo-width': 2,
+          'text-halo-blur': 2
         }
       }
     }
@@ -43,6 +39,11 @@ export default {
     geometry (newValue) {
       const selectedLayer = this.map.getSource(this.selectedLayer.id)
       selectedLayer.setData(newValue)
+      this.map.setLayoutProperty(
+        this.selectedLayer.id,
+        'text-field',
+        this.message
+      )
       this.map.moveLayer(this.selectedLayer.id)
     }
   },
@@ -53,6 +54,9 @@ export default {
       map.addLayer(this.selectedLayer)
       this.map.moveLayer(this.selectedLayer.id)
     }
+  },
+  render () {
+    return null
   }
 }
 </script>

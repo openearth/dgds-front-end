@@ -6,7 +6,7 @@ describe('getters', () => {
   describe('colors', () => {
     test('calls getColors with active property', () => {
       const state = {
-        active: 'foo',
+        active: 'foo'
       }
       getters.colors(state)
       expect(getColors).toHaveBeenCalledWith(state.active)
