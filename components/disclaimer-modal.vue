@@ -48,8 +48,8 @@ import Panel from './panel.vue'
 import UiCheckbox from './ui-checkbox.vue'
 import UiButton from './ui-button.vue'
 
-const userAgreements = require('~/assets/docs/user-agreements.md')
-const cookieAgreement = require('~/assets/docs/cookie-agreements.md')
+import userAgreements from  '~/assets/docs/user-agreements.md'
+import cookieAgreement from '~/assets/docs/cookie-agreements.md'
 
 const mustBeTrue = val => val === true
 export default {
