@@ -8,7 +8,7 @@
     <section class="about-section__section">
       <VueMarkdown
         class="about-text"
-        :source="require('~/assets/docs/about-text.md').html"
+        :source="aboutText"
       />
     </section>
   </aside>
@@ -16,6 +16,7 @@
 
 <script>
 import VueMarkdown from 'vue-markdown'
+import aboutText from '~/assets/docs/about-text.md'
 
 export default {
   name: 'AboutSection',
@@ -24,7 +25,7 @@ export default {
   },
   data () {
     return {
-      aboutText: ''
+      aboutText: aboutText.html
     }
   }
 }
