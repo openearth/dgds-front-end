@@ -39,7 +39,7 @@
       class="default-layout__timestamp"
       :timestamp="activeTimestamp"
     />
-    <Disclaimer />
+    <DisclaimerModal />
     <nuxt />
     <SiteNavigation
       class="default-layout__site-navigation"
@@ -71,7 +71,7 @@ import getRasterLayer from '../lib/mapbox/layers/get-raster-layer'
 import VMapboxVectorLayer from '../components/v-mapbox-components/v-mapbox-vector-layer'
 import VMapboxRasterLayer from '../components/v-mapbox-components/v-mapbox-raster-layer'
 import VMapboxSelectedPointLayer from '../components/v-mapbox-components/v-mapbox-selected-point-layer'
-import Disclaimer from '../components/disclaimer'
+import DisclaimerModal from '../components/disclaimer-modal'
 import VMapboxInfoTextLayer from '../components/v-mapbox-components/v-mapbox-info-text-layer'
 
 const bands = {
@@ -94,7 +94,7 @@ export default {
     VMapboxVectorLayer,
     VMapboxRasterLayer,
     VMapboxSelectedPointLayer,
-    Disclaimer,
+    DisclaimerModal,
     VMapboxInfoTextLayer
   },
   data: () => ({

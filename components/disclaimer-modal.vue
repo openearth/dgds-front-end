@@ -8,21 +8,22 @@
           :source="userAgreements"
         />
         <VueMarkdown
-        class="modal-content-text__markdown"
-        :source="cookieAgreement" />
+          class="modal-content-text__markdown"
+          :source="cookieAgreement"
+        />
       </div>
       <template v-slot:footer>
         <div class="modal-content__actions form-group">
           <div class="modal-content-actions__checkboxes">
             <UiCheckbox
               :checked="agree"
-              @input="setAgreementTarget($event, 'agree')"
+              @input="setTarget($event, 'agree')"
             >
               I agree with the Conditions of Use
             </UiCheckbox>
             <UiCheckbox
               :checked="cookie"
-              @input="setAgreementTarget($event, 'cookie')"
+              @input="setTarget($event, 'cookie')"
             >
               I consent with the use of cookies
             </UiCheckbox>
@@ -43,9 +44,12 @@ import VueMarkdown from 'vue-markdown'
 import { required, and } from 'vuelidate/lib/validators'
 import * as Cookies from 'tiny-cookie'
 
-import Panel from './panel'
+import Panel from './panel.vue'
 import UiCheckbox from './ui-checkbox.vue'
 import UiButton from './ui-button.vue'
+
+const userAgreements = require('~/assets/docs/user-agreements.md')
+const cookieAgreement = require('~/assets/docs/cookie-agreements.md')
 
 const mustBeTrue = val => val === true
 export default {
@@ -58,8 +62,8 @@ export default {
   data () {
     return {
       open: true,
-      userAgreements: '',
-      cookieAgreement: '',
+      userAgreements: userAgreements.html,
+      cookieAgreement: cookieAgreement.html,
       agree: false,
       cookie: false
     }
@@ -79,25 +83,8 @@ export default {
       required
     }
   },
-  mounted () {
-    fetch('docs/user-agreements.md')
-      .then((res) => {
-        return res.text()
-      })
-      .then((response) => {
-        this.userAgreements = response
-      })
-    fetch('docs/cookie-agreements.md')
-      .then((res) => {
-        return res.text()
-      })
-      .then((response) => {
-        this.cookieAgreement = response
-      })
-  },
-
   methods: {
-    setAgreementTarget (evt, target) {
+    setTarget (evt, target) {
       this[target] = evt.target.checked
       this.$v[target].$touch()
     },
@@ -121,8 +108,7 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgb(0, 0, 0);
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--color-background);
 }
 
 .disclaimer section.panel__body {
@@ -155,10 +141,6 @@ export default {
   padding-bottom: var(--spacing-small);
 }
 
-.modal-content__text {
-  font-size: unset;
-}
-
 .modal-content__actions {
   flex-grow: 1;
   display: flex;
@@ -169,10 +151,6 @@ export default {
   flex-grow: 9;
   display: flex;
   flex-direction: column;
-}
-
-.modal-content-actions__agree-button {
-  margin-top: auto;
 }
 
 </style>
