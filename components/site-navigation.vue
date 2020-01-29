@@ -10,14 +10,14 @@
         <div class="site-navigation__list-item">
           <div class="site-navigation-list-item__img-holder">
             <img
-              @click="toggleExpanded"
               class="img-logo"
               src="../assets/images/deltares_avatar.png"
+              @click="toggleExpanded"
             ></img>
           </div>
           <img
-            class="img-logo--expanded"
             v-if="expanded"
+            class="img-logo--expanded"
             src="../assets/images/deltares_logo.png"
           ></img>
         </div>
