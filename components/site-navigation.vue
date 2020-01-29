@@ -5,7 +5,7 @@
     label="site navigation"
     @keydown.esc="collapse"
   >
-    <About v-if="about"> </About>
+    <About v-if="about" />
     <ul class="site-navigation__list">
       <li v-for="(theme, key) in getThemes" :key="key">
         <div class="site-navigation__list-item">
@@ -28,7 +28,7 @@
               'site-navigation__list-item--active': checkActive(theme.id),
             }"
             @click="toggleTheme(theme.id)"
-            >{{ theme.name }}
+          >{{ theme.name }}
           </span>
         </div>
       </li>
@@ -65,7 +65,7 @@ export default {
   data: () => ({
     expanded: false,
     about: false,
-    activeTheme: null,
+    activeTheme: null
   }),
   computed: {
     ...mapGetters('map/themes', ['getThemes', 'getActiveTheme'])
@@ -103,13 +103,13 @@ export default {
         this.toggleAbout()
       }
     },
-    toggleAbout() {
+    toggleAbout () {
       this.about = !this.about
       if (this.about && this.expanded) {
         this.toggleExpanded()
       }
-    },
-  },
+    }
+  }
 }
 </script>
 

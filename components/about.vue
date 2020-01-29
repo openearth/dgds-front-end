@@ -1,13 +1,40 @@
 <template>
   <aside class="about-id scrollbar">
     <header class="about-id__header">
-      <h2 class="h2">About</h2>
+      <h2 class="h2">
+        About
+      </h2>
     </header>
+    <VueMarkdown
+      class="about-text"
+      :soure="aboutText"
+    />
   </aside>
 </template>
 
 <script>
-export default {}
+import VueMarkdown from 'vue-markdown'
+
+export default {
+  name: 'About',
+  components: {
+    VueMarkdown
+  },
+  data () {
+    return {
+      aboutText: ''
+    }
+  },
+  mounted () {
+    fetch('docs/about-text.md')
+      .then((res) => {
+        return res.text()
+      })
+      .then((response) => {
+        this.aboutText = response
+      })
+  }
+}
 </script>
 
 <style>
