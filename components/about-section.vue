@@ -5,10 +5,12 @@
         About
       </h2>
     </header>
-    <VueMarkdown
-      class="about-text"
-      :soure="aboutText"
-    />
+    <section class="about-id__section">
+      <VueMarkdown
+        class="about-text"
+        :source="require('~/assets/docs/about-text.md').html"
+      />
+    </section>
   </aside>
 </template>
 
@@ -16,7 +18,7 @@
 import VueMarkdown from 'vue-markdown'
 
 export default {
-  name: 'About',
+  name: 'AboutSection',
   components: {
     VueMarkdown
   },
@@ -24,15 +26,6 @@ export default {
     return {
       aboutText: ''
     }
-  },
-  mounted () {
-    fetch('docs/about-text.md')
-      .then((res) => {
-        return res.text()
-      })
-      .then((response) => {
-        this.aboutText = response
-      })
   }
 }
 </script>
@@ -56,5 +49,9 @@ export default {
 
   display: flex;
   justify-content: space-between;
+}
+
+.about-id__section {
+  padding: var(--spacing-small);
 }
 </style>

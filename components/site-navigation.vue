@@ -5,7 +5,7 @@
     label="site navigation"
     @keydown.esc="collapse"
   >
-    <About v-if="about" />
+    <AboutSection v-if="about" />
     <ul class="site-navigation__list">
       <li v-for="(theme, key) in getThemes" :key="key">
         <div class="site-navigation__list-item">
@@ -58,10 +58,10 @@
 import { mapGetters, mapMutations } from 'vuex'
 import UiButtonIcon from './ui-button-icon'
 import Icon from './icon'
-import About from './about'
+import AboutSection from './about-section'
 
 export default {
-  components: { UiButtonIcon, Icon, About },
+  components: { UiButtonIcon, Icon, AboutSection },
   data: () => ({
     expanded: false,
     about: false,
