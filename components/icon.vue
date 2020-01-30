@@ -1,6 +1,7 @@
 <template>
   <span class="icon" :class="{ 'icon--large': size === 'large' }">
-    <component :is="icon" />
+    <i class="material-icons mdi-icon" :class="{ 'mdi-icon--large': size === 'large' }" v-if="mdi">{{ name }}</i>
+    <component :is="icon" v-else />
   </span>
 </template>
 
@@ -40,6 +41,10 @@ export default {
     size: {
       type: String,
       default: null
+    },
+    mdi: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -53,17 +58,39 @@ export default {
 </script>
 
 <style>
+@import 'material-design-icons/iconfont/material-icons.css';
+
+.icon {
+  display: flex;
+}
+
+.icon svg {
+  margin: auto;
+}
+
 .icon--large {
-  display: block;
+  margin: auto;
+  display: flex;
   width: 3rem;
   height: 3rem;
-  position: relative;
 }
 
 .icon--large svg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(1.25);
+  margin: auto;
+  transform: scale(1.25);
+}
+
+.mdi-icon {
+  margin: auto;
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
+
+.mdi-icon--large {
+  margin: auto;
+  font-size: 36px;
+  width: 36px;
+  height: 36px;
 }
 </style>

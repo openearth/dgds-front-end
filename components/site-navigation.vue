@@ -36,19 +36,14 @@
 
     <div class="site-navigation__about-wrapper">
       <div class="site-navigation__list-item">
-        <UiButtonIcon
-          :class="{
-            'site-navigation__list-item--active': about,
-          }"
-          @click="toggleAbout"
-        >
-          <Icon size="large" name="placeholder" fallback-name="placeholder" />
+        <UiButtonIcon @click="toggleAbout">
+          <Icon class="icons" :mdi="true" name="info_outline" />
         </UiButtonIcon>
       </div>
     </div>
     <div class="site-navigation__toggle-wrapper">
       <UiButtonIcon @click="toggleExpanded">
-        <Icon size="large" name="collapse" fallback-name="placeholder" />
+        <Icon class="icons"  name="collapse" fallback-name="placeholder" />
       </UiButtonIcon>
     </div>
   </nav>
@@ -153,7 +148,7 @@ export default {
   color: var(--color-grey-40);
 }
 .site-navigation__toggle-wrapper .ui-button-icon svg {
-  transform: translate(-50%, -50%) rotate(180deg);
+  transform: rotate(180deg);
   transition: transform var(--speed-fast) var(--ease);
 }
 .site-navigation__toggle-wrapper:hover .ui-button-icon,
@@ -235,6 +230,11 @@ export default {
   .site-navigation__toggle-wrapper
   .ui-button-icon
   svg {
-  transform: translate(-50%, -50%) rotate(0deg);
+  transform: rotate(0deg);
+}
+
+.icons {
+  width: var(--site-nav-width-collapsed);
+  height: var(--site-nav-width-collapsed);
 }
 </style>
