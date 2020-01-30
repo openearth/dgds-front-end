@@ -1,6 +1,6 @@
 <template>
   <span class="icon" :class="{ 'icon--large': size === 'large' }">
-    <i class="material-icons mdi-icon" :class="{ 'mdi-icon--large': size === 'large' }" v-if="mdi">{{ name }}</i>
+    <i v-if="mdi" class="material-icons mdi-icon" :class="{ 'mdi-icon--large': size === 'large' }">{{ name }}</i>
     <component :is="icon" v-else />
   </span>
 </template>

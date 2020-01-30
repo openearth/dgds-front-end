@@ -59,7 +59,7 @@
     </div>
     <div class="site-navigation__toggle-wrapper">
       <UiButtonIcon @click="toggleExpanded">
-        <Icon class="icons"  name="collapse" fallback-name="placeholder" />
+        <Icon class="icons" name="collapse" fallback-name="placeholder" />
       </UiButtonIcon>
     </div>
   </nav>
