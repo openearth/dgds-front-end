@@ -7,6 +7,22 @@
   >
     <AboutSection v-if="about" />
     <ul class="site-navigation__list">
+      <li>
+        <div class="site-navigation__list-item">
+          <div class="site-navigation-list-item__img-holder">
+            <img
+              class="img-logo"
+              :src="require('~/assets/images/deltares_avatar.png')"
+              @click="toggleExpanded"
+            ></img>
+          </div>
+          <img
+            v-show="expanded"
+            class="img-logo--expanded"
+            :src="require('~/assets/images/deltares_logo.png')"
+          ></img>
+        </div>
+      </li>
       <li v-for="(theme, key) in getThemes" :key="key">
         <div class="site-navigation__list-item">
           <UiButtonIcon
@@ -109,6 +125,23 @@ export default {
 </script>
 
 <style>
+.img-logo {
+  height: var(--icon-size);
+  z-index: 1; /* Why does this need to be set with a z-index??? */
+  margin: auto;
+}
+
+.img-logo--expanded {
+  height: var(--icon-size);
+  z-index: 1; /* Why does this need to be set with a z-index??? */
+}
+
+.site-navigation-list-item__img-holder {
+  width: var(--site-nav-width-collapsed);
+  z-index: 1;
+  display: flex;
+}
+
 .site-navigation {
   display: flex;
   flex-direction: column;
