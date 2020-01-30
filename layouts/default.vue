@@ -74,18 +74,6 @@ import VMapboxSelectedPointLayer from '../components/v-mapbox-components/v-mapbo
 import DisclaimerModal from '../components/disclaimer-modal'
 import VMapboxInfoTextLayer from '../components/v-mapbox-components/v-mapbox-info-text-layer'
 
-const bands = {
-  cc: 'magnitude',
-  dd: 'discharge_routed_simulated',
-  gb: 'elevation',
-  mt: 'mean_temperature',
-  pp: 'daily_precipitation',
-  tt: 'astronomical_tide',
-  wd: 'magnitude',
-  wl: 'water_level',
-  sh: 'water_level_surge',
-  wv: 'waveheight'
-}
 export default {
   components: {
     SiteNavigation,
@@ -209,11 +197,23 @@ export default {
         this.removeInfoText()
         return
       }
+
       const parameters = {
         imageId: this.activeRasterData.imageId,
-        bbox,
-        band: bands[this.getActiveRasterLayer]
+        bbox
       }
+
+      const band = _.get(this.activeRasterData, 'band')
+      const func = _.get(this.activeRasterData, 'function')
+
+      if (band) {
+        parameters.band = band
+      } else if (func) {
+        parameters.function = func
+      } else {
+        return
+      }
+
       fetch(this.activeRasterData.featureInfoUrl, {
         method: 'POST',
         body: JSON.stringify(parameters),
