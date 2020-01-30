@@ -16,7 +16,7 @@
             ></img>
           </div>
           <img
-            v-if="expanded"
+            v-show="expanded"
             class="img-logo--expanded"
             :src="require('~/assets/images/deltares_logo.png')"
           ></img>
