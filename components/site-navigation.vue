@@ -5,6 +5,7 @@
     label="site navigation"
     @keydown.esc="collapse"
   >
+    <AboutSection v-if="about" />
     <ul class="site-navigation__list">
       <li>
         <div class="site-navigation__list-item">
@@ -43,13 +44,22 @@
               'site-navigation__list-item--active': checkActive(theme.id),
             }"
             @click="toggleTheme(theme.id)"
-          >{{ theme.name }}</span>
+          >{{ theme.name }}
+          </span>
         </div>
       </li>
     </ul>
+
+    <div class="site-navigation__about-wrapper">
+      <div class="site-navigation__list-item">
+        <UiButtonIcon @click="toggleAbout">
+          <Icon class="icons" :mdi="true" name="info_outline" />
+        </UiButtonIcon>
+      </div>
+    </div>
     <div class="site-navigation__toggle-wrapper">
       <UiButtonIcon @click="toggleExpanded">
-        <Icon size="large" name="collapse" fallback-name="placeholder" />
+        <Icon class="icons" name="collapse" fallback-name="placeholder" />
       </UiButtonIcon>
     </div>
   </nav>
@@ -59,11 +69,13 @@
 import { mapGetters, mapMutations } from 'vuex'
 import UiButtonIcon from './ui-button-icon'
 import Icon from './icon'
+import AboutSection from './about-section'
 
 export default {
-  components: { UiButtonIcon, Icon },
+  components: { UiButtonIcon, Icon, AboutSection },
   data: () => ({
     expanded: false,
+    about: false,
     activeTheme: null
   }),
   computed: {
@@ -98,6 +110,15 @@ export default {
     },
     toggleExpanded () {
       this.expanded = !this.expanded
+      if (this.about && this.expanded) {
+        this.toggleAbout()
+      }
+    },
+    toggleAbout () {
+      this.about = !this.about
+      if (this.about && this.expanded) {
+        this.toggleExpanded()
+      }
     }
   }
 }
@@ -141,6 +162,14 @@ export default {
   transition: transform var(--speed-fast) var(--ease);
 }
 
+.site-navigation__about-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  transform: translate(calc(-100% + var(--site-nav-width-collapsed)));
+  transition: transform var(--speed-fast) var(--ease);
+}
+
 .site-navigation__toggle-wrapper {
   display: flex;
   justify-content: flex-end;
@@ -152,12 +181,18 @@ export default {
   color: var(--color-grey-40);
 }
 .site-navigation__toggle-wrapper .ui-button-icon svg {
-  transform: translate(-50%, -50%) rotate(180deg);
+  transform: rotate(180deg);
   transition: transform var(--speed-fast) var(--ease);
 }
 .site-navigation__toggle-wrapper:hover .ui-button-icon,
 .site-navigation__toggle-wrapper .ui-button-icon:focus,
 .site-navigation__toggle-wrapper:active .ui-button-icon {
+  color: var(--color-text);
+}
+
+.site-navigation__about-wrapper:hover .ui-button-icon,
+.site-navigation__about-wrapper .ui-button-icon:focus,
+.site-navigation__about-wrapper:active .ui-button-icon {
   color: var(--color-text);
 }
 
@@ -220,6 +255,7 @@ export default {
 
 .site-navigation--expanded .site-navigation__text,
 .site-navigation--expanded .site-navigation__toggle-wrapper,
+.site-navigation--expanded .site-navigation__about-wrapper,
 .site-navigation--expanded:before {
   transform: translate(0);
 }
@@ -227,6 +263,11 @@ export default {
   .site-navigation__toggle-wrapper
   .ui-button-icon
   svg {
-  transform: translate(-50%, -50%) rotate(0deg);
+  transform: rotate(0deg);
+}
+
+.icons {
+  width: var(--site-nav-width-collapsed);
+  height: var(--site-nav-width-collapsed);
 }
 </style>

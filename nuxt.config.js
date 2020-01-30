@@ -43,7 +43,8 @@ export default {
     'mapbox-gl/dist/mapbox-gl.css',
     '~/css/main.css',
     '~/css/typography.css',
-    '~/css/helpers.css'
+    '~/css/helpers.css',
+    'material-design-icons/iconfont/material-icons.css'
   ],
 
   /*
