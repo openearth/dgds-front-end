@@ -16,9 +16,6 @@
 * {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: var(--color-text-color);
-  font-size: inherit;
-  line-height: inherit;
-  font-weight: inherit;
 }
 
 .strong {
