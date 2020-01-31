@@ -37,7 +37,6 @@
     <TimeStamp
       v-show="activeTimestamp !== ''"
       class="default-layout__timestamp"
-      :timestamp="activeTimestamp"
     />
     <DisclaimerModal />
     <nuxt />

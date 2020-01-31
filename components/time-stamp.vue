@@ -1,25 +1,18 @@
 <template>
   <Panel class="timestamp">
-    <span class="timestamp__title">Date raster layer: {{ timestamp }}</span>
+    Date raster layer:
+    <TimeSlider />
   </Panel>
 </template>
 
 <script>
-import Panel from './panel'
+import Panel from './panel.vue'
+import TimeSlider from './time-slider/time-slider.vue'
+
 export default {
-  components: { Panel },
-  props: {
-    timestamp: {
-      type: String,
-      default: () => ''
-    }
-  }
+  components: { Panel, TimeSlider }
 }
 </script>
 
 <style>
-.timestamp__title {
-  display: flex;
-  align-items: center;
-}
 </style>

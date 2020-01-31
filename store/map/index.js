@@ -225,7 +225,7 @@ export const getters = {
     const dateFormat = _.get(activeRasterData, 'dateFormat')
 
     if (date && dateFormat) {
-      const timeStamp = moment(date, dateFormat).format('DD-MM-YYYY')
+      const timeStamp = moment(date, dateFormat).format('DD-MM-YYYY HH:MM')
       return timeStamp
     } else {
       return ''
