@@ -60,6 +60,10 @@ export const mutations = {
     } else {
       state.collapsedDatasets.push(id)
     }
+  },
+
+  updateRasterLayer (state, { dataset, rasterLayer }) {
+    state.datasets[dataset].raster = rasterLayer
   }
 }
 
@@ -105,6 +109,15 @@ export const actions = {
           }
         }
       })
+    })
+  },
+
+  retrieveRasterLayerByImageId ({ commit, state, getters }, imageId) {
+    const dataset = getters.getActiveRasterLayer
+
+    // Retrieve complete new rasterLayer by imageId and dataset
+    getFromApi(`datasets/${dataset}/${imageId}`).then((val) => {
+      commit('updateRasterLayer', { dataset, rasterLayer: val })
     })
   },
 

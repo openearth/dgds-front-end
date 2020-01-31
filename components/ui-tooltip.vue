@@ -11,14 +11,14 @@
 import VueMarkdown from 'vue-markdown'
 
 export default {
+  components: {
+    VueMarkdown
+  },
   props: {
     tooltipText: {
       type: String,
       default: ''
     }
-  },
-  components: {
-    VueMarkdown
   }
 }
 </script>

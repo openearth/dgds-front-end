@@ -116,7 +116,7 @@ export default {
     ]),
     rasterLayer () {
       const rasterLayer = getRasterLayer()
-      rasterLayer.source.tiles = _.get(this.activeRasterData, 'tiles')
+      rasterLayer.source.tiles = [_.get(this.activeRasterData, 'url')]
       return rasterLayer
     },
     vectorLayers () {
