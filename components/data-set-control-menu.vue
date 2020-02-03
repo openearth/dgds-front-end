@@ -16,10 +16,14 @@
               :name="`dataset-${dataset.id}`"
               fallback-name="placeholder"
             />
-            <UiTooltip v-if="dataset.toolTip" class="data-set-control-menu__text unselectable" :tooltipText="dataset.toolTip">
+            <UiTooltip
+              v-if="dataset.toolTip"
+              class="data-set-control-menu__text unselectable"
+              :tooltip-text="dataset.toolTip"
+            >
               {{ dataset.name }}
             </UiToolTip>
-            <div class="data-set-control-menu__text" v-else>
+            <div v-else class="data-set-control-menu__text">
               {{ dataset.name }}
             </div>
             <div class="data-set-control-menu__control">
