@@ -6,14 +6,18 @@
       'graph-line--collapsed': isCollapsed,
     }"
   >
-    <ui-button-icon
+    <UiButtonIcon
       v-if="collapsible"
       class="graph-line__toggle"
       label="Toggle"
       @click="toggleCollapsedDataset(parameterId)"
     >
-      <icon name="chevron" />
-    </ui-button-icon>
+    <Icon
+      size="large"
+      name="action-chevron-down"
+      fallback-name="placeholder"
+    />
+    </UiButtonIcon>
     <figcaption
       class="graph-line__caption strong"
       @click="toggleCollapsedDataset(parameterId)"
@@ -30,22 +34,20 @@
         :ref="title"
         :options="graphData()"
         :autoresize="true"
-        height="100%"
         class="graph-line__chart"
       />
       <img
         v-if="type === 'images'"
-        id="graphImage"
         :src="imageUrl"
-        class="graph-line__chart"
+        class="graph-line__chart graph-image"
       >
-      <ui-button
+      <UiButton
         class="download-btn"
         kind="quiet"
         @click="download()"
       >
         DOWNLOAD
-      </ui-button>
+      </UiButton>
     </div>
   </figure>
 </template>
@@ -259,15 +261,10 @@ export default {
   height: 600px;
 }
 
-#graphImage {
+.graph-image {
   background-repeat: no-repeat;
   background-size: 50% 100%;
   height: 600px;
-}
-
-.echarts {
-  width: 100%;
-  height: 100%;
 }
 
 .graph-line {
@@ -276,12 +273,8 @@ export default {
 }
 
 .graph-line__aspect-ratio {
-  height: 0;
-  overflow: hidden;
-  padding-top: 50%;
+  min-height: 360px;
   position: relative;
-  padding-top: 60%;
-  height: ;
 }
 
 .graph-line__chart {
@@ -298,14 +291,12 @@ export default {
 
 .graph-line__toggle {
   position: absolute;
-  top: calc(var(--caption-height) / 2);
   right: 0;
   transition: transform 0.25s ease-in-out;
-  transform: translateY(-50%);
 }
 
 .graph-line--collapsed .graph-line__toggle {
-  transform: translateY(-50%) rotate(180deg);
+  transform: rotate(180deg);
 }
 
 .graph-line__caption {
@@ -314,10 +305,6 @@ export default {
   height: var(--caption-height);
 }
 
-#btn-div {
-  height: 10%;
-  position: absolute;
-}
 .download-btn {
   right: 0;
   bottom: 0;
