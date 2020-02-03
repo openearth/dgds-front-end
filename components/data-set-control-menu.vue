@@ -16,7 +16,14 @@
               :name="`dataset-${dataset.id}`"
               fallback-name="placeholder"
             />
-            <div class="data-set-control-menu__text unselectable">
+            <UiTooltip
+              v-if="dataset.toolTip"
+              class="data-set-control-menu__text unselectable"
+              :tooltip-text="dataset.toolTip"
+            >
+              {{ dataset.name }}
+            </UiToolTip>
+            <div v-else class="data-set-control-menu__text">
               {{ dataset.name }}
             </div>
             <div class="data-set-control-menu__control">
@@ -55,11 +62,12 @@ import _ from 'lodash'
 import Panel from './panel'
 import UiToggle from './ui-toggle'
 import UiRadio from './ui-radio'
+import UiTooltip from './ui-tooltip'
 import Icon from './icon'
 import LayerLegend from './layer-legend.vue'
 
 export default {
-  components: { Panel, UiToggle, Icon, UiRadio, LayerLegend },
+  components: { Panel, UiToggle, Icon, UiRadio, LayerLegend, UiTooltip },
   props: {
     datasets: {
       type: Array,

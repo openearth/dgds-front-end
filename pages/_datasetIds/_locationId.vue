@@ -5,7 +5,11 @@
         {{ locations }}
       </h2>
       <ui-button-icon @click="close">
-        <icon name="cross" />
+        <Icon
+          name="action-cross"
+          fallback-name="placeholder"
+          size="large"
+        />
       </ui-button-icon>
     </header>
     <section class="location-id__graphs">
