@@ -47,17 +47,10 @@ export const mutations = {
     // else add to datasets
     if (!state[id]) Vue.set(state, id, {})
     const rasterData = getRasterData(state[id])
-    const rasterLayer = merge(rasterData, {
-      date: _.get(data, 'rasterLayer.date'),
-      dateFormat: _.get(data, 'rasterLayer.dateFormat'),
-      tiles: [_.get(data, 'rasterLayer.url')],
-      linearGradient: _.get(data, 'rasterLayer.linearGradient'),
-      min: _.get(data, 'rasterLayer.min'),
-      max: _.get(data, 'rasterLayer.max'),
-      imageId: _.get(data, 'rasterLayer.imageId'),
-      featureInfoUrl: _.get(data, 'rasterLayer.featureInfoUrl')
-    })
+    const rasterLayer = merge(rasterData, _.get(data, 'rasterLayer'))
+
     if (!_.get(data, 'rasterLayer.url')) return
+    rasterLayer.tiles = [_.get(rasterLayer, 'url')]
     Vue.set(state[id], 'raster', rasterLayer)
   },
   addDatasetPointData (state, { id, data }) {

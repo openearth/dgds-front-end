@@ -114,6 +114,7 @@ describe('addDatasetRaster', () => {
       wl: {
         raster: {
           tiles: ['some/url'],
+          url: 'some/url',
           date: '01-01-2011',
           dateFormat: 'DD-MM-YYYY',
           linearGradient: 'some/gradient',
@@ -183,12 +184,7 @@ describe('addDatasetRaster', () => {
       },
       wd: {
         raster: {
-          tiles: ['some/url'],
-          date: undefined,
-          dateFormat: undefined,
-          linearGradient: undefined,
-          max: undefined,
-          min: undefined
+          tiles: ['some/url']
         }
       }
     })
