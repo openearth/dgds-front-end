@@ -37,6 +37,7 @@
     <TimeStamp
       v-show="activeTimestamp !== ''"
       class="default-layout__timestamp"
+      @update-timestep="removeInfoText"
     />
     <DisclaimerModal />
     <nuxt />
@@ -117,6 +118,7 @@ export default {
     rasterLayer () {
       const rasterLayer = getRasterLayer()
       rasterLayer.source.tiles = [_.get(this.activeRasterData, 'url')]
+      console.log('hello')
       return rasterLayer
     },
     vectorLayers () {

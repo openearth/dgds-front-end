@@ -44,6 +44,7 @@ export default {
     ...mapActions('map', ['retrieveRasterLayerByImageId']),
     getNewRasterLayer (serie) {
       this.retrieveRasterLayerByImageId(_.get(serie, 'imageId'))
+      this.$emit('update-timestep')
     }
   }
 }
