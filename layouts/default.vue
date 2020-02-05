@@ -1,6 +1,6 @@
 <template>
   <div class="default-layout" style="position: relative;">
-    <no-ssr>
+    <client-only>
       <v-mapbox
         id="map"
         ref="map"
@@ -27,7 +27,7 @@
         />
         <v-mapbox-raster-layer :options="rasterLayer" @click="getFeatureInfo" />
       </v-mapbox>
-    </no-ssr>
+    </client-only>
     <DataSetControlMenu
       class="default-layout__data-set-control-menu"
       :datasets="datasetsInActiveTheme"

@@ -2,22 +2,25 @@
   <div class="time-slider">
     <div v-if="dailyImagesTimeline" />
     <div class="time-slider__button-container">
-      <UiButtonIcon class="time-slider__button" @click="getNewRasterLayer(-1)">
-        <Icon class="icons" :mdi="true" name="chevron_left" />
-      </UiButtonIcon>
+      <div class="time-slider__button">
+        <UiButtonIcon v-if="timeIndex !== 0" @click="back">
+          <Icon class="icons" :mdi="true" name="chevron_left" />
+        </UiButtonIcon>
+      </div>
       <span class="time-slider__text">
-        {{ activeTimestamp }}
+        {{ label }}
       </span>
-      <UiButtonIcon class="time-slider__button" @click="getNewRasterLayer(1)">
-        <Icon class="icons" :mdi="true" name="chevron_right" />
-      </UiButtonIcon>
+      <div class="time-slider__button">
+        <UiButtonIcon v-if="timeIndex !== dates.length - 1" @click="forward">
+          <Icon class="icons" :mdi="true" name="chevron_right" />
+        </UiButtonIcon>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import _ from 'lodash'
-import { mapActions, mapGetters } from 'vuex'
 import UiButtonIcon from '../ui-button-icon'
 import Icon from '../icon'
 
@@ -33,28 +36,65 @@ export default {
     dates: {
       type: Array,
       default: () => []
+    },
+    label: {
+      type: String,
+      default: () => ''
+    },
+    startAt: {
+      // Where to start in the dates array, begin end or at random index
+      default: () => 'start',
+      validator (value) {
+        if (Number.isInteger(value)) return true
+        else if (['start', 'end'].includes(value)) return true
+        else return false
+      }
+    }
+  },
+  data () {
+    return {
+      timeIndex: 0
     }
   },
   computed: {
-    ...mapGetters('map', [
-      'activeTimestamp',
-      'activeRasterData'
-    ])
+    currentDateObject () {
+      return _.get(this.dates, this.timeIndex)
+    }
+  },
+  watch: {
+    dates (newVal, oldVal) {
+      // When the dates have changed, change timeIndex
+      const newObj = _.get(newVal, this.timeIndex)
+      const oldObj = _.get(oldVal, this.timeIndex)
+      if (!_.isEqual(oldObj, newObj) || oldObj.length !== newObj.length) {
+        this.setInitialTimeIndex()
+      }
+    },
+    timeIndex () {
+      this.$emit('update-timestep', this.currentDateObject)
+    }
+  },
+  mounted () {
+    this.setInitialTimeIndex()
   },
   methods: {
-    ...mapActions('map', ['retrieveRasterLayerByImageId']),
-    getNewRasterLayer (newIndex) {
-      const series = _.get(this.activeRasterData, 'imageTimeseries')
-      const imgId = _.get(this.activeRasterData, 'imageId')
-
-      // Find the index of the current time stamp
-      const currentIndex = series.findIndex((serie) => {
-        return serie.imageId === imgId
-      })
-      const serie = series[currentIndex + newIndex]
-      const imageId = _.get(serie, 'imageId')
-      console.log(serie, series, newIndex, currentIndex, imageId)
-      this.retrieveRasterLayerByImageId(imageId)
+    setInitialTimeIndex () {
+      // Set the timeIndex when timeslider is mounted or dates have changed
+      if (this.startAt === 'end' && this.dates.length > 0) {
+        this.timeIndex = this.dates.length - 1
+      } else if (Number.isInteger(this.startAt)) {
+        this.timeIndex = this.startAt
+      } else {
+        this.timeIndex = 0
+      }
+    },
+    forward () {
+      // Go one step forward in time
+      this.timeIndex += 1
+    },
+    back () {
+      // Go one step back in time
+      this.timeIndex -= 1
     }
   }
 }
@@ -65,8 +105,12 @@ export default {
   display: flex;
 }
 
+.time-slider__button {
+  width: 48px;
+}
+
 .time-slider__text {
   margin: auto;
-  padding-bottom: 1px;
+  padding: 0 var(--spacing-small) 1px  var(--spacing-small);
 }
 </style>

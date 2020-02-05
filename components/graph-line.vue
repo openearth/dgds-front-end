@@ -12,11 +12,11 @@
       label="Toggle"
       @click="toggleCollapsedDataset(parameterId)"
     >
-    <Icon
-      size="large"
-      name="action-chevron-down"
-      fallback-name="placeholder"
-    />
+      <Icon
+        size="large"
+        name="action-chevron-down"
+        fallback-name="placeholder"
+      />
     </UiButtonIcon>
     <figcaption
       class="graph-line__caption strong"
