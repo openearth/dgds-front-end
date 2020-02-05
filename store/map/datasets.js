@@ -50,6 +50,7 @@ export const mutations = {
     const rasterLayer = merge(rasterData, _.get(data, 'rasterLayer'))
 
     if (!_.get(data, 'rasterLayer.url')) return
+    rasterLayer.tiles = [_.get(rasterLayer, 'url')]
     Vue.set(state[id], 'raster', rasterLayer)
   },
   addDatasetPointData (state, { id, data }) {
