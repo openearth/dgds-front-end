@@ -95,5 +95,7 @@ export default {
 .time-slider__text {
   margin: auto;
   padding: 0 16px 1px 16px;
+  width: 300px;
+  text-align: center;
 }
 </style>

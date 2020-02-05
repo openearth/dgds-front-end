@@ -7,16 +7,16 @@
       @update-timestep="getNewRasterLayer"
     >
       <template v-slot:backButton="{back}">
-        <UiButtonIcon @click="back">
+        <UiButtonIcon :disabled="getLoadingState" @click="back">
           <Icon class="icons" :mdi="true" name="chevron_left" />
         </UiButtonIcon>
       </template>
       <template v-slot:label>
-        {{activeTimestamp}}
+        {{ activeTimestamp }}
       </template>
       <template v-slot:forwardButton="{forward}">
-        <UiButtonIcon @click="forward">
-          <Icon class="icons" :mdi="true" name="chevron_right" />
+        <UiButtonIcon :disabled="getLoadingState" @click="forward">
+          <Icon class="icons" :mdi="true" name="chevron_right" @click="forward"/>
         </UiButtonIcon>
       </template>
     </TimeSlider>
@@ -36,7 +36,8 @@ export default {
   computed: {
     ...mapGetters('map', [
       'activeTimestamp',
-      'activeRasterData'
+      'activeRasterData',
+      'getLoadingState'
     ])
   },
   methods: {
