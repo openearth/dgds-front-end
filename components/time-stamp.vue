@@ -3,21 +3,36 @@
     Date raster layer:
     <TimeSlider
       :dates="activeRasterData.imageTimeseries"
-      :label="activeTimestamp"
       start-at="end"
       @update-timestep="getNewRasterLayer"
-    />
+    >
+      <template v-slot:backButton="{back}">
+        <UiButtonIcon @click="back">
+          <Icon class="icons" :mdi="true" name="chevron_left" />
+        </UiButtonIcon>
+      </template>
+      <template v-slot:label>
+        {{activeTimestamp}}
+      </template>
+      <template v-slot:forwardButton="{forward}">
+        <UiButtonIcon @click="forward">
+          <Icon class="icons" :mdi="true" name="chevron_right" />
+        </UiButtonIcon>
+      </template>
+    </TimeSlider>
   </Panel>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import _ from 'lodash'
+import UiButtonIcon from './ui-button-icon'
+import Icon from './icon'
 import Panel from './panel.vue'
 import TimeSlider from './time-slider/time-slider.vue'
 
 export default {
-  components: { Panel, TimeSlider },
+  components: { Panel, TimeSlider, UiButtonIcon, Icon },
   computed: {
     ...mapGetters('map', [
       'activeTimestamp',

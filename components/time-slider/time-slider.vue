@@ -1,19 +1,15 @@
 <template>
   <div class="time-slider">
-    <div v-if="dailyImagesTimeline" />
+    <!-- TODO: create slot for svg timeslider element -->
     <div class="time-slider__button-container">
       <div class="time-slider__button">
-        <UiButtonIcon v-if="timeIndex !== 0" @click="back">
-          <Icon class="icons" :mdi="true" name="chevron_left" />
-        </UiButtonIcon>
+        <slot v-if="timeIndex !== 0" name="backButton" :back="back" />
       </div>
       <span class="time-slider__text">
-        {{ label }}
+        <slot name="label" />
       </span>
       <div class="time-slider__button">
-        <UiButtonIcon v-if="timeIndex !== dates.length - 1" @click="forward">
-          <Icon class="icons" :mdi="true" name="chevron_right" />
-        </UiButtonIcon>
+        <slot v-if="timeIndex !== dates.length - 1" name="forwardButton" :forward="forward" />
       </div>
     </div>
   </div>
@@ -21,25 +17,12 @@
 
 <script>
 import _ from 'lodash'
-import UiButtonIcon from '../ui-button-icon'
-import Icon from '../icon'
 
 export default {
-  components: {
-    UiButtonIcon, Icon
-  },
   props: {
-    dailyImagesTimeline: {
-      type: Boolean,
-      default: () => false
-    },
     dates: {
       type: Array,
       default: () => []
-    },
-    label: {
-      type: String,
-      default: () => ''
     },
     startAt: {
       // Where to start in the dates array, begin end or at random index
@@ -111,6 +94,6 @@ export default {
 
 .time-slider__text {
   margin: auto;
-  padding: 0 var(--spacing-small) 1px  var(--spacing-small);
+  padding: 0 16px 1px 16px;
 }
 </style>
