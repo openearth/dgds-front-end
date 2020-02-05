@@ -240,7 +240,8 @@ export const getters = {
       .filter(identity)
   },
 
-  activeTimestamp (state, { activeRasterData }) {
+  activeTimestamp (state) {
+    const { activeRasterData } = state
     if (state.loadingRasterLayers) return 'Loading...'
     // Retrieve the timestamp from te activeRasterData and combine this into a string
     // using the dateformat given
@@ -248,7 +249,7 @@ export const getters = {
     const dateFormat = _.get(activeRasterData, 'dateFormat')
 
     if (date && dateFormat) {
-      const timeStamp = moment(date, dateFormat).format('DD-MM-YYYY HH:MM')
+      const timeStamp = moment(date, dateFormat).format('DD-MM-YYYY HH:mm')
       return timeStamp
     } else {
       return ''
