@@ -1,6 +1,6 @@
 <template>
   <div class="default-layout" style="position: relative;">
-    <no-ssr>
+    <client-only>
       <v-mapbox
         id="map"
         ref="map"
@@ -27,7 +27,7 @@
         />
         <v-mapbox-raster-layer :options="rasterLayer" @click="getFeatureInfo" />
       </v-mapbox>
-    </no-ssr>
+    </client-only>
     <DataSetControlMenu
       class="default-layout__data-set-control-menu"
       :datasets="datasetsInActiveTheme"
@@ -35,9 +35,9 @@
       @toggle-raster-layer="toggleRasterLayer"
     />
     <TimeStamp
-      v-show="activeTimestamp !== ''"
+      v-show="activeTimestamp !== '' && getActiveRasterLayer"
       class="default-layout__timestamp"
-      :timestamp="activeTimestamp"
+      @update-timestep="removeInfoText"
     />
     <DisclaimerModal />
     <nuxt />
@@ -117,7 +117,7 @@ export default {
     ]),
     rasterLayer () {
       const rasterLayer = getRasterLayer()
-      rasterLayer.source.tiles = _.get(this.activeRasterData, 'tiles')
+      rasterLayer.source.tiles = [_.get(this.activeRasterData, 'url')]
       return rasterLayer
     },
     vectorLayers () {

@@ -21,7 +21,8 @@ export const state = () => ({
   activeLocationIds: [],
   activeRasterLayerId: '',
   activeTheme: {},
-  collapsedDatasets: []
+  collapsedDatasets: [],
+  loadingRasterLayers: false
 })
 
 export const mutations = {
@@ -60,6 +61,13 @@ export const mutations = {
     } else {
       state.collapsedDatasets.push(id)
     }
+  },
+
+  updateRasterLayer (state, { dataset, rasterLayer }) {
+    state.datasets[dataset].raster = rasterLayer
+  },
+  setLoadingRasterLayers (state, loading) {
+    state.loadingRasterLayers = loading
   }
 }
 
@@ -105,6 +113,17 @@ export const actions = {
           }
         }
       })
+    })
+  },
+
+  retrieveRasterLayerByImageId ({ commit, state, getters }, imageId) {
+    commit('setLoadingRasterLayers', true)
+    const dataset = getters.getActiveRasterLayer
+
+    // Retrieve complete new rasterLayer by imageId and dataset
+    return getFromApi(`datasets/${dataset}/${imageId}`).then((val) => {
+      commit('updateRasterLayer', { dataset, rasterLayer: val })
+      commit('setLoadingRasterLayers', false)
     })
   },
 
@@ -193,6 +212,9 @@ export const getters = {
   getCollapsedDatasets (state) {
     return state.collapsedDatasets
   },
+  getLoadingState (state) {
+    return state.loadingRasterLayers
+  },
   knownLocationIds (state) {
     const getInDatasets = getIn(state.datasets)
     const getLocationId = map(get('properties.locationId'))
@@ -218,14 +240,15 @@ export const getters = {
       .filter(identity)
   },
 
-  activeTimestamp ({ state }, { activeRasterData }) {
+  activeTimestamp (state, { activeRasterData }) {
+    if (state.loadingRasterLayers) return 'Loading...'
     // Retrieve the timestamp from te activeRasterData and combine this into a string
     // using the dateformat given
     const date = _.get(activeRasterData, 'date')
     const dateFormat = _.get(activeRasterData, 'dateFormat')
 
     if (date && dateFormat) {
-      const timeStamp = moment(date, dateFormat).format('DD-MM-YYYY')
+      const timeStamp = moment(date, dateFormat).format('DD-MM-YYYY HH:mm')
       return timeStamp
     } else {
       return ''
