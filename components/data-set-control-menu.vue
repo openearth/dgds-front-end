@@ -16,21 +16,21 @@
               class="data-set-control-menu__icon unselectable"
               :tooltip-text="dataset.toolTip"
             >
+              <Icon
+                class="data-set-control-menu__icon"
+                :name="`dataset-${dataset.id}`"
+                fallback-name="placeholder"
+              />
+            </UiToolTip>
             <Icon
+              v-else
               class="data-set-control-menu__icon"
               :name="`dataset-${dataset.id}`"
               fallback-name="placeholder"
             />
-          </UiToolTip>
-          <Icon
-            class="data-set-control-menu__icon"
-            :name="`dataset-${dataset.id}`"
-            fallback-name="placeholder"
-            v-else
-          />
-          <div class="data-set-control-menu__text">
-            {{ dataset.name }}
-          </div>
+            <div class="data-set-control-menu__text">
+              {{ dataset.name }}
+            </div>
             <div class="data-set-control-menu__control">
               <UiToggle
                 v-if="checkVector(dataset.id)"
