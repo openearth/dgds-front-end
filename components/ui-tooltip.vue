@@ -1,9 +1,7 @@
 <template>
   <div class="tooltip">
     <slot />
-    <span class="tooltiptext">
-      <VueMarkdown :source="tooltipText" />
-    </span>
+    <VueMarkdown :source="tooltipText" class="tooltiptext"/>
   </div>
 </template>
 
@@ -28,6 +26,7 @@ export default {
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted black;
+  width: calc(20rem - var(--spacing-small));
 }
 
 .tooltip .tooltiptext {
@@ -38,11 +37,13 @@ export default {
   border-radius: 4px;
   position: absolute;
   left: 0;
-  max-width: 220px;
   z-index: 1;
-  top: 100%;
+  top: calc(var(--spacing-default) + 0.5 * var(--spacing-small));
   word-wrap: break-word;
-  text-align: center;
+  text-align: left;
+}
+.tooltiptext {
+  width: calc(20rem - 2 * var(--spacing-small) - 8px);
 }
 
 .tooltip:hover .tooltiptext {
