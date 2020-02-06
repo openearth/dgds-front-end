@@ -110,14 +110,14 @@ describe('activeTimestamp', () => {
     const state = {
       loadingRasterLayers: true
     }
-    const result = getters.activeTimestamp(state)
+    const result = getters.activeTimestamp(state, state)
     expect(result).toBe('Loading...')
   })
   test('returns empty when no activeRasterData is available', () => {
     const state = {
       activeRasterData: []
     }
-    const result = getters.activeTimestamp(state)
+    const result = getters.activeTimestamp(state, state)
     expect(result).toBe('')
   })
   test('returns date in DD-MM-YYYY HH:MM when activeRasterData is available and a correct time string', () => {
@@ -127,7 +127,7 @@ describe('activeTimestamp', () => {
         dateFormat: 'YYYY-MM-DD HH:mm'
       }
     }
-    const result = getters.activeTimestamp(state)
+    const result = getters.activeTimestamp(state, state)
     expect(result).toBe('01-12-2011 00:01')
   })
 

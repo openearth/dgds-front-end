@@ -16,7 +16,7 @@
       </template>
       <template v-slot:forwardButton="{forward}">
         <UiButtonIcon :disabled="getLoadingState" @click="forward">
-          <Icon class="icons" :mdi="true" name="chevron_right" @click="forward"/>
+          <Icon class="icons" :mdi="true" name="chevron_right" />
         </UiButtonIcon>
       </template>
     </TimeSlider>
@@ -37,14 +37,18 @@ export default {
     ...mapGetters('map', [
       'activeTimestamp',
       'activeRasterData',
-      'getLoadingState'
+      'getLoadingState',
+      'getActiveRasterLayer'
     ])
   },
   methods: {
     ...mapActions('map', ['retrieveRasterLayerByImageId']),
     getNewRasterLayer (serie) {
-      this.retrieveRasterLayerByImageId(_.get(serie, 'imageId'))
-      this.$emit('update-timestep')
+      if (this.getActiveRasterLayer) {
+        // For each update of the timeslider adjust the raster layer to the new time
+        this.retrieveRasterLayerByImageId(_.get(serie, 'imageId'))
+        this.$emit('update-timestep')
+      }
     }
   }
 }

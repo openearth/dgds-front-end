@@ -28,9 +28,13 @@ export default {
       // Where to start in the dates array, begin end or at random index
       default: () => 'start',
       validator (value) {
-        if (Number.isInteger(value)) return true
-        else if (['start', 'end'].includes(value)) return true
-        else return false
+        if (Number.isInteger(value)) {
+          return true
+        } else if (['start', 'end'].includes(value)) {
+          return true
+        } else {
+          return false
+        }
       }
     }
   },

@@ -35,7 +35,7 @@
       @toggle-raster-layer="toggleRasterLayer"
     />
     <TimeStamp
-      v-show="activeTimestamp !== ''"
+      v-show="activeTimestamp !== '' && getActiveRasterLayer"
       class="default-layout__timestamp"
       @update-timestep="removeInfoText"
     />
@@ -118,7 +118,6 @@ export default {
     rasterLayer () {
       const rasterLayer = getRasterLayer()
       rasterLayer.source.tiles = [_.get(this.activeRasterData, 'url')]
-      console.log('hello')
       return rasterLayer
     },
     vectorLayers () {
