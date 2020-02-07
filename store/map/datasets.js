@@ -22,17 +22,17 @@ const getMetadata = pipe([get('metadata'), getOrEmptyMetadata])
 export const state = () => ({})
 
 export const mutations = {
-  addDatasetVector(state, data) {
+  addDatasetVector (state, data) {
     const id = _.get(data, 'id')
     if (!id) return
     if (!state[id]) Vue.set(state, id, {})
     const vectorData = getVectorData(state[id])
 
     const mapboxLayers = _.get(data, 'vectorLayer.mapboxLayers') || []
-    const newMapboxLayers = mapboxLayers.map(layer => {
+    const newMapboxLayers = mapboxLayers.map((layer) => {
       layer.metadata = {
         locationIdField: _.get(data, 'locationIdField'),
-        datasetId: _.get(layer, 'id'),
+        datasetId: _.get(layer, 'id')
       }
       return layer
     })
@@ -40,32 +40,27 @@ export const mutations = {
     const mergedVector = _.merge({ mapboxLayer: newMapboxLayers }, vectorData)
     Vue.set(state[id], 'vector', mergedVector)
   },
-  addDatasetRaster(state, data) {
+  addDatasetRaster (state, data) {
     const id = _.get(data, 'id')
     // If id already has a rasterLayer return
     if (!id) return
     // else add to datasets
     if (!state[id]) Vue.set(state, id, {})
     const rasterData = getRasterData(state[id])
-    const rasterLayer = merge(rasterData, {
-      date: _.get(data, 'rasterLayer.date'),
-      dateFormat: _.get(data, 'rasterLayer.dateFormat'),
-      tiles: [_.get(data, 'rasterLayer.url')],
-      linearGradient: _.get(data, 'rasterLayer.linearGradient'),
-      min: _.get(data, 'rasterLayer.min'),
-      max: _.get(data, 'rasterLayer.max'),
-    })
+    const rasterLayer = merge(rasterData, _.get(data, 'rasterLayer'))
+
     if (!_.get(data, 'rasterLayer.url')) return
+    rasterLayer.tiles = [_.get(rasterLayer, 'url')]
     Vue.set(state[id], 'raster', rasterLayer)
   },
-  addDatasetPointData(state, { id, data }) {
+  addDatasetPointData (state, { id, data }) {
     if (!state[id]) Vue.set(state, id, {})
     const pointData = getPointData(state[id])
     Vue.set(state[id], 'pointData', merge(pointData, data))
   },
-  addMetadata(state, _metadata) {
+  addMetadata (state, _metadata) {
     if (!state[_metadata.id]) Vue.set(state, _metadata.id, {})
     const metadata = getMetadata(state[_metadata.id])
     Vue.set(state[_metadata.id], 'metadata', merge(metadata, _metadata))
-  },
+  }
 }

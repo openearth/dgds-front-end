@@ -6,7 +6,7 @@
         type="checkbox"
         v-bind="$attrs"
         v-on="$listeners"
-      />
+      >
       <span class="ui-checkbox__visual" />
     </span>
     <slot />

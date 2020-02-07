@@ -1,5 +1,5 @@
 <template>
-  <button class="ui-button-icon" aria-label="text" v-on="$listeners">
+  <button class="ui-button-icon" :disabled="disabled" aria-label="text" v-on="$listeners">
     <slot />
   </button>
 </template>
@@ -9,9 +9,13 @@ export default {
   props: {
     text: {
       type: String,
-      default: '',
+      default: ''
     },
-  },
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  }
 }
 </script>
 
@@ -51,5 +55,10 @@ export default {
 
 .ui-button-icon:active {
   background-color: var(--color-quiet-pressed);
+}
+
+.ui-button-icon:disabled {
+  background-color: var(--color-background);
+  cursor: wait;
 }
 </style>

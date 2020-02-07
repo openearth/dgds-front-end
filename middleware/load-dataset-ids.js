@@ -1,4 +1,4 @@
-export default function loadDatasetIds({ route, store }) {
+export default function loadDatasetIds ({ route, store }) {
   if (process.client) {
     const { datasetIds } = route.params
     if (datasetIds) {

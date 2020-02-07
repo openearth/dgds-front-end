@@ -7,6 +7,7 @@ test('Initial state', () => {
     activeRasterLayerId: '',
     activeTheme: {},
     collapsedDatasets: [],
+    loadingRasterLayers: false
   }
   expect(state()).toEqual(initialState)
 })

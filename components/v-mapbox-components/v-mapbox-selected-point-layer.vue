@@ -15,12 +15,12 @@ export default {
       default: () => {
         return {
           type: 'Point',
-          coordinates: [],
+          coordinates: []
         }
-      },
-    },
+      }
+    }
   },
-  data() {
+  data () {
     return {
       map: null,
       selectedLayer: {
@@ -28,29 +28,31 @@ export default {
         type: 'circle',
         source: {
           type: 'geojson',
-          data: {},
+          data: {}
         },
         paint: {
           'circle-stroke-width': 8,
           'circle-color': color.white100,
           'circle-stroke-color': color.blue60,
-          'circle-stroke-opacity': 0.6,
-        },
-      },
+          'circle-stroke-opacity': 0.6
+        }
+      }
     }
   },
   watch: {
-    geometry(newValue) {
+    geometry (newValue) {
       const selectedLayer = this.map.getSource(this.selectedLayer.id)
       selectedLayer.setData(newValue)
-    },
+      this.map.moveLayer(this.selectedLayer.id)
+    }
   },
   methods: {
-    deferredMountedTo(map) {
+    deferredMountedTo (map) {
       this.map = map
       this.selectedLayer.source.data = this.geometry
       map.addLayer(this.selectedLayer)
-    },
-  },
+      this.map.moveLayer(this.selectedLayer.id)
+    }
+  }
 }
 </script>

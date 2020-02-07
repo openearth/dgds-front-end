@@ -5,7 +5,24 @@
     label="site navigation"
     @keydown.esc="collapse"
   >
+    <AboutSection v-if="about" />
     <ul class="site-navigation__list">
+      <li>
+        <div class="site-navigation__list-item">
+          <div class="site-navigation-list-item__img-holder">
+            <img
+              class="img-logo"
+              :src="require('~/assets/images/deltares_avatar.png')"
+              @click="toggleExpanded"
+            ></img>
+          </div>
+          <img
+            v-show="expanded"
+            class="img-logo--expanded"
+            :src="require('~/assets/images/deltares_logo.png')"
+          ></img>
+        </div>
+      </li>
       <li v-for="(theme, key) in getThemes" :key="key">
         <div class="site-navigation__list-item">
           <UiButtonIcon
@@ -27,14 +44,22 @@
               'site-navigation__list-item--active': checkActive(theme.id),
             }"
             @click="toggleTheme(theme.id)"
-            >{{ theme.name }}</span
-          >
+          >{{ theme.name }}
+          </span>
         </div>
       </li>
     </ul>
+
+    <div class="site-navigation__about-wrapper">
+      <div class="site-navigation__list-item">
+        <UiButtonIcon @click="toggleAbout">
+          <Icon class="icons" :mdi="true" name="info_outline" />
+        </UiButtonIcon>
+      </div>
+    </div>
     <div class="site-navigation__toggle-wrapper">
       <UiButtonIcon @click="toggleExpanded">
-        <Icon size="large" name="collapse" fallback-name="placeholder" />
+        <Icon class="icons" name="collapse" fallback-name="placeholder" />
       </UiButtonIcon>
     </div>
   </nav>
@@ -44,29 +69,31 @@
 import { mapGetters, mapMutations } from 'vuex'
 import UiButtonIcon from './ui-button-icon'
 import Icon from './icon'
+import AboutSection from './about-section'
 
 export default {
-  components: { UiButtonIcon, Icon },
+  components: { UiButtonIcon, Icon, AboutSection },
   data: () => ({
     expanded: false,
-    activeTheme: null,
+    about: false,
+    activeTheme: null
   }),
   computed: {
-    ...mapGetters('map/themes', ['getThemes', 'getActiveTheme']),
+    ...mapGetters('map/themes', ['getThemes', 'getActiveTheme'])
   },
   watch: {
-    $route(to, from) {
+    $route (to, from) {
       if (to.params.locationId) {
         this.collapse()
       }
-    },
+    }
   },
   methods: {
     ...mapMutations('map', ['toggleActiveTheme']),
-    checkActive(id) {
+    checkActive (id) {
       return this.activeTheme === id
     },
-    toggleTheme(id) {
+    toggleTheme (id) {
       this.toggleActiveTheme(id)
       this.$emit('change-theme')
       if (this.activeTheme === id) {
@@ -75,20 +102,46 @@ export default {
         this.activeTheme = id
       }
     },
-    expand() {
+    expand () {
       this.expanded = true
     },
-    collapse() {
+    collapse () {
       this.expanded = false
     },
-    toggleExpanded() {
+    toggleExpanded () {
       this.expanded = !this.expanded
+      if (this.about && this.expanded) {
+        this.toggleAbout()
+      }
     },
-  },
+    toggleAbout () {
+      this.about = !this.about
+      if (this.about && this.expanded) {
+        this.toggleExpanded()
+      }
+    }
+  }
 }
 </script>
 
 <style>
+.img-logo {
+  height: var(--icon-size);
+  z-index: 1; /* Why does this need to be set with a z-index??? */
+  margin: auto;
+}
+
+.img-logo--expanded {
+  height: var(--icon-size);
+  z-index: 1; /* Why does this need to be set with a z-index??? */
+}
+
+.site-navigation-list-item__img-holder {
+  width: var(--site-nav-width-collapsed);
+  z-index: 1;
+  display: flex;
+}
+
 .site-navigation {
   display: flex;
   flex-direction: column;
@@ -109,6 +162,14 @@ export default {
   transition: transform var(--speed-fast) var(--ease);
 }
 
+.site-navigation__about-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  transform: translate(calc(-100% + var(--site-nav-width-collapsed)));
+  transition: transform var(--speed-fast) var(--ease);
+}
+
 .site-navigation__toggle-wrapper {
   display: flex;
   justify-content: flex-end;
@@ -120,12 +181,18 @@ export default {
   color: var(--color-grey-40);
 }
 .site-navigation__toggle-wrapper .ui-button-icon svg {
-  transform: translate(-50%, -50%) rotate(180deg);
+  transform: rotate(180deg);
   transition: transform var(--speed-fast) var(--ease);
 }
 .site-navigation__toggle-wrapper:hover .ui-button-icon,
 .site-navigation__toggle-wrapper .ui-button-icon:focus,
 .site-navigation__toggle-wrapper:active .ui-button-icon {
+  color: var(--color-text);
+}
+
+.site-navigation__about-wrapper:hover .ui-button-icon,
+.site-navigation__about-wrapper .ui-button-icon:focus,
+.site-navigation__about-wrapper:active .ui-button-icon {
   color: var(--color-text);
 }
 
@@ -188,6 +255,7 @@ export default {
 
 .site-navigation--expanded .site-navigation__text,
 .site-navigation--expanded .site-navigation__toggle-wrapper,
+.site-navigation--expanded .site-navigation__about-wrapper,
 .site-navigation--expanded:before {
   transform: translate(0);
 }
@@ -195,6 +263,11 @@ export default {
   .site-navigation__toggle-wrapper
   .ui-button-icon
   svg {
-  transform: translate(-50%, -50%) rotate(0deg);
+  transform: rotate(0deg);
+}
+
+.icons {
+  width: var(--site-nav-width-collapsed);
+  height: var(--site-nav-width-collapsed);
 }
 </style>

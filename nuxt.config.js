@@ -10,12 +10,12 @@ export default {
 
   env: {
     MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
-    SERVER_URL: process.env.SERVER_URL,
+    SERVER_URL: process.env.SERVER_URL
   },
 
   generate: {
     fallback: 'index.html',
-    exclude: [/ui-test/],
+    exclude: [/ui-test/]
   },
 
   /*
@@ -26,9 +26,9 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description },
+      { hid: 'description', name: 'description', content: pkg.description }
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
 
   /*
@@ -44,6 +44,7 @@ export default {
     '~/css/main.css',
     '~/css/typography.css',
     '~/css/helpers.css',
+    'material-design-icons/iconfont/material-icons.css'
   ],
 
   /*
@@ -51,9 +52,10 @@ export default {
    */
   plugins: [
     { src: '~/plugins/custom-properties', ssr: false },
-    { src: '~/plugins/vue-2-mapbox', ssr: false },
+    { src: '~/plugins/vue2mapbox-gl', ssr: false },
     { src: '~/plugins/bootstrap', ssr: false },
     { src: '~/plugins/polyfills', ssr: false },
+    { src: '~/plugins/vuelidate', ssr: false }
   ],
 
   /*
@@ -70,7 +72,7 @@ export default {
       chunk: ({ isDev }) => (isDev ? '[name].js' : '[name].[chunkhash].js'),
       css: ({ isDev }) => (isDev ? '[name].css' : '[name].[contenthash].css'),
       img: ({ isDev }) =>
-        isDev ? '[path][name].[ext]' : 'img/[name].[hash:7].[ext]',
+        isDev ? '[path][name].[ext]' : 'img/[name].[hash:7].[ext]'
     },
 
     postcss: {
@@ -78,20 +80,20 @@ export default {
         'postcss-custom-properties': {
           preserve: true,
           importFrom: [
-            { customProperties: fromPairs(generateCustomProperties('light')) },
-          ],
-        },
+            { customProperties: fromPairs(generateCustomProperties('light')) }
+          ]
+        }
       },
       preset: {
-        autoprefixer: {},
-      },
+        autoprefixer: {}
+      }
     },
     transpile: ['vue-echarts', 'resize-detector'],
 
     /*
      ** You can extend webpack config here
      */
-    extend(config, ctx) {
+    extend (config, ctx) {
       const svgRule = config.module.rules.find(rule => rule.test.test('.svg'))
 
       // TODO: what is this....
@@ -103,13 +105,19 @@ export default {
           {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env'],
-            },
+              presets: ['@babel/preset-env']
+            }
           },
           {
-            loader: 'vue-svg-loader',
-          },
-        ],
+            loader: 'vue-svg-loader'
+          }
+        ]
+      })
+
+      // add frontmatter-markdown-loader
+      config.module.rules.push({
+        test: /\.md$/,
+        loader: 'frontmatter-markdown-loader'
       })
 
       config.module.rules.push({
@@ -124,13 +132,13 @@ export default {
           enforce: 'pre',
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
-          exclude: /(node_modules)/,
+          exclude: /(node_modules)/
         })
       }
 
       if (ctx.isClient) {
         config.devtool = '#source-map'
       }
-    },
-  },
+    }
+  }
 }

@@ -11,12 +11,24 @@
       >
         <div id="menu-control">
           <label class="data-set-control-menu__label">
+            <UiTooltip
+              v-if="dataset.toolTip"
+              class="data-set-control-menu__icon unselectable"
+              :tooltip-text="dataset.toolTip"
+            >
+              <Icon
+                class="data-set-control-menu__icon"
+                :name="`dataset-${dataset.id}`"
+                fallback-name="placeholder"
+              />
+            </UiToolTip>
             <Icon
+              v-else
               class="data-set-control-menu__icon"
               :name="`dataset-${dataset.id}`"
               fallback-name="placeholder"
             />
-            <div class="data-set-control-menu__text unselectable">
+            <div class="data-set-control-menu__text">
               {{ dataset.name }}
             </div>
             <div class="data-set-control-menu__control">
@@ -55,45 +67,46 @@ import _ from 'lodash'
 import Panel from './panel'
 import UiToggle from './ui-toggle'
 import UiRadio from './ui-radio'
+import UiTooltip from './ui-tooltip'
 import Icon from './icon'
 import LayerLegend from './layer-legend.vue'
 
 export default {
-  components: { Panel, UiToggle, Icon, UiRadio, LayerLegend },
+  components: { Panel, UiToggle, Icon, UiRadio, LayerLegend, UiTooltip },
   props: {
     datasets: {
       type: Array,
-      default: () => [],
-    },
+      default: () => []
+    }
   },
   computed: {
     ...mapGetters('map', [
       'getActiveRasterLayer',
       'getActiveTheme',
       'getDatasets',
-      'activeRasterData',
+      'activeRasterData'
     ]),
-    themeName() {
+    themeName () {
       return _.get(this.getActiveTheme, 'name') || 'No theme selected'
-    },
+    }
   },
   methods: {
-    toggleLocationDataset(id) {
+    toggleLocationDataset (id) {
       this.$emit('toggle-location-dataset', id)
     },
-    toggleRasterLayer(id) {
+    toggleRasterLayer (id) {
       if (this.getActiveRasterLayer === id) {
         id = null
       }
       this.$emit('toggle-raster-layer', id)
     },
-    checkVector(id) {
+    checkVector (id) {
       return _.has(this.getDatasets, `${id}.vector`)
     },
-    checkRaster(id) {
+    checkRaster (id) {
       return _.has(this.getDatasets, `${id}.raster`)
-    },
-  },
+    }
+  }
 }
 </script>
 

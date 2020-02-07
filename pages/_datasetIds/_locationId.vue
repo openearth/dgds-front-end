@@ -1,8 +1,16 @@
 <template>
   <aside class="location-id scrollbar">
     <header class="location-id__header">
-      <h2 class="h2">{{ locations }}</h2>
-      <ui-button-icon @click="close"><icon-cross /></ui-button-icon>
+      <h2 class="h2">
+        {{ locations }}
+      </h2>
+      <ui-button-icon @click="close">
+        <Icon
+          name="action-cross"
+          fallback-name="placeholder"
+          size="large"
+        />
+      </ui-button-icon>
     </header>
     <section class="location-id__graphs">
       <GraphLine
@@ -25,18 +33,18 @@
 <script>
 import flatten from 'lodash/flatten'
 import { mapState, mapMutations, mapGetters } from 'vuex'
+import _ from 'lodash'
 import GraphLine from '~/components/graph-line'
 import UiButtonIcon from '~/components/ui-button-icon'
-import IconCross from '~/assets/icon-action-cross.svg'
-import _ from 'lodash'
+import Icon from '~/components/icon'
 
 export default {
   middleware: 'load-location-id',
-  components: { GraphLine, UiButtonIcon, IconCross },
+  components: { GraphLine, UiButtonIcon, Icon },
   computed: {
     ...mapGetters('map', ['activePointDataPerDataset']),
     ...mapState({ activeTheme: state => state.preferences.theme.active }),
-    datasets() {
+    datasets () {
       const activePointData = this.activePointDataPerDataset
 
       // prettier-ignore
@@ -44,26 +52,26 @@ export default {
         .map(pointId => _.get(activePointData, [pointId][0]))
       return flatten(result)
     },
-    locations() {
+    locations () {
       const { locationId } = this.$route.params
       return locationId
-    },
+    }
   },
-  mounted() {
+  mounted () {
     const { locationId } = this.$route.params
     this.location = locationId
     this.setActiveLocationIds([locationId])
   },
-  destroyed() {
+  destroyed () {
     this.clearActiveLocationIds()
   },
   methods: {
     ...mapMutations('map', ['clearActiveLocationIds', 'setActiveLocationIds']),
-    close() {
+    close () {
       const { datasetIds } = this.$route.params
       this.$router.push({ name: 'datasetIds', params: { datasetIds } })
-    },
-  },
+    }
+  }
 }
 </script>
 

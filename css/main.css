@@ -13,10 +13,13 @@
   --border-radius: 4px;
 
   --site-nav-width-collapsed: 3rem;
+
+  --icon-size: 30px;
 }
 
 html {
   box-sizing: border-box;
+  overflow:hidden;
 }
 
 *,
