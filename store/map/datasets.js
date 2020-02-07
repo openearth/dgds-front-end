@@ -13,10 +13,13 @@ const getOrEmpty = empty => when(identity, identity, empty)
 const getOrEmptyVector = getOrEmpty(emptyLocationsObject)
 const getOrEmptyPointData = getOrEmpty(emptyObject)
 const getOrEmptyRaster = getOrEmpty(emptyObject)
+const getOrEmptyFlowmap = getOrEmpty(emptyObject)
 const getOrEmptyMetadata = getOrEmpty(emptyObject)
+
 const getPointData = pipe([get('pointData'), getOrEmptyPointData])
 const getVectorData = pipe([get('vector'), getOrEmptyVector])
 const getRasterData = pipe([get('raster'), getOrEmptyRaster])
+const getFlowmapData = pipe([get('flowmap'), getOrEmptyFlowmap])
 const getMetadata = pipe([get('metadata'), getOrEmptyMetadata])
 
 export const state = () => ({})
@@ -39,6 +42,16 @@ export const mutations = {
     // TODO: make generic by looping over vectorLayer
     const mergedVector = _.merge({ mapboxLayer: newMapboxLayers }, vectorData)
     Vue.set(state[id], 'vector', mergedVector)
+  },
+  addDatasetFlowmap (state, data) {
+    // Follow the same approach as in addDatasetFlowmap
+    const id = _.get(data, 'id')
+    // update the flowmapLayer  with info  from the url
+    if (!id) return
+    if (!state[id]) Vue.set(state, id, {})
+    const flowmapData = getFlowmapData(state[id])
+    const flowmapLayer = merge(flowmapData, _.get(data, 'flowmapLayer'))
+    Vue.set(state[id], 'flowmap', flowmapLayer)
   },
   addDatasetRaster (state, data) {
     const id = _.get(data, 'id')

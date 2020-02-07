@@ -93,12 +93,18 @@ export const actions = {
         // Add metadata to store.datasets (excluding vectorLayer and rasterLayer)
         commit(
           'datasets/addMetadata',
-          _.omit(set, ['vectorLayer', 'rasterLayer'])
+          _.omit(set, ['vectorLayer', 'rasterLayer', 'flowmapLayer'])
         )
 
         // Add vectorlayer to store.datasets if available
-        if (_.has(set, 'vectorLayer')) commit('datasets/addDatasetVector', set)
+        if (_.has(set, 'vectorLayer')) {
+          commit('datasets/addDatasetVector', set)
+        }
 
+        // Flowmap for currents and  wind
+        if (_.has(set, 'flowmapLayer')) {
+          commit('datasets/addDatasetFlowmap', set)
+        }
         // Add rasterLayer to store.datasets if available
         if (
           _.has(set, 'rasterLayer') &&
@@ -241,7 +247,9 @@ export const getters = {
   },
 
   activeTimestamp (state, { activeRasterData }) {
-    if (state.loadingRasterLayers) return 'Loading...'
+    if (state.loadingRasterLayers) {
+      return 'Loading...'
+    }
     // Retrieve the timestamp from te activeRasterData and combine this into a string
     // using the dateformat given
     const date = _.get(activeRasterData, 'date')
@@ -255,14 +263,18 @@ export const getters = {
     }
   },
 
-  activeRasterData ({ datasets, activeRasterLayerId, activeDatasets }) {
+  activeRasterData ({ datasets, activeRasterLayerId }) {
     // Return the active raster data tiles (if not defined, return [])
-    if (activeRasterLayerId === '' || activeRasterLayerId === null) return []
+    if (activeRasterLayerId === '' || activeRasterLayerId === null) {
+      return []
+    }
     return _.get(datasets, `${activeRasterLayerId}.raster`)
   },
   activeRasterLegendData ({ datasets, activeRasterLayerId, activeDatasets }) {
     // Return the active raster data tiles (if not defined, return [])
-    if (activeRasterLayerId === '' || activeRasterLayerId === null) return []
+    if (activeRasterLayerId === '' || activeRasterLayerId === null) {
+      return []
+    }
     const raster = get(`${activeRasterLayerId}.raster`, datasets)
     return {
       linearGradient: raster.linearGradient,
@@ -270,6 +282,15 @@ export const getters = {
       max: raster.max
     }
   },
+
+  activeFlowmapData ({ datasets, activeRasterLayerId }) {
+    // return the  flowmap data
+    if (activeRasterLayerId === '' || activeRasterLayerId === null) {
+      return []
+    }
+    return _.get(datasets, `${activeRasterLayerId}.flowmap`)
+  },
+
   activeVectorData ({ activeLocationIds }, { activeDatasets }) {
     // Retrieve for active layers where vector data is available the data
     const vectorLayers = activeDatasets.filter(has('vector'))
