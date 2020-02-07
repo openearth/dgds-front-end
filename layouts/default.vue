@@ -15,9 +15,9 @@
         />
         <v-mapbox-selected-point-layer
           :geometry="geometry"
-        ></v-mapbox-selected-point-layer>
-        <v-mapbox-canvas-layer :layer="'uv'"></v-mapbox-canvas-layer>
         />
+        <!-- <v-mapbox-canvas-layer :layer="'uv'" /> -->
+        <!-- /> -->
         <v-mapbox-info-text-layer
           :geometry="infoTextGeometry"
           :message="mapboxMessage"
@@ -30,7 +30,8 @@
           :active-theme="activeTheme"
           @select-locations="selectLocations"
         />
-        <v-mapbox-raster-layer :options="rasterLayer" @click="getFeatureInfo" />
+        <!-- <v-mapbox-raster-layer :options="rasterLayer" @click="getFeatureInfo" /> -->
+        <v-mapbox-raster-layer :options="flowmapLayer" v-if="flowmapLayer" />
       </v-mapbox>
     </client-only>
     <DataSetControlMenu
@@ -85,7 +86,7 @@ export default {
     SiteNavigation,
     DataSetControlMenu,
     TimeStamp,
-    VMapboxCanvasLayer,
+    // VMapboxCanvasLayer,
     VMapboxVectorLayer,
     VMapboxRasterLayer,
     VMapboxSelectedPointLayer,
@@ -113,6 +114,7 @@ export default {
     }),
     ...mapGetters('map', [
       'activeRasterData',
+      'activeFlowmapData',
       'activeVectorData',
       'activeDatasetsLocations',
       'datasetsInActiveTheme',
@@ -126,6 +128,17 @@ export default {
       const rasterLayer = getRasterLayer()
       rasterLayer.source.tiles = [_.get(this.activeRasterData, 'url')]
       return rasterLayer
+    },
+    flowmapLayer () {
+      const flowmapLayer = getRasterLayer()
+      const flowmapData = this.activeFlowmapData
+      const url = _.get(flowmapData, 'url')
+      if (url) {
+        // should this be done using Vue.set?
+        flowmapLayer.source.tiles = [url]
+      }
+      console.log('debug', flowmapLayer, flowmapData)
+      return flowmapLayer
     },
     vectorLayers () {
       // Returns an array with unique mapboxlayers.
