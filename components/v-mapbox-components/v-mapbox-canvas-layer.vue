@@ -1,7 +1,7 @@
 <template>
   <div class="offscreen">
     <!-- <img src="~/assets/glossis-uv.png" class="uv" /> -->
-    <canvas id="uv" width="1024" height="1023"></canvas>
+    <canvas id="uv" width="1024" height="1023" />
   </div>
 </template>
 <script>
@@ -15,15 +15,15 @@ export default {
       default: () => {
         return {}
       },
-      type: Object,
-    },
+      type: Object
+    }
   },
-  data() {
+  data () {
     return {}
   },
-  mounted() {},
+  mounted () {},
   methods: {
-    renderCanvas() {
+    renderCanvas () {
       const canvas = this.$el.querySelector('#uv')
       const ctx = canvas.getContext('2d')
       ctx.fillStyle = 'rgb(0, 255, 0)'
@@ -35,13 +35,13 @@ export default {
         200,
         50,
         0,
-        Math.PI * 2,
+        Math.PI * 2
       )
       ctx.fillStyle = 'red'
       ctx.fill()
       ctx.closePath()
     },
-    deferredMountedTo(map) {
+    deferredMountedTo (map) {
       this.renderCanvas()
       document.querySelector('.mapboxgl-canvas').id = 'mapbox-canvas'
       const source = {
@@ -51,23 +51,23 @@ export default {
           [1, 55], //
           [8, 55],
           [8, 52],
-          [1, 52],
+          [1, 52]
         ],
-        animate: true,
+        animate: true
       }
 
       map.addLayer({
         id: 'test-canvas',
         type: 'raster',
         source,
-        paint: {},
+        paint: {}
       })
-    },
+    }
   },
-  render() {
+  render () {
     return null
   },
-  inject: ['getMap'],
+  inject: ['getMap']
 }
 </script>
 <style>
