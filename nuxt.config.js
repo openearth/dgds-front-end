@@ -123,7 +123,7 @@ export default {
       config.module.rules.push({
         test: /\.glsl$/,
         loader: 'webpack-glsl-loader',
-        exclude: /(node_modules)/,
+        exclude: /(node_modules)/
       })
 
       // Run ESLint on save
