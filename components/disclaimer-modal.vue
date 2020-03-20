@@ -29,7 +29,7 @@
             </UiCheckbox>
           </div>
           <div class="modal-content-actions__agree-button">
-            <UiButton :disabled="!$v.agree.$model" @click="submit">
+            <UiButton :disabled="!$v.agree.$model || !$v.cookie.$model" @click="submit">
               I Agree
             </UiButton>
           </div>
