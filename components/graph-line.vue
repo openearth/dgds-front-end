@@ -32,7 +32,7 @@
       <v-chart
         v-if="type === 'line' || type === 'scatter'"
         :ref="title"
-        :options="graphData()"
+        :options="options"
         :autoresize="true"
         class="graph-line__chart"
       />
@@ -56,6 +56,7 @@
 import { mapGetters, mapMutations } from 'vuex'
 import merge from 'lodash/merge'
 import moment from 'moment'
+import _ from 'lodash'
 import ECharts from 'vue-echarts'
 import { saveAs } from 'file-saver'
 import UiButtonIcon from '~/components/ui-button-icon'
@@ -66,6 +67,7 @@ import 'echarts/lib/chart/scatter'
 import 'echarts/lib/component/dataZoom'
 import 'echarts/lib/component/tooltip'
 import 'echarts/lib/component/markLine'
+import 'echarts/lib/component/markPoint'
 
 const getStyle = (colors = {}) => ({
   backgroundColor: colors.background,
@@ -180,26 +182,45 @@ export default {
     parameterId: {
       type: String,
       default: ''
+    },
+    setMarkPoint: {
+      type: Boolean,
+      default: false
+    },
+    timeStep: {
+      type: String,
+      default: ''
     }
   },
   computed: {
     ...mapGetters('preferences/theme', ['colors']),
-    ...mapGetters('map', ['getCollapsedDatasets']),
+    ...mapGetters('map', ['getCollapsedDatasets', 'activeTimestamp']),
     isCollapsed () {
       return this.getCollapsedDatasets.includes(this.parameterId)
+    },
+    options () {
+      const series = this.graphData()
+      return series
     }
   },
   methods: {
     ...mapMutations('map', ['toggleCollapsedDataset']),
     graphData () {
       let series = []
+      let markPointCoord = []
       series = this.series.map((serie) => {
         let data = serie.map((col, i) => [this.category[i], col])
-
         // Make sure that all data is in chronological order to plot it correctly
         data = data.sort((colA, colB) => {
           return moment(colA[0]) - moment(colB[0])
         })
+
+        // Create a markpoint if there is a value on the exact timestamp selected
+        markPointCoord = data.find((val) => {
+          const same = moment(val[0]).isSame(moment(this.timeStep))
+          return same
+        })
+
         return {
           type: this.type,
           showAllSymbol: true,
@@ -212,6 +233,19 @@ export default {
         }
       })
 
+      if (this.timeStep !== '') {
+        series.push({
+          type: this.type,
+          markPoint: {
+            data: [
+              {
+                coord: markPointCoord,
+                symbolSize: 30
+              }
+            ]
+          }
+        })
+      }
       series.push({
         type: 'line',
         markLine: {
