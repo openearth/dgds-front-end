@@ -17,11 +17,6 @@
   --icon-size: 30px;
 }
 
-html {
-  box-sizing: border-box;
-  overflow:hidden;
-}
-
 *,
 *:before,
 *:after {
@@ -29,6 +24,10 @@ html {
   margin: 0;
 }
 
+html {
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
 .unselectable {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
