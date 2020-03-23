@@ -28,6 +28,13 @@ html {
   box-sizing: border-box;
   overflow-x: hidden;
 }
+
+ol,
+ul {
+  padding-left: var(--spacing-default);
+  margin-bottom: var(--spacing-small);
+}
+
 .unselectable {
   -webkit-touch-callout: none;
   -webkit-user-select: none;

@@ -1,5 +1,5 @@
 <template>
-  <label class="ui-radio bodytext-m">
+  <label class="ui-radio">
     <span class="ui-radio__button-wrapper">
       <input
         class="ui-radio__input"
