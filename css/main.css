@@ -17,16 +17,15 @@
   --icon-size: 30px;
 }
 
-html {
-  box-sizing: border-box;
-  overflow:hidden;
-}
-
 *,
 *:before,
 *:after {
   box-sizing: border-box;
   margin: 0;
+}
+
+html {
+  box-sizing: border-box;
 }
 
 .unselectable {

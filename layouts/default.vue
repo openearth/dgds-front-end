@@ -1,5 +1,5 @@
 <template>
-  <div class="default-layout" style="position: relative;">
+  <div class="default-layout">
     <client-only>
       <v-mapbox
         id="map"
@@ -323,8 +323,10 @@ export default {
 
 <style>
 .default-layout {
+  position: relative;
   width: 100vw;
   height: 100vh;
+  overflow: hidden;
   --map-controls-height: 122px;
 }
 
@@ -332,6 +334,7 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 .default-layout__data-set-control-menu {
   position: absolute;
   top: var(--spacing-default);
