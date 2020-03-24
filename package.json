@@ -65,7 +65,7 @@
     "nodemon": "^2.0.2",
     "postcss-custom-properties": "9.0.2",
     "vue-jest": "^3.0.5",
-    "vue-svg-loader": "0.15.0",
+    "vue-html-loader": "^1.2.4",
     "vue-template-compiler": "^2.6.11"
   }
 }
