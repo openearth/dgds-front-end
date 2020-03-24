@@ -1,5 +1,5 @@
 <template>
-  <label class="ui-checkbox">
+  <label class="ui-checkbox bodytext-m">
     <span class="ui-checkbox__button-wrapper">
       <input
         class="ui-checkbox__input"

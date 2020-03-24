@@ -170,6 +170,63 @@ export default {
 
 .modal__card-text__markdown {
   margin-bottom: var(--spacing-small);
+  font-size: 1rem;
+  line-height: 1.3rem;
+}
+
+.modal__card-text__markdown strong {
+  font-weight: bold;
+}
+
+.modal__card-text__markdown em {
+  font-style: italic;
+}
+
+.modal__card-text__markdown h1,
+.modal__card-text__markdown h2,
+.modal__card-text__markdown h3,
+.modal__card-text__markdown h4 {
+  margin: var(--spacing-small) 0;
+  font-family: 'sansa_con_probold';
+}
+
+.modal__card-text__markdown h1 {
+  font-size: 2.5rem;
+  line-height: 3.75rem;
+}
+
+.modal__card-text__markdown h2 {
+  font-size: 2rem;
+  line-height: 3rem;
+}
+
+.modal__card-text__markdown h3 {
+  font-size: 1.5rem;
+  line-height: 2.25rem;
+}
+
+.modal__card-text__markdown h4 {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.modal__card-text__markdown p + p {
+  margin-top: 1rem;
+}
+
+.modal__card-text__markdown ol,
+.modal__card-text__markdown ul {
+  padding-left: var(--spacing-default);
+  margin-bottom: var(--spacing-small);
+}
+
+.modal__card-text__markdown a {
+  color: var(--color-blue-100);
+}
+
+.modal__card-text__markdown a:hover,
+.modal__card-text__markdown a:focus {
+  color: var(--color-blue);
 }
 
 .modal__card-actions {

@@ -28,12 +28,6 @@ html {
   box-sizing: border-box;
 }
 
-ol,
-ul {
-  padding-left: var(--spacing-default);
-  margin-bottom: var(--spacing-small);
-}
-
 .unselectable {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
