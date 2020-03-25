@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <section class="section ui-test">
     <h1 class="h1">
       UI test
     </h1>
@@ -92,6 +92,32 @@
         </ui-checkbox>
       </div>
     </section>
+
+    <section class="section">
+      <h2 class="h2">
+        Dropdown
+      </h2>
+      <div style="display: flex; flex-direction: columnn">
+        <ui-dropdown :items="dropdownItems" :selected-item.sync="selectedItem" />
+      </div>
+      <span>
+        Selected: {{ selectedItem }}
+      </span>
+      <div style="display: flex; flex-direction: column;">
+        <ui-dropdown :items="dropdownItemsLong" :selected-item.sync="selectedItem" />
+      </div>
+      <span>
+        Selected: {{ selectedItem }}
+        Test scrolling of dropdown menu
+      </span>
+      <div style="display: flex; flex-direction: columnn">
+        <ui-dropdown :items="dropdownItems" :selected-item.sync="selectedItem" disabled />
+      </div>
+      <span>
+        Selected: {{ selectedItem }}
+        Test disabled
+      </span>
+    </section>
   </section>
 </template>
 
@@ -102,6 +128,7 @@ import UiRadio from '../components/ui-radio'
 import UiCheckbox from '../components/ui-checkbox'
 import UiButtonIcon from '../components/ui-button-icon'
 import Icon from '~/components/icon'
+import UiDropdown from '~/components/ui-dropdown'
 
 export default {
   layout: 'ui-test',
@@ -111,12 +138,25 @@ export default {
     UiToggle,
     UiRadio,
     UiCheckbox,
-    Icon
+    Icon,
+    UiDropdown
+  },
+  data () {
+    return {
+      dropdownItems: ['item 1', 'item 2', 'item 3'],
+      dropdownItemsLong: ['item 1', 'item 2', 'item 3', 'item 4', 'item 5', 'item 6'],
+      selectedItem: 'item 1',
+      wrongSelectedItem: 'item 4'
+    }
   }
 }
 </script>
 
 <style scoped>
+.ui-test {
+  height: 100vh;
+  overflow-y: auto;
+}
 .section {
   padding: 1rem;
 }
