@@ -12,11 +12,6 @@ export default {
       type: Object
     }
   },
-  data () {
-    return {}
-  },
-  mounted () {
-  },
   methods: {
     deferredMountedTo (map) {
       // get the tile source, will be replaced byoptions

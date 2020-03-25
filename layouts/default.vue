@@ -16,8 +16,6 @@
         <v-mapbox-selected-point-layer
           :geometry="geometry"
         />
-        <!-- <v-mapbox-canvas-layer :layer="'uv'" /> -->
-        <!-- /> -->
         <v-mapbox-info-text-layer
           :geometry="infoTextGeometry"
           :message="mapboxMessage"
@@ -137,7 +135,6 @@ export default {
         // should this be done using Vue.set?
         flowmapLayer.source.tiles = [url]
       }
-      console.log('debug', flowmapLayer, flowmapData)
       return flowmapLayer
     },
     vectorLayers () {
