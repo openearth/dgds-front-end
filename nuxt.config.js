@@ -44,6 +44,7 @@ export default {
     '~/css/main.css',
     '~/css/typography.css',
     '~/css/helpers.css',
+    '~/css/markdown.css',
     'material-design-icons/iconfont/material-icons.css'
   ],
 
