@@ -103,13 +103,7 @@ export default {
         test: /\.svg$/,
         use: [
           {
-            loader: 'babel-loader',
-            options: {
-              presets: ['@babel/preset-env']
-            }
-          },
-          {
-            loader: 'vue-svg-loader'
+            loader: 'vue-html-loader'
           }
         ]
       })

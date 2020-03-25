@@ -25,6 +25,8 @@
         :units="data.units"
         :type="data.type"
         :parameter-id="data.id"
+        :set-mark-point="data.id === getActiveRasterLayer"
+        :time-step="getTimeStep"
       />
     </section>
   </aside>
@@ -42,7 +44,7 @@ export default {
   middleware: 'load-location-id',
   components: { GraphLine, UiButtonIcon, Icon },
   computed: {
-    ...mapGetters('map', ['activePointDataPerDataset']),
+    ...mapGetters('map', ['activePointDataPerDataset', 'getActiveRasterLayer', 'activeRasterData']),
     ...mapState({ activeTheme: state => state.preferences.theme.active }),
     datasets () {
       const activePointData = this.activePointDataPerDataset
@@ -55,6 +57,14 @@ export default {
     locations () {
       const { locationId } = this.$route.params
       return locationId
+    },
+    getTimeStep () {
+      const date = _.get(this.activeRasterData, 'date')
+      if (date) {
+        return date
+      } else {
+        return ''
+      }
     }
   },
   mounted () {

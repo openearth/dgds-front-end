@@ -1,6 +1,6 @@
 <template>
   <div class="ui-test-layout" style="position: relative;">
-    <div style="position: absolute; bottom: 2rem; right: 3rem;">
+    <div style="position: absolute; top: 2rem; right: 3rem;">
       <select @change="setActive">
         <option value="light">
           Light
