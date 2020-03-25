@@ -15,7 +15,6 @@
       <Icon
         size="large"
         name="action-chevron-down"
-        fallback-name="placeholder"
       />
     </UiButtonIcon>
     <figcaption

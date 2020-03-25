@@ -7,7 +7,6 @@
       <ui-button-icon @click="close">
         <Icon
           name="action-cross"
-          fallback-name="placeholder"
           size="large"
         />
       </ui-button-icon>

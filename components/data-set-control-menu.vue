@@ -19,14 +19,12 @@
               <Icon
                 class="data-set-control-menu__icon"
                 :name="`dataset-${dataset.id}`"
-                fallback-name="placeholder"
               />
             </UiToolTip>
             <Icon
               v-else
               class="data-set-control-menu__icon"
               :name="`dataset-${dataset.id}`"
-              fallback-name="placeholder"
             />
             <div class="data-set-control-menu__text">
               {{ dataset.name }}

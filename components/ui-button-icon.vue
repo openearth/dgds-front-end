@@ -37,11 +37,12 @@ export default {
 
 .ui-button-icon > svg {
   pointer-events: none;
+  stroke: inherit;
   color: inherit;
 }
 
 .ui-button-icon path {
-  fill: currentColor;
+  stroke: inherit;
   color: inherit;
 }
 
