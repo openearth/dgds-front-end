@@ -29,7 +29,7 @@
           @select-locations="selectLocations"
         />
         <v-mapbox-raster-layer :options="rasterLayer" @click="getFeatureInfo" />
-        <v-mapbox-flowmap-layer v-if="flowmapLayer" :options="flowmapLayer" />
+        <v-mapbox-flowmap-layer v-if="flowmapLayerReady" :options="flowmapLayer" />
       </v-mapbox>
     </client-only>
     <DataSetControlMenu
@@ -103,7 +103,9 @@ export default {
       type: 'Point',
       coordinates: []
     },
-    mapboxMessage: ''
+    mapboxMessage: '',
+    // disable for now, needs to be added to the backend for it to show up
+    flowmapLayerReady: false
   }),
   computed: {
     ...mapState({
