@@ -94,9 +94,10 @@ export default {
      ** You can extend webpack config here
      */
     extend (config, ctx) {
+      // This configuration is copied  from
+      // https://github.com/visualfanatic/vue-svg-loader
       const svgRule = config.module.rules.find(rule => rule.test.test('.svg'))
 
-      // TODO: what is this....
       svgRule.test = /\.(png|jpe?g|gif|webp)$/
 
       config.module.rules.push({
