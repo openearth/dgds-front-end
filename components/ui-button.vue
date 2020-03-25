@@ -1,5 +1,6 @@
 <template>
   <button
+    type="button"
     class="ui-button"
     :class="{
       'ui-button--primary': kind === 'primary',

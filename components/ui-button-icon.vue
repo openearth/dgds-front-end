@@ -1,5 +1,5 @@
 <template>
-  <button class="ui-button-icon" :disabled="disabled" aria-label="text" v-on="$listeners">
+  <button type="button" class="ui-button-icon" :disabled="disabled" :aria-label="text" v-on="$listeners">
     <slot />
   </button>
 </template>
