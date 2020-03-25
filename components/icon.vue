@@ -1,42 +1,17 @@
 <template>
-  <span class="icon" :class="{ 'icon--large': size === 'large' }">
+  <span class="icon" :class="{ 'icon--large': size === 'large' }" role="presentation">
     <i v-if="mdi" class="material-icons mdi-icon" :class="{ 'mdi-icon--large': size === 'large' }">{{ name }}</i>
-    <component :is="icon" v-else />
+    <span v-else-if="icon" v-html="icon" />
+    <span v-else v-html="placeholder" />
   </span>
 </template>
 
 <script>
-
-import Vue from 'vue'
-import _ from 'lodash'
-
-// Use node-js to create components for all icons
-// Search for all  icons in the icons folder
-const requires = require.context('../assets/icons', true, /^(.*\.(svg$))[^.]*$/im)
-// Lookup the name
-const nameRe = /icon-(.*)\.svg/
-// store  them in a dictionary, make available
-export const icons = {}
-
-// fill the icons
-requires.keys().forEach(function (key) {
-  const name = nameRe.exec(key)[1] || 'empty'
-  try {
-    icons[name] = requires(key)
-  } catch (e) {
-    icons[name] = Vue.component('icon-' + name, {})
-  }
-})
-
 export default {
   props: {
     name: {
       type: String,
       default: ''
-    },
-    fallbackName: {
-      type: String,
-      default: 'empty'
     },
     size: {
       type: String,
@@ -49,9 +24,10 @@ export default {
   },
   computed: {
     icon () {
-      const icon = _.get(icons, this.name, icons.empty)
-      // return the module
-      return icon.default
+      return require(`../assets/icons/icon-${this.name}.svg`)
+    },
+    placeholder () {
+      return require('../assets/icons/icon-placeholder.svg')
     }
   }
 }
