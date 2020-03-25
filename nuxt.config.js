@@ -115,12 +115,6 @@ export default {
         loader: 'frontmatter-markdown-loader'
       })
 
-      config.module.rules.push({
-        test: /\.glsl$/,
-        loader: 'webpack-glsl-loader',
-        exclude: /(node_modules)/
-      })
-
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {
         config.module.rules.push({
@@ -131,6 +125,7 @@ export default {
         })
       }
 
+      // Fix source maps
       if (ctx.isClient) {
         config.devtool = '#source-map'
       }
