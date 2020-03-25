@@ -1,7 +1,7 @@
 <template>
   <div class="tooltip">
     <slot />
-    <VueMarkdown :source="tooltipText" class="tooltiptext"/>
+    <VueMarkdown :source="tooltipText" class="tooltiptext" />
   </div>
 </template>
 

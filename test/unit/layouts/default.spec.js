@@ -8,13 +8,12 @@ localVue.use(Vuex)
 // Mock nuxt
 localVue.component('nuxt-link', { template: '<a href="#">foo</a>' })
 localVue.component('nuxt', { template: '<div />' })
-localVue.component('client-only', { template: '<div />'})
+localVue.component('client-only', { template: '<div />' })
 
 // Mock Mapbox (can't properly render in node anyway)
-localVue.component('v-mapbox', { template: '<div />'})
-localVue.component('v-mapbox-navigation-control', { template: '<div />'})
+localVue.component('v-mapbox', { template: '<div />' })
+localVue.component('v-mapbox-navigation-control', { template: '<div />' })
 localVue.directive('mapbox', {})
-
 
 describe('Default', () => {
   let store
