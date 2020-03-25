@@ -5,8 +5,14 @@ import Default from '../../../layouts/default.vue'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 
+// Mock nuxt
 localVue.component('nuxt-link', { template: '<a href="#">foo</a>' })
 localVue.component('nuxt', { template: '<div />' })
+localVue.component('client-only', { template: '<div />' })
+
+// Mock Mapbox (can't properly render in node anyway)
+localVue.component('v-mapbox', { template: '<div />' })
+localVue.component('v-mapbox-navigation-control', { template: '<div />' })
 localVue.directive('mapbox', {})
 
 describe('Default', () => {
@@ -18,8 +24,11 @@ describe('Default', () => {
     map = {
       namespaced: true,
       getters: {
+        activeRasterData: jest.fn(() => 'dummy'),
         activeSpatialData: jest.fn(() => 'foo'),
+        activeTimestamp: jest.fn(() => 'dummy'),
         datasetsInActiveTheme: jest.fn(() => ['bar']),
+        getActiveRasterLayer: jest.fn(() => 'dummy'),
         getActiveTheme: jest.fn(() => {
           return {
             datasets: ['cd', 'ef', 'gh'],

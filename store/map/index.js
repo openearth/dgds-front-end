@@ -197,6 +197,7 @@ export const actions = {
 }
 
 export const getters = {
+  // TODO: check if  all these functions are needed/used
   getActiveTheme (state) {
     return state.activeTheme
   },
