@@ -17,15 +17,21 @@
   --icon-size: 30px;
 }
 
-*,
-*:before,
-*:after {
+* {
   box-sizing: border-box;
+}
+
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
   margin: 0;
 }
 
-html {
-  box-sizing: border-box;
+ol, ul {
+  margin: 0;
 }
 
 .unselectable {
