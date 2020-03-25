@@ -6,10 +6,12 @@
 </template>
 <script>
 // https://github.com/mapbox/webgl-wind
-// import WindGL from '@/lib/styling/windgl.js'
+import * as windGl from '@openearth/windgl'
+
+console.log('WindGL', windGl)
 
 export default {
-  name: 'VMapboxCanvasLayer',
+  name: 'VMapboxFlowmapLayer',
   props: {
     options: {
       default: () => {
@@ -21,7 +23,8 @@ export default {
   data () {
     return {}
   },
-  mounted () {},
+  mounted () {
+  },
   methods: {
     renderCanvas () {
       const canvas = this.$el.querySelector('#uv')
@@ -42,9 +45,48 @@ export default {
       ctx.closePath()
     },
     deferredMountedTo (map) {
+      const source = windGl.source('glossis/tile.json')
+      const layers = [
+        {
+          type: 'particles',
+          after: 'waterway-label',
+
+          properties: {
+            'particle-speed': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              0,
+              0.9,
+              8,
+              1.5
+            ],
+            'particle-color': 'rgba(60, 60, 90, 0.9)'
+          }
+        }
+      ]
+      layers.forEach((layer) => {
+        const { type, after, properties } = layer
+        if (windGl[type]) {
+          layer = windGl[type](
+            Object.assign(
+              {
+                id: type,
+                source
+              },
+              properties || {}
+            )
+          )
+        }
+        if (after) {
+          map.addLayer(layer, after)
+        } else {
+          map.addLayer(layer)
+        }
+      })
       this.renderCanvas()
       document.querySelector('.mapboxgl-canvas').id = 'mapbox-canvas'
-      const source = {
+      const testSource = {
         type: 'canvas',
         canvas: 'uv',
         coordinates: [
@@ -59,7 +101,7 @@ export default {
       map.addLayer({
         id: 'test-canvas',
         type: 'raster',
-        source,
+        source: testSource,
         paint: {}
       })
     }
