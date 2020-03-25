@@ -15,7 +15,7 @@
         </UiButtonIcon>
       </template>
       <template v-slot:label>
-        <UiDropdown :items="timeseriesItems" :selected-item.sync="timestamp" />
+        <UiDropdown id="timeslider-dropdown" :options="timeseriesItems" :value.sync="timestamp" />
       </template>
       <template v-slot:forwardButton="{forward}">
         <UiButtonIcon :disabled="getLoadingState" @click="forward">
@@ -38,6 +38,11 @@ import TimeSlider from './time-slider/time-slider.vue'
 
 export default {
   components: { Panel, TimeSlider, UiButtonIcon, Icon, UiDropdown },
+  data () {
+    return {
+      dateIndex: 0 // use input dropdown to, change the index of the timeslider accordingly
+    }
+  },
   computed: {
     ...mapGetters('map', [
       'activeTimestamp',
@@ -49,11 +54,17 @@ export default {
       // The items for the dropdown menu -> a list with the dates in of the
       // active raster layer in a readable format
       if (this.activeTimestamp === 'Loading...') {
-        return [this.activeTimestamp]
+        return [{
+          name: this.activeTimestamp,
+          value: this.activeTimestamp
+        }]
       }
       const series = _.get(this.activeRasterData, 'imageTimeseries') || []
       return series.map((serie) => {
-        return moment(serie.date).format('DD-MM-YYYY HH:mm')
+        return {
+          value: moment(serie.date).format('DD-MM-YYYY HH:mm'),
+          name: moment(serie.date).format('DD-MM-YYYY HH:mm')
+        }
       })
     },
     timestamp: {
@@ -62,6 +73,9 @@ export default {
         return this.activeTimestamp
       },
       set (val) {
+        if (!val) {
+          return
+        }
         const series = _.get(this.activeRasterData, 'imageTimeseries')
         const serie = series.find((serie, i) => {
           if (moment(val, 'DD-MM-YYYY HH:mm').isSame(moment(serie.date))) {
@@ -70,11 +84,6 @@ export default {
           }
         })
       }
-    }
-  },
-  data () {
-    return {
-      dateIndex: 0 // use input dropdown to, change the index of the timeslider accordingly
     }
   },
   methods: {

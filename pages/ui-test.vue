@@ -98,20 +98,20 @@
         Dropdown
       </h2>
       <div style="display: flex; flex-direction: columnn">
-        <ui-dropdown :items="dropdownItems" :selected-item.sync="selectedItem" />
+        <ui-dropdown id="dropdown1" :options="dropdownItems" :value.sync="selectedItem" />
       </div>
       <span>
         Selected: {{ selectedItem }}
       </span>
-      <div style="display: flex; flex-direction: column;">
-        <ui-dropdown :items="dropdownItemsLong" :selected-item.sync="selectedItem" />
+      <div style="display: flex; flex-direction: column">
+        <ui-dropdown id="dropdown2" :options="dropdownItemsLong" :value.sync="selectedItem" />
       </div>
       <span>
         Selected: {{ selectedItem }}
         Test scrolling of dropdown menu
       </span>
       <div style="display: flex; flex-direction: columnn">
-        <ui-dropdown :items="dropdownItems" :selected-item.sync="selectedItem" disabled />
+        <ui-dropdown id="dropdown3" :options="dropdownItems" :value.sync="selectedItem" disabled />
       </div>
       <span>
         Selected: {{ selectedItem }}
@@ -143,9 +143,36 @@ export default {
   },
   data () {
     return {
-      dropdownItems: ['item 1', 'item 2', 'item 3'],
-      dropdownItemsLong: ['item 1', 'item 2', 'item 3', 'item 4', 'item 5', 'item 6'],
-      selectedItem: 'item 1',
+      dropdownItems: [{
+        name: 'Item 1',
+        value: 'val1'
+      }, {
+        name: 'Item 2',
+        value: 'val2'
+      }, {
+        name: 'Item 3',
+        value: 'val3'
+      }],
+      dropdownItemsLong: [{
+        name: 'Item 1',
+        value: 'val'
+      }, {
+        name: 'Item 2',
+        value: 'val2'
+      }, {
+        name: 'Item 3',
+        value: 'val3'
+      }, {
+        name: 'Item 4',
+        value: 'val4'
+      }, {
+        name: 'Item 5',
+        value: 'val5'
+      }, {
+        name: 'Item 6',
+        value: 'val6'
+      }],
+      selectedItem: 'val1',
       wrongSelectedItem: 'item 4'
     }
   }
