@@ -20,6 +20,7 @@
   ],
   "dependencies": {
     "@nuxtjs/pwa": "3.0.0-beta.19",
+    "@openearth/windgl": "^0.1.1",
     "@turf/distance": "^6.0.1",
     "@turf/turf": "^5.1.6",
     "cross-env": "^6.0.3",
