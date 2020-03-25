@@ -19,7 +19,9 @@ export default {
   },
   methods: {
     deferredMountedTo (map) {
+      // get the tile source, will be replaced byoptions
       const source = windGl.source('glossis/tile.json')
+      // Add the visualisation layer
       const layers = [
         {
           type: 'particles',
@@ -42,6 +44,7 @@ export default {
       layers.forEach((layer) => {
         const { type, after, properties } = layer
         if (windGl[type]) {
+          // create a custom layertype
           layer = windGl[type](
             Object.assign(
               {
@@ -53,6 +56,7 @@ export default {
           )
         }
         if (after) {
+          // add it inline (before the label)
           map.addLayer(layer, after)
         } else {
           map.addLayer(layer)
