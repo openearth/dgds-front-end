@@ -1,9 +1,12 @@
 <template>
   <Panel class="timestamp">
-    Date raster layer:
+    <span class="data-set-control-menu__title h4 unselectable">
+      Date raster layer
+    </span>
     <TimeSlider
       :dates="activeRasterData.imageTimeseries"
       start-at="end"
+      :set-time-index="dateIndex"
       @update-timestep="getNewRasterLayer"
     >
       <template v-slot:backButton="{back}">
@@ -12,7 +15,7 @@
         </UiButtonIcon>
       </template>
       <template v-slot:label>
-        {{ activeTimestamp }}
+        <UiDropdown :items="timeseriesItems" :selected-item.sync="timestamp" />
       </template>
       <template v-slot:forwardButton="{forward}">
         <UiButtonIcon :disabled="getLoadingState" @click="forward">
@@ -26,20 +29,53 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 import _ from 'lodash'
+import moment from 'moment'
 import UiButtonIcon from './ui-button-icon'
+import UiDropdown from './ui-dropdown'
 import Icon from './icon'
 import Panel from './panel.vue'
 import TimeSlider from './time-slider/time-slider.vue'
 
 export default {
-  components: { Panel, TimeSlider, UiButtonIcon, Icon },
+  components: { Panel, TimeSlider, UiButtonIcon, Icon, UiDropdown },
   computed: {
     ...mapGetters('map', [
       'activeTimestamp',
       'activeRasterData',
       'getLoadingState',
       'getActiveRasterLayer'
-    ])
+    ]),
+    timeseriesItems () {
+      // The items for the dropdown menu -> a list with the dates in of the
+      // active raster layer in a readable format
+      if (this.activeTimestamp === 'Loading...') {
+        return [this.activeTimestamp]
+      }
+      const series = _.get(this.activeRasterData, 'imageTimeseries') || []
+      return series.map((serie) => {
+        return moment(serie.date).format('DD-MM-YYYY HH:mm')
+      })
+    },
+    timestamp: {
+      // This is the input for the v-model of the select of the dropdown menu
+      get () {
+        return this.activeTimestamp
+      },
+      set (val) {
+        const series = _.get(this.activeRasterData, 'imageTimeseries')
+        const serie = series.find((serie, i) => {
+          if (moment(val, 'DD-MM-YYYY HH:mm').isSame(moment(serie.date))) {
+            this.dateIndex = i
+            return true
+          }
+        })
+      }
+    }
+  },
+  data () {
+    return {
+      dateIndex: 0 // use input dropdown to, change the index of the timeslider accordingly
+    }
   },
   methods: {
     ...mapActions('map', ['retrieveRasterLayerByImageId']),

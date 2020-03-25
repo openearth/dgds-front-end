@@ -5,13 +5,13 @@
       <div class="time-slider__button">
         <slot v-if="timeIndex !== 0" name="backButton" :back="back" />
       </div>
-      <span class="time-slider__text">
-        <slot name="label" />
-      </span>
       <div class="time-slider__button">
         <slot v-if="timeIndex !== dates.length - 1" name="forwardButton" :forward="forward" />
       </div>
     </div>
+    <span class="time-slider__text">
+      <slot name="label" />
+    </span>
   </div>
 </template>
 
@@ -36,6 +36,9 @@ export default {
           return false
         }
       }
+    },
+    setTimeIndex: {
+      type: Number
     }
   },
   data () {
@@ -58,7 +61,12 @@ export default {
       }
     },
     timeIndex () {
+      console.log('update', this.timeIndex, this.currentDateObject)
       this.$emit('update-timestep', this.currentDateObject)
+    },
+    setTimeIndex (val) {
+      console.log('set timeindex????')
+      this.timeIndex = val
     }
   },
   mounted () {
@@ -72,6 +80,7 @@ export default {
       } else if (Number.isInteger(this.startAt)) {
         this.timeIndex = this.startAt
       } else {
+        console.log('setintiieltimeindex')
         this.timeIndex = 0
       }
     },
@@ -89,7 +98,9 @@ export default {
 
 <style>
 .time-slider__button-container {
+  float: right;
   display: flex;
+  margin-bottom: var(--spacing-small);
 }
 
 .time-slider__button {
