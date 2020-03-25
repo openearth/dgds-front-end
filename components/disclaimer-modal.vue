@@ -1,41 +1,43 @@
 <template>
   <div v-if="open" class="modal disclaimer">
-    <Panel class="modal-content unselectable">
-      <div class="modal-content__text">
-        <VueMarkdown
-          id="user-agreements"
-          class="modal-content-text__markdown"
-          :source="userAgreements"
-        />
-        <VueMarkdown
-          class="modal-content-text__markdown"
-          :source="cookieAgreement"
-        />
-      </div>
-      <template v-slot:footer>
-        <div class="modal-content__actions form-group">
-          <div class="modal-content-actions__checkboxes">
-            <UiCheckbox
-              :checked="agree"
-              @input="setTarget($event, 'agree')"
-            >
-              I agree with the Conditions of Use
-            </UiCheckbox>
-            <UiCheckbox
-              :checked="cookie"
-              @input="setTarget($event, 'cookie')"
-            >
-              I consent with the use of cookies
-            </UiCheckbox>
-          </div>
-          <div class="modal-content-actions__agree-button">
-            <UiButton :disabled="!$v.agree.$model || !$v.cookie.$model" @click="submit">
-              I Agree
-            </UiButton>
-          </div>
+    <div class="modal__wrapper">
+      <Panel class="modal__card">
+        <div class="modal__card-text">
+          <VueMarkdown
+            id="user-agreements"
+            class="modal__card-text__markdown"
+            :source="userAgreements"
+          />
+          <VueMarkdown
+            class="modal__card-text__markdown"
+            :source="cookieAgreement"
+          />
         </div>
-      </template>
-    </Panel>
+        <template v-slot:footer>
+          <div class="modal__card-actions form-group">
+            <div class="modal__card-actions__checkboxes">
+              <UiCheckbox
+                :checked="agree"
+                @input="setTarget($event, 'agree')"
+              >
+                I agree with the Conditions of Use
+              </UiCheckbox>
+              <UiCheckbox
+                :checked="cookie"
+                @input="setTarget($event, 'cookie')"
+              >
+                I consent with the use of cookies
+              </UiCheckbox>
+            </div>
+            <div class="modal__card-actions__agree-button">
+              <UiButton :disabled="!$v.agree.$model || !$v.cookie.$model" @click="submit">
+                I Agree
+              </UiButton>
+            </div>
+          </div>
+        </template>
+      </Panel>
+    </div>
   </div>
 </template>
 
@@ -101,56 +103,141 @@ export default {
 
 <style>
 .modal {
-  position: fixed;
-  z-index: 1;
-  left: 0;
+  position: absolute;
+  z-index: 2;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: var(--color-background);
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  transform: translateZ(0);
+  background-color: rgba(0, 0, 0, .5);
 }
 
-.disclaimer section.panel__body {
-  padding-left: 0;
+.disclaimer .panel__body {
   padding-right: 0;
+  padding-left: 0;
 }
 
-.modal-content {
-  margin: 10% auto;
-  width: 80%;
-  height: 50%;
+.modal__wrapper {
   display: flex;
+  z-index: 1;
+  flex: 1;
   flex-direction: column;
+  height: 100%;
+}
+
+@media all and (min-width: 500px) {
+  .modal__wrapper {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    flex-direction: row;
+    align-items: center;
+    width: 500px;
+    margin: 0 auto;
+    padding: var(--spacing-large);
+    transform: translateX(-50%);
+  }
+}
+
+@media all and (min-width: 768px) {
+  .modal__wrapper {
+    width: 800px;
+  }
+}
+
+.modal__card {
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: var(--spacing-small);
+  border-radius: var(--border-radius);
   background-color: var(--color-background);
   box-shadow: var(--shadow);
-  border-radius: 4px;
-  display: flex;
-  overflow: auto;
-  padding: var(--spacing-small);
 }
 
-.modal-content__title {
-  padding-bottom: var(--spacing-small);
+@media all and (min-width: 500px) {
+  .modal__card {
+    height: auto;
+    max-height: 100%;
+  }
+}
+
+.modal__card-text__markdown {
+  margin-bottom: var(--spacing-small);
+  font-size: 1rem;
+  line-height: 1.3rem;
+}
+
+.modal__card-text__markdown strong {
+  font-weight: bold;
+}
+
+.modal__card-text__markdown em {
+  font-style: italic;
+}
+
+.modal__card-text__markdown h1,
+.modal__card-text__markdown h2,
+.modal__card-text__markdown h3,
+.modal__card-text__markdown h4 {
+  margin: var(--spacing-small) 0;
+  font-family: 'sansa_con_probold';
+}
+
+.modal__card-text__markdown h1 {
+  font-size: 2.5rem;
+  line-height: 3.75rem;
+}
+
+.modal__card-text__markdown h2 {
+  font-size: 2rem;
+  line-height: 3rem;
+}
+
+.modal__card-text__markdown h3 {
+  font-size: 1.5rem;
+  line-height: 2.25rem;
+}
+
+.modal__card-text__markdown h4 {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.modal__card-text__markdown p + p {
+  margin-top: 1rem;
+}
+
+.modal__card-text__markdown ol,
+.modal__card-text__markdown ul {
+  padding-left: var(--spacing-default);
+  margin-bottom: var(--spacing-small);
+}
+
+.modal__card-text__markdown a {
+  color: var(--color-blue-100);
+}
+
+.modal__card-text__markdown a:hover,
+.modal__card-text__markdown a:focus {
+  color: var(--color-blue);
+}
+
+.modal__card-actions {
   display: flex;
   align-items: center;
-  flex-grow: 1;
-}
-
-.modal-content-text__markdown {
-  padding-bottom: var(--spacing-small);
-}
-
-.modal-content__actions {
-  flex-grow: 1;
-  display: flex;
   padding-top: var(--spacing-small);
 }
 
-.modal-content-actions__checkboxes {
-  flex-grow: 9;
+.modal__card-actions__checkboxes {
   display: flex;
+  flex: 1;
   flex-direction: column;
 }
-
 </style>
