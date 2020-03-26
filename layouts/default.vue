@@ -172,6 +172,16 @@ export default {
   },
   async mounted () {
     await this.$nextTick()
+    this.$refs.map.map.fitBounds([
+      [
+        -180.0,
+        -90.0
+      ],
+      [
+        180.0,
+        90.0
+      ]
+    ])
   },
   methods: {
     ...mapMutations('map', ['clearActiveDatasetIds', 'setActiveRasterLayer']),
@@ -261,6 +271,7 @@ export default {
     toggleRasterLayer (event) {
       this.setActiveRasterLayer(event)
       this.removeInfoText()
+      this.zoomToBbox(this.getActiveRasterLayer)
     },
     toggleLocationDataset (id) {
       const addId = value => concat(value, id)
@@ -279,6 +290,19 @@ export default {
         this.$route
       )
       this.updateRoute(newRouteObject)
+
+      const newParams = newRouteObject.params.datasetIds.split(',')
+      // If toggled on, use id to set bbox
+      const datasetId = newParams.includes(id) ? id : null
+      this.zoomToBbox(datasetId)
+    },
+
+    zoomToBbox (datasetId) {
+      // If layer is toggled on and has a bbox, zoom to that layer
+      const bbox = _.get(this.getDatasets, `${datasetId}.metadata.bbox`)
+      if (bbox) {
+        this.$refs.map.map.fitBounds(bbox)
+      }
     },
     changeTheme () {
       // When new theme is chosen update the route with the datasets within
