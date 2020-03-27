@@ -35,7 +35,7 @@ export default {
   transition: background-color var(--speed-fast) var(--ease);
 }
 
-.ui-button-icon > svg {
+.ui-button-icon svg {
   pointer-events: none;
   stroke: inherit;
   color: inherit;
@@ -61,5 +61,9 @@ export default {
 .ui-button-icon:disabled {
   background-color: var(--color-background);
   cursor: wait;
+}
+
+.ui-button-icon__label {
+  color: var(--color-text-color);
 }
 </style>

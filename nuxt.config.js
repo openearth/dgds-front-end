@@ -41,11 +41,12 @@ export default {
    */
   css: [
     'mapbox-gl/dist/mapbox-gl.css',
+    'material-design-icons/iconfont/material-icons.css',
     '~/css/main.css',
-    '~/css/typography.css',
     '~/css/helpers.css',
-    '~/css/markdown.css',
-    'material-design-icons/iconfont/material-icons.css'
+    '~/css/transitions.css',
+    '~/css/typography.css',
+    '~/css/markdown.css'
   ],
 
   /*

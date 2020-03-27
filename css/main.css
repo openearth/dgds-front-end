@@ -12,7 +12,8 @@
 
   --border-radius: 4px;
 
-  --site-nav-width-collapsed: 3rem;
+  --nav-bar-width: 78px;
+  --nav-bar-expanded-width: 275px;
 
   --icon-size: 30px;
 }
@@ -31,6 +32,10 @@ body {
 }
 
 ol, ul {
+  margin: 0;
+}
+
+figure {
   margin: 0;
 }
 
