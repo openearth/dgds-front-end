@@ -70,6 +70,7 @@ import isEqual from 'lodash/fp/isEqual'
 import identity from 'lodash/fp/identity'
 import _ from 'lodash'
 import { mapState, mapGetters, mapMutations } from 'vuex'
+import auth from '../auth'
 import DataSetControlMenu from '../components/data-set-control-menu'
 import NavigationBar from '../components/navigation-bar/navigation-bar'
 import TimeStamp from '../components/time-stamp'
@@ -180,8 +181,14 @@ export default {
       deep: true
     }
   },
-  async mounted () {
-    await this.$nextTick()
+  mounted () {
+    auth.getUser()
+      .then((user) => {
+        console.log({ user })
+      })
+      .catch((err) => {
+        console.log({ err })
+      })
   },
   methods: {
     ...mapMutations('map', ['clearActiveDatasetIds', 'setActiveRasterLayer']),

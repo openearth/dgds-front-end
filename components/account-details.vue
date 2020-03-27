@@ -1,6 +1,8 @@
 <template>
   <div class="account-details">
-    <h3 class="h4">Account Details</h3>
+    <h3 class="h4">
+      Account Details
+    </h3>
     <dl>
       <dt>Name</dt>
       <dd>{{ name }}</dd>
@@ -9,13 +11,17 @@
       <dt>Phone number</dt>
       <dd>{{ phone }}</dd>
     </dl>
-    <UiButton kind="primary">
-      Logout
+    <UiButton kind="primary" @click="login">
+      Log in
+    </UiButton>
+    <UiButton kind="primary" @click="logout">
+      Log out
     </UiButton>
   </div>
 </template>
 
 <script>
+import auth from '../auth'
 import UiButton from './ui-button'
 
 export default {
@@ -29,6 +35,14 @@ export default {
     },
     phone () {
       return 'Lorem ipsum'
+    }
+  },
+  methods: {
+    login () {
+      auth.signinRedirect({ state: window.location.href })
+    },
+    logout () {
+      auth.signoutRedirect({ state: '/portal' })
     }
   }
 }

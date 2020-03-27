@@ -32,6 +32,7 @@
     "material-design-icons": "^3.0.1",
     "moment": "^2.24.0",
     "nuxt": "2.11.0",
+    "oidc-client": "^1.10.1",
     "tiny-cookie": "^2.3.1",
     "vue-echarts": "^4.1.0",
     "vue-markdown": "^2.2.4",
