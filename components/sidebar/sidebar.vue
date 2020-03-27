@@ -116,12 +116,15 @@ export default {
 </script>
 
 <style>
-  .navigation-bar ~ .ui-tray {
+  .sidebar .ui-tray {
     left: var(--nav-bar-width);
-    transition: left .3s ease;
   }
 
-  .navigation-bar--expanded ~ .ui-tray {
+  .default-layout--sidebar-animating .sidebar .ui-tray {
+     transition: left .35s ease;
+  }
+
+  .default-layout--sidebar-expanded .sidebar .ui-tray {
     left: var(--nav-bar-expanded-width);
   }
 </style>

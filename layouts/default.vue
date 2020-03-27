@@ -1,7 +1,10 @@
 <template>
   <div
     class="default-layout"
-    :class="{ 'default-layout--sidebar-expanded': sidebarExpanded }"
+    :class="{
+      'default-layout--sidebar-animating': sidebarAnimating,
+      'default-layout--sidebar-expanded': sidebarExpanded
+    }"
   >
     <client-only>
       <v-mapbox
@@ -106,7 +109,7 @@ export default {
     mapboxMessage: ''
   }),
   computed: {
-    ...mapState('preferences', ['theme', 'sidebarExpanded']),
+    ...mapState('preferences', ['theme', 'sidebarAnimating', 'sidebarExpanded']),
     ...mapState('map', ['activeLocationIds']),
     ...mapGetters('map', [
       'activeRasterData',
@@ -331,18 +334,24 @@ export default {
 
 .default-layout__timestamp {
   position: absolute;
-  left: calc(var(--spacing-default) * 3);
   top: calc(var(--spacing-default));
-  margin-right: calc(var(--spacing-default));
+  left: calc(var(--nav-bar-width) + var(--spacing-default));
   max-width: 20rem;
+  margin-right: calc(var(--spacing-default));
+}
+
+.default-layout--sidebar-animating .default-layout__timestamp {
+  transition: left .35s ease;
+}
+
+.default-layout--sidebar-expanded .default-layout__timestamp {
+  left: calc(var(--nav-bar-expanded-width) + var(--spacing-default));
 }
 
 .default-layout .mapboxgl-ctrl-bottom-left {
-  left: calc(var(--nav-bar-width) + var(--spacing-small));
   z-index: 0;
-}
-
-.default-layout--sidebar-expanded .mapboxgl-ctrl-bottom-left {
-  left: calc(var(--nav-bar-expanded-width) + var(--spacing-small));
+  right: 55px;
+  bottom: var(--spacing-default);
+  left: auto;
 }
 </style>

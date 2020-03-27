@@ -1,8 +1,5 @@
 <template>
-  <UiTray
-    class="location"
-    :class="{ 'location--has-offset': sidebarExpanded }"
-    @on-close="close">
+  <UiTray class="location" @on-close="close">
     <template v-slot:header>
       <h2 class="h3">
         {{ locations }}
@@ -40,7 +37,7 @@ export default {
   components: { GraphLine, UiTray },
   computed: {
     ...mapGetters('map', ['activePointDataPerDataset', 'getActiveRasterLayer', 'activeRasterData']),
-    ...mapState('preferences', ['theme', 'sidebarExpanded']),
+    ...mapState('preferences', ['theme']),
     activeTheme () {
       return this.theme.active
     },
@@ -87,10 +84,13 @@ export default {
 <style>
   .location {
     left: var(--nav-bar-width);
-    transition: left .3s ease;
   }
 
-  .location--has-offset {
+  .default-layout--sidebar-animating .location {
+    transition: left .35s ease;
+  }
+
+  .default-layout--sidebar-expanded .location {
     left: var(--nav-bar-expanded-width);
   }
 </style>

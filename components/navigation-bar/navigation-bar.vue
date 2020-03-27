@@ -2,6 +2,7 @@
   <nav
     class="navigation-bar"
     :class="{ 'navigation-bar--expanded': sidebarExpanded }"
+    @transitionend="onTransitionEnd"
   >
     <div class="navigation-bar__logo">
       <img :src="logo" width="24" />
@@ -67,6 +68,9 @@ export default {
     isActive (id) {
       return this.activeTheme === id
     },
+    onTransitionEnd () {
+      this.$store.commit('preferences/setSidebarAnimating', { animating: false })
+    },
     toggleTheme (id) {
       this.toggleActiveTheme(id)
 
@@ -85,6 +89,7 @@ export default {
       this.$emit('toggle-account')
     },
     toggleNavigation () {
+      this.$store.commit('preferences/setSidebarAnimating', { animating: true })
       this.$store.commit('preferences/setSidebarExpanded', { expanded: !this.sidebarExpanded })
     }
   }
@@ -104,7 +109,10 @@ export default {
     background-color: var(--color-background);
     box-shadow: 4px 0 24px 0 rgba(0, 0, 0, .1);
     z-index: 1;
-    transition: width .3s ease;
+  }
+
+  .default-layout--sidebar-animating .navigation-bar {
+    transition: width .35s ease;
   }
 
   .navigation-bar--expanded {
@@ -119,13 +127,14 @@ export default {
     left: 5rem;
     transform: translateX(-10px);
     transition: opacity .1s ease, transform .2s ease;
+    pointer-events: none;
   }
 
   .navigation-bar--expanded .ui-button-icon__label {
     opacity: 1;
     transform: translateX(0);
-    transition: opacity .3s ease, transform .3s ease;
-    transition-delay: .1s;
+    transition: opacity .35s ease, transform .35s ease;
+    pointer-events: all;
   }
 
   .navigation-bar .ui-button-icon {
@@ -177,7 +186,7 @@ export default {
 
   .navigation-bar__toggle .icon {
     transform: rotate(180deg);
-    transition: transform .3s ease;
+    transition: transform .35s ease;
   }
 
   .navigation-bar--expanded .navigation-bar__toggle .icon {
