@@ -53,7 +53,7 @@ export default {
     flex-direction: column;
     width: 500px;
     height: 100%;
-    padding: 0 var(--spacing-small);
+    padding: 0 var(--spacing-default);
     background-color: var(--color-background);
     box-shadow: var(--shadow);
   }
