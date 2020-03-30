@@ -98,17 +98,17 @@ export default {
 
 <style>
   .navigation-bar {
+    display: flex;
     position: absolute;
+    z-index: 3;
     top: 0;
     bottom: 0;
     left: 0;
-    display: flex;
     flex-direction: column;
-    height: 100%;
     width: var(--nav-bar-width);
+    height: 100%;
     background-color: var(--color-background);
     box-shadow: 4px 0 24px 0 rgba(0, 0, 0, .1);
-    z-index: 3;
   }
 
   .default-layout--sidebar-animating .navigation-bar {
@@ -121,30 +121,30 @@ export default {
 
   .ui-button-icon__label {
     position: absolute;
-    min-width: 150px;
-    text-align: left;
-    opacity: 0;
     left: 5rem;
+    min-width: 150px;
     transform: translateX(-10px);
     transition: opacity .1s ease, transform .2s ease;
+    opacity: 0;
+    text-align: left;
     pointer-events: none;
   }
 
   .navigation-bar--expanded .ui-button-icon__label {
-    opacity: 1;
     transform: translateX(0);
     transition: opacity .35s ease, transform .35s ease;
+    opacity: 1;
     pointer-events: all;
   }
 
   .navigation-bar .ui-button-icon {
-    border-radius: 0;
+    display: flex;
+    align-content: center;
+    justify-content: flex-start;
     width: 100%;
     height: auto;
-    display: flex;
-    justify-content: flex-start;
-    align-content: center;
     padding: .75rem var(--spacing-default);
+    border-radius: 0;
   }
 
   .navigation-bar__list:first-of-type .ui-button-icon .icon {
@@ -161,6 +161,10 @@ export default {
     background-color: var(--color-quiet-focus);
   }
 
+  .ui-button-icon--active .ui-button-icon__label {
+    color:var(--color-blue);
+  }
+
   .ui-button-icon--active path {
     fill: var(--color-blue);
   }
@@ -170,8 +174,8 @@ export default {
   }
 
   .navigation-bar__logo img {
-    padding: .125rem;
     width: 30px;
+    padding: .125rem;
   }
 
   .navigation-bar__list {

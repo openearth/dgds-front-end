@@ -70,22 +70,22 @@ export default {
 
   .account-details__placeholder {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
   }
 
   .account-details__buttons {
-    text-align: right;
     margin-bottom: 1.5rem;
+    text-align: right;
   }
 
   .account-details dt {
-    font-weight: bold;
     margin-bottom: .5rem;
+    font-weight: bold;
   }
 
   .account-details dd {
-    margin-left: 0;
     margin-bottom: var(--spacing-small);
+    margin-left: 0;
   }
 </style>

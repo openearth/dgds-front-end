@@ -117,12 +117,12 @@ export default {
 
 <style>
   .sidebar .ui-tray {
-    left: var(--nav-bar-width);
     z-index: 2;
+    left: var(--nav-bar-width);
   }
 
   .default-layout--sidebar-animating .sidebar .ui-tray {
-     transition: left .35s ease;
+    transition: left .35s ease;
   }
 
   .default-layout--sidebar-expanded .sidebar .ui-tray {
