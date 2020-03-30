@@ -118,6 +118,7 @@ export default {
 <style>
   .sidebar .ui-tray {
     left: var(--nav-bar-width);
+    z-index: 2;
   }
 
   .default-layout--sidebar-animating .sidebar .ui-tray {

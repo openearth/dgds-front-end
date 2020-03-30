@@ -108,7 +108,7 @@ export default {
     width: var(--nav-bar-width);
     background-color: var(--color-background);
     box-shadow: 4px 0 24px 0 rgba(0, 0, 0, .1);
-    z-index: 1;
+    z-index: 3;
   }
 
   .default-layout--sidebar-animating .navigation-bar {
