@@ -7,7 +7,6 @@ import { mapActions } from 'vuex'
 
 export default {
   transition: 'slide',
-  middleware: 'load-dataset-ids',
   mounted () {
     const { datasetIds } = this.$route.params
     if (datasetIds) {

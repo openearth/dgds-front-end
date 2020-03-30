@@ -33,7 +33,6 @@ import GraphLine from '../../components/graph-line'
 import UiTray from '../../components/ui-tray'
 
 export default {
-  middleware: 'load-location-id',
   components: { GraphLine, UiTray },
   computed: {
     ...mapGetters('map', ['activePointDataPerDataset', 'getActiveRasterLayer', 'activeRasterData']),
