@@ -34,4 +34,3 @@ describe('setUser', () => {
     expect(state.user).toMatchObject(expectedResult)
   })
 })
-
