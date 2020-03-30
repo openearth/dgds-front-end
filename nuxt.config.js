@@ -8,6 +8,10 @@ dotEnv.config()
 export default {
   mode: 'spa',
 
+  server: {
+    port: 8000,
+  },
+
   env: {
     MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
     SERVER_URL: process.env.SERVER_URL
