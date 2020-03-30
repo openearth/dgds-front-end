@@ -1,7 +1,5 @@
 <template>
-  <div class="logout">
-    <p>logout</p>
-  </div>
+  <div />
 </template>
 
 <script>
@@ -9,8 +7,9 @@ import Oidc from 'oidc-client'
 
 export default {
   mounted () {
-    console.log('auth/logout')
-    new Oidc.UserManager().signinSilentCallback()
+    new Oidc.UserManager().signoutRedirectCallback()
+      .then(user => (window.location = '/'))
+      .catch(err => console.error(err))
   }
 }
 </script>

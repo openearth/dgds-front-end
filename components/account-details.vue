@@ -3,7 +3,7 @@
     <h3 class="h4">
       Account Details
     </h3>
-    <dl>
+    <dl v-if="user" class="account-details__list">
       <dt>Name</dt>
       <dd>{{ name }}</dd>
       <dt>Email address</dt>
@@ -11,30 +11,37 @@
       <dt>Phone number</dt>
       <dd>{{ phone }}</dd>
     </dl>
-    <UiButton kind="primary" @click="login">
-      Log in
-    </UiButton>
-    <UiButton kind="primary" @click="logout">
-      Log out
-    </UiButton>
+    <div v-else class="account-details__placeholder">
+      <p>Please login to view your account details</p>
+    </div>
+    <div class="account-details__buttons">
+      <UiButton v-if="!user" kind="primary" @click="login">
+        Log in
+      </UiButton>
+      <UiButton v-else kind="primary" @click="logout">
+        Log out
+      </UiButton>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import auth from '../auth'
 import UiButton from './ui-button'
 
 export default {
   components: { UiButton },
   computed: {
+    ...mapState('preferences', ['user']),
     name () {
-      return 'Lorem ipsum'
+      return this.user.name || '--'
     },
     email () {
-      return 'Lorem ipsum'
+      return this.user.email || '--'
     },
     phone () {
-      return 'Lorem ipsum'
+      return this.user.phone || '--'
     }
   },
   methods: {
@@ -49,6 +56,29 @@ export default {
 </script>
 
 <style>
+  .account-details {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .account-details__list,
+  .account-details__placeholder {
+    flex: 1 1 auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .account-details__placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .account-details__buttons {
+    text-align: right;
+    margin-bottom: 1.5rem;
+  }
+
   .account-details dt {
     font-weight: bold;
     margin-bottom: .5rem;

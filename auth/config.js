@@ -9,8 +9,8 @@ const oidcSettings = {
   response_type: `${process.env.AUTH_TYPE}`,
   scope: `${process.env.AUTH_SCOPE}`,
   post_logout_redirect_uri: `${process.env.AUTH_URL}/${process.env.AUTH_LOGOUT_URL}`,
-  automaticSilentRenew: true,
-  userStore: new Oidc.WebStorageStateStore({ store: window.localStorage })
+  userStore: new Oidc.WebStorageStateStore({ store: window.localStorage }),
+  monitorSession: false
 }
 
 export default oidcSettings

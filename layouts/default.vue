@@ -184,7 +184,11 @@ export default {
   mounted () {
     auth.getUser()
       .then((user) => {
-        console.log({ user })
+        if (user !== null) {
+          this.$store.commit('preferences/setUser', { user: user.profile })
+        } else {
+          this.$store.commit('preferences/setUser', { user: null })
+        }
       })
       .catch((err) => {
         console.log({ err })
