@@ -57,19 +57,19 @@ export default {
   watch: {
     geometry (newValue) {
       this.selectedLayers.forEach((selectedLayer) => {
-        const lId = selectedLayer.id
-        const layer = this.map.getSource(lId)
+        const layerId = selectedLayer.id
+        const layer = this.map.getSource(layerId)
         layer.setData(newValue)
 
         // For the text layer, also change the value of the text
         if (selectedLayer.type === 'symbol') {
           this.map.setLayoutProperty(
-            lId,
+            layerId,
             'text-field',
             this.message
           )
         }
-        this.map.moveLayer(lId)
+        this.map.moveLayer(layerId)
       })
     }
   },
