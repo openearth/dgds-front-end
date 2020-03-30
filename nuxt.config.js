@@ -9,7 +9,7 @@ export default {
   mode: 'spa',
 
   server: {
-    port: 8000,
+    port: 8000
   },
 
   env: {
