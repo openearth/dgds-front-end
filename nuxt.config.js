@@ -14,7 +14,15 @@ export default {
 
   env: {
     MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
-    SERVER_URL: process.env.SERVER_URL
+    SERVER_URL: process.env.SERVER_URL,
+    AUTH_URL: process.env.AUTH_URL,
+    AUTH_AUTHORITY: process.env.AUTH_AUTHORITY,
+    AUTH_ID: process.env.AUTH_ID,
+    AUTH_TYPE: process.env.AUTH_TYPE,
+    AUTH_SCOPE: process.env.AUTH_SCOPE,
+    AUTH_LOGIN_URL: process.env.AUTH_LOGIN_URL,
+    AUTH_LOGOUT_URL: process.env.AUTH_LOGOUT_URL,
+    AUTH_SILENT_URL: process.env.AUTH_SILENT_URL
   },
 
   generate: {
