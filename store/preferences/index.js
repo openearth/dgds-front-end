@@ -1,17 +1,17 @@
 export const state = () => ({
   sidebarAnimating: false,
   sidebarExpanded: false,
-  user: null
+  user: null,
 })
 
 export const mutations = {
-  setSidebarAnimating (state, { animating }) {
+  setSidebarAnimating(state, { animating }) {
     state.sidebarAnimating = animating
   },
-  setSidebarExpanded (state, { expanded }) {
+  setSidebarExpanded(state, { expanded }) {
     state.sidebarExpanded = expanded
   },
-  setUser (state, { user }) {
+  setUser(state, { user }) {
     state.user = user
-  }
+  },
 }

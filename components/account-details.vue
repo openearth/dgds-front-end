@@ -18,22 +18,22 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+  import { mapState } from 'vuex'
 
-export default {
-  computed: {
-    ...mapState('preferences', ['user']),
-    name () {
-      return this.user.name || '--'
+  export default {
+    computed: {
+      ...mapState('preferences', ['user']),
+      name() {
+        return this.user.name || '--'
+      },
+      email() {
+        return this.user.email || '--'
+      },
+      phone() {
+        return this.user.phone || '--'
+      },
     },
-    email () {
-      return this.user.email || '--'
-    },
-    phone () {
-      return this.user.phone || '--'
-    }
   }
-}
 </script>
 
 <style>
@@ -55,7 +55,7 @@ export default {
   }
 
   .account-details dt {
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
     font-weight: bold;
   }
 

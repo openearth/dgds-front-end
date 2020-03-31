@@ -32,8 +32,8 @@ test('reject when status code is 400 or higher', async () => {
     Promise.resolve({
       json: jest.fn(),
       status: 400,
-      statusText: 'Bad request'
-    })
+      statusText: 'Bad request',
+    }),
   )
   window.fetch = fetch
   const get = (await import('../../../../lib/request/get')).default
@@ -47,8 +47,8 @@ test('reject when ok is false', async () => {
   const fetch = jest.fn(() =>
     Promise.resolve({
       json: jest.fn(),
-      ok: false
-    })
+      ok: false,
+    }),
   )
   window.fetch = fetch
   const get = (await import('../../../../lib/request/get')).default

@@ -4,7 +4,7 @@ test('Initial state', () => {
   const initialState = {
     sidebarAnimating: false,
     sidebarExpanded: false,
-    user: null
+    user: null,
   }
   expect(state()).toEqual(initialState)
 })

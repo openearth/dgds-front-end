@@ -3,13 +3,14 @@
 </template>
 
 <script>
-import Oidc from 'oidc-client'
+  import Oidc from 'oidc-client'
 
-export default {
-  mounted () {
-    new Oidc.UserManager().signoutRedirectCallback()
-      .then(user => (window.location = '/'))
-      .catch(err => console.error(err))
+  export default {
+    mounted() {
+      new Oidc.UserManager()
+        .signoutRedirectCallback()
+        .then(user => (window.location = '/'))
+        .catch(err => console.error(err))
+    },
   }
-}
 </script>

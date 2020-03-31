@@ -9,7 +9,7 @@ export default {
   mode: 'spa',
 
   server: {
-    port: 8000
+    port: 8000,
   },
 
   env: {
@@ -19,12 +19,12 @@ export default {
     AUTH_AUTHORITY: process.env.AUTH_AUTHORITY,
     AUTH_ID: process.env.AUTH_ID,
     AUTH_TYPE: process.env.AUTH_TYPE,
-    AUTH_SCOPE: process.env.AUTH_SCOPE
+    AUTH_SCOPE: process.env.AUTH_SCOPE,
   },
 
   generate: {
     fallback: 'index.html',
-    exclude: [/ui-test/]
+    exclude: [/ui-test/],
   },
 
   /*
@@ -35,9 +35,9 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: pkg.description }
+      { hid: 'description', name: 'description', content: pkg.description },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
+    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
 
   /*
@@ -55,7 +55,7 @@ export default {
     '~/css/helpers.css',
     '~/css/transitions.css',
     '~/css/typography.css',
-    '~/css/markdown.css'
+    '~/css/markdown.css',
   ],
 
   /*
@@ -66,7 +66,7 @@ export default {
     { src: '~/plugins/vue2mapbox-gl', ssr: false },
     { src: '~/plugins/bootstrap', ssr: false },
     { src: '~/plugins/polyfills', ssr: false },
-    { src: '~/plugins/vuelidate', ssr: false }
+    { src: '~/plugins/vuelidate', ssr: false },
   ],
 
   /*
@@ -82,29 +82,26 @@ export default {
       app: ({ isDev }) => (isDev ? '[name].js' : '[name].[chunkhash].js'),
       chunk: ({ isDev }) => (isDev ? '[name].js' : '[name].[chunkhash].js'),
       css: ({ isDev }) => (isDev ? '[name].css' : '[name].[contenthash].css'),
-      img: ({ isDev }) =>
-        isDev ? '[path][name].[ext]' : 'img/[name].[hash:7].[ext]'
+      img: ({ isDev }) => (isDev ? '[path][name].[ext]' : 'img/[name].[hash:7].[ext]'),
     },
 
     postcss: {
       plugins: {
         'postcss-custom-properties': {
           preserve: true,
-          importFrom: [
-            { customProperties: fromPairs(generateCustomProperties('light')) }
-          ]
-        }
+          importFrom: [{ customProperties: fromPairs(generateCustomProperties('light')) }],
+        },
       },
       preset: {
-        autoprefixer: {}
-      }
+        autoprefixer: {},
+      },
     },
     transpile: ['vue-echarts', 'resize-detector'],
 
     /*
      ** You can extend webpack config here
      */
-    extend (config, ctx) {
+    extend(config, ctx) {
       const svgRule = config.module.rules.find(rule => rule.test.test('.svg'))
 
       svgRule.test = /\.(png|jpe?g|gif|webp)$/
@@ -113,15 +110,15 @@ export default {
         test: /\.svg$/,
         use: [
           {
-            loader: 'vue-html-loader'
-          }
-        ]
+            loader: 'vue-html-loader',
+          },
+        ],
       })
 
       // add frontmatter-markdown-loader
       config.module.rules.push({
         test: /\.md$/,
-        loader: 'frontmatter-markdown-loader'
+        loader: 'frontmatter-markdown-loader',
       })
 
       // Run ESLint on save
@@ -130,9 +127,9 @@ export default {
           enforce: 'pre',
           test: /\.(js|vue)$/,
           loader: 'eslint-loader',
-          exclude: /(node_modules)/
+          exclude: /(node_modules)/,
         })
       }
-    }
-  }
+    },
+  },
 }

@@ -6,8 +6,8 @@ const layer = {
   source: {
     tileSize: 256,
     tiles: [],
-    type: 'raster'
-  }
+    type: 'raster',
+  },
 }
 
 test('returns location layer', () => {
@@ -20,7 +20,7 @@ test('returns location layer', () => {
 describe('add', () => {
   test('call mapbox.addLayer with a layer containing the correct source structure', () => {
     const mapbox = {
-      addLayer: jest.fn()
+      addLayer: jest.fn(),
     }
     const rasterLayer = getRasterLayer()
     rasterLayer.source.tiles.push('some/url')
@@ -32,14 +32,14 @@ describe('add', () => {
       source: {
         tileSize: 256,
         tiles: ['some/url'],
-        type: 'raster'
-      }
+        type: 'raster',
+      },
     })
     expect(mapbox.addLayer.mock.calls[0][1]).toBe('water-border')
   })
   test('dont add when tiles are empty', () => {
     const mapbox = {
-      addLayer: jest.fn()
+      addLayer: jest.fn(),
     }
     const rasterLayer = getRasterLayer()
     rasterLayer.add(mapbox)
@@ -55,11 +55,11 @@ describe('update', () => {
     const addLayer = jest.fn()
     const mapbox = {
       getSource: () => ({
-        setData
+        setData,
       }),
       removeLayer,
       removeSource,
-      addLayer
+      addLayer,
     }
     const rasterLayer = getRasterLayer()
     rasterLayer.source.tiles = ['some/url']
@@ -77,7 +77,7 @@ describe('update', () => {
       getSource: () => undefined,
       removeLayer,
       removeSource,
-      addLayer
+      addLayer,
     }
     const rasterLayer = getRasterLayer()
     rasterLayer.source.tiles = ['some/url']
@@ -94,11 +94,11 @@ describe('update', () => {
     const addLayer = jest.fn()
     const mapbox = {
       getSource: () => () => ({
-        setData
+        setData,
       }),
       removeLayer,
       removeSource,
-      addLayer
+      addLayer,
     }
     const rasterLayer = getRasterLayer()
     rasterLayer.update(mapbox)

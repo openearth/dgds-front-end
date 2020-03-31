@@ -2,7 +2,7 @@
   <div class="ui-tray">
     <div class="ui-tray__close">
       <ui-button-icon @click="onClickClose">
-        <Icon name="action-cross" />
+        <icon name="action-cross" />
       </ui-button-icon>
     </div>
     <header v-if="hasHeader" class="ui-tray__header">
@@ -18,31 +18,31 @@
 </template>
 
 <script>
-import UiButtonIcon from './ui-button-icon'
-import Icon from './icon'
+  import UiButtonIcon from './ui-button-icon'
+  import Icon from './icon'
 
-export default {
-  components: {
-    Icon,
-    UiButtonIcon
-  },
-  computed: {
-    hasHeader () {
-      return !!this.$slots.header
+  export default {
+    components: {
+      Icon,
+      UiButtonIcon,
     },
-    hasBody () {
-      return !!this.$slots.body
+    computed: {
+      hasHeader() {
+        return !!this.$slots.header
+      },
+      hasBody() {
+        return !!this.$slots.body
+      },
+      hasFooter() {
+        return !!this.$slots.footer
+      },
     },
-    hasFooter () {
-      return !!this.$slots.footer
-    }
-  },
-  methods: {
-    onClickClose () {
-      this.$emit('on-close')
-    }
+    methods: {
+      onClickClose() {
+        this.$emit('on-close')
+      },
+    },
   }
-}
 </script>
 
 <style>
@@ -60,8 +60,8 @@ export default {
 
   .ui-tray__close {
     position: absolute;
-    top: .5rem;
-    right: .5rem;
+    top: 0.5rem;
+    right: 0.5rem;
   }
 
   .ui-tray__close .ui-button-icon {

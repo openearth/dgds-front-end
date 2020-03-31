@@ -82,7 +82,10 @@
       <h2>The quick brown fox jumps over the lazy dog.</h2>
       <h3>The quick brown fox jumps over the lazy dog.</h3>
       <h4>The quick brown fox jumps over the lazy dog.</h4>
-      <p>The <strong>quick</strong> <em>brown</em> fox <a href="/ui-test">jumps</a> over the lazy dog.</p>
+      <p>
+        The <strong>quick</strong> <em>brown</em> fox <a href="/ui-test">jumps</a> over the lazy
+        dog.
+      </p>
     </section>
     <section>
       <h2 class="h2">
@@ -103,31 +106,31 @@
 </template>
 
 <script>
-import UiButton from '../components/ui-button'
-import UiToggle from '../components/ui-toggle'
-import UiRadio from '../components/ui-radio'
-import UiCheckbox from '../components/ui-checkbox'
-import UiButtonIcon from '../components/ui-button-icon'
-import Icon from '~/components/icon'
+  import UiButton from '../components/ui-button'
+  import UiToggle from '../components/ui-toggle'
+  import UiRadio from '../components/ui-radio'
+  import UiCheckbox from '../components/ui-checkbox'
+  import UiButtonIcon from '../components/ui-button-icon'
+  import Icon from '~/components/icon'
 
-export default {
-  layout: 'ui-test',
-  components: {
-    UiButton,
-    UiButtonIcon,
-    UiToggle,
-    UiRadio,
-    UiCheckbox,
-    Icon
+  export default {
+    layout: 'ui-test',
+    components: {
+      UiButton,
+      UiButtonIcon,
+      UiToggle,
+      UiRadio,
+      UiCheckbox,
+      Icon,
+    },
   }
-}
 </script>
 
 <style scoped>
-.section {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 1rem;
-}
+  .section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
 </style>

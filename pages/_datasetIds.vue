@@ -3,18 +3,18 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+  import { mapActions } from 'vuex'
 
-export default {
-  transition: 'slide',
-  mounted () {
-    const { datasetIds } = this.$route.params
-    if (datasetIds) {
-      this.storeActiveDatasets(datasetIds)
-    }
-  },
-  methods: {
-    ...mapActions('map', ['storeActiveDatasets', 'loadLocationsInDatasets'])
+  export default {
+    transition: 'slide',
+    mounted() {
+      const { datasetIds } = this.$route.params
+      if (datasetIds) {
+        this.storeActiveDatasets(datasetIds)
+      }
+    },
+    methods: {
+      ...mapActions('map', ['storeActiveDatasets', 'loadLocationsInDatasets']),
+    },
   }
-}
 </script>

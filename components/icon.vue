@@ -1,36 +1,41 @@
 <template>
   <span class="icon" :class="{ 'icon--large': size === 'large' }" role="presentation">
-    <i v-if="mdi" class="material-icons mdi-icon" :class="{ 'mdi-icon--large': size === 'large' }">{{ name }}</i>
+    <i
+      v-if="mdi"
+      class="material-icons mdi-icon"
+      :class="{ 'mdi-icon--large': size === 'large' }"
+      >{{ name }}</i
+    >
     <span v-else v-html="icon" />
   </span>
 </template>
 
 <script>
-export default {
-  props: {
-    name: {
-      type: String,
-      default: ''
+  export default {
+    props: {
+      name: {
+        type: String,
+        default: '',
+      },
+      size: {
+        type: String,
+        default: null,
+      },
+      mdi: {
+        type: Boolean,
+        default: false,
+      },
     },
-    size: {
-      type: String,
-      default: null
+    computed: {
+      icon() {
+        try {
+          return require(`../assets/icons/icon-${this.name}.svg`)
+        } catch {
+          return require('../assets/icons/icon-placeholder.svg')
+        }
+      },
     },
-    mdi: {
-      type: Boolean,
-      default: false
-    }
-  },
-  computed: {
-    icon () {
-      try {
-        return require(`../assets/icons/icon-${this.name}.svg`)
-      } catch {
-        return require('../assets/icons/icon-placeholder.svg')
-      }
-    }
   }
-}
 </script>
 
 <style>
