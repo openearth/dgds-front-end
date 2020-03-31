@@ -16,10 +16,10 @@
     </div>
     <div class="account-details__buttons">
       <UiButton v-if="!user" kind="primary" @click="login">
-        Log in
+        Login
       </UiButton>
       <UiButton v-else kind="primary" @click="logout">
-        Log out
+        Logout
       </UiButton>
     </div>
   </div>
