@@ -5,13 +5,13 @@
     </span>
     <time-slider
       :dates="activeRasterData.imageTimeseries"
-      start-at="end"
       :set-time-index="dateIndex"
+      start-at="end"
       @update-timestep="getNewRasterLayer"
     >
       <template v-slot:backButton="{ back }">
         <ui-button-icon :disabled="getLoadingState" @click="back">
-          <icon class="icons" :mdi="true" name="chevron_left" />
+          <icon :mdi="true" class="icons" name="chevron_left" />
         </ui-button-icon>
       </template>
       <template v-slot:label>
@@ -19,7 +19,7 @@
       </template>
       <template v-slot:forwardButton="{ forward }">
         <ui-button-icon :disabled="getLoadingState" @click="forward">
-          <icon class="icons" :mdi="true" name="chevron_right" />
+          <icon :mdi="true" class="icons" name="chevron_right" />
         </ui-button-icon>
       </template>
     </time-slider>
@@ -79,9 +79,10 @@
             return
           }
           const series = _.get(this.activeRasterData, 'imageTimeseries')
-          const serie = series.find((serie, i) => {
+          series.find((serie, i) => {
             if (moment(val, 'DD-MM-YYYY HH:mm').isSame(moment(serie.date))) {
               this.dateIndex = i
+              this.getNewRasterLayer(serie)
               return true
             }
           })

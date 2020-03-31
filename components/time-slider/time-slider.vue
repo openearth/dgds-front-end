@@ -1,17 +1,16 @@
 <template>
   <div class="time-slider">
-    <!-- TODO: create slot for svg timeslider element -->
     <div class="time-slider__button-container">
       <div class="time-slider__button">
-        <slot v-if="timeIndex !== 0" name="backButton" :back="back" />
+        <slot v-if="timeIndex !== 0" :back="back" name="backButton" />
       </div>
+      <span class="time-slider__text">
+        <slot name="label" />
+      </span>
       <div class="time-slider__button">
-        <slot v-if="timeIndex !== dates.length - 1" name="forwardButton" :forward="forward" />
+        <slot v-if="timeIndex !== dates.length - 1" :forward="forward" name="forwardButton" />
       </div>
     </div>
-    <span class="time-slider__text">
-      <slot name="label" />
-    </span>
   </div>
 </template>
 
@@ -57,13 +56,12 @@
         // When the dates have changed, change timeIndex
         const newObj = _.get(newVal, this.timeIndex)
         const oldObj = _.get(oldVal, this.timeIndex)
-        if (!_.isEqual(oldObj, newObj) || oldObj.length !== newObj.length) {
+        if (!_.isEqual(oldObj, newObj)) {
           this.setInitialTimeIndex()
+        } else {
+          console.log('timeIndex: ', this.setTimeIndex)
+          this.timeIndex = this.setTimeIndex
         }
-      },
-      timeIndex() {
-        console.log('update', this.timeIndex, this.currentDateObject)
-        this.$emit('update-timestep', this.currentDateObject)
       },
       setTimeIndex(val) {
         console.log('set timeindex????')
@@ -76,22 +74,27 @@
     methods: {
       setInitialTimeIndex() {
         // Set the timeIndex when timeslider is mounted or dates have changed
+        console.log(this.dates)
+        if (!this.dates) {
+          return
+        }
         if (this.startAt === 'end' && this.dates.length > 0) {
           this.timeIndex = this.dates.length - 1
         } else if (Number.isInteger(this.startAt)) {
           this.timeIndex = this.startAt
         } else {
-          console.log('setintiieltimeindex')
           this.timeIndex = 0
         }
       },
       forward() {
         // Go one step forward in time
         this.timeIndex += 1
+        this.$emit('update-timestep', this.currentDateObject)
       },
       back() {
         // Go one step back in time
         this.timeIndex -= 1
+        this.$emit('update-timestep', this.currentDateObject)
       },
     },
   }
@@ -99,9 +102,8 @@
 
 <style>
   .time-slider__button-container {
-    float: right;
     display: flex;
-    margin-bottom: var(--spacing-small);
+    overflow-x: hidden;
   }
 
   .time-slider__button {
@@ -110,8 +112,6 @@
 
   .time-slider__text {
     margin: auto;
-    padding: 0 16px 1px 16px;
-    width: 300px;
     text-align: center;
   }
 </style>
