@@ -1,8 +1,7 @@
 <template>
   <span class="icon" :class="{ 'icon--large': size === 'large' }" role="presentation">
     <i v-if="mdi" class="material-icons mdi-icon" :class="{ 'mdi-icon--large': size === 'large' }">{{ name }}</i>
-    <span v-else-if="icon" v-html="icon" />
-    <span v-else v-html="placeholder" />
+    <span v-else v-html="icon" />
   </span>
 </template>
 
@@ -24,10 +23,11 @@ export default {
   },
   computed: {
     icon () {
-      return require(`../assets/icons/icon-${this.name}.svg`)
-    },
-    placeholder () {
-      return require('../assets/icons/icon-placeholder.svg')
+      try {
+        return require(`../assets/icons/icon-${this.name}.svg`)
+      } catch {
+        return require('../assets/icons/icon-placeholder.svg')
+      }
     }
   }
 }
