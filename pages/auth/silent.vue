@@ -3,11 +3,11 @@
 </template>
 
 <script>
-import Oidc from 'oidc-client'
+  import Oidc from 'oidc-client'
 
-export default {
-  mounted () {
-    new Oidc.UserManager().signinSilentCallback()
+  export default {
+    mounted() {
+      new Oidc.UserManager().signinSilentCallback()
+    },
   }
-}
 </script>

@@ -11,89 +11,89 @@
     <ul class="navigation-bar__list">
       <li v-for="(theme, key) in getThemes" :key="key">
         <div class="navigation-bar__list-item">
-          <UiButtonIcon
+          <ui-button-icon
             kind="quiet"
             :class="{ 'ui-button-icon--active': isActive(theme.id) }"
             @click="toggleTheme(theme.id)"
           >
-            <Icon :name="`theme-${theme.id}`" />
+            <icon :name="`theme-${theme.id}`" />
             <span class="ui-button-icon__label bodytext-m">{{ theme.name }}</span>
-          </UiButtonIcon>
+          </ui-button-icon>
         </div>
       </li>
     </ul>
 
     <ul class="navigation-bar__list">
       <li>
-        <UiButtonIcon @click="toggleAbout">
-          <Icon name="info" />
+        <ui-button-icon @click="toggleAbout">
+          <icon name="info" />
           <span class="ui-button-icon__label bodytext-m">About</span>
-        </UiButtonIcon>
+        </ui-button-icon>
       </li>
       <li>
-        <UiButtonIcon @click="toggleAccount">
-          <Icon name="account" />
+        <ui-button-icon @click="toggleAccount">
+          <icon name="account" />
           <span class="ui-button-icon__label bodytext-m">Account</span>
-        </UiButtonIcon>
+        </ui-button-icon>
       </li>
     </ul>
 
     <div class="navigation-bar__toggle">
-      <UiButtonIcon @click="toggleNavigation">
-        <Icon name="collapse" />
-      </UiButtonIcon>
+      <ui-button-icon @click="toggleNavigation">
+        <icon name="collapse" />
+      </ui-button-icon>
     </div>
   </nav>
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapState } from 'vuex'
-import UiButtonIcon from '../ui-button-icon'
-import Icon from '../icon'
+  import { mapGetters, mapMutations, mapState } from 'vuex'
+  import UiButtonIcon from '../ui-button-icon'
+  import Icon from '../icon'
 
-export default {
-  components: { UiButtonIcon, Icon },
-  data: () => ({
-    activeTheme: null
-  }),
-  computed: {
-    ...mapGetters('map/themes', ['getThemes', 'getActiveTheme']),
-    ...mapState('preferences', ['sidebarExpanded']),
-    logo () {
-      return require('~/assets/images/deltares_avatar.png')
-    }
-  },
-  methods: {
-    ...mapMutations('map', ['toggleActiveTheme']),
-    isActive (id) {
-      return this.activeTheme === id
+  export default {
+    components: { UiButtonIcon, Icon },
+    data: () => ({
+      activeTheme: null,
+    }),
+    computed: {
+      ...mapGetters('map/themes', ['getThemes', 'getActiveTheme']),
+      ...mapState('preferences', ['sidebarExpanded']),
+      logo() {
+        return require('~/assets/images/deltares_avatar.png')
+      },
     },
-    onTransitionEnd () {
-      this.$store.commit('preferences/setSidebarAnimating', { animating: false })
-    },
-    toggleTheme (id) {
-      this.toggleActiveTheme(id)
+    methods: {
+      ...mapMutations('map', ['toggleActiveTheme']),
+      isActive(id) {
+        return this.activeTheme === id
+      },
+      onTransitionEnd() {
+        this.$store.commit('preferences/setSidebarAnimating', { animating: false })
+      },
+      toggleTheme(id) {
+        this.toggleActiveTheme(id)
 
-      if (this.activeTheme === id) {
-        this.activeTheme = null
-      } else {
-        this.activeTheme = id
-      }
+        if (this.activeTheme === id) {
+          this.activeTheme = null
+        } else {
+          this.activeTheme = id
+        }
 
-      this.$emit('change-theme')
+        this.$emit('change-theme')
+      },
+      toggleAbout() {
+        this.$emit('toggle-about')
+      },
+      toggleAccount() {
+        this.$emit('toggle-account')
+      },
+      toggleNavigation() {
+        this.$store.commit('preferences/setSidebarAnimating', { animating: true })
+        this.$store.commit('preferences/setSidebarExpanded', { expanded: !this.sidebarExpanded })
+      },
     },
-    toggleAbout () {
-      this.$emit('toggle-about')
-    },
-    toggleAccount () {
-      this.$emit('toggle-account')
-    },
-    toggleNavigation () {
-      this.$store.commit('preferences/setSidebarAnimating', { animating: true })
-      this.$store.commit('preferences/setSidebarExpanded', { expanded: !this.sidebarExpanded })
-    }
   }
-}
 </script>
 
 <style>
@@ -108,11 +108,11 @@ export default {
     width: var(--nav-bar-width);
     height: 100%;
     background-color: var(--color-background);
-    box-shadow: 4px 0 24px 0 rgba(0, 0, 0, .1);
+    box-shadow: 4px 0 24px 0 rgba(0, 0, 0, 0.1);
   }
 
   .default-layout--sidebar-animating .navigation-bar {
-    transition: width .35s ease;
+    transition: width 0.35s ease;
   }
 
   .navigation-bar--expanded {
@@ -124,7 +124,7 @@ export default {
     left: 5rem;
     min-width: 150px;
     transform: translateX(-10px);
-    transition: opacity .1s ease, transform .2s ease;
+    transition: opacity 0.1s ease, transform 0.2s ease;
     opacity: 0;
     text-align: left;
     pointer-events: none;
@@ -132,7 +132,7 @@ export default {
 
   .navigation-bar--expanded .ui-button-icon__label {
     transform: translateX(0);
-    transition: opacity .35s ease, transform .35s ease;
+    transition: opacity 0.35s ease, transform 0.35s ease;
     opacity: 1;
     pointer-events: all;
   }
@@ -143,7 +143,7 @@ export default {
     justify-content: flex-start;
     width: 100%;
     height: auto;
-    padding: .75rem var(--spacing-default);
+    padding: 0.75rem var(--spacing-default);
     border-radius: 0;
   }
 
@@ -162,7 +162,7 @@ export default {
   }
 
   .ui-button-icon--active .ui-button-icon__label {
-    color:var(--color-blue);
+    color: var(--color-blue);
   }
 
   .ui-button-icon--active path {
@@ -170,12 +170,12 @@ export default {
   }
 
   .navigation-bar__logo {
-    padding: .75rem var(--spacing-default);
+    padding: 0.75rem var(--spacing-default);
   }
 
   .navigation-bar__logo img {
     width: 30px;
-    padding: .125rem;
+    padding: 0.125rem;
   }
 
   .navigation-bar__list {
@@ -190,7 +190,7 @@ export default {
 
   .navigation-bar__toggle .icon {
     transform: rotate(180deg);
-    transition: transform .35s ease;
+    transition: transform 0.35s ease;
   }
 
   .navigation-bar--expanded .navigation-bar__toggle .icon {

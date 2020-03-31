@@ -10,7 +10,7 @@ const oidcSettings = {
   scope: `${process.env.AUTH_SCOPE}`,
   post_logout_redirect_uri: `${process.env.AUTH_URL}/auth/logout`,
   userStore: new Oidc.WebStorageStateStore({ store: window.localStorage }),
-  monitorSession: false
+  monitorSession: false,
 }
 
 export default oidcSettings
