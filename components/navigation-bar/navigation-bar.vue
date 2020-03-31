@@ -165,7 +165,7 @@
     color: var(--color-blue);
   }
 
-  .ui-button-icon--active path {
+  .ui-button-icon--active svg {
     fill: var(--color-blue);
   }
 

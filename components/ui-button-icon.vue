@@ -43,13 +43,7 @@
 
   .ui-button-icon svg {
     pointer-events: none;
-    stroke: inherit;
-    color: inherit;
-  }
-
-  .ui-button-icon path {
-    stroke: inherit;
-    color: inherit;
+    color: var(--color-text-color);
   }
 
   .ui-button-icon:hover {
