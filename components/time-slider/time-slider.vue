@@ -1,15 +1,13 @@
 <template>
   <div class="time-slider">
-    <div class="time-slider__button-container">
-      <div class="time-slider__button">
-        <slot v-if="timeIndex !== 0" :back="back" name="backButton" />
-      </div>
-      <span class="time-slider__text">
-        <slot name="label" />
-      </span>
-      <div class="time-slider__button">
-        <slot v-if="timeIndex !== dates.length - 1" :forward="forward" name="forwardButton" />
-      </div>
+    <div class="time-slider__button">
+      <slot v-if="timeIndex !== 0" :back="back" name="backButton" />
+    </div>
+    <div class="time-slider__text">
+      <slot name="label" />
+    </div>
+    <div class="time-slider__button">
+      <slot v-if="timeIndex !== dates.length - 1" :forward="forward" name="forwardButton" />
     </div>
   </div>
 </template>
@@ -59,12 +57,10 @@
         if (!_.isEqual(oldObj, newObj)) {
           this.setInitialTimeIndex()
         } else {
-          console.log('timeIndex: ', this.setTimeIndex)
           this.timeIndex = this.setTimeIndex
         }
       },
       setTimeIndex(val) {
-        console.log('set timeindex????')
         this.timeIndex = val
       },
     },
@@ -74,7 +70,6 @@
     methods: {
       setInitialTimeIndex() {
         // Set the timeIndex when timeslider is mounted or dates have changed
-        console.log(this.dates)
         if (!this.dates) {
           return
         }
@@ -101,17 +96,25 @@
 </script>
 
 <style>
-  .time-slider__button-container {
+  .time-slider {
     display: flex;
-    overflow-x: hidden;
+    align-items: center;
   }
 
-  .time-slider__button {
-    width: 48px;
+  .time-slider .ui-select {
+    min-width: 155px;
+  }
+
+  .time-slider .ui-select__label {
+    display: none;
+  }
+
+  .time-slider__button .icon {
+    color: var(--color-text-color);
   }
 
   .time-slider__text {
-    margin: auto;
-    text-align: center;
+    flex: 1 1 auto;
+    margin: 0 var(--spacing-small);
   }
 </style>

@@ -1,8 +1,8 @@
 <template>
   <panel class="timestamp">
-    <span class="data-set-control-menu__title h4 unselectable">
+    <h3 class="data-set-control-menu__title h4">
       Date raster layer
-    </span>
+    </h3>
     <time-slider
       :dates="activeRasterData.imageTimeseries"
       :set-time-index="dateIndex"
@@ -15,7 +15,12 @@
         </ui-button-icon>
       </template>
       <template v-slot:label>
-        <ui-dropdown id="timeslider-dropdown" :options="timeseriesItems" :value.sync="timestamp" />
+        <ui-select
+          id="timeslider-dropdown"
+          v-model="timestamp"
+          label="Select a timestamp"
+          :options="timeseriesItems"
+        />
       </template>
       <template v-slot:forwardButton="{ forward }">
         <ui-button-icon :disabled="getLoadingState" @click="forward">
@@ -31,13 +36,13 @@
   import _ from 'lodash'
   import moment from 'moment'
   import UiButtonIcon from './ui-button-icon'
-  import UiDropdown from './ui-dropdown'
+  import UiSelect from './ui-select'
   import Icon from './icon'
   import Panel from './panel.vue'
   import TimeSlider from './time-slider/time-slider.vue'
 
   export default {
-    components: { Panel, TimeSlider, UiButtonIcon, Icon, UiDropdown },
+    components: { Panel, TimeSlider, UiButtonIcon, Icon, UiSelect },
     data() {
       return {
         dateIndex: 0, // use input dropdown to, change the index of the timeslider accordingly
