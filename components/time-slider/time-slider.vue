@@ -16,102 +16,102 @@
 </template>
 
 <script>
-import _ from 'lodash'
+  import _ from 'lodash'
 
-export default {
-  props: {
-    dates: {
-      type: Array,
-      default: () => []
+  export default {
+    props: {
+      dates: {
+        type: Array,
+        default: () => [],
+      },
+      startAt: {
+        // Where to start in the dates array, begin end or at random index
+        default: () => 'start',
+        validator(value) {
+          if (Number.isInteger(value)) {
+            return true
+          } else if (['start', 'end'].includes(value)) {
+            return true
+          } else {
+            return false
+          }
+        },
+      },
+      setTimeIndex: {
+        type: Number,
+        default: () => 0,
+      },
     },
-    startAt: {
-      // Where to start in the dates array, begin end or at random index
-      default: () => 'start',
-      validator (value) {
-        if (Number.isInteger(value)) {
-          return true
-        } else if (['start', 'end'].includes(value)) {
-          return true
-        } else {
-          return false
+    data() {
+      return {
+        timeIndex: 0,
+      }
+    },
+    computed: {
+      currentDateObject() {
+        return _.get(this.dates, this.timeIndex)
+      },
+    },
+    watch: {
+      dates(newVal, oldVal) {
+        // When the dates have changed, change timeIndex
+        const newObj = _.get(newVal, this.timeIndex)
+        const oldObj = _.get(oldVal, this.timeIndex)
+        if (!_.isEqual(oldObj, newObj) || oldObj.length !== newObj.length) {
+          this.setInitialTimeIndex()
         }
-      }
+      },
+      timeIndex() {
+        console.log('update', this.timeIndex, this.currentDateObject)
+        this.$emit('update-timestep', this.currentDateObject)
+      },
+      setTimeIndex(val) {
+        console.log('set timeindex????')
+        this.timeIndex = val
+      },
     },
-    setTimeIndex: {
-      type: Number,
-      default: () => 0
-    }
-  },
-  data () {
-    return {
-      timeIndex: 0
-    }
-  },
-  computed: {
-    currentDateObject () {
-      return _.get(this.dates, this.timeIndex)
-    }
-  },
-  watch: {
-    dates (newVal, oldVal) {
-      // When the dates have changed, change timeIndex
-      const newObj = _.get(newVal, this.timeIndex)
-      const oldObj = _.get(oldVal, this.timeIndex)
-      if (!_.isEqual(oldObj, newObj) || oldObj.length !== newObj.length) {
-        this.setInitialTimeIndex()
-      }
+    mounted() {
+      this.setInitialTimeIndex()
     },
-    timeIndex () {
-      console.log('update', this.timeIndex, this.currentDateObject)
-      this.$emit('update-timestep', this.currentDateObject)
+    methods: {
+      setInitialTimeIndex() {
+        // Set the timeIndex when timeslider is mounted or dates have changed
+        if (this.startAt === 'end' && this.dates.length > 0) {
+          this.timeIndex = this.dates.length - 1
+        } else if (Number.isInteger(this.startAt)) {
+          this.timeIndex = this.startAt
+        } else {
+          console.log('setintiieltimeindex')
+          this.timeIndex = 0
+        }
+      },
+      forward() {
+        // Go one step forward in time
+        this.timeIndex += 1
+      },
+      back() {
+        // Go one step back in time
+        this.timeIndex -= 1
+      },
     },
-    setTimeIndex (val) {
-      console.log('set timeindex????')
-      this.timeIndex = val
-    }
-  },
-  mounted () {
-    this.setInitialTimeIndex()
-  },
-  methods: {
-    setInitialTimeIndex () {
-      // Set the timeIndex when timeslider is mounted or dates have changed
-      if (this.startAt === 'end' && this.dates.length > 0) {
-        this.timeIndex = this.dates.length - 1
-      } else if (Number.isInteger(this.startAt)) {
-        this.timeIndex = this.startAt
-      } else {
-        console.log('setintiieltimeindex')
-        this.timeIndex = 0
-      }
-    },
-    forward () {
-      // Go one step forward in time
-      this.timeIndex += 1
-    },
-    back () {
-      // Go one step back in time
-      this.timeIndex -= 1
-    }
   }
-}
 </script>
 
 <style>
-.time-slider__button-container {
-  float: right;
-  display: flex;
-  margin-bottom: var(--spacing-small);
-}
+  .time-slider__button-container {
+    float: right;
+    display: flex;
+    margin-bottom: var(--spacing-small);
+  }
 
-.time-slider__button {
-  width: 48px;
-}
+  .time-slider__button {
+    width: 48px;
+  }
 
-.time-slider__text {
-  margin: auto;
-  padding: 0 16px 1px 16px;
-  width: 300px;
-  text-align: center;
-}
+  .time-slider__text {
+    margin: auto;
+    padding: 0 16px 1px 16px;
+    width: 300px;
+    text-align: center;
+  }
 </style>

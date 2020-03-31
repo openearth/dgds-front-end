@@ -18,48 +18,48 @@
 </template>
 
 <script>
-export default {
-  props: {
-    id: {
-      type: String,
-      required: true
-    },
-    placeholder: {
-      type: String,
-      default: () => 'Choose... '
-    },
-    name: {
-      type: String,
-      default: () => ''
-    },
-    value: {
-      type: [String, Number],
-      default: () => ''
-    },
-    options: {
-      type: Array,
-      required: true
-    }
-  },
-  data () {
-    return {
-      isFocused: false
-    }
-  },
-  computed: {
-    model: {
-      get () {
-        return this.value !== undefined || this.value !== null ? this.value : ''
+  export default {
+    props: {
+      id: {
+        type: String,
+        required: true,
       },
-      set (value) {
-        this.$emit('update:value', value)
+      placeholder: {
+        type: String,
+        default: () => 'Choose... ',
+      },
+      name: {
+        type: String,
+        default: () => '',
+      },
+      value: {
+        type: [String, Number],
+        default: () => '',
+      },
+      options: {
+        type: Array,
+        required: true,
+      },
+    },
+    data() {
+      return {
+        isFocused: false,
       }
-    }
+    },
+    computed: {
+      model: {
+        get() {
+          return this.value !== undefined || this.value !== null ? this.value : ''
+        },
+        set(value) {
+          this.$emit('update:value', value)
+        },
+      },
+    },
   }
-}
 </script>
-<style >
- .ui-dropdown {
+<style>
+  .ui-dropdown {
     width: 180px;
     height: 38px;
     display: flex;
@@ -68,20 +68,19 @@ export default {
     background-color: var(--color-form-base);
     cursor: pointer;
     padding-left: 13px;
-}
+  }
 
-.ui-dropdown__label {
-  margin: auto;
-  text-align: left;
-  flex-grow: 1;
+  .ui-dropdown__label {
+    margin: auto;
+    text-align: left;
+    flex-grow: 1;
+  }
 
-}
+  .ui-dropdown:hover {
+    border-color: var(--color-primary-hover);
+  }
 
-.ui-dropdown:hover {
-  border-color: var(--color-primary-hover);
-}
-
-.ui-dropdown:focus {
-  border-color: var(--color-primary-pressed);
-}
+  .ui-dropdown:focus {
+    border-color: var(--color-primary-pressed);
+  }
 </style>
