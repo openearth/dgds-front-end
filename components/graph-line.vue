@@ -6,29 +6,18 @@
       'graph-line--collapsed': isCollapsed,
     }"
   >
-    <UiButtonIcon
+    <ui-button-icon
       v-if="collapsible"
       class="graph-line__toggle"
       label="Toggle"
       @click="toggleCollapsedDataset(parameterId)"
     >
-      <Icon
-        size="large"
-        name="action-chevron-down"
-        fallback-name="placeholder"
-      />
-    </UiButtonIcon>
-    <figcaption
-      class="graph-line__caption strong"
-      @click="toggleCollapsedDataset(parameterId)"
-    >
+      <icon size="large" name="action-chevron-down" />
+    </ui-button-icon>
+    <figcaption class="graph-line__caption strong" @click="toggleCollapsedDataset(parameterId)">
       {{ title }}
     </figcaption>
-    <div
-      v-if="!isCollapsed"
-      class="graph-line__aspect-ratio"
-      :class="{ image: type === 'images' }"
-    >
+    <div v-if="!isCollapsed" class="graph-line__aspect-ratio" :class="{ image: type === 'images' }">
       <v-chart
         v-if="type === 'line' || type === 'scatter'"
         :ref="title"
@@ -36,312 +25,303 @@
         :autoresize="true"
         class="graph-line__chart"
       />
-      <img
-        v-if="type === 'images'"
-        :src="imageUrl"
-        class="graph-line__chart graph-image"
-      >
-      <UiButton
-        class="download-btn"
-        kind="quiet"
-        @click="download()"
-      >
+      <img v-if="type === 'images'" :src="imageUrl" class="graph-line__chart graph-image" />
+      <ui-button class="download-btn" kind="quiet" @click="download()">
         DOWNLOAD
-      </UiButton>
+      </ui-button>
     </div>
   </figure>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
-import merge from 'lodash/merge'
-import moment from 'moment'
-import _ from 'lodash'
-import ECharts from 'vue-echarts'
-import { saveAs } from 'file-saver'
-import UiButtonIcon from '~/components/ui-button-icon'
-import UiButton from '~/components/ui-button'
-import Icon from '~/components/icon'
-import 'echarts/lib/chart/line'
-import 'echarts/lib/chart/scatter'
-import 'echarts/lib/component/dataZoom'
-import 'echarts/lib/component/tooltip'
-import 'echarts/lib/component/markLine'
-import 'echarts/lib/component/markPoint'
+  import { mapGetters, mapMutations } from 'vuex'
+  import merge from 'lodash/merge'
+  import moment from 'moment'
+  import ECharts from 'vue-echarts'
+  import { saveAs } from 'file-saver'
+  import UiButtonIcon from '~/components/ui-button-icon'
+  import UiButton from '~/components/ui-button'
+  import Icon from '~/components/icon'
+  import 'echarts/lib/chart/line'
+  import 'echarts/lib/chart/scatter'
+  import 'echarts/lib/component/dataZoom'
+  import 'echarts/lib/component/tooltip'
+  import 'echarts/lib/component/markLine'
+  import 'echarts/lib/component/markPoint'
 
-const getStyle = (colors = {}) => ({
-  backgroundColor: colors.background,
-  color: colors.pink,
-  textStyle: {
-    color: colors.textColor
-  },
-  xAxis: {
-    axisLine: {
-      lineStyle: {
-        color: colors.textColor
-      }
-    }
-  },
-  yAxis: {
-    axisLine: {
-      lineStyle: {
-        color: colors.textColor
-      }
+  const getStyle = (colors = {}) => ({
+    backgroundColor: colors.background,
+    color: colors.pink,
+    textStyle: {
+      color: colors.textColor,
     },
-    splitLine: {
-      lineStyle: {
-        color: colors.formBase
-      }
-    }
+    xAxis: {
+      axisLine: {
+        lineStyle: {
+          color: colors.textColor,
+        },
+      },
+    },
+    yAxis: {
+      axisLine: {
+        lineStyle: {
+          color: colors.textColor,
+        },
+      },
+      splitLine: {
+        lineStyle: {
+          color: colors.formBase,
+        },
+      },
+    },
+  })
+
+  const baseOptions = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'shadow',
+      },
+    },
+    grid: {
+      show: true,
+      top: 30,
+      bottom: 50,
+      right: 20,
+      left: 90,
+    },
+    dataZoom: [
+      {
+        type: 'inside',
+        realtime: true,
+      },
+    ],
+    textStyle: {
+      fontFamily: 'Helvetica',
+    },
+    xAxis: {
+      type: 'time',
+      axisLine: {
+        onZero: false,
+        show: false,
+      },
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        fontSize: 14,
+      },
+      nameLocation: 'middle',
+      nameGap: 55,
+      nameTextStyle: {
+        fontSize: 14,
+        fontFamily: 'Helvetica',
+      },
+    },
   }
-})
 
-const baseOptions = {
-  tooltip: {
-    trigger: 'axis',
-    axisPointer: {
-      type: 'shadow'
-    }
-  },
-  grid: {
-    show: true,
-    top: 30,
-    bottom: 50,
-    right: 20,
-    left: 90
-  },
-  dataZoom: [
-    {
-      type: 'inside',
-      realtime: true
-    }
-  ],
-  textStyle: {
-    fontFamily: 'Helvetica'
-  },
-  xAxis: {
-    type: 'time',
-    axisLine: {
-      onZero: false,
-      show: false
-    }
-  },
-  yAxis: {
-    type: 'value',
-    axisLabel: {
-      fontSize: 14
+  export default {
+    components: { UiButtonIcon, Icon, 'v-chart': ECharts, UiButton },
+    props: {
+      imageUrl: {
+        type: String,
+        default: () => '',
+      },
+      category: {
+        type: Array,
+        default: () => [],
+      },
+      series: {
+        type: Array,
+        default: () => [],
+      },
+      title: {
+        type: String,
+        default: '',
+      },
+      theme: {
+        type: String,
+        default: '',
+      },
+      collapsible: {
+        type: Boolean,
+        default: false,
+      },
+      units: {
+        type: String,
+        default: '-',
+      },
+      type: {
+        type: String,
+        default: 'line',
+        validator(value) {
+          // The value must match one of these strings
+          return ['line', 'scatter', 'images'].includes(value)
+        },
+      },
+      parameterId: {
+        type: String,
+        default: '',
+      },
+      setMarkPoint: {
+        type: Boolean,
+        default: false,
+      },
+      timeStep: {
+        type: String,
+        default: '',
+      },
     },
-    nameLocation: 'middle',
-    nameGap: 55,
-    nameTextStyle: {
-      fontSize: 14,
-      fontFamily: 'Helvetica'
-    }
-  }
-}
+    computed: {
+      ...mapGetters('preferences/theme', ['colors']),
+      ...mapGetters('map', ['getCollapsedDatasets', 'activeTimestamp']),
+      isCollapsed() {
+        return this.getCollapsedDatasets.includes(this.parameterId)
+      },
+      options() {
+        const series = this.graphData()
+        return series
+      },
+    },
+    methods: {
+      ...mapMutations('map', ['toggleCollapsedDataset']),
+      graphData() {
+        let series = []
+        let markPointCoord = []
+        series = this.series.map(serie => {
+          let data = serie.map((col, i) => [this.category[i], col])
+          // Make sure that all data is in chronological order to plot it correctly
+          data = data.sort((colA, colB) => {
+            return moment(colA[0]) - moment(colB[0])
+          })
 
-export default {
-  components: { UiButtonIcon, Icon, 'v-chart': ECharts, UiButton },
-  props: {
-    imageUrl: {
-      type: String,
-      default: () => ''
-    },
-    category: {
-      type: Array,
-      default: () => []
-    },
-    series: {
-      type: Array,
-      default: () => []
-    },
-    title: {
-      type: String,
-      default: ''
-    },
-    theme: {
-      type: String,
-      default: ''
-    },
-    collapsible: {
-      type: Boolean,
-      default: false
-    },
-    units: {
-      type: String,
-      default: '-'
-    },
-    type: {
-      type: String,
-      default: 'line',
-      validator (value) {
-        // The value must match one of these strings
-        return ['line', 'scatter', 'images'].includes(value)
-      }
-    },
-    parameterId: {
-      type: String,
-      default: ''
-    },
-    setMarkPoint: {
-      type: Boolean,
-      default: false
-    },
-    timeStep: {
-      type: String,
-      default: ''
-    }
-  },
-  computed: {
-    ...mapGetters('preferences/theme', ['colors']),
-    ...mapGetters('map', ['getCollapsedDatasets', 'activeTimestamp']),
-    isCollapsed () {
-      return this.getCollapsedDatasets.includes(this.parameterId)
-    },
-    options () {
-      const series = this.graphData()
-      return series
-    }
-  },
-  methods: {
-    ...mapMutations('map', ['toggleCollapsedDataset']),
-    graphData () {
-      let series = []
-      let markPointCoord = []
-      series = this.series.map((serie) => {
-        let data = serie.map((col, i) => [this.category[i], col])
-        // Make sure that all data is in chronological order to plot it correctly
-        data = data.sort((colA, colB) => {
-          return moment(colA[0]) - moment(colB[0])
-        })
+          // Create a markpoint if there is a value on the exact timestamp selected
+          markPointCoord = data.find(val => {
+            const same = moment(val[0]).isSame(moment(this.timeStep))
+            return same
+          })
 
-        // Create a markpoint if there is a value on the exact timestamp selected
-        markPointCoord = data.find((val) => {
-          const same = moment(val[0]).isSame(moment(this.timeStep))
-          return same
-        })
-
-        return {
-          type: this.type,
-          showAllSymbol: true,
-          data,
-          itemStyle: {
-            normal: {
-              borderWidth: 1
-            }
+          return {
+            type: this.type,
+            showAllSymbol: true,
+            data,
+            itemStyle: {
+              normal: {
+                borderWidth: 1,
+              },
+            },
           }
-        }
-      })
+        })
 
-      if (this.timeStep !== '') {
+        if (this.timeStep !== '') {
+          series.push({
+            type: this.type,
+            markPoint: {
+              data: [
+                {
+                  coord: markPointCoord,
+                  symbolSize: 30,
+                },
+              ],
+            },
+          })
+        }
         series.push({
-          type: this.type,
-          markPoint: {
+          type: 'line',
+          markLine: {
+            silent: true,
             data: [
               {
-                coord: markPointCoord,
-                symbolSize: 30
-              }
-            ]
-          }
+                xAxis: moment().format(),
+              },
+            ],
+            lineStyle: { color: 'white' },
+          },
         })
-      }
-      series.push({
-        type: 'line',
-        markLine: {
-          silent: true,
-          data: [
-            {
-              xAxis: moment().format()
-            }
-          ],
-          lineStyle: { color: 'white' }
+        const dataOptions = {
+          series,
+          yAxis: {
+            name: `${this.title} [${this.units}]`,
+          },
         }
-      })
-      const dataOptions = {
-        series,
-        yAxis: {
-          name: `${this.title} [${this.units}]`
+        const theme = getStyle(this.colors)
+        const result = merge(dataOptions, baseOptions, theme)
+        return result
+      },
+      download() {
+        const fileName = `${this.title}.json`
+
+        const data = {
+          title: this.title,
+          timeseries: this.series,
+          units: this.units,
+          dates: this.category,
         }
-      }
-      const theme = getStyle(this.colors)
-      const result = merge(dataOptions, baseOptions, theme)
-      return result
+        // Create a blob of the data
+        const fileToSave = new Blob([JSON.stringify(data)], {
+          type: 'application/json',
+          name: fileName,
+        })
+
+        // Save the file
+        saveAs(fileToSave, fileName)
+      },
     },
-    download () {
-      const fileName = `${this.title}.json`
-
-      const data = {
-        title: this.title,
-        timeseries: this.series,
-        units: this.units,
-        dates: this.category
-      }
-      // Create a blob of the data
-      const fileToSave = new Blob([JSON.stringify(data)], {
-        type: 'application/json',
-        name: fileName
-      })
-
-      // Save the file
-      saveAs(fileToSave, fileName)
-    }
   }
-}
 </script>
 
 <style>
-.graph-line__aspect-ratio.image {
-  height: 600px;
-}
+  .graph-line__aspect-ratio.image {
+    height: 600px;
+  }
 
-.graph-image {
-  background-repeat: no-repeat;
-  background-size: 50% 100%;
-  height: 600px;
-}
+  .graph-image {
+    background-repeat: no-repeat;
+    background-size: 50% 100%;
+    height: 600px;
+  }
 
-.graph-line {
-  position: relative;
-  --caption-height: 3rem;
-}
+  .graph-line {
+    position: relative;
+    --caption-height: 3rem;
+  }
 
-.graph-line__aspect-ratio {
-  min-height: 360px;
-  position: relative;
-}
+  .graph-line__aspect-ratio {
+    min-height: 360px;
+    position: relative;
+  }
 
-.graph-line__chart {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 90%;
-}
+  .graph-line__chart {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 90%;
+  }
 
-.graph-line__collapsible .graph-line__caption {
-  cursor: pointer;
-}
+  .graph-line__collapsible .graph-line__caption {
+    cursor: pointer;
+  }
 
-.graph-line__toggle {
-  position: absolute;
-  right: 0;
-  transition: transform 0.25s ease-in-out;
-}
+  .graph-line__toggle {
+    position: absolute;
+    right: 0;
+    transition: transform 0.25s ease-in-out;
+  }
 
-.graph-line--collapsed .graph-line__toggle {
-  transform: rotate(180deg);
-}
+  .graph-line--collapsed .graph-line__toggle {
+    transform: rotate(180deg);
+  }
 
-.graph-line__caption {
-  padding: var(--spacing-small);
-  background-color: var(--color-background);
-  height: var(--caption-height);
-}
+  .graph-line__caption {
+    padding: var(--spacing-small);
+    background-color: var(--color-background);
+    height: var(--caption-height);
+  }
 
-.download-btn {
-  right: 0;
-  bottom: 0;
-  position: absolute;
-}
+  .download-btn {
+    right: 0;
+    bottom: 0;
+    position: absolute;
+  }
 </style>
