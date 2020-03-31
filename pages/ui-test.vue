@@ -2,6 +2,21 @@
   <section class="section">
     <section class="section">
       <h2 class="h2">
+        Select
+      </h2>
+      <div style="display: flex; flex-direction: columnn">
+        <ui-select
+          id="select1"
+          :options="options"
+          label="Select an option"
+          placeholder="Options"
+          v-model="selectedOption"
+        />
+      </div>
+      <p>Selected: {{ selectedOption }}</p>
+    </section>
+    <section class="section">
+      <h2 class="h2">
         Button
       </h2>
       <ui-button>Primary button</ui-button>
@@ -102,30 +117,6 @@
         <li>item</li>
       </ol>
     </section>
-
-    <section class="section">
-      <h2 class="h2">
-        Dropdown
-      </h2>
-      <div style="display: flex; flex-direction: columnn">
-        <ui-dropdown id="dropdown1" :options="dropdownItems" :value.sync="selectedItem" />
-      </div>
-      <span> Selected: {{ selectedItem }} </span>
-      <div style="display: flex; flex-direction: column">
-        <ui-dropdown id="dropdown2" :options="dropdownItemsLong" :value.sync="selectedItem" />
-      </div>
-      <span>
-        Selected: {{ selectedItem }}
-        Test scrolling of dropdown menu
-      </span>
-      <div style="display: flex; flex-direction: columnn">
-        <ui-dropdown id="dropdown3" :options="dropdownItems" :value.sync="selectedItem" disabled />
-      </div>
-      <span>
-        Selected: {{ selectedItem }}
-        Test disabled
-      </span>
-    </section>
   </section>
 </template>
 
@@ -136,7 +127,7 @@
   import UiCheckbox from '../components/ui-checkbox'
   import UiButtonIcon from '../components/ui-button-icon'
   import Icon from '~/components/icon'
-  import UiDropdown from '~/components/ui-dropdown'
+  import UiSelect from '~/components/ui-select'
 
   export default {
     layout: 'ui-test',
@@ -147,52 +138,25 @@
       UiRadio,
       UiCheckbox,
       Icon,
-      UiDropdown,
+      UiSelect,
     },
     data() {
       return {
-        dropdownItems: [
+        options: [
           {
-            name: 'Item 1',
-            value: 'val1',
+            name: 'Option 1',
+            value: 'option1',
           },
           {
-            name: 'Item 2',
-            value: 'val2',
+            name: 'Option 2',
+            value: 'option2',
           },
           {
-            name: 'Item 3',
-            value: 'val3',
-          },
-        ],
-        dropdownItemsLong: [
-          {
-            name: 'Item 1',
-            value: 'val',
-          },
-          {
-            name: 'Item 2',
-            value: 'val2',
-          },
-          {
-            name: 'Item 3',
-            value: 'val3',
-          },
-          {
-            name: 'Item 4',
-            value: 'val4',
-          },
-          {
-            name: 'Item 5',
-            value: 'val5',
-          },
-          {
-            name: 'Item 6',
-            value: 'val6',
+            name: 'Option 3',
+            value: 'option3',
           },
         ],
-        selectedItem: 'val1',
-        wrongSelectedItem: 'item 4',
+        selectedOption: 'option1',
       }
     },
   }
