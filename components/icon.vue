@@ -34,37 +34,44 @@ export default {
 </script>
 
 <style>
-.icon {
-  display: flex;
-}
+  .icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+  }
 
-.icon svg {
-  margin: auto;
-}
+  .icon--large {
+    width: 3rem;
+    height: 3rem;
+  }
 
-.icon--large {
-  margin: auto;
-  display: flex;
-  width: 3rem;
-  height: 3rem;
-}
+  .icon span {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
 
-.icon--large svg {
-  margin: auto;
-  transform: scale(1.25);
-}
+  .icon svg {
+    display: block;
+    width: 100%;
+    width: 100%;
+    height: 100%;
+  }
 
-.mdi-icon {
-  margin: auto;
-  font-size: 24px;
-  width: 24px;
-  height: 24px;
-}
+  .icon--large svg {
+    transform: scale(1.25);
+  }
 
-.mdi-icon--large {
-  margin: auto;
-  font-size: 36px;
-  width: 36px;
-  height: 36px;
-}
+  .mdi-icon {
+    width: 24px;
+    height: 24px;
+    margin: auto;
+    font-size: 24px;
+  }
+
+  .mdi-icon--large {
+    width: 36px;
+    height: 36px;
+    font-size: 36px;
+  }
 </style>

@@ -1,18 +1,11 @@
 <template>
-  <aside class="location-id scrollbar">
-    <header class="location-id__header">
-      <h2 class="h2">
+  <UiTray class="location" @on-close="close">
+    <template v-slot:header>
+      <h2 class="h3">
         {{ locations }}
       </h2>
-      <ui-button-icon @click="close">
-        <Icon
-          name="action-cross"
-          fallback-name="placeholder"
-          size="large"
-        />
-      </ui-button-icon>
-    </header>
-    <section class="location-id__graphs">
+    </template>
+    <template v-slot:body>
       <GraphLine
         v-for="(data, index) in datasets"
         :key="index"
@@ -28,24 +21,25 @@
         :set-mark-point="data.id === getActiveRasterLayer"
         :time-step="getTimeStep"
       />
-    </section>
-  </aside>
+    </template>
+  </UiTray>
 </template>
 
 <script>
+import _ from 'lodash'
 import flatten from 'lodash/flatten'
 import { mapState, mapMutations, mapGetters } from 'vuex'
-import _ from 'lodash'
-import GraphLine from '~/components/graph-line'
-import UiButtonIcon from '~/components/ui-button-icon'
-import Icon from '~/components/icon'
+import GraphLine from '../../components/graph-line'
+import UiTray from '../../components/ui-tray'
 
 export default {
-  middleware: 'load-location-id',
-  components: { GraphLine, UiButtonIcon, Icon },
+  components: { GraphLine, UiTray },
   computed: {
     ...mapGetters('map', ['activePointDataPerDataset', 'getActiveRasterLayer', 'activeRasterData']),
-    ...mapState({ activeTheme: state => state.preferences.theme.active }),
+    ...mapState('preferences', ['theme']),
+    activeTheme () {
+      return this.theme.active
+    },
     datasets () {
       const activePointData = this.activePointDataPerDataset
 
@@ -55,8 +49,7 @@ export default {
       return flatten(result)
     },
     locations () {
-      const { locationId } = this.$route.params
-      return locationId
+      return this.$route.params.locationId
     },
     getTimeStep () {
       const date = _.get(this.activeRasterData, 'date')
@@ -78,31 +71,25 @@ export default {
   methods: {
     ...mapMutations('map', ['clearActiveLocationIds', 'setActiveLocationIds']),
     close () {
-      const { datasetIds } = this.$route.params
-      this.$router.push({ name: 'datasetIds', params: { datasetIds } })
+      this.$router.push({
+        name: 'datasetIds',
+        params: { datasetIds: this.$route.params.datasetIds }
+      })
     }
   }
 }
 </script>
 
 <style>
-.location-id {
-  width: 50vw;
-  max-width: 600px;
-  height: 100vh;
-  position: absolute;
-  top: 0;
-  left: var(--site-nav-width-collapsed);
-  background-color: var(--color-background);
-  box-shadow: var(--shadow);
-  overflow-x: hidden;
-}
+  .location {
+    left: var(--nav-bar-width);
+  }
 
-.location-id__header {
-  padding-left: var(--spacing-small);
-  padding-top: var(--spacing-small);
+  .default-layout--sidebar-animating .location {
+    transition: left .35s ease;
+  }
 
-  display: flex;
-  justify-content: space-between;
-}
+  .default-layout--sidebar-expanded .location {
+    left: var(--nav-bar-expanded-width);
+  }
 </style>

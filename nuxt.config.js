@@ -8,9 +8,18 @@ dotEnv.config()
 export default {
   mode: 'spa',
 
+  server: {
+    port: 8000
+  },
+
   env: {
     MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
-    SERVER_URL: process.env.SERVER_URL
+    SERVER_URL: process.env.SERVER_URL,
+    AUTH_URL: process.env.BASE_URL || 'http://localhost:8000',
+    AUTH_AUTHORITY: process.env.AUTH_AUTHORITY,
+    AUTH_ID: process.env.AUTH_ID,
+    AUTH_TYPE: process.env.AUTH_TYPE,
+    AUTH_SCOPE: process.env.AUTH_SCOPE
   },
 
   generate: {
@@ -41,10 +50,12 @@ export default {
    */
   css: [
     'mapbox-gl/dist/mapbox-gl.css',
+    'material-design-icons/iconfont/material-icons.css',
     '~/css/main.css',
-    '~/css/typography.css',
     '~/css/helpers.css',
-    'material-design-icons/iconfont/material-icons.css'
+    '~/css/transitions.css',
+    '~/css/typography.css',
+    '~/css/markdown.css'
   ],
 
   /*

@@ -1,5 +1,11 @@
 <template>
-  <div class="default-layout">
+  <div
+    class="default-layout"
+    :class="{
+      'default-layout--sidebar-animating': sidebarAnimating,
+      'default-layout--sidebar-expanded': sidebarExpanded
+    }"
+  >
     <client-only>
       <v-mapbox
         id="map"
@@ -28,23 +34,25 @@
         <v-mapbox-raster-layer :options="rasterLayer" @click="getFeatureInfo" />
       </v-mapbox>
     </client-only>
+
     <DataSetControlMenu
       class="default-layout__data-set-control-menu"
       :datasets="datasetsInActiveTheme"
       @toggle-location-dataset="toggleLocationDataset"
       @toggle-raster-layer="toggleRasterLayer"
     />
+
     <TimeStamp
       v-show="activeTimestamp !== '' && getActiveRasterLayer"
       class="default-layout__timestamp"
       @update-timestep="removeInfoText"
     />
-    <DisclaimerModal />
+
     <nuxt />
-    <SiteNavigation
-      class="default-layout__site-navigation"
-      @change-theme="changeTheme"
-    />
+
+    <Sidebar />
+
+    <DisclaimerModal />
   </div>
 </template>
 
@@ -62,8 +70,9 @@ import isEqual from 'lodash/fp/isEqual'
 import identity from 'lodash/fp/identity'
 import _ from 'lodash'
 import { mapState, mapGetters, mapMutations } from 'vuex'
+import auth from '../auth'
 import DataSetControlMenu from '../components/data-set-control-menu'
-import SiteNavigation from '../components/site-navigation'
+import NavigationBar from '../components/navigation-bar/navigation-bar'
 import TimeStamp from '../components/time-stamp'
 import { when } from '../lib/utils'
 import getVectorLayer from '../lib/mapbox/layers/get-vector-layer'
@@ -73,17 +82,18 @@ import VMapboxRasterLayer from '../components/v-mapbox-components/v-mapbox-raste
 import VMapboxSelectedPointLayer from '../components/v-mapbox-components/v-mapbox-selected-point-layer'
 import DisclaimerModal from '../components/disclaimer-modal'
 import VMapboxInfoTextLayer from '../components/v-mapbox-components/v-mapbox-info-text-layer'
+import Sidebar from '../components/sidebar/sidebar'
 
 export default {
   components: {
-    SiteNavigation,
     DataSetControlMenu,
     TimeStamp,
     VMapboxVectorLayer,
     VMapboxRasterLayer,
     VMapboxSelectedPointLayer,
     DisclaimerModal,
-    VMapboxInfoTextLayer
+    VMapboxInfoTextLayer,
+    Sidebar
   },
   data: () => ({
     mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
@@ -100,10 +110,8 @@ export default {
     mapboxMessage: ''
   }),
   computed: {
-    ...mapState({
-      activeTheme: state => state.preferences.theme.active,
-      activeLocationIds: state => state.map.activeLocationIds
-    }),
+    ...mapState('preferences', ['theme', 'sidebarAnimating', 'sidebarExpanded']),
+    ...mapState('map', ['activeLocationIds']),
     ...mapGetters('map', [
       'activeRasterData',
       'activeVectorData',
@@ -115,6 +123,9 @@ export default {
       'getActiveRasterLayer',
       'getDatasets'
     ]),
+    activeTheme () {
+      return this.theme.active
+    },
     rasterLayer () {
       const rasterLayer = getRasterLayer()
       rasterLayer.source.tiles = [_.get(this.activeRasterData, 'url')]
@@ -170,8 +181,18 @@ export default {
       deep: true
     }
   },
-  async mounted () {
-    await this.$nextTick()
+  mounted () {
+    auth.getUser()
+      .then((user) => {
+        if (user !== null) {
+          this.$store.commit('preferences/setUser', { user: user.profile })
+        } else {
+          this.$store.commit('preferences/setUser', { user: null })
+        }
+      })
+      .catch((err) => {
+        console.log({ err })
+      })
   },
   methods: {
     ...mapMutations('map', ['clearActiveDatasetIds', 'setActiveRasterLayer']),
@@ -280,28 +301,6 @@ export default {
       )
       this.updateRoute(newRouteObject)
     },
-    changeTheme () {
-      // When new theme is chosen update the route with the datasets within
-      // this theme
-      const newRouteObject = this.$route
-
-      const oldIds = newRouteObject.params.datasetIds
-      const datasets = this.getActiveTheme.datasets
-
-      let newparams
-      let oldIdsArray = []
-      if (oldIds) {
-        oldIdsArray = oldIds.split(',')
-      }
-
-      const newIds = _.intersection(oldIdsArray, datasets)
-
-      if (newIds.length > 0) {
-        newparams = newIds.join(',')
-      }
-      newRouteObject.params.datasetIds = newparams
-      this.updateRoute(newRouteObject)
-    },
     updateRoute (routeObj) {
       // Update route with route object
       const { datasetIds, locationId } = routeObj.params
@@ -344,23 +343,26 @@ export default {
   margin-left: calc(var(--spacing-default) * 3);
 }
 
-.default-layout__site-navigation {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100vh;
-}
-
 .default-layout__timestamp {
   position: absolute;
-  left: calc(var(--spacing-default) * 3);
   top: calc(var(--spacing-default));
-  margin-right: calc(var(--spacing-default));
+  left: calc(var(--nav-bar-width) + var(--spacing-default));
   max-width: 20rem;
+  margin-right: calc(var(--spacing-default));
+}
+
+.default-layout--sidebar-animating .default-layout__timestamp {
+  transition: left .35s ease;
+}
+
+.default-layout--sidebar-expanded .default-layout__timestamp {
+  left: calc(var(--nav-bar-expanded-width) + var(--spacing-default));
 }
 
 .default-layout .mapboxgl-ctrl-bottom-left {
-  left: var(--site-nav-width-collapsed);
   z-index: 0;
+  right: 55px;
+  bottom: var(--spacing-default);
+  left: auto;
 }
 </style>

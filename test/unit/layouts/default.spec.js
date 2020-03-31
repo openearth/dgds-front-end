@@ -143,26 +143,4 @@ describe('Default', () => {
       name: 'datasetIds-locationId'
     })
   })
-
-  test('update url when theme changes', () => {
-    const routerPush = jest.fn()
-    const wrapper = shallowMount(Default, {
-      store,
-      localVue,
-      mocks: {
-        $route: {
-          params: { datasetIds: 'ef' },
-          name: 'datasetIds-locationId'
-        },
-        $router: { push: routerPush }
-      }
-    })
-
-    wrapper.find('.default-layout__site-navigation').vm.$emit('change-theme')
-
-    expect(routerPush).toHaveBeenCalledWith({
-      params: { datasetIds: 'ef' },
-      name: 'datasetIds-locationId'
-    })
-  })
 })

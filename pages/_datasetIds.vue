@@ -1,14 +1,12 @@
 <template>
-  <div class="datasetids">
-    <nuxt-child v-if="$route.params.locationId" />
-  </div>
+  <nuxt-child v-if="$route.params.locationId" :key="$route.params.locationId" />
 </template>
 
 <script>
 import { mapActions } from 'vuex'
 
 export default {
-  middleware: 'load-dataset-ids',
+  transition: 'slide',
   mounted () {
     const { datasetIds } = this.$route.params
     if (datasetIds) {
@@ -20,5 +18,3 @@ export default {
   }
 }
 </script>
-
-<style></style>

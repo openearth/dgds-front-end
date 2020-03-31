@@ -1,5 +1,5 @@
 <template>
-  <button class="ui-button-icon" :disabled="disabled" aria-label="text" v-on="$listeners">
+  <button type="button" class="ui-button-icon" :disabled="disabled" :aria-label="text" v-on="$listeners">
     <slot />
   </button>
 </template>
@@ -35,13 +35,14 @@ export default {
   transition: background-color var(--speed-fast) var(--ease);
 }
 
-.ui-button-icon > svg {
+.ui-button-icon svg {
   pointer-events: none;
+  stroke: inherit;
   color: inherit;
 }
 
 .ui-button-icon path {
-  fill: currentColor;
+  stroke: inherit;
   color: inherit;
 }
 
@@ -60,5 +61,9 @@ export default {
 .ui-button-icon:disabled {
   background-color: var(--color-background);
   cursor: wait;
+}
+
+.ui-button-icon__label {
+  color: var(--color-text-color);
 }
 </style>
