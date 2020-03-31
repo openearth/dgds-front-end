@@ -15,7 +15,7 @@ export default {
   env: {
     MAPBOX_ACCESS_TOKEN: process.env.MAPBOX_ACCESS_TOKEN,
     SERVER_URL: process.env.SERVER_URL,
-    AUTH_URL: process.env.AUTH_URL,
+    AUTH_URL: process.env.BASE_URL || 'http://localhost:8000',
     AUTH_AUTHORITY: process.env.AUTH_AUTHORITY,
     AUTH_ID: process.env.AUTH_ID,
     AUTH_TYPE: process.env.AUTH_TYPE,
