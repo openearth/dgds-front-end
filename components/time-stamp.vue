@@ -20,6 +20,7 @@
           v-model="timestamp"
           label="Select a timestamp"
           :options="timeseriesItems"
+          :disabled="loadingRasterLayers"
         />
       </template>
       <template v-slot:forwardButton="{ forward }">
@@ -32,7 +33,7 @@
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex'
+  import { mapActions, mapGetters, mapState } from 'vuex'
   import _ from 'lodash'
   import moment from 'moment'
   import UiButtonIcon from './ui-button-icon'
@@ -49,6 +50,7 @@
       }
     },
     computed: {
+      ...mapState('map', ['loadingRasterLayers']),
       ...mapGetters('map', [
         'activeTimestamp',
         'activeRasterData',
