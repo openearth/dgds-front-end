@@ -14,24 +14,13 @@
     <div v-else class="account-details__placeholder">
       <p>Please login to view your account details</p>
     </div>
-    <div class="account-details__buttons">
-      <UiButton v-if="!user" kind="primary" @click="login">
-        Login
-      </UiButton>
-      <UiButton v-else kind="primary" @click="logout">
-        Logout
-      </UiButton>
-    </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import auth from '../auth'
-import UiButton from './ui-button'
 
 export default {
-  components: { UiButton },
   computed: {
     ...mapState('preferences', ['user']),
     name () {
@@ -42,14 +31,6 @@ export default {
     },
     phone () {
       return this.user.phone || '--'
-    }
-  },
-  methods: {
-    login () {
-      auth.signinRedirect({ state: window.location.href })
-    },
-    logout () {
-      auth.signoutRedirect({ state: '/portal' })
     }
   }
 }
@@ -65,18 +46,12 @@ export default {
   .account-details__list,
   .account-details__placeholder {
     flex: 1 1 auto;
-    margin-bottom: 1.5rem;
   }
 
   .account-details__placeholder {
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  .account-details__buttons {
-    margin-bottom: 1.5rem;
-    text-align: right;
   }
 
   .account-details dt {

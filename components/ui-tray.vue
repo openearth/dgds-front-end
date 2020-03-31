@@ -75,9 +75,12 @@ export default {
 
   .ui-tray__body {
     flex: 1 1 100%;
+    margin-bottom: var(--spacing-default);
+    overflow-x: auto;
   }
 
   .ui-tray__footer {
     flex: 0 0 auto;
+    margin-bottom: var(--spacing-default);
   }
 </style>

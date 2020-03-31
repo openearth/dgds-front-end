@@ -7,7 +7,7 @@
     />
 
     <transition name="slide" mode="out-in">
-      <UiTray v-if="aboutOpen" @on-close="toggleAbout">
+      <UiTray v-if="aboutOpen" class="about" @on-close="toggleAbout">
         <template v-slot:header>
           <h2 class="h3">
             About
@@ -23,7 +23,7 @@
     </transition>
 
     <transition name="slide" mode="out-in">
-      <UiTray v-if="accountOpen" @on-close="toggleAccount">
+      <UiTray v-if="accountOpen" class="account" @on-close="toggleAccount">
         <template v-slot:header>
           <h2 class="h3">
             Account
@@ -31,6 +31,14 @@
         </template>
         <template v-slot:body>
           <AccountDetails />
+        </template>
+        <template v-slot:footer>
+          <UiButton v-if="!user" kind="primary" @click="login">
+            Login
+          </UiButton>
+          <UiButton v-else kind="primary" @click="logout">
+            Logout
+          </UiButton>
         </template>
       </UiTray>
     </transition>
@@ -41,8 +49,10 @@
 import _ from 'lodash'
 import VueMarkdown from 'vue-markdown'
 import update from 'lodash/fp/update'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
+import auth from '../../auth'
 import NavigationBar from '../../components/navigation-bar/navigation-bar'
+import UiButton from '../../components/ui-button'
 import UiTray from '../../components/ui-tray'
 import AccountDetails from '../../components/account-details'
 import aboutText from '~/assets/docs/about-text.md'
@@ -51,6 +61,7 @@ export default {
   components: {
     AccountDetails,
     NavigationBar,
+    UiButton,
     UiTray,
     VueMarkdown
   },
@@ -60,9 +71,16 @@ export default {
     aboutText: aboutText.html
   }),
   computed: {
+    ...mapState('preferences', ['user']),
     ...mapGetters('map', ['getActiveTheme'])
   },
   methods: {
+    login () {
+      auth.signinRedirect({ state: window.location.href })
+    },
+    logout () {
+      auth.signoutRedirect({ state: '/portal' })
+    },
     changeTheme () {
       let newparams
       let oldIdsArray = []
@@ -127,5 +145,9 @@ export default {
 
   .default-layout--sidebar-expanded .sidebar .ui-tray {
     left: var(--nav-bar-expanded-width);
+  }
+
+  .account .ui-tray__footer {
+    text-align: right;
   }
 </style>
