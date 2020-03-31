@@ -82,7 +82,10 @@
       <h2>The quick brown fox jumps over the lazy dog.</h2>
       <h3>The quick brown fox jumps over the lazy dog.</h3>
       <h4>The quick brown fox jumps over the lazy dog.</h4>
-      <p>The <strong>quick</strong> <em>brown</em> fox <a href="/ui-test">jumps</a> over the lazy dog.</p>
+      <p>
+        The <strong>quick</strong> <em>brown</em> fox <a href="/ui-test">jumps</a> over the lazy
+        dog.
+      </p>
     </section>
     <section>
       <h2 class="h2">
@@ -107,9 +110,7 @@
       <div style="display: flex; flex-direction: columnn">
         <ui-dropdown id="dropdown1" :options="dropdownItems" :value.sync="selectedItem" />
       </div>
-      <span>
-        Selected: {{ selectedItem }}
-      </span>
+      <span> Selected: {{ selectedItem }} </span>
       <div style="display: flex; flex-direction: column">
         <ui-dropdown id="dropdown2" :options="dropdownItemsLong" :value.sync="selectedItem" />
       </div>
@@ -129,72 +130,83 @@
 </template>
 
 <script>
-import UiButton from '../components/ui-button'
-import UiToggle from '../components/ui-toggle'
-import UiRadio from '../components/ui-radio'
-import UiCheckbox from '../components/ui-checkbox'
-import UiButtonIcon from '../components/ui-button-icon'
-import Icon from '~/components/icon'
-import UiDropdown from '~/components/ui-dropdown'
+  import UiButton from '../components/ui-button'
+  import UiToggle from '../components/ui-toggle'
+  import UiRadio from '../components/ui-radio'
+  import UiCheckbox from '../components/ui-checkbox'
+  import UiButtonIcon from '../components/ui-button-icon'
+  import Icon from '~/components/icon'
+  import UiDropdown from '~/components/ui-dropdown'
 
-export default {
-  layout: 'ui-test',
-  components: {
-    UiButton,
-    UiButtonIcon,
-    UiToggle,
-    UiRadio,
-    UiCheckbox,
-    Icon,
-    UiDropdown
-  },
-  data () {
-    return {
-      dropdownItems: [{
-        name: 'Item 1',
-        value: 'val1'
-      }, {
-        name: 'Item 2',
-        value: 'val2'
-      }, {
-        name: 'Item 3',
-        value: 'val3'
-      }],
-      dropdownItemsLong: [{
-        name: 'Item 1',
-        value: 'val'
-      }, {
-        name: 'Item 2',
-        value: 'val2'
-      }, {
-        name: 'Item 3',
-        value: 'val3'
-      }, {
-        name: 'Item 4',
-        value: 'val4'
-      }, {
-        name: 'Item 5',
-        value: 'val5'
-      }, {
-        name: 'Item 6',
-        value: 'val6'
-      }],
-      selectedItem: 'val1',
-      wrongSelectedItem: 'item 4'
-    }
+  export default {
+    layout: 'ui-test',
+    components: {
+      UiButton,
+      UiButtonIcon,
+      UiToggle,
+      UiRadio,
+      UiCheckbox,
+      Icon,
+      UiDropdown,
+    },
+    data() {
+      return {
+        dropdownItems: [
+          {
+            name: 'Item 1',
+            value: 'val1',
+          },
+          {
+            name: 'Item 2',
+            value: 'val2',
+          },
+          {
+            name: 'Item 3',
+            value: 'val3',
+          },
+        ],
+        dropdownItemsLong: [
+          {
+            name: 'Item 1',
+            value: 'val',
+          },
+          {
+            name: 'Item 2',
+            value: 'val2',
+          },
+          {
+            name: 'Item 3',
+            value: 'val3',
+          },
+          {
+            name: 'Item 4',
+            value: 'val4',
+          },
+          {
+            name: 'Item 5',
+            value: 'val5',
+          },
+          {
+            name: 'Item 6',
+            value: 'val6',
+          },
+        ],
+        selectedItem: 'val1',
+        wrongSelectedItem: 'item 4',
+      }
+    },
   }
-}
 </script>
 
 <style scoped>
-.ui-test {
-  height: 100vh;
-  overflow-y: auto;
-}
-.section {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 1rem;
-}
+  .ui-test {
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
 </style>
