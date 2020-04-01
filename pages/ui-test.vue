@@ -2,6 +2,21 @@
   <section class="section">
     <section class="section">
       <h2 class="h2">
+        Select
+      </h2>
+      <div style="display: flex; flex-direction: columnn">
+        <ui-select
+          id="select1"
+          :options="options"
+          label="Select an option"
+          placeholder="Options"
+          v-model="selectedOption"
+        />
+      </div>
+      <p>Selected: {{ selectedOption }}</p>
+    </section>
+    <section class="section">
+      <h2 class="h2">
         Button
       </h2>
       <ui-button>Primary button</ui-button>
@@ -112,6 +127,7 @@
   import UiCheckbox from '../components/ui-checkbox'
   import UiButtonIcon from '../components/ui-button-icon'
   import Icon from '~/components/icon'
+  import UiSelect from '~/components/ui-select'
 
   export default {
     layout: 'ui-test',
@@ -122,11 +138,35 @@
       UiRadio,
       UiCheckbox,
       Icon,
+      UiSelect,
+    },
+    data() {
+      return {
+        options: [
+          {
+            name: 'Option 1',
+            value: 'option1',
+          },
+          {
+            name: 'Option 2',
+            value: 'option2',
+          },
+          {
+            name: 'Option 3',
+            value: 'option3',
+          },
+        ],
+        selectedOption: 'option1',
+      }
     },
   }
 </script>
 
 <style scoped>
+  .ui-test {
+    height: 100vh;
+    overflow-y: auto;
+  }
   .section {
     display: flex;
     flex-direction: column;
