@@ -26,15 +26,15 @@
         class="graph-line__chart"
       />
       <img v-if="type === 'images'" :src="imageUrl" class="graph-line__chart graph-image" />
-      <ui-button class="download-btn" kind="quiet" @click="download()">
-        DOWNLOAD
+      <ui-button v-if="user" class="download-btn" kind="quiet" @click="download">
+        Download
       </ui-button>
     </div>
   </figure>
 </template>
 
 <script>
-  import { mapGetters, mapMutations } from 'vuex'
+  import { mapGetters, mapMutations, mapState } from 'vuex'
   import merge from 'lodash/merge'
   import moment from 'moment'
   import ECharts from 'vue-echarts'
@@ -175,6 +175,7 @@
     computed: {
       ...mapGetters('preferences/theme', ['colors']),
       ...mapGetters('map', ['getCollapsedDatasets', 'activeTimestamp']),
+      ...mapState('preferences', ['user']),
       isCollapsed() {
         return this.getCollapsedDatasets.includes(this.parameterId)
       },
