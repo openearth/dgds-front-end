@@ -1,24 +1,20 @@
 <template>
-  <div class="datasetids">
-    <nuxt-child v-if="$route.params.locationId" />
-  </div>
+  <nuxt-child v-if="$route.params.locationId" :key="$route.params.locationId" />
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+  import { mapActions } from 'vuex'
 
-export default {
-  middleware: 'load-dataset-ids',
-  mounted () {
-    const { datasetIds } = this.$route.params
-    if (datasetIds) {
-      this.storeActiveDatasets(datasetIds)
-    }
-  },
-  methods: {
-    ...mapActions('map', ['storeActiveDatasets', 'loadLocationsInDatasets'])
+  export default {
+    transition: 'slide',
+    mounted() {
+      const { datasetIds } = this.$route.params
+      if (datasetIds) {
+        this.storeActiveDatasets(datasetIds)
+      }
+    },
+    methods: {
+      ...mapActions('map', ['storeActiveDatasets', 'loadLocationsInDatasets']),
+    },
   }
-}
 </script>
-
-<style></style>

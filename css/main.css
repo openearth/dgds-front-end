@@ -12,20 +12,31 @@
 
   --border-radius: 4px;
 
-  --site-nav-width-collapsed: 3rem;
+  --nav-bar-width: 78px;
+  --nav-bar-expanded-width: 275px;
 
   --icon-size: 30px;
 }
 
-*,
-*:before,
-*:after {
+* {
   box-sizing: border-box;
+}
+
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
   margin: 0;
 }
 
-html {
-  box-sizing: border-box;
+ol, ul {
+  margin: 0;
+}
+
+figure {
+  margin: 0;
 }
 
 .unselectable {

@@ -1,0 +1,62 @@
+.markdown p {
+  margin-bottom: 0;
+  font-size: 1rem;
+  line-height: 1.3rem;
+}
+
+.markdown strong {
+  font-weight: bold;
+}
+
+.markdown em {
+  font-style: italic;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  margin: var(--spacing-small) 0;
+  font-family: 'sansa_con_probold';
+}
+
+.markdown h1 {
+  font-size: 2.5rem;
+  line-height: 3.75rem;
+}
+
+.markdown h2 {
+  font-size: 2rem;
+  line-height: 3rem;
+}
+
+.markdown h3 {
+  font-size: 1.5rem;
+  line-height: 2.25rem;
+}
+
+.markdown h4 {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.markdown p + p {
+  margin-top: 1rem;
+}
+
+.markdown ol,
+.markdown ul {
+  margin-bottom: var(--spacing-small);
+  padding-left: var(--spacing-default);
+  font-size: 1rem;
+  line-height: 1.3rem;
+}
+
+.markdown a {
+  color: var(--color-blue-100);
+}
+
+.markdown a:hover,
+.markdown a:focus {
+  color: var(--color-blue);
+}

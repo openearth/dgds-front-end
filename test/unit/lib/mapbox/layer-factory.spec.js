@@ -21,8 +21,8 @@ describe('geojson', () => {
       foo: 'bar',
       source: {
         type: 'geojson',
-        data: { type: 'FeatureCollection', features: [{ foo: 'bar' }] }
-      }
+        data: { type: 'FeatureCollection', features: [{ foo: 'bar' }] },
+      },
     }
     const result = layerFactory('geojson', layer)
 
@@ -30,8 +30,8 @@ describe('geojson', () => {
       foo: 'bar',
       source: {
         type: 'geojson',
-        data: { type: 'FeatureCollection', features: [{ foo: 'bar' }] }
-      }
+        data: { type: 'FeatureCollection', features: [{ foo: 'bar' }] },
+      },
     })
   })
 })
@@ -39,7 +39,7 @@ describe('geojson', () => {
 describe('raster', () => {
   test('add raster data structure to provided layer object', () => {
     const layer = {
-      foo: 'bar'
+      foo: 'bar',
     }
     const result = layerFactory('raster', layer)
 
@@ -48,8 +48,8 @@ describe('raster', () => {
       source: {
         type: 'raster',
         tileSize: 256,
-        tiles: []
-      }
+        tiles: [],
+      },
     })
   })
 
@@ -59,8 +59,8 @@ describe('raster', () => {
       source: {
         type: 'raster',
         tileSize: 512,
-        tiles: ['path/to/tile']
-      }
+        tiles: ['path/to/tile'],
+      },
     }
     const result = layerFactory('raster', layer)
 
@@ -69,8 +69,8 @@ describe('raster', () => {
       source: {
         type: 'raster',
         tileSize: 512,
-        tiles: ['path/to/tile']
-      }
+        tiles: ['path/to/tile'],
+      },
     })
   })
 })

@@ -23,21 +23,21 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+  import { mapGetters } from 'vuex'
 
-export default {
-  computed: {
-    ...mapGetters('map', ['activeRasterLegendData'])
+  export default {
+    computed: {
+      ...mapGetters('map', ['activeRasterLegendData']),
+    },
   }
-}
 </script>
 
 <style>
-#legend-span {
-  width: 100%;
-  height: 10px;
-  display: inline-block;
-  text-align: justify;
-  text-align-last: justify;
-}
+  #legend-span {
+    width: 100%;
+    height: 10px;
+    display: inline-block;
+    text-align: justify;
+    text-align-last: justify;
+  }
 </style>
