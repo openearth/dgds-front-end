@@ -352,9 +352,8 @@
     position: absolute;
     top: var(--spacing-default);
     right: var(--spacing-default);
-    width: 20rem;
+    width: 22rem;
     max-height: calc(100vh - var(--spacing-large) - var(--map-controls-height));
-    margin-left: calc(var(--spacing-default) * 3);
   }
 
   .default-layout__timestamp {
