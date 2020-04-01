@@ -23,11 +23,15 @@ export const state = () => ({
   activeTheme: {},
   collapsedDatasets: [],
   loadingRasterLayers: false,
+  geographicalScope: '',
 })
 
 export const mutations = {
   setActiveDatasetIds(state, ids) {
     state.activeDatasetIds = ids
+  },
+  setGeographicalScope(state, scope) {
+    state.geographicalScope = scope
   },
   clearActiveDatasetIds(state) {
     state.activeDatasetIds = []
@@ -185,6 +189,9 @@ export const getters = {
   // TODO: check if  all these functions are needed/used
   getActiveTheme(state) {
     return state.activeTheme
+  },
+  getGeographicalScope(state) {
+    return state.geographicalScope
   },
   getDatasets(state) {
     return state.datasets
