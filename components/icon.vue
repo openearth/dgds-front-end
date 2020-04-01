@@ -64,10 +64,6 @@
     fill: currentColor;
   }
 
-  .icon--large svg {
-    transform: scale(1.25);
-  }
-
   .mdi-icon {
     width: 24px;
     height: 24px;

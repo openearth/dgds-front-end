@@ -30,8 +30,8 @@
     background-color: var(--color-quiet);
     border: transparent;
     border-radius: var(--border-radius);
-    width: 3rem;
-    height: 3rem;
+    width: 2.5rem;
+    height: 2.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
