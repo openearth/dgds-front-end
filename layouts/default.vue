@@ -30,15 +30,15 @@
 
     <data-set-control-menu
       :datasets="datasetsInActiveTheme"
+      class="default-layout__data-set-control-menu"
       @toggle-location-dataset="toggleLocationDataset"
       @toggle-raster-layer="toggleRasterLayer"
-      class="default-layout__data-set-control-menu"
     />
 
     <time-stamp
       v-show="activeTimestamp !== '' && getActiveRasterLayer"
-      @update-timestep="removeInfoText"
       class="default-layout__timestamp"
+      @update-timestep="removeInfoText"
     />
 
     <nuxt />
@@ -352,9 +352,8 @@
     position: absolute;
     top: var(--spacing-default);
     right: var(--spacing-default);
-    width: 20rem;
+    width: 22rem;
     max-height: calc(100vh - var(--spacing-large) - var(--map-controls-height));
-    margin-left: calc(var(--spacing-default) * 3);
   }
 
   .default-layout__timestamp {
