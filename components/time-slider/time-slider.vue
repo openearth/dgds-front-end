@@ -1,16 +1,13 @@
 <template>
   <div class="time-slider">
-    <!-- TODO: create slot for svg timeslider element -->
-    <div class="time-slider__button-container">
-      <div class="time-slider__button">
-        <slot v-if="timeIndex !== 0" name="backButton" :back="back" />
-      </div>
-      <span class="time-slider__text">
-        <slot name="label" />
-      </span>
-      <div class="time-slider__button">
-        <slot v-if="timeIndex !== dates.length - 1" name="forwardButton" :forward="forward" />
-      </div>
+    <div class="time-slider__button">
+      <slot v-if="timeIndex !== 0" :back="back" name="backButton" />
+    </div>
+    <div class="time-slider__text">
+      <slot name="label" />
+    </div>
+    <div class="time-slider__button">
+      <slot v-if="timeIndex !== dates.length - 1" :forward="forward" name="forwardButton" />
     </div>
   </div>
 </template>
@@ -37,6 +34,10 @@
           }
         },
       },
+      setTimeIndex: {
+        type: Number,
+        default: () => 0,
+      },
     },
     data() {
       return {
@@ -53,12 +54,14 @@
         // When the dates have changed, change timeIndex
         const newObj = _.get(newVal, this.timeIndex)
         const oldObj = _.get(oldVal, this.timeIndex)
-        if (!_.isEqual(oldObj, newObj) || oldObj.length !== newObj.length) {
+        if (!_.isEqual(oldObj, newObj)) {
           this.setInitialTimeIndex()
+        } else {
+          this.timeIndex = this.setTimeIndex
         }
       },
-      timeIndex() {
-        this.$emit('update-timestep', this.currentDateObject)
+      setTimeIndex(val) {
+        this.timeIndex = val
       },
     },
     mounted() {
@@ -67,6 +70,9 @@
     methods: {
       setInitialTimeIndex() {
         // Set the timeIndex when timeslider is mounted or dates have changed
+        if (!this.dates) {
+          return
+        }
         if (this.startAt === 'end' && this.dates.length > 0) {
           this.timeIndex = this.dates.length - 1
         } else if (Number.isInteger(this.startAt)) {
@@ -78,28 +84,37 @@
       forward() {
         // Go one step forward in time
         this.timeIndex += 1
+        this.$emit('update-timestep', this.currentDateObject)
       },
       back() {
         // Go one step back in time
         this.timeIndex -= 1
+        this.$emit('update-timestep', this.currentDateObject)
       },
     },
   }
 </script>
 
 <style>
-  .time-slider__button-container {
+  .time-slider {
     display: flex;
+    align-items: center;
   }
 
-  .time-slider__button {
-    width: 48px;
+  .time-slider .ui-select {
+    min-width: 155px;
+  }
+
+  .time-slider .ui-select__label {
+    display: none;
+  }
+
+  .time-slider__button .icon {
+    color: var(--color-text-color);
   }
 
   .time-slider__text {
-    margin: auto;
-    padding: 0 16px 1px 16px;
-    width: 300px;
-    text-align: center;
+    flex: 1 1 auto;
+    margin: 0 var(--spacing-small);
   }
 </style>

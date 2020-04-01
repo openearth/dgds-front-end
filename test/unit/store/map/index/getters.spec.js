@@ -11,6 +11,16 @@ describe('getActiveTheme', () => {
   })
 })
 
+describe('getGeographicalScope', () => {
+  test('returns geographicalScope', () => {
+    const state = {
+      geographicalScope: 'global',
+    }
+    const result = getters.getGeographicalScope(state)
+    expect(result).toEqual('global')
+  })
+})
+
 describe('getDatasets', () => {
   test('returns datasets', () => {
     const state = {

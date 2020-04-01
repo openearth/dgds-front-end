@@ -11,8 +11,8 @@ import flatten from 'lodash/fp/flatten'
 import uniq from 'lodash/fp/uniq'
 import _ from 'lodash'
 import moment from 'moment'
-import getFromApi from '../../lib/request/get'
 import { includesIn, getIn, wrapInProperty } from '../../lib/utils'
+import getFromApi from '../../lib/request/get'
 
 const getId = get('id')
 
@@ -23,11 +23,15 @@ export const state = () => ({
   activeTheme: {},
   collapsedDatasets: [],
   loadingRasterLayers: false,
+  geographicalScope: '',
 })
 
 export const mutations = {
   setActiveDatasetIds(state, ids) {
     state.activeDatasetIds = ids
+  },
+  setGeographicalScope(state, scope) {
+    state.geographicalScope = scope
   },
   clearActiveDatasetIds(state) {
     state.activeDatasetIds = []
@@ -62,7 +66,7 @@ export const mutations = {
   },
 
   updateRasterLayer(state, { dataset, rasterLayer }) {
-    state.datasets[dataset].raster = rasterLayer
+    Object.assign(state.datasets[dataset].raster, rasterLayer)
   },
   setLoadingRasterLayers(state, loading) {
     state.loadingRasterLayers = loading
@@ -186,6 +190,9 @@ export const getters = {
   getActiveTheme(state) {
     return state.activeTheme
   },
+  getGeographicalScope(state) {
+    return state.geographicalScope
+  },
   getDatasets(state) {
     return state.datasets
   },
@@ -220,10 +227,7 @@ export const getters = {
     const { activeDatasetIds, datasets } = state
     const getInDatasets = getIn(datasets)
 
-    // prettier-ignore
-    return activeDatasetIds
-      .map(getInDatasets)
-      .filter(identity)
+    return activeDatasetIds.map(getInDatasets).filter(identity)
   },
 
   activeTimestamp(state, { activeRasterData }) {
@@ -271,23 +275,18 @@ export const getters = {
         feature,
       )
 
-    // prettier-ignore
     const addActiveProperty = feature =>
       pipe([
         get('properties'),
         merge(getActiveProperty(feature)),
         wrapInProperty('properties'),
-        merge(feature)
+        merge(feature),
       ])(feature)
 
-    // prettier-ignore
     const enhanceFeatureWithActiveState = location =>
-      pipe([
-        get('features'),
-        map(addActiveProperty),
-        wrapInProperty('features'),
-        merge(location)
-      ])(location)
+      pipe([get('features'), map(addActiveProperty), wrapInProperty('features'), merge(location)])(
+        location,
+      )
 
     return activeDatasets
       .map(get('locations'))

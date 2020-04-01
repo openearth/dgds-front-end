@@ -46,10 +46,10 @@
       },
       datasets() {
         const activePointData = this.activePointDataPerDataset
+        const result = Object.keys(activePointData).map(pointId =>
+          _.get(activePointData, [pointId][0]),
+        )
 
-        // prettier-ignore
-        const result = Object.keys(activePointData)
-        .map(pointId => _.get(activePointData, [pointId][0]))
         return flatten(result)
       },
       locations() {
@@ -65,9 +65,11 @@
       },
     },
     mounted() {
-      const { locationId } = this.$route.params
+      console.log('jaja')
+      const { datasetIds, locationId } = this.$route.params
       this.location = locationId
       this.setActiveLocationIds([locationId])
+      this.$store.dispatch('map/loadPointDataForLocation', { datasetIds, locationId })
     },
     destroyed() {
       this.clearActiveLocationIds()
