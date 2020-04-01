@@ -30,15 +30,15 @@
 
     <data-set-control-menu
       :datasets="datasetsInActiveTheme"
-      class="default-layout__data-set-control-menu"
       @toggle-location-dataset="toggleLocationDataset"
       @toggle-raster-layer="toggleRasterLayer"
+      class="default-layout__data-set-control-menu"
     />
 
     <time-stamp
       v-show="activeTimestamp !== '' && getActiveRasterLayer"
-      class="default-layout__timestamp"
       @update-timestep="removeInfoText"
+      class="default-layout__timestamp"
     />
 
     <nuxt />
@@ -51,22 +51,12 @@
 
 <script>
   import head from 'lodash/head'
-  import includes from 'lodash/fp/includes'
-  import pipe from 'lodash/fp/pipe'
-  import split from 'lodash/fp/split'
-  import join from 'lodash/fp/join'
-  import filter from 'lodash/fp/filter'
-  import update from 'lodash/fp/update'
-  import negate from 'lodash/fp/negate'
-  import concat from 'lodash/fp/concat'
-  import isEqual from 'lodash/fp/isEqual'
-  import identity from 'lodash/fp/identity'
   import _ from 'lodash'
+  import update from 'lodash/fp/update'
   import { mapState, mapGetters, mapMutations } from 'vuex'
   import auth from '../auth'
   import DataSetControlMenu from '../components/data-set-control-menu'
   import TimeStamp from '../components/time-stamp'
-  import { when } from '../lib/utils'
   import getVectorLayer from '../lib/mapbox/layers/get-vector-layer'
   import getRasterLayer from '../lib/mapbox/layers/get-raster-layer'
   import VMapboxVectorLayer from '../components/v-mapbox-components/v-mapbox-vector-layer'
@@ -114,6 +104,7 @@
         'getActiveTheme',
         'getActiveRasterLayer',
         'getDatasets',
+        'getGeographicalScope',
       ]),
       activeTheme() {
         return this.theme.active
@@ -186,7 +177,11 @@
         })
     },
     methods: {
-      ...mapMutations('map', ['clearActiveDatasetIds', 'setActiveRasterLayer']),
+      ...mapMutations('map', [
+        'clearActiveDatasetIds',
+        'setActiveRasterLayer',
+        'setGeographicalScope',
+      ]),
       removeInfoText() {
         this.infoTextGeometry = {
           type: 'Point',
@@ -205,11 +200,18 @@
         return layer
       },
       zoomToBbox(datasetId) {
-        // If layer is toggled on and has a bbox, zoom to that layer
-        const bbox = _.get(this.getDatasets, `${datasetId}.metadata.bbox`)
-        if (bbox) {
-          this.$refs.map.map.fitBounds(bbox)
+        const oldScope = this.getGeographicalScope
+        const metadata = _.get(this.getDatasets, `[${datasetId}].metadata`)
+        const newScope = metadata.scope
+        // If the new scope is global or the same as the old scope, do nothing
+        if (newScope === 'regional' || oldScope !== newScope) {
+          // If layer is toggled on and has a bbox, zoom to that layer
+          const bbox = metadata.bbox
+          if (bbox) {
+            this.$refs.map.map.fitBounds(bbox)
+          }
         }
+        this.setGeographicalScope(newScope)
       },
       getFeatureInfo(bbox) {
         if (!this.getActiveRasterLayer) {
@@ -280,23 +282,35 @@
         this.zoomToBbox(this.getActiveRasterLayer)
       },
       toggleLocationDataset(id) {
-        const addId = value => concat(value, id)
-        const removeId = filter(negate(isEqual(id)))
-        const toggleIdDatasets = pipe([
-          split(','),
-          when(includes(id), removeId, addId),
-          filter(identity),
-          join(','),
-          when(isEqual(''), () => undefined, identity),
-        ])
+        let oldParams = _.get(this.$route, 'params.datasetIds')
+        const newRouteObject = this.$route
+        let newParams
 
-        const newRouteObject = update('params.datasetIds', toggleIdDatasets, this.$route)
+        // TODO: there are too many if/else scenarios, this should be solved by
+        // moving the zoomtobbox logic towards the global/regional themes in
+        // the left panel, instead on these datasets.
+        if (!oldParams) {
+          // If oldParams is undefined, set newParams by id
+          newParams = id
+        } else {
+          // Else check if new id should be removed or added to new route
+          oldParams = oldParams.split(',')
+          if (oldParams.includes(id)) {
+            // if oldparams already includes id, remove from route
+            newParams = oldParams.filter(param => param !== id)
+            if (newParams.length === 0) {
+              // If there are no datasets anymore, set the scop back to 'global'
+              this.setGeographicalScope('global')
+            }
+            newParams = newParams.join(',')
+          } else {
+            // else add id to route and zoomtobbox
+            newParams = `${oldParams},${id}`
+            this.zoomToBbox(id)
+          }
+        }
+        newRouteObject.params.datasetIds = newParams
         this.updateRoute(newRouteObject)
-
-        const newParams = newRouteObject.params.datasetIds.split(',')
-        // If toggled on, use id to set bbox
-        const datasetId = newParams.includes(id) ? id : null
-        this.zoomToBbox(datasetId)
       },
       updateRoute(routeObj) {
         // Update route with route object
