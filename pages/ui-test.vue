@@ -7,10 +7,10 @@
       <div style="display: flex; flex-direction: columnn">
         <ui-select
           id="select1"
+          v-model="selectedOption"
           :options="options"
           label="Select an option"
           placeholder="Options"
-          v-model="selectedOption"
         />
       </div>
       <p>Selected: {{ selectedOption }}</p>
