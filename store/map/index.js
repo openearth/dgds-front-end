@@ -227,10 +227,7 @@ export const getters = {
     const { activeDatasetIds, datasets } = state
     const getInDatasets = getIn(datasets)
 
-    // prettier-ignore
-    return activeDatasetIds
-      .map(getInDatasets)
-      .filter(identity)
+    return activeDatasetIds.map(getInDatasets).filter(identity)
   },
 
   activeTimestamp(state, { activeRasterData }) {
@@ -278,23 +275,18 @@ export const getters = {
         feature,
       )
 
-    // prettier-ignore
     const addActiveProperty = feature =>
       pipe([
         get('properties'),
         merge(getActiveProperty(feature)),
         wrapInProperty('properties'),
-        merge(feature)
+        merge(feature),
       ])(feature)
 
-    // prettier-ignore
     const enhanceFeatureWithActiveState = location =>
-      pipe([
-        get('features'),
-        map(addActiveProperty),
-        wrapInProperty('features'),
-        merge(location)
-      ])(location)
+      pipe([get('features'), map(addActiveProperty), wrapInProperty('features'), merge(location)])(
+        location,
+      )
 
     return activeDatasets
       .map(get('locations'))

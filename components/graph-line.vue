@@ -26,15 +26,19 @@
         class="graph-line__chart"
       />
       <img v-if="type === 'images'" :src="imageUrl" class="graph-line__chart graph-image" />
-      <ui-button class="download-btn" kind="quiet" @click="download()">
-        DOWNLOAD
+      <ui-button v-if="user" class="graph-line__download" kind="secondary" @click="download">
+        Download data
       </ui-button>
+      <p v-else class="graph-line__message">
+        <icon name="info" />
+        Please log in to download data
+      </p>
     </div>
   </figure>
 </template>
 
 <script>
-  import { mapGetters, mapMutations } from 'vuex'
+  import { mapGetters, mapMutations, mapState } from 'vuex'
   import merge from 'lodash/merge'
   import moment from 'moment'
   import ECharts from 'vue-echarts'
@@ -175,6 +179,7 @@
     computed: {
       ...mapGetters('preferences/theme', ['colors']),
       ...mapGetters('map', ['getCollapsedDatasets', 'activeTimestamp']),
+      ...mapState('preferences', ['user']),
       isCollapsed() {
         return this.getCollapsedDatasets.includes(this.parameterId)
       },
@@ -276,9 +281,9 @@
   }
 
   .graph-image {
+    height: 600px;
     background-repeat: no-repeat;
     background-size: 50% 100%;
-    height: 600px;
   }
 
   .graph-line {
@@ -287,8 +292,8 @@
   }
 
   .graph-line__aspect-ratio {
-    min-height: 360px;
     position: relative;
+    min-height: 360px;
   }
 
   .graph-line__chart {
@@ -314,14 +319,30 @@
   }
 
   .graph-line__caption {
+    height: var(--caption-height);
     padding: var(--spacing-small);
     background-color: var(--color-background);
-    height: var(--caption-height);
   }
 
-  .download-btn {
-    right: 0;
-    bottom: 0;
+  .graph-line__download,
+  .graph-line__message {
     position: absolute;
+    right: 0;
+    bottom: -1rem;
+  }
+
+  .graph-line__download {
+    text-transform: uppercase;
+  }
+
+  .graph-line__message {
+    display: flex;
+    align-items: center;
+  }
+
+  .graph-line__message .icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.5rem;
   }
 </style>

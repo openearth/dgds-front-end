@@ -188,6 +188,14 @@
     margin-top: auto;
   }
 
+  .navigation-bar__toggle {
+    border-top: 1px solid var(--color-form-base);
+  }
+
+  .navigation-bar__toggle .ui-button-icon {
+    padding: var(--spacing-small) var(--spacing-default);
+  }
+
   .navigation-bar__toggle .icon {
     transform: rotate(180deg);
     transition: transform 0.35s ease;
