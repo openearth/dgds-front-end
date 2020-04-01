@@ -289,6 +289,7 @@
         // TODO: there are too many if/else scenarios, this should be solved by
         // moving the zoomtobbox logic towards the global/regional themes in
         // the left panel, instead on these datasets.
+
         if (!oldParams) {
           // If oldParams is undefined, set newParams by id
           newParams = id
@@ -298,11 +299,13 @@
           if (oldParams.includes(id)) {
             // if oldparams already includes id, remove from route
             newParams = oldParams.filter(param => param !== id)
+            newParams = newParams.join(',')
+
             if (newParams.length === 0) {
               // If there are no datasets anymore, set the scop back to 'global'
               this.setGeographicalScope('global')
+              newParams = undefined
             }
-            newParams = newParams.join(',')
           } else {
             // else add id to route and zoomtobbox
             newParams = `${oldParams},${id}`

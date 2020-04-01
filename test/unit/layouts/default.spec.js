@@ -29,6 +29,17 @@ describe('Default', () => {
         activeTimestamp: jest.fn(() => 'dummy'),
         datasetsInActiveTheme: jest.fn(() => ['bar']),
         getActiveRasterLayer: jest.fn(() => 'dummy'),
+        getGeographicalScope: jest.fn(() => 'global'),
+        getDatasets: jest.fn(() => {
+          return {
+            ab: {
+              metadata: {
+                scope: 'global',
+              },
+            },
+            cd: { metadata: { scope: 'global' } },
+          }
+        }),
         getActiveTheme: jest.fn(() => {
           return {
             datasets: ['cd', 'ef', 'gh'],
@@ -54,6 +65,9 @@ describe('Default', () => {
       actions: {
         loadPointDataForLocation: jest.fn(),
       },
+      mutations: {
+        setGeographicalScope: jest.fn(),
+      },
     }
     preferences = {
       namespaced: true,
@@ -75,6 +89,7 @@ describe('Default', () => {
     })
   })
 
+  // TODO: test of rounting with zoom to bbox is incomplete.
   test('updates url when datasetId is switched on', () => {
     const routerPush = jest.fn()
     const wrapper = shallowMount(Default, {
