@@ -11,6 +11,17 @@ describe('setActiveDatasetIds', () => {
   })
 })
 
+describe('setGeographicalScope', () => {
+  test('updates state.setGeographicalScope with scope in payload', () => {
+    const state = {
+      geographicalScope: [],
+    }
+    const scope = 'global'
+    mutations.setGeographicalScope(state, scope)
+    expect(state.geographicalScope).toBe(scope)
+  })
+})
+
 describe('clearActiveDatasetIds', () => {
   test('clears state.activeDatasetIds', () => {
     const state = {
