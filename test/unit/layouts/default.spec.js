@@ -101,7 +101,7 @@ describe('Default', () => {
       },
     })
 
-    wrapper.find('.default-layout__data-set-control-menu').vm.$emit('toggle-location-dataset', 'ab')
+    wrapper.find('.default-layout__data-set-controls').vm.$emit('toggle-location-dataset', 'ab')
 
     expect(routerPush).toHaveBeenCalledWith({
       params: { datasetIds: 'cd,ab' },
@@ -123,7 +123,7 @@ describe('Default', () => {
       },
     })
 
-    wrapper.find('.default-layout__data-set-control-menu').vm.$emit('toggle-location-dataset', 'ab')
+    wrapper.find('.default-layout__data-set-controls').vm.$emit('toggle-location-dataset', 'ab')
 
     expect(routerPush).toHaveBeenCalledWith({
       params: { datasetIds: 'cd' },
@@ -145,7 +145,7 @@ describe('Default', () => {
       },
     })
 
-    wrapper.find('.default-layout__data-set-control-menu').vm.$emit('toggle-location-dataset', 'ab')
+    wrapper.find('.default-layout__data-set-controls').vm.$emit('toggle-location-dataset', 'ab')
 
     expect(routerPush).toHaveBeenCalledWith({
       params: { datasetIds: undefined },
