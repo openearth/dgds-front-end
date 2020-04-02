@@ -131,6 +131,11 @@
     cursor: pointer;
   }
 
+  .data-set-controls__item .tooltip:hover .icon svg {
+    transition: fill 0.25s ease;
+    fill: var(--color-blue);
+  }
+
   .data-set-controls__item-title {
     flex: 1 1 auto;
     margin: 0 1rem;
