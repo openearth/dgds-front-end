@@ -109,7 +109,9 @@
   .ui-select .icon {
     position: absolute;
     right: var(--spacing-small);
-    bottom: 10px;
+    bottom: 13px;
+    width: 18px;
+    height: 18px;
     pointer-events: none;
   }
 
