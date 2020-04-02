@@ -6,8 +6,6 @@
         ref="map"
         :access-token="mapboxAccessToken"
         map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
-        :pitch="10"
-        :bearing="10"
         :preserve-drawing-buffer="true"
       >
         <v-mapbox-navigation-control
@@ -105,7 +103,7 @@ export default {
     },
     mapboxMessage: '',
     // disable for now, needs to be added to the backend for it to show up
-    flowmapLayerReady: false
+    flowmapLayerReady: true
   }),
   computed: {
     ...mapState({
