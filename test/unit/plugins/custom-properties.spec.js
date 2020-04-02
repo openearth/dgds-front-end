@@ -4,7 +4,7 @@ jest.mock('../../../lib/styling/colors')
 getColors.mockReturnValue({
   black100: '#000000',
   blue: '#0891cc',
-  blue100: '#008fc5'
+  blue100: '#008fc5',
 })
 
 test('set custom properties on the DOM root', () => {

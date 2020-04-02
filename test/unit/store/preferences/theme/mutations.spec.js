@@ -5,7 +5,7 @@ describe('mutations', () => {
     test('sets active property', () => {
       const state = { active: 'light' }
       const setActive = mutations.setActive.bind({
-        $setCustomProperties: jest.fn()
+        $setCustomProperties: jest.fn(),
       })
       setActive(state, 'dark')
       expect(state.active).toBe('dark')
@@ -14,7 +14,7 @@ describe('mutations', () => {
       const state = { active: 'light' }
       const $setCustomProperties = jest.fn()
       const setActive = mutations.setActive.bind({
-        $setCustomProperties
+        $setCustomProperties,
       })
       setActive(state, 'dark')
       expect($setCustomProperties).toHaveBeenCalledWith('dark')

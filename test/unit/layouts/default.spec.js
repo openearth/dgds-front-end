@@ -29,11 +29,22 @@ describe('Default', () => {
         activeTimestamp: jest.fn(() => 'dummy'),
         datasetsInActiveTheme: jest.fn(() => ['bar']),
         getActiveRasterLayer: jest.fn(() => 'dummy'),
+        getGeographicalScope: jest.fn(() => 'global'),
+        getDatasets: jest.fn(() => {
+          return {
+            ab: {
+              metadata: {
+                scope: 'global',
+              },
+            },
+            cd: { metadata: { scope: 'global' } },
+          }
+        }),
         getActiveTheme: jest.fn(() => {
           return {
             datasets: ['cd', 'ef', 'gh'],
             id: 'themeId',
-            name: 'themeName'
+            name: 'themeName',
           }
         }),
         activeVectorData: jest.fn(() => {
@@ -43,17 +54,20 @@ describe('Default', () => {
               id: 'GLOSSIS',
               source: {
                 type: 'vector',
-                url: 'mapbox://global-data-viewer.6w19mbaw'
+                url: 'mapbox://global-data-viewer.6w19mbaw',
               },
               'source-layer': 'pltc012flat',
-              type: 'circle'
-            }
+              type: 'circle',
+            },
           ]
-        })
+        }),
       },
       actions: {
-        loadPointDataForLocation: jest.fn()
-      }
+        loadPointDataForLocation: jest.fn(),
+      },
+      mutations: {
+        setGeographicalScope: jest.fn(),
+      },
     }
     preferences = {
       namespaced: true,
@@ -62,19 +76,20 @@ describe('Default', () => {
           namespaced: true,
           state: { active: 'dark' },
           mutations: {
-            setActive: jest.fn()
-          }
-        }
-      }
+            setActive: jest.fn(),
+          },
+        },
+      },
     }
     store = new Vuex.Store({
       modules: {
         map,
-        preferences
-      }
+        preferences,
+      },
     })
   })
 
+  // TODO: test of rounting with zoom to bbox is incomplete.
   test('updates url when datasetId is switched on', () => {
     const routerPush = jest.fn()
     const wrapper = shallowMount(Default, {
@@ -82,17 +97,15 @@ describe('Default', () => {
       localVue,
       mocks: {
         $route: { params: { datasetIds: 'cd' }, name: 'datasetIds-locationId' },
-        $router: { push: routerPush }
-      }
+        $router: { push: routerPush },
+      },
     })
 
-    wrapper
-      .find('.default-layout__data-set-control-menu')
-      .vm.$emit('toggle-location-dataset', 'ab')
+    wrapper.find('.default-layout__data-set-control-menu').vm.$emit('toggle-location-dataset', 'ab')
 
     expect(routerPush).toHaveBeenCalledWith({
       params: { datasetIds: 'cd,ab' },
-      name: 'datasetIds-locationId'
+      name: 'datasetIds-locationId',
     })
   })
 
@@ -104,19 +117,17 @@ describe('Default', () => {
       mocks: {
         $route: {
           params: { datasetIds: 'cd,ab' },
-          name: 'datasetIds-locationId'
+          name: 'datasetIds-locationId',
         },
-        $router: { push: routerPush }
-      }
+        $router: { push: routerPush },
+      },
     })
 
-    wrapper
-      .find('.default-layout__data-set-control-menu')
-      .vm.$emit('toggle-location-dataset', 'ab')
+    wrapper.find('.default-layout__data-set-control-menu').vm.$emit('toggle-location-dataset', 'ab')
 
     expect(routerPush).toHaveBeenCalledWith({
       params: { datasetIds: 'cd' },
-      name: 'datasetIds-locationId'
+      name: 'datasetIds-locationId',
     })
   })
 
@@ -128,41 +139,17 @@ describe('Default', () => {
       mocks: {
         $route: {
           params: { datasetIds: 'ab', locationId: 'ef' },
-          name: 'datasetIds-locationId'
+          name: 'datasetIds-locationId',
         },
-        $router: { push: routerPush }
-      }
+        $router: { push: routerPush },
+      },
     })
 
-    wrapper
-      .find('.default-layout__data-set-control-menu')
-      .vm.$emit('toggle-location-dataset', 'ab')
+    wrapper.find('.default-layout__data-set-control-menu').vm.$emit('toggle-location-dataset', 'ab')
 
     expect(routerPush).toHaveBeenCalledWith({
       params: { datasetIds: undefined },
-      name: 'datasetIds-locationId'
-    })
-  })
-
-  test('update url when theme changes', () => {
-    const routerPush = jest.fn()
-    const wrapper = shallowMount(Default, {
-      store,
-      localVue,
-      mocks: {
-        $route: {
-          params: { datasetIds: 'ef' },
-          name: 'datasetIds-locationId'
-        },
-        $router: { push: routerPush }
-      }
-    })
-
-    wrapper.find('.default-layout__site-navigation').vm.$emit('change-theme')
-
-    expect(routerPush).toHaveBeenCalledWith({
-      params: { datasetIds: 'ef' },
-      name: 'datasetIds-locationId'
+      name: 'datasetIds-locationId',
     })
   })
 })

@@ -4,17 +4,27 @@ import { getters } from '../../../../../store/map/index.js'
 describe('getActiveTheme', () => {
   test('returns activeTheme', () => {
     const state = {
-      activeTheme: 'theme1'
+      activeTheme: 'theme1',
     }
     const result = getters.getActiveTheme(state)
     expect(result).toEqual('theme1')
   })
 })
 
+describe('getGeographicalScope', () => {
+  test('returns geographicalScope', () => {
+    const state = {
+      geographicalScope: 'global',
+    }
+    const result = getters.getGeographicalScope(state)
+    expect(result).toEqual('global')
+  })
+})
+
 describe('getDatasets', () => {
   test('returns datasets', () => {
     const state = {
-      datasets: 'wl'
+      datasets: 'wl',
     }
     const result = getters.getDatasets(state)
     expect(result).toEqual('wl')
@@ -26,8 +36,8 @@ describe('knownDatasetIds', () => {
     const state = {
       datasets: {
         wl: {},
-        wd: {}
-      }
+        wd: {},
+      },
     }
     const ids = ['wl', 'wd']
     const result = getters.knownDatasetIds(state)
@@ -40,15 +50,15 @@ describe('knownLocationIds', () => {
     datasets: {
       wl: {
         locations: {
-          features: []
-        }
+          features: [],
+        },
       },
       wd: {
         locations: {
-          features: []
-        }
-      }
-    }
+          features: [],
+        },
+      },
+    },
   }
 
   test('returns an empty array when no locations are present', () => {
@@ -60,7 +70,7 @@ describe('knownLocationIds', () => {
     const newState = update(
       'datasets.wl.locations.features',
       _ => [{ properties: { locationId: 'WL-Loc1' } }],
-      state
+      state,
     )
     const result = getters.knownLocationIds(newState)
     expect(result).toEqual(['WL-Loc1'])
@@ -70,12 +80,12 @@ describe('knownLocationIds', () => {
     let newState = update(
       'datasets.wl.locations.features',
       _ => [{ properties: { locationId: 'WL-Loc1' } }],
-      state
+      state,
     )
     newState = update(
       'datasets.wd.locations.features',
       _ => [{ properties: { locationId: 'WD-Loc2' } }],
-      newState
+      newState,
     )
     const result = getters.knownLocationIds(newState)
     expect(result).toEqual(['WL-Loc1', 'WD-Loc2'])
@@ -87,12 +97,12 @@ describe('activeDatasets', () => {
     activeDatasetIds: ['wl'],
     datasets: {
       wl: {
-        data: 'test-wl'
+        data: 'test-wl',
       },
       wd: {
-        data: 'test-wd'
-      }
-    }
+        data: 'test-wd',
+      },
+    },
   }
   test('returns array with one item when one active dataset is present', () => {
     const result = getters.activeDatasets(state)
@@ -108,14 +118,14 @@ describe('activeDatasets', () => {
 describe('activeTimestamp', () => {
   test('returns Loading... when no loadingRasterLayers is true is available', () => {
     const state = {
-      loadingRasterLayers: true
+      loadingRasterLayers: true,
     }
     const result = getters.activeTimestamp(state, state)
     expect(result).toBe('Loading...')
   })
   test('returns empty when no activeRasterData is available', () => {
     const state = {
-      activeRasterData: []
+      activeRasterData: [],
     }
     const result = getters.activeTimestamp(state, state)
     expect(result).toBe('')
@@ -124,8 +134,8 @@ describe('activeTimestamp', () => {
     const state = {
       activeRasterData: {
         date: '2011-12-01 00:01',
-        dateFormat: 'YYYY-MM-DD HH:mm'
-      }
+        dateFormat: 'YYYY-MM-DD HH:mm',
+      },
     }
     const result = getters.activeTimestamp(state, state)
     expect(result).toBe('01-12-2011 00:01')
@@ -134,8 +144,8 @@ describe('activeTimestamp', () => {
   test('returns empty when date is not defined', () => {
     const state = {
       activeRasterData: {
-        dateFormat: 'YYYY-MM-DD'
-      }
+        dateFormat: 'YYYY-MM-DD',
+      },
     }
     const result = getters.activeTimestamp({}, state)
     expect(result).toBe('')
@@ -144,8 +154,8 @@ describe('activeTimestamp', () => {
   test('returns empty when dateFormat is not defined', () => {
     const state = {
       activeRasterData: {
-        date: '2011-12-01'
-      }
+        date: '2011-12-01',
+      },
     }
     const result = getters.activeTimestamp({}, state)
     expect(result).toBe('')
@@ -153,7 +163,7 @@ describe('activeTimestamp', () => {
 
   test('returns date when activeRasterData is available and not a correct time string', () => {
     const state = {
-      activeRasterData: ['foo']
+      activeRasterData: ['foo'],
     }
     const result = getters.activeTimestamp({}, state)
     expect(result).toBe('')
@@ -166,10 +176,10 @@ describe('activeRasterData', () => {
     datasets: {
       foo: {
         raster: {
-          tiles: ['bar']
-        }
-      }
-    }
+          tiles: ['bar'],
+        },
+      },
+    },
   }
   test('return empty array when no active raster data', () => {
     const result = getters.activeRasterData(state)
@@ -191,10 +201,10 @@ describe('activeRasterLegendData', () => {
         raster: {
           linearGradient: 'LG',
           min: 'min',
-          max: 'max'
-        }
-      }
-    }
+          max: 'max',
+        },
+      },
+    },
   }
   test('return empty array when no active raster data', () => {
     const result = getters.activeRasterLegendData(state)
@@ -206,7 +216,7 @@ describe('activeRasterLegendData', () => {
     expect(result).toEqual({
       linearGradient: 'LG',
       min: 'min',
-      max: 'max'
+      max: 'max',
     })
   })
 })
@@ -217,10 +227,10 @@ describe('activeVectorData', () => {
     activeDatasets: [
       {
         vector: {
-          mapboxLayer: 'mblayer'
-        }
-      }
-    ]
+          mapboxLayer: 'mblayer',
+        },
+      },
+    ],
   }
   test('return active vector data', () => {
     const result = getters.activeVectorData(state, state)
@@ -238,25 +248,25 @@ describe('activeDatasetsLocations', () => {
             features: [
               {
                 properties: {
-                  locationId: 'WL-Loc1'
-                }
-              }
-            ]
+                  locationId: 'WL-Loc1',
+                },
+              },
+            ],
           },
           pointData: {
             'WL-Loc1': {
-              data: 'test-wl-loc1'
+              data: 'test-wl-loc1',
             },
             'WL-Loc2': {
-              data: 'test-wl-loc2'
-            }
-          }
-        }
-      ]
+              data: 'test-wl-loc2',
+            },
+          },
+        },
+      ],
     }
     const result = getters.activeDatasetsLocations(state, state)
     expect(result).toEqual([
-      { features: [{ properties: { active: true, locationId: 'WL-Loc1' } }] }
+      { features: [{ properties: { active: true, locationId: 'WL-Loc1' } }] },
     ])
   })
 })
@@ -266,7 +276,7 @@ describe('activePointDataPerDataset', () => {
     const state = {
       activeLocationIds: ['WL-Loc1'],
       activeDatasetIds: ['wl', 'wd'],
-      datasets: { wl: { pointData: { foo: 'bar' } } }
+      datasets: { wl: { pointData: { foo: 'bar' } } },
     }
     const result = getters.activePointDataPerDataset(state, state)
     expect(result).toEqual({ 'WL-Loc1': [] })
@@ -283,33 +293,33 @@ describe('activePointDataPerDataset', () => {
             features: [
               {
                 properties: {
-                  locationId: 'WL-Loc1'
-                }
-              }
-            ]
+                  locationId: 'WL-Loc1',
+                },
+              },
+            ],
           },
           pointData: {
             'WL-Loc1': {
-              data: 'test-wl-loc1'
+              data: 'test-wl-loc1',
             },
             'WL-Loc2': {
-              data: 'test-wl-loc2'
-            }
-          }
+              data: 'test-wl-loc2',
+            },
+          },
         },
         wd: {
           locations: {
-            features: []
-          }
-        }
-      }
+            features: [],
+          },
+        },
+      },
     }
     const result = getters.activePointDataPerDataset(state)
     expect(result['WL-Loc1']).toEqual([
       {
         datasetName: 'Test WL',
-        data: 'test-wl-loc1'
-      }
+        data: 'test-wl-loc1',
+      },
     ])
   })
 })
@@ -319,12 +329,12 @@ describe('datasetsInActiveTheme', () => {
     const state = {
       activeDatasetIds: ['bar'],
       activeTheme: {
-        datasets: ['foo']
+        datasets: ['foo'],
       },
       datasets: {
         foo: { metadata: { id: 'foo' } },
-        bar: { metadata: { id: 'bar' } }
-      }
+        bar: { metadata: { id: 'bar' } },
+      },
     }
     const result = getters.datasetsInActiveTheme(state)
     expect(result).toEqual([{ id: 'foo', visible: false }])
@@ -336,13 +346,13 @@ describe('datasetsInActiveTheme', () => {
       activeTheme: {},
       datasets: {
         foo: { metadata: { id: 'foo' } },
-        bar: { metadata: { id: 'bar' } }
-      }
+        bar: { metadata: { id: 'bar' } },
+      },
     }
     const result = getters.datasetsInActiveTheme(state)
     expect(result).toEqual([
       { id: 'foo', visible: false },
-      { id: 'bar', visible: true }
+      { id: 'bar', visible: true },
     ])
   })
 })

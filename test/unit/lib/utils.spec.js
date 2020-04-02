@@ -19,10 +19,7 @@ describe('includesIn', () => {
 
 describe('momentFormat', () => {
   test('formats a timestamp with momentjs', () => {
-    const result = utils.momentFormat(
-      'MM-DD-YYYY \n HH:mm',
-      '2019-03-27T00:00:00Z'
-    )
+    const result = utils.momentFormat('MM-DD-YYYY \n HH:mm', '2019-03-27T00:00:00Z')
     expect(result).toBe('03-27-2019  01:00')
   })
 
@@ -137,7 +134,7 @@ describe('tapWith', () => {
 describe('mapAsync', () => {
   test('maps over an array with an async function', async () => {
     const fn = msg =>
-      new Promise((resolve) => {
+      new Promise(resolve => {
         setTimeout(() => {
           resolve(msg.toUpperCase())
         }, 500)
@@ -148,7 +145,7 @@ describe('mapAsync', () => {
   })
   test('can be called curried', async () => {
     const fn = msg =>
-      new Promise((resolve) => {
+      new Promise(resolve => {
         setTimeout(() => {
           resolve(msg.toUpperCase())
         }, 500)
@@ -161,12 +158,18 @@ describe('mapAsync', () => {
 
 describe('filterBy', () => {
   test('filters a collection based on a provided object', () => {
-    const collection = [{ a: 1, b: 2, c: 3 }, { a: 4, b: 5, c: 6 }]
+    const collection = [
+      { a: 1, b: 2, c: 3 },
+      { a: 4, b: 5, c: 6 },
+    ]
     const result = utils.filterBy({ a: 4 }, collection)
     expect(result).toEqual([collection[1]])
   })
   test('can be called curried', () => {
-    const collection = [{ a: 1, b: 2, c: 3 }, { a: 4, b: 5, c: 6 }]
+    const collection = [
+      { a: 1, b: 2, c: 3 },
+      { a: 4, b: 5, c: 6 },
+    ]
     const result = utils.filterBy({ a: 4 })(collection)
     expect(result).toEqual([collection[1]])
   })

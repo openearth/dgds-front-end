@@ -2,6 +2,21 @@
   <section class="section">
     <section class="section">
       <h2 class="h2">
+        Select
+      </h2>
+      <div style="display: flex; flex-direction: columnn">
+        <ui-select
+          id="select1"
+          v-model="selectedOption"
+          :options="options"
+          label="Select an option"
+          placeholder="Options"
+        />
+      </div>
+      <p>Selected: {{ selectedOption }}</p>
+    </section>
+    <section class="section">
+      <h2 class="h2">
         Button
       </h2>
       <ui-button>Primary button</ui-button>
@@ -82,7 +97,10 @@
       <h2>The quick brown fox jumps over the lazy dog.</h2>
       <h3>The quick brown fox jumps over the lazy dog.</h3>
       <h4>The quick brown fox jumps over the lazy dog.</h4>
-      <p>The <strong>quick</strong> <em>brown</em> fox <a href="/ui-test">jumps</a> over the lazy dog.</p>
+      <p>
+        The <strong>quick</strong> <em>brown</em> fox <a href="/ui-test">jumps</a> over the lazy
+        dog.
+      </p>
     </section>
     <section>
       <h2 class="h2">
@@ -103,31 +121,56 @@
 </template>
 
 <script>
-import UiButton from '../components/ui-button'
-import UiToggle from '../components/ui-toggle'
-import UiRadio from '../components/ui-radio'
-import UiCheckbox from '../components/ui-checkbox'
-import UiButtonIcon from '../components/ui-button-icon'
-import Icon from '~/components/icon'
+  import UiButton from '../components/ui-button'
+  import UiToggle from '../components/ui-toggle'
+  import UiRadio from '../components/ui-radio'
+  import UiCheckbox from '../components/ui-checkbox'
+  import UiButtonIcon from '../components/ui-button-icon'
+  import Icon from '~/components/icon'
+  import UiSelect from '~/components/ui-select'
 
-export default {
-  layout: 'ui-test',
-  components: {
-    UiButton,
-    UiButtonIcon,
-    UiToggle,
-    UiRadio,
-    UiCheckbox,
-    Icon
+  export default {
+    layout: 'ui-test',
+    components: {
+      UiButton,
+      UiButtonIcon,
+      UiToggle,
+      UiRadio,
+      UiCheckbox,
+      Icon,
+      UiSelect,
+    },
+    data() {
+      return {
+        options: [
+          {
+            name: 'Option 1',
+            value: 'option1',
+          },
+          {
+            name: 'Option 2',
+            value: 'option2',
+          },
+          {
+            name: 'Option 3',
+            value: 'option3',
+          },
+        ],
+        selectedOption: 'option1',
+      }
+    },
   }
-}
 </script>
 
 <style scoped>
-.section {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 1rem;
-}
+  .ui-test {
+    height: 100vh;
+    overflow-y: auto;
+  }
+  .section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
 </style>

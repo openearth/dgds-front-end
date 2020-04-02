@@ -7,18 +7,18 @@ describe('addTheme', () => {
 
     mutations.addTheme(state, theme)
     expect(state).toMatchObject({
-      mytheme: { id: 'mytheme', foo: 'bar' }
+      mytheme: { id: 'mytheme', foo: 'bar' },
     })
   })
   test('replace theme when called with existing id', () => {
     const state = {
-      mytheme: { id: 'mytheme', foo: 'bar' }
+      mytheme: { id: 'mytheme', foo: 'bar' },
     }
     const theme = { id: 'mytheme', baz: 'baz' }
 
     mutations.addTheme(state, theme)
     expect(state).toMatchObject({
-      mytheme: { id: 'mytheme', baz: 'baz' }
+      mytheme: { id: 'mytheme', baz: 'baz' },
     })
   })
 })

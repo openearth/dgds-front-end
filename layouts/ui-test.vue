@@ -15,27 +15,27 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+  import { mapState, mapMutations } from 'vuex'
 
-export default {
-  computed: {
-    ...mapState({
-      activeTheme: state => state.preferences.theme.active
-    })
-  },
-  methods: {
-    ...mapMutations({ toggleActiveTheme: 'preferences/theme/setActive' }),
-    setActive (event) {
-      this.toggleActiveTheme(event.target.value)
-    }
+  export default {
+    computed: {
+      ...mapState({
+        activeTheme: state => state.preferences.theme.active,
+      }),
+    },
+    methods: {
+      ...mapMutations({ toggleActiveTheme: 'preferences/theme/setActive' }),
+      setActive(event) {
+        this.toggleActiveTheme(event.target.value)
+      },
+    },
   }
-}
 </script>
 
 <style>
-.ui-test-layout {
-  width: 100vw;
-  min-height: 100vh;
-  background-color: var(--color-background);
-}
+  .ui-test-layout {
+    width: 100vw;
+    min-height: 100vh;
+    background-color: var(--color-background);
+  }
 </style>

@@ -1,58 +1,110 @@
 <template>
-  <Panel class="timestamp">
-    Date raster layer:
-    <TimeSlider
+  <panel class="timestamp">
+    <h3 class="data-set-control-menu__title h4">
+      Date raster layer
+    </h3>
+    <time-slider
       :dates="activeRasterData.imageTimeseries"
+      :set-time-index="dateIndex"
       start-at="end"
       @update-timestep="getNewRasterLayer"
     >
-      <template v-slot:backButton="{back}">
-        <UiButtonIcon :disabled="getLoadingState" @click="back">
-          <Icon class="icons" :mdi="true" name="chevron_left" />
-        </UiButtonIcon>
+      <template v-slot:backButton="{ back }">
+        <ui-button-icon :disabled="getLoadingState" @click="back">
+          <icon :mdi="true" class="icons" name="chevron_left" />
+        </ui-button-icon>
       </template>
       <template v-slot:label>
-        {{ activeTimestamp }}
+        <ui-select
+          id="timeslider-dropdown"
+          v-model="timestamp"
+          label="Select a timestamp"
+          :options="timeseriesItems"
+          :disabled="loadingRasterLayers"
+        />
       </template>
-      <template v-slot:forwardButton="{forward}">
-        <UiButtonIcon :disabled="getLoadingState" @click="forward">
-          <Icon class="icons" :mdi="true" name="chevron_right" />
-        </UiButtonIcon>
+      <template v-slot:forwardButton="{ forward }">
+        <ui-button-icon :disabled="getLoadingState" @click="forward">
+          <icon :mdi="true" class="icons" name="chevron_right" />
+        </ui-button-icon>
       </template>
-    </TimeSlider>
-  </Panel>
+    </time-slider>
+  </panel>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
-import _ from 'lodash'
-import UiButtonIcon from './ui-button-icon'
-import Icon from './icon'
-import Panel from './panel.vue'
-import TimeSlider from './time-slider/time-slider.vue'
+  import { mapActions, mapGetters, mapState } from 'vuex'
+  import _ from 'lodash'
+  import moment from 'moment'
+  import UiButtonIcon from './ui-button-icon'
+  import UiSelect from './ui-select'
+  import Icon from './icon'
+  import Panel from './panel.vue'
+  import TimeSlider from './time-slider/time-slider.vue'
 
-export default {
-  components: { Panel, TimeSlider, UiButtonIcon, Icon },
-  computed: {
-    ...mapGetters('map', [
-      'activeTimestamp',
-      'activeRasterData',
-      'getLoadingState',
-      'getActiveRasterLayer'
-    ])
-  },
-  methods: {
-    ...mapActions('map', ['retrieveRasterLayerByImageId']),
-    getNewRasterLayer (serie) {
-      if (this.getActiveRasterLayer) {
-        // For each update of the timeslider adjust the raster layer to the new time
-        this.retrieveRasterLayerByImageId(_.get(serie, 'imageId'))
-        this.$emit('update-timestep')
+  export default {
+    components: { Panel, TimeSlider, UiButtonIcon, Icon, UiSelect },
+    data() {
+      return {
+        dateIndex: 0, // use input dropdown to, change the index of the timeslider accordingly
       }
-    }
+    },
+    computed: {
+      ...mapState('map', ['loadingRasterLayers']),
+      ...mapGetters('map', [
+        'activeTimestamp',
+        'activeRasterData',
+        'getLoadingState',
+        'getActiveRasterLayer',
+      ]),
+      timeseriesItems() {
+        // The items for the dropdown menu -> a list with the dates in of the
+        // active raster layer in a readable format
+        if (this.activeTimestamp === 'Loading...') {
+          return [
+            {
+              name: this.activeTimestamp,
+              value: this.activeTimestamp,
+            },
+          ]
+        }
+        const series = _.get(this.activeRasterData, 'imageTimeseries') || []
+        return series.map(serie => {
+          return {
+            value: moment(serie.date).format('DD-MM-YYYY HH:mm'),
+            name: moment(serie.date).format('DD-MM-YYYY HH:mm'),
+          }
+        })
+      },
+      timestamp: {
+        // This is the input for the v-model of the select of the dropdown menu
+        get() {
+          return this.activeTimestamp
+        },
+        set(val) {
+          if (!val) {
+            return
+          }
+          const series = _.get(this.activeRasterData, 'imageTimeseries')
+          series.find((serie, i) => {
+            if (moment(val, 'DD-MM-YYYY HH:mm').isSame(moment(serie.date))) {
+              this.dateIndex = i
+              this.getNewRasterLayer(serie)
+              return true
+            }
+          })
+        },
+      },
+    },
+    methods: {
+      ...mapActions('map', ['retrieveRasterLayerByImageId']),
+      getNewRasterLayer(serie) {
+        if (this.getActiveRasterLayer) {
+          // For each update of the timeslider adjust the raster layer to the new time
+          this.retrieveRasterLayerByImageId(_.get(serie, 'imageId'))
+          this.$emit('update-timestep')
+        }
+      },
+    },
   }
-}
 </script>
-
-<style>
-</style>
