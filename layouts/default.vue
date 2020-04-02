@@ -92,12 +92,15 @@
         coordinates: [],
       },
       mapboxMessage: '',
+      flowmapLayerReady: true,
     }),
     computed: {
       ...mapState('preferences', ['theme', 'sidebarAnimating', 'sidebarExpanded']),
       ...mapState('map', ['activeLocationIds']),
       ...mapGetters('map', [
         'activeRasterData',
+        'activeFlowmapData',
+
         'activeVectorData',
         'activeDatasetsLocations',
         'datasetsInActiveTheme',
@@ -116,6 +119,17 @@
         rasterLayer.source.tiles = [_.get(this.activeRasterData, 'url')]
         return rasterLayer
       },
+      flowmapLayer() {
+        const flowmapLayer = getRasterLayer()
+        const flowmapData = this.activeFlowmapData
+        const url = _.get(flowmapData, 'url')
+        if (url) {
+          // should this be done using Vue.set?
+          flowmapLayer.source.tiles = [url]
+        }
+        return flowmapLayer
+      },
+
       vectorLayers() {
         // Returns an array with unique mapboxlayers.
         // Get active vectorlayers and flatten, all mapboxlayers into 1 array
