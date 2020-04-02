@@ -4,7 +4,7 @@
       <slot name="header" />
     </header>
 
-    <div class="panel__body">
+    <div class="panel__body scrollbar">
       <slot />
     </div>
 

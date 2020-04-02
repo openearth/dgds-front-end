@@ -8,7 +8,7 @@
     <header v-if="hasHeader" class="ui-tray__header">
       <slot name="header" />
     </header>
-    <div v-if="hasBody" class="ui-tray__body">
+    <div v-if="hasBody" class="ui-tray__body scrollbar">
       <slot name="body" />
     </div>
     <footer v-if="hasFooter" class="ui-tray__footer">
