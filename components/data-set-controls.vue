@@ -68,7 +68,7 @@
         'activeRasterData',
       ]),
       themeName() {
-        return _.get(this.getActiveTheme, 'name') || 'No theme selected'
+        return _.get(this.getActiveTheme, 'name') || 'All datasets'
       },
     },
     methods: {
