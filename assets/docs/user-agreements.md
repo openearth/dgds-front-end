@@ -1,26 +1,19 @@
 ## Blue Earth Data (beta) User Agreement Deltares
-&nbsp;
 
 This legal agreement (hereinafter “User Agreement”) governs the conditions of use of this Deltares Open Data website and the data products (hereinafter “Data Products”) to be found, accessed and downloaded through our website.
-&nbsp;
 
 Please read this User Agreement carefully.  
-&nbsp;
 
 This is a legal agreement between you – either as individual or acting on behalf of a legal entity - and Stichting Deltares (hereinafter “Deltares”). This agreement is effective upon your submission of consent, by checking and clicking on the “I-Agree” button below.  
-&nbsp;
 
 The use of this Blue Earth Data website (hereinafter “Website”), and the Data Products resulting from the use of therefrom, is subject to the conditions of this User Agreement as set out below.  
-&nbsp;
 
 By marking the “I agree”-checkbox:
 1. You expressly declare being authorized to act, either individually or on behalf of the legal entity (hereinafter “User”) you represent, for the purposes of accepting this User Agreement;
 2. User expressly accepts this User Agreement and accepts to be legally bound by the terms and conditions contained therein.
 If you are not authorized to act on behalf of User to agree upon this User Agreement, please do not mark the “I-agree” checkbox and exit this website page. Furthermore, do not mark the “I accept” checkbox and end the visit to this website page if User does not agree with the User Agreement.
-&nbsp;
 
 You are not allowed to use this website and its Data Products without an agreement with Deltares. If you do not agree to the terms of this User Agreement, you must promptly stop using the Website and the Data Products. Any further actions with respect to the Website and/or Data Products without an agreement are in violation of copyright law.
-&nbsp;
 
 Article 1: General purpose and allowed use
 - 1.1	By presenting this Website and providing Data Products that can be accessed online as well
@@ -33,7 +26,6 @@ Article 1: General purpose and allowed use
  	purpose involving safety at sea.   
 - 1.3 The Data Products are generally grouped into specific data sets. The specific purpose and
  	allowed use of each type of data set are further specified below at Article 2.
-&nbsp;
 
 Article 2: Specific purpose and allowed use per dataset
 - 2.1	The specific purpose and allowed use of Data Products within each type of dataset is
@@ -79,14 +71,12 @@ Article 2: Specific purpose and allowed use per dataset
   - 2.6.1 The purpose of the Bathymetry Data Product is to support the analysis and interpretation of the other Data Products by the User. The Bathymetry Data Product should NOT be used for navigation or for any other purpose involving safety at sea.
 - 2.7   CHASM Data Products (CHASM Wave Height, Direction and Period, Wind Speed and Direction and Turbulence)
   - 2.7.1 The CHASM Data Products are provided as a deliverable of a project aimed at innovations in numerical metocean modelling. Care has been taken to incorporate the latest scientific insights and to validate the methods against measured metocean data. However, a more elaborate validation is recommended before using the data for operational and/or planning purposes. 
-&nbsp;
 
 Article 3: License
 - 3.1	Deltares grants User a non-exclusive, worldwide, royalty-free, non-transferable and non-
  	sublicensable license to use the Website and its Data Products strictly for the purpose and in
  	accordance with the limitations specified in this User Agreement. This license is provided
  	solely under the condition that User complies with the provisions of this User Agreement.
-&nbsp;
 
 Article 4: Use of the Website and Data Products
 - 4.1	User acknowledges and agrees
@@ -98,7 +88,6 @@ Article 4: Use of the Website and Data Products
     - f)	that User remains solely responsible for performing the appropriate risk assessments prior to any action or activity performed by the User’s interpretation of the Website and Data Products;
     - g)	that the Website and Data Products may only be used for legitimate and lawful purposes, in a manner that cannot in any way i) harm Deltares or ii) infringe the rights of third parties;
     - h)	never to (re)sell, re-distribute, make available, grant access to or communicate this Website nor the resulting Data Products to any third party.  
-&nbsp;
 
 Article 5: Intellectual Property Rights
 - 5.1	Unless stated differently, all intellectual property rights in connection with the Website and
@@ -110,7 +99,6 @@ Article 5: Intellectual Property Rights
  	personal, non-commercial use or in so far as otherwise permitted under mandatory law.
  	User acknowledges and agrees that with this User Agreement, no transfer of ownership
  	whatsoever, including the transfer of intellectual property rights is made to User.   
-&nbsp;
 
 Article 6: No warranty, indemnification
 - 6.1	Although this Website and the resulting Data Products have been set up with the greatest
@@ -148,7 +136,6 @@ Article 6: No warranty, indemnification
  	third party against Deltares and/or its officers, directors, employees or agents to the extent  
  	that such a claim is connected to the use of the Website and resulting Data Products by User
  	and/or third parties at whose disposal User has placed the Website and/or Data Products.
-&nbsp;
 
 Article 7: Duration
 - 7.1	This User Agreement is concluded for an indefinite period. Deltares may terminate this User
@@ -156,7 +143,6 @@ Article 7: Duration
  	breach of any of its obligations under this User Agreement.
 - 7.2	In the event of termination of this User Agreement, User shall immediately cease using the
  	Website and Data Products.
-&nbsp;
 
 Article 8: Privacy
 - 8.1	Any and all of User’s personal data that User may provide to Deltares for purposes of his/her
@@ -166,7 +152,6 @@ Article 8: Privacy
  	2018, 145). Our Privacy Statement sets out when and why we collect the data, exactly what
  	that data is, and how it will be processed and, above all, protected. Please read the
  	statement carefully, available on our website here.
-&nbsp;
 
 Article 9: Liability
 - 9.1	User agrees that Deltares (including its personnel and non-employees who (have)
@@ -175,7 +160,6 @@ Article 9: Liability
  	Agreement, the use of the Website and resulting Data Products, or the non-availability of the
  	Website and resulting Data Products, except for damages caused by willful misconduct or
  	gross negligence of Deltares.
-&nbsp;
 
 Article 10 Miscellaneous
 - 10.1  	The parties are not allowed to assign any rights and/or obligations under the User
@@ -192,7 +176,6 @@ Article 10 Miscellaneous
  	jurisdiction over Deltares, either specific or personal, in jurisdictions other than the laws of
  	the Netherlands. This Agreement and all the agreements arising therefrom are governed
  	exclusively by the laws of the Netherlands.  
-&nbsp;
 
 About Deltares
 This Website and the Data Products have been composed by, or at any rate by order of Stichting Deltares, with its registered office in Delft, 2629 HV, the Netherlands and its principal place of business at Boussinesqweg 1 Delft, The Netherlands. Deltares is registered with the Dutch Chamber of Commerce and Industry under number 41146461. Other contact details of Deltares are: telephone: + 31 (0)88 335 8273; fax: + 31 (0)88 335 8582; email: info@deltares.nl.
