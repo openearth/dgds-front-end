@@ -3,7 +3,7 @@
   --spacing-large: calc(var(--spacing-default) * 2);
   --spacing-small: 1rem;
 
-  --shadow: 0px 0px 20px 0px rgba(0,0,0,0.25);
+  --shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.5);
 
   --ease: cubic-bezier(0, 0, 0.58, 1);
   --speed-fast: 0.15s;
