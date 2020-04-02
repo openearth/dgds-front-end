@@ -175,6 +175,7 @@
         .catch(err => {
           console.log({ err })
         })
+      this.setGeographicalScope('global')
     },
     methods: {
       ...mapMutations('map', [
@@ -200,18 +201,20 @@
         return layer
       },
       zoomToBbox(datasetId) {
-        const oldScope = this.getGeographicalScope
-        const metadata = _.get(this.getDatasets, `[${datasetId}].metadata`)
-        const newScope = metadata.scope
-        // If the new scope is global or the same as the old scope, do nothing
-        if (newScope === 'regional' || oldScope !== newScope) {
-          // If layer is toggled on and has a bbox, zoom to that layer
-          const bbox = metadata.bbox
-          if (bbox) {
-            this.$refs.map.map.fitBounds(bbox)
+        setTimeout(() => {
+          const oldScope = this.getGeographicalScope
+          const metadata = _.get(this.getDatasets, `[${datasetId}].metadata`)
+          const newScope = metadata.scope
+          // If the new scope is global or the same as the old scope, do nothing
+          if (newScope === 'regional' && oldScope !== newScope) {
+            // If layer is toggled on and has a bbox, zoom to that layer
+            const bbox = metadata.bbox
+            if (bbox) {
+              this.$refs.map.map.fitBounds(bbox)
+            }
           }
-        }
-        this.setGeographicalScope(newScope)
+          this.setGeographicalScope(newScope)
+        }, 500)
       },
       getFeatureInfo(bbox) {
         if (!this.getActiveRasterLayer) {
@@ -283,7 +286,7 @@
       },
       toggleLocationDataset(id) {
         let oldParams = _.get(this.$route, 'params.datasetIds')
-        const newRouteObject = this.$route
+        const newRouteObject = Object.assign({}, this.$route)
         let newParams
 
         // TODO: there are too many if/else scenarios, this should be solved by
@@ -299,12 +302,12 @@
           if (oldParams.includes(id)) {
             // if oldparams already includes id, remove from route
             newParams = oldParams.filter(param => param !== id)
-            newParams = newParams.join(',')
-
             if (newParams.length === 0) {
               // If there are no datasets anymore, set the scop back to 'global'
               this.setGeographicalScope('global')
               newParams = undefined
+            } else {
+              newParams = newParams.join(',')
             }
           } else {
             // else add id to route and zoomtobbox
@@ -327,7 +330,6 @@
         if (datasetIds === undefined && locationId !== undefined) {
           routeObj = update('params.locationId', () => undefined, routeObj)
         }
-
         this.$router.push(routeObj)
       },
     },
