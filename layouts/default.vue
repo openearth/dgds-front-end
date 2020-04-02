@@ -28,9 +28,9 @@
       </v-mapbox>
     </client-only>
 
-    <data-set-control-menu
+    <data-set-controls
       :datasets="datasetsInActiveTheme"
-      class="default-layout__data-set-control-menu"
+      class="default-layout__data-set-controls"
       @toggle-location-dataset="toggleLocationDataset"
       @toggle-raster-layer="toggleRasterLayer"
     />
@@ -55,7 +55,7 @@
   import update from 'lodash/fp/update'
   import { mapState, mapGetters, mapMutations } from 'vuex'
   import auth from '../auth'
-  import DataSetControlMenu from '../components/data-set-control-menu'
+  import DataSetControls from '../components/data-set-controls'
   import TimeStamp from '../components/time-stamp'
   import getVectorLayer from '../lib/mapbox/layers/get-vector-layer'
   import getRasterLayer from '../lib/mapbox/layers/get-raster-layer'
@@ -68,7 +68,7 @@
 
   export default {
     components: {
-      DataSetControlMenu,
+      DataSetControls,
       TimeStamp,
       VMapboxVectorLayer,
       VMapboxRasterLayer,
@@ -350,11 +350,10 @@
     height: 100%;
   }
 
-  .default-layout__data-set-control-menu {
+  .default-layout__data-set-controls {
     position: absolute;
     top: var(--spacing-default);
     right: var(--spacing-default);
-    width: 22rem;
     max-height: calc(100vh - var(--spacing-large) - var(--map-controls-height));
   }
 
