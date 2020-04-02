@@ -93,10 +93,7 @@ export const actions = {
 
       val.datasets.forEach(set => {
         // Add metadata to store.datasets (excluding vectorLayer and rasterLayer)
-        commit(
-          'datasets/addMetadata',
-          _.omit(set, ['vectorLayer', 'rasterLayer', 'flowmapLayer'])
-        )
+        commit('datasets/addMetadata', _.omit(set, ['vectorLayer', 'rasterLayer', 'flowmapLayer']))
 
         // Add vectorlayer to store.datasets if available
         if (_.has(set, 'vectorLayer')) {
@@ -239,7 +236,7 @@ export const getters = {
     return activeDatasetIds.map(getInDatasets).filter(identity)
   },
 
-  activeTimestamp (state, { activeRasterData }) {
+  activeTimestamp(state, { activeRasterData }) {
     if (state.loadingRasterLayers) {
       return 'Loading...'
     }
@@ -276,7 +273,7 @@ export const getters = {
     }
   },
 
-  activeFlowmapData ({ datasets, activeRasterLayerId }) {
+  activeFlowmapData({ datasets, activeRasterLayerId }) {
     // return the  flowmap data
     if (activeRasterLayerId === '' || activeRasterLayerId === null) {
       return []
@@ -284,7 +281,7 @@ export const getters = {
     return _.get(datasets, `${activeRasterLayerId}.flowmap`)
   },
 
-  activeVectorData ({ activeLocationIds }, { activeDatasets }) {
+  activeVectorData({ activeLocationIds }, { activeDatasets }) {
     // Retrieve for active layers where vector data is available the data
     const vectorLayers = activeDatasets.filter(has('vector'))
     const mapboxLayers = vectorLayers.map(layer => {

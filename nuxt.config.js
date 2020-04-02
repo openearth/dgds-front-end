@@ -102,7 +102,7 @@ export default {
      ** You can extend webpack config here
      */
 
-    extend (config, ctx) {
+    extend(config, ctx) {
       // This configuration is copied  from
       // https://github.com/visualfanatic/vue-svg-loader
       const svgRule = config.module.rules.find(rule => rule.test.test('.svg'))
@@ -138,6 +138,6 @@ export default {
       if (ctx.isClient) {
         config.devtool = '#source-map'
       }
-    }
-  }
+    },
+  },
 }

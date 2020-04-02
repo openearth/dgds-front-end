@@ -43,7 +43,7 @@ export const mutations = {
     const mergedVector = _.merge({ mapboxLayer: newMapboxLayers }, vectorData)
     Vue.set(state[id], 'vector', mergedVector)
   },
-  addDatasetFlowmap (state, data) {
+  addDatasetFlowmap(state, data) {
     // Follow the same approach as in addDatasetFlowmap
     const id = _.get(data, 'id')
     // update the flowmapLayer  with info  from the url
@@ -53,7 +53,7 @@ export const mutations = {
     const flowmapLayer = merge(flowmapData, _.get(data, 'flowmapLayer'))
     Vue.set(state[id], 'flowmap', flowmapLayer)
   },
-  addDatasetRaster (state, data) {
+  addDatasetRaster(state, data) {
     const id = _.get(data, 'id')
     // If id already has a rasterLayer return
     if (!id) return
