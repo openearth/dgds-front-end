@@ -46,8 +46,8 @@
   }
 
   .icon--large {
-    width: 3rem;
-    height: 3rem;
+    width: 2rem;
+    height: 2rem;
   }
 
   .icon span {
@@ -61,10 +61,7 @@
     width: 100%;
     width: 100%;
     height: 100%;
-  }
-
-  .icon--large svg {
-    transform: scale(1.25);
+    fill: currentColor;
   }
 
   .mdi-icon {

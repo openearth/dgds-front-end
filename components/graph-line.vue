@@ -12,7 +12,7 @@
       label="Toggle"
       @click="toggleCollapsedDataset(parameterId)"
     >
-      <icon size="large" name="action-chevron-down" />
+      <icon name="action-chevron-down" />
     </ui-button-icon>
     <figcaption class="graph-line__caption strong" @click="toggleCollapsedDataset(parameterId)">
       {{ title }}
@@ -311,10 +311,13 @@
   .graph-line__toggle {
     position: absolute;
     right: 0;
+  }
+
+  .graph-line__toggle .icon {
     transition: transform 0.25s ease-in-out;
   }
 
-  .graph-line--collapsed .graph-line__toggle {
+  .graph-line--collapsed .graph-line__toggle .icon {
     transform: rotate(180deg);
   }
 
