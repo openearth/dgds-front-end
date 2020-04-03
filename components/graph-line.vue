@@ -1,23 +1,23 @@
 <template>
   <figure
-    class="graph-line"
     :class="{
       'graph-line__collapsible': collapsible,
       'graph-line--collapsed': isCollapsed,
     }"
+    class="graph-line"
   >
     <ui-button-icon
       v-if="collapsible"
+      @click="toggleCollapsedDataset(parameterId)"
       class="graph-line__toggle"
       label="Toggle"
-      @click="toggleCollapsedDataset(parameterId)"
     >
       <icon name="action-chevron-down" />
     </ui-button-icon>
-    <figcaption class="graph-line__caption strong" @click="toggleCollapsedDataset(parameterId)">
+    <figcaption @click="toggleCollapsedDataset(parameterId)" class="graph-line__caption strong">
       {{ title }}
     </figcaption>
-    <div v-if="!isCollapsed" class="graph-line__aspect-ratio" :class="{ image: type === 'images' }">
+    <div v-if="!isCollapsed" :class="{ image: type === 'images' }" class="graph-line__aspect-ratio">
       <v-chart
         v-if="type === 'line' || type === 'scatter'"
         :ref="title"
@@ -26,7 +26,7 @@
         class="graph-line__chart"
       />
       <img v-if="type === 'images'" :src="imageUrl" class="graph-line__chart graph-image" />
-      <ui-button v-if="user" class="graph-line__download" kind="secondary" @click="download">
+      <ui-button v-if="user" @click="download" class="graph-line__download" kind="secondary">
         Download data
       </ui-button>
       <p v-else class="graph-line__message">
@@ -331,7 +331,7 @@
   .graph-line__message {
     position: absolute;
     right: 0;
-    bottom: -1rem;
+    bottom: 0;
   }
 
   .graph-line__download {
