@@ -30,15 +30,15 @@
 
     <data-set-controls
       :datasets="datasetsInActiveTheme"
-      class="default-layout__data-set-controls"
       @toggle-location-dataset="toggleLocationDataset"
       @toggle-raster-layer="toggleRasterLayer"
+      class="default-layout__data-set-controls"
     />
 
     <time-stamp
       v-show="activeTimestamp !== '' && getActiveRasterLayer"
-      class="default-layout__timestamp"
       @update-timestep="removeInfoText"
+      class="default-layout__timestamp"
     />
 
     <nuxt />
@@ -214,7 +214,7 @@
             }
           }
           this.setGeographicalScope(newScope)
-        }, 500)
+        }, 1000)
       },
       getFeatureInfo(bbox) {
         if (!this.getActiveRasterLayer) {
@@ -296,6 +296,7 @@
         if (!oldParams) {
           // If oldParams is undefined, set newParams by id
           newParams = id
+          this.zoomToBbox(id)
         } else {
           // Else check if new id should be removed or added to new route
           oldParams = oldParams.split(',')
