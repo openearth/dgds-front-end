@@ -12,6 +12,7 @@
         ref="map"
         :access-token="mapboxAccessToken"
         map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
+        mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm
       >
         <v-mapbox-navigation-control position="bottom-right" />
         <v-mapbox-selected-point-layer :geometry="geometry" />
@@ -204,7 +205,7 @@
         setTimeout(() => {
           const oldScope = this.getGeographicalScope
           const metadata = _.get(this.getDatasets, `[${datasetId}].metadata`)
-          const newScope = metadata.scope
+          const newScope = _.get(metadata, 'scope')
           // If the new scope is global or the same as the old scope, do nothing
           if (newScope === 'regional' && oldScope !== newScope) {
             // If layer is toggled on and has a bbox, zoom to that layer
