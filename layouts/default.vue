@@ -12,7 +12,6 @@
         ref="map"
         :access-token="mapboxAccessToken"
         map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
-        mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm
       >
         <v-mapbox-navigation-control position="bottom-right" />
         <v-mapbox-selected-point-layer :geometry="geometry" />
@@ -31,15 +30,15 @@
 
     <data-set-controls
       :datasets="datasetsInActiveTheme"
+      class="default-layout__data-set-controls"
       @toggle-location-dataset="toggleLocationDataset"
       @toggle-raster-layer="toggleRasterLayer"
-      class="default-layout__data-set-controls"
     />
 
     <time-stamp
       v-show="activeTimestamp !== '' && getActiveRasterLayer"
-      @update-timestep="removeInfoText"
       class="default-layout__timestamp"
+      @update-timestep="removeInfoText"
     />
 
     <nuxt />

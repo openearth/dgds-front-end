@@ -8,13 +8,13 @@
   >
     <ui-button-icon
       v-if="collapsible"
-      @click="toggleCollapsedDataset(parameterId)"
       class="graph-line__toggle"
       label="Toggle"
+      @click="toggleCollapsedDataset(parameterId)"
     >
       <icon name="action-chevron-down" />
     </ui-button-icon>
-    <figcaption @click="toggleCollapsedDataset(parameterId)" class="graph-line__caption strong">
+    <figcaption class="graph-line__caption strong" @click="toggleCollapsedDataset(parameterId)">
       {{ title }}
     </figcaption>
     <div v-if="!isCollapsed" :class="{ image: type === 'images' }" class="graph-line__aspect-ratio">
@@ -26,7 +26,7 @@
         class="graph-line__chart"
       />
       <img v-if="type === 'images'" :src="imageUrl" class="graph-line__chart graph-image" />
-      <ui-button v-if="user" @click="download" class="graph-line__download" kind="secondary">
+      <ui-button v-if="user" class="graph-line__download" kind="secondary" @click="download">
         Download data
       </ui-button>
       <p v-else class="graph-line__message">
