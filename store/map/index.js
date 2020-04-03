@@ -143,8 +143,6 @@ export const actions = {
       const dateFormat = _.get(activeRaster, 'dateFormat')
       currentTime = moment(currentTime, dateFormat)
       lastTime = moment(lastTime, dateFormat)
-      console.log(currentTime.isAfter(lastTime))
-
       const now = currentTime.isAfter(lastTime) ? lastTime : currentTime
 
       const parameters = {
