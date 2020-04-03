@@ -33,7 +33,6 @@
         map.removeLayer(layer.id)
         layer.onRemove(map)
       }
-
     },
     methods: {
       deferredMountedTo(map) {
@@ -41,7 +40,7 @@
       },
       createLayer(map) {
         // check if already created
-        let oldLayer = map.getLayer('particle')
+        const oldLayer = map.getLayer('particle')
         if (oldLayer) {
           console.warn('layer already created')
           return
@@ -49,7 +48,7 @@
 
         // get the tile source, will be replaced by options once  backend is fully  implemented
         let url =
-          'https://storage.googleapis.com/dgds-data-public/flowmap_glossis/tiles/glossis-current-202003310000/tile.json'
+          'https://storage.googleapis.com/dgds-data-public/flowmap/glossis/tiles/glossis-current-202003310000/tile.json'
         url = 'glossis/tile.json'
         const source = windGl.source(url)
         // Add the visualisation layer
