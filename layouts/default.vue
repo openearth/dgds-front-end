@@ -13,8 +13,6 @@
         :access-token="mapboxAccessToken"
         map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
         :preserve-drawing-buffer="true"
-        :max-zoom="maxZoom"
-        min-zoom="1"
       >
         <v-mapbox-navigation-control position="bottom-right" />
         <v-mapbox-selected-point-layer :geometry="geometry" />
@@ -167,14 +165,6 @@
       showFlowmapLayer() {
         const layer = this.getActiveRasterLayer
         return layer === 'cc'
-      },
-      maxZoom() {
-        const layer = this.getActiveRasterLayer
-        let maxZoom = 20
-        if (layer === 'cc') {
-          maxZoom = 6
-        }
-        return maxZoom
       },
     },
     watch: {

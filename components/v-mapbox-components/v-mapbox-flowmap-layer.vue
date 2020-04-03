@@ -35,7 +35,6 @@
         const layerConfig = {
           type: 'particles',
           after: 'waterway-label',
-
           properties: {
             'particle-speed': ['interpolate', ['linear'], ['zoom'], 0, 0.9, 8, 1.5],
             'particle-color': 'rgba(60, 60, 90, 0.9)',
@@ -54,6 +53,8 @@
             properties || {},
           ),
         )
+        layer.maxzoom = 7
+        layer.minzoom = 1
         if (after) {
           // add it inline (before the label)
           map.addLayer(layer, after)
