@@ -1,5 +1,5 @@
 <template>
-  <ui-tray class="location" @on-close="close">
+  <ui-tray @on-close="close" class="location">
     <template v-slot:header>
       <h2 class="h3">
         {{ locations }}
@@ -65,7 +65,6 @@
       },
     },
     mounted() {
-      console.log('jaja')
       const { datasetIds, locationId } = this.$route.params
       this.location = locationId
       this.setActiveLocationIds([locationId])
