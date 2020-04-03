@@ -13,12 +13,14 @@
             :checked="dataset.visible"
             @change="toggleLocationDataset(dataset.id)"
           />
-          <ui-radio
-            v-if="checkRaster(dataset.id)"
-            :checked="dataset.id === getActiveRasterLayer"
-            @click="toggleRasterLayer(dataset.id)"
-          />
-          <div v-if="dataset.toolTip" class="tooltip" @click="onTooltipClick(dataset.id)">
+          <div class="data-set-controls__item-radio">
+            <ui-radio
+              v-if="checkRaster(dataset.id)"
+              :checked="dataset.id === getActiveRasterLayer"
+              @click="toggleRasterLayer(dataset.id)"
+            />
+          </div>
+          <div v-if="dataset.toolTip" @click="onTooltipClick(dataset.id)" class="tooltip">
             <icon name="info" />
           </div>
         </div>
@@ -119,10 +121,6 @@
     margin-left: 0.5rem;
   }
 
-  .data-set-controls__item .ui-radio:last-child {
-    margin-right: 2rem;
-  }
-
   .data-set-controls__item .ui-radio__button-wrapper {
     margin: 0;
   }
@@ -186,5 +184,8 @@
 
   .data-set-controls__legend p {
     margin-bottom: 0;
+  }
+  .data-set-controls__item-radio {
+    width: 32px;
   }
 </style>
