@@ -12,6 +12,7 @@
         ref="map"
         :access-token="mapboxAccessToken"
         map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
+        :preserve-drawing-buffer="true"
       >
         <v-mapbox-navigation-control position="bottom-right" />
         <v-mapbox-selected-point-layer :geometry="geometry" />
@@ -25,6 +26,7 @@
           @select-locations="selectLocations"
         />
         <v-mapbox-raster-layer :options="rasterLayer" @click="getFeatureInfo" />
+        <v-mapbox-flowmap-layer v-if="showFlowmapLayer" :options="flowmapLayer" />
       </v-mapbox>
     </client-only>
 
@@ -61,6 +63,7 @@
   import getRasterLayer from '../lib/mapbox/layers/get-raster-layer'
   import VMapboxVectorLayer from '../components/v-mapbox-components/v-mapbox-vector-layer'
   import VMapboxRasterLayer from '../components/v-mapbox-components/v-mapbox-raster-layer'
+  import VMapboxFlowmapLayer from '../components/v-mapbox-components/v-mapbox-flowmap-layer'
   import VMapboxSelectedPointLayer from '../components/v-mapbox-components/v-mapbox-selected-point-layer'
   import DisclaimerModal from '../components/disclaimer-modal'
   import VMapboxInfoTextLayer from '../components/v-mapbox-components/v-mapbox-info-text-layer'
@@ -72,6 +75,7 @@
       TimeStamp,
       VMapboxVectorLayer,
       VMapboxRasterLayer,
+      VMapboxFlowmapLayer,
       VMapboxSelectedPointLayer,
       DisclaimerModal,
       VMapboxInfoTextLayer,
@@ -96,6 +100,8 @@
       ...mapState('map', ['activeLocationIds']),
       ...mapGetters('map', [
         'activeRasterData',
+        'activeFlowmapData',
+
         'activeVectorData',
         'activeDatasetsLocations',
         'datasetsInActiveTheme',
@@ -114,6 +120,17 @@
         rasterLayer.source.tiles = [_.get(this.activeRasterData, 'url')]
         return rasterLayer
       },
+      flowmapLayer() {
+        const flowmapLayer = getRasterLayer()
+        const flowmapData = this.activeFlowmapData
+        const url = _.get(flowmapData, 'url')
+        if (url) {
+          // should this be done using Vue.set?
+          flowmapLayer.source.tiles = [url]
+        }
+        return flowmapLayer
+      },
+
       vectorLayers() {
         // Returns an array with unique mapboxlayers.
         // Get active vectorlayers and flatten, all mapboxlayers into 1 array
@@ -144,6 +161,10 @@
           return mergedFilter
         })
         return newLayers
+      },
+      showFlowmapLayer() {
+        const layer = this.getActiveRasterLayer
+        return layer === 'cc'
       },
     },
     watch: {

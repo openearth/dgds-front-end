@@ -101,7 +101,10 @@ export default {
     /*
      ** You can extend webpack config here
      */
+
     extend(config, ctx) {
+      // This configuration is copied  from
+      // https://github.com/visualfanatic/vue-svg-loader
       const svgRule = config.module.rules.find(rule => rule.test.test('.svg'))
 
       svgRule.test = /\.(png|jpe?g|gif|webp)$/
@@ -129,6 +132,11 @@ export default {
           loader: 'eslint-loader',
           exclude: /(node_modules)/,
         })
+      }
+
+      // Fix source maps
+      if (ctx.isClient) {
+        config.devtool = '#source-map'
       }
     },
   },
