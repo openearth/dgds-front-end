@@ -1,38 +1,40 @@
 <script>
-// https://github.com/mapbox/webgl-wind
-import * as windGl from '@openearth/windgl'
+  // https://github.com/mapbox/webgl-wind
+  import * as windGl from '@openearth/windgl'
 
-export default {
-  name: 'VMapboxFlowmapLayer',
-  props: {
-    options: {
-      default: () => {
-        return {}
+  export default {
+    name: 'VMapboxFlowmapLayer',
+    props: {
+      options: {
+        default: () => {
+          return {}
+        },
+        type: Object,
       },
-      type: Object,
     },
-  },
-  data() {
-    return {
-      layer: null,
-    }
-  },
-  mounted() {
-    const map = this.getMap()
-    if (!map) {
-      return
-    }
-    this.createLayer(map)
-  },
-  methods: {
-    deferredMountedTo(map) {
+    data() {
+      return {
+        layer: null,
+      }
+    },
+    mounted() {
+      const map = this.getMap()
+      if (!map) {
+        return
+      }
       this.createLayer(map)
     },
-    createLayer(map) {
-      // get the tile source, will be replaced byoptions
-      const source = windGl.source('https://storage.cloud.google.com/dgds-data/flowmap_glossis/tiles/glossis-current-202003310000/tile.json')
-      // Add the visualisation layer
-      const layerConfig = {
+    methods: {
+      deferredMountedTo(map) {
+        this.createLayer(map)
+      },
+      createLayer(map) {
+        // get the tile source, will be replaced byoptions
+        const source = windGl.source(
+          'https://storage.googleapis.com/dgds-data/flowmap_glossis/tiles/glossis-current-202003310000/tile.json',
+        )
+        // Add the visualisation layer
+        const layerConfig = {
           type: 'particles',
           after: 'waterway-label',
           properties: {
