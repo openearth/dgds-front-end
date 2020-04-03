@@ -63,6 +63,7 @@
   import getRasterLayer from '../lib/mapbox/layers/get-raster-layer'
   import VMapboxVectorLayer from '../components/v-mapbox-components/v-mapbox-vector-layer'
   import VMapboxRasterLayer from '../components/v-mapbox-components/v-mapbox-raster-layer'
+  import VMapboxFlowmapLayer from '../components/v-mapbox-components/v-mapbox-flowmap-layer'
   import VMapboxSelectedPointLayer from '../components/v-mapbox-components/v-mapbox-selected-point-layer'
   import DisclaimerModal from '../components/disclaimer-modal'
   import VMapboxInfoTextLayer from '../components/v-mapbox-components/v-mapbox-info-text-layer'
@@ -74,6 +75,7 @@
       TimeStamp,
       VMapboxVectorLayer,
       VMapboxRasterLayer,
+      VMapboxFlowmapLayer,
       VMapboxSelectedPointLayer,
       DisclaimerModal,
       VMapboxInfoTextLayer,
