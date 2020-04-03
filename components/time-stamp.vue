@@ -1,6 +1,6 @@
 <template>
   <panel class="timestamp">
-    <h3 class="data-set-control-menu__title h4">
+    <h3 class="h4">
       Date raster layer
     </h3>
     <time-slider

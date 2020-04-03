@@ -109,11 +109,13 @@
   .ui-select .icon {
     position: absolute;
     right: var(--spacing-small);
-    bottom: 10px;
+    bottom: 13px;
+    width: 18px;
+    height: 18px;
     pointer-events: none;
   }
 
-  .ui-select .icon path {
+  .ui-select .icon svg {
     transition: fill 0.25s ease;
     fill: var(--color-text-color);
   }
@@ -164,7 +166,7 @@
     box-shadow: inset 0 0 0 2px var(--color-primary-hover);
   }
 
-  .ui-select__input:focus:enabled ~ .icon path {
+  .ui-select__input:focus:enabled ~ .icon svg {
     fill: var(--color-text-inverted);
   }
 </style>
