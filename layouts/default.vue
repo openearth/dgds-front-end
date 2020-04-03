@@ -14,7 +14,7 @@
         map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
         :preserve-drawing-buffer="true"
         :max-zoom="maxZoom"
-        :min-zoom="1"
+        min-zoom="1"
       >
         <v-mapbox-navigation-control position="bottom-right" />
         <v-mapbox-selected-point-layer :geometry="geometry" />
@@ -28,7 +28,7 @@
           @select-locations="selectLocations"
         />
         <v-mapbox-raster-layer :options="rasterLayer" @click="getFeatureInfo" />
-        <v-mapbox-flowmap-layer v-if="flowmapLayerReady" :options="flowmapLayer" />
+        <v-mapbox-flowmap-layer v-if="showFlowmapLayer" :options="flowmapLayer" />
       </v-mapbox>
     </client-only>
 
@@ -96,7 +96,6 @@
         coordinates: [],
       },
       mapboxMessage: '',
-      flowmapLayerReady: true,
     }),
     computed: {
       ...mapState('preferences', ['theme', 'sidebarAnimating', 'sidebarExpanded']),
@@ -164,6 +163,10 @@
           return mergedFilter
         })
         return newLayers
+      },
+      showFlowmapLayer() {
+        const layer = this.getActiveRasterLayer
+        return layer === 'cc'
       },
       maxZoom() {
         const layer = this.getActiveRasterLayer

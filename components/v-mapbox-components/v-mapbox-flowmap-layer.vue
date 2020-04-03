@@ -12,43 +12,64 @@
         type: Object,
       },
     },
+    data() {
+      return {
+        layer: null,
+      }
+    },
+    mounted() {
+      const map = this.getMap()
+      if (!map) {
+        return
+      }
+      this.createLayer(map)
+    },
     methods: {
       deferredMountedTo(map) {
+        this.createLayer(map)
+      },
+      createLayer(map) {
         // get the tile source, will be replaced byoptions
         const source = windGl.source('glossis/tile.json')
         // Add the visualisation layer
-        const layers = [
-          {
-            type: 'particles',
-            after: 'waterway-label',
+        const layerConfig = {
+          type: 'particles',
+          after: 'waterway-label',
 
-            properties: {
-              'particle-speed': ['interpolate', ['linear'], ['zoom'], 0, 0.9, 8, 1.5],
-              'particle-color': 'rgba(60, 60, 90, 0.9)',
-            },
+          properties: {
+            'particle-speed': ['interpolate', ['linear'], ['zoom'], 0, 0.9, 8, 1.5],
+            'particle-color': 'rgba(60, 60, 90, 0.9)',
           },
-        ]
-        layers.forEach(layer => {
-          const { type, after, properties } = layer
-          if (windGl[type]) {
-            // create a custom layertype
-            layer = windGl[type](
-              Object.assign(
-                {
-                  id: type,
-                  source,
-                },
-                properties || {},
-              ),
-            )
-          }
-          if (after) {
-            // add it inline (before the label)
-            map.addLayer(layer, after)
-          } else {
-            map.addLayer(layer)
-          }
-        })
+        }
+
+        const { type, after, properties } = layerConfig
+        const constructor = windGl[type]
+        // create a custom layertype
+        const layer = constructor(
+          Object.assign(
+            {
+              id: type,
+              source,
+            },
+            properties || {},
+          ),
+        )
+        if (after) {
+          // add it inline (before the label)
+          map.addLayer(layer, after)
+        } else {
+          map.addLayer(layer)
+        }
+        // save for removal
+        this.layer = layer
+      },
+      beforeDestroy() {
+        const layer = this.layer
+        if (layer.id && this.map.getLayer(layer.id)) {
+          // this layer does not have a  source
+          this.map.removeLayer(layer.id)
+          this.map.removeSource(layer.source.id)
+        }
       },
     },
     render() {
