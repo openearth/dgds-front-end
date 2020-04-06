@@ -65,7 +65,6 @@
       },
     },
     mounted() {
-      console.log('jaja')
       const { datasetIds, locationId } = this.$route.params
       this.location = locationId
       this.setActiveLocationIds([locationId])

@@ -225,7 +225,7 @@
         setTimeout(() => {
           const oldScope = this.getGeographicalScope
           const metadata = _.get(this.getDatasets, `[${datasetId}].metadata`)
-          const newScope = metadata.scope
+          const newScope = _.get(metadata, 'scope')
           // If the new scope is global or the same as the old scope, do nothing
           if (newScope === 'regional' && oldScope !== newScope) {
             // If layer is toggled on and has a bbox, zoom to that layer
@@ -235,7 +235,7 @@
             }
           }
           this.setGeographicalScope(newScope)
-        }, 500)
+        }, 1000)
       },
       getFeatureInfo(bbox) {
         if (!this.getActiveRasterLayer) {
@@ -317,6 +317,7 @@
         if (!oldParams) {
           // If oldParams is undefined, set newParams by id
           newParams = id
+          this.zoomToBbox(id)
         } else {
           // Else check if new id should be removed or added to new route
           oldParams = oldParams.split(',')

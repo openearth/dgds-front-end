@@ -134,25 +134,36 @@ export const actions = {
     commit('setActiveDatasetIds', ids)
   },
 
-  loadPointDataForLocation({ commit, state }, { datasetIds, locationId }) {
-    const datasets = isArray(datasetIds) ? datasetIds : datasetIds.split(',')
-    datasets.forEach(datasetId => {
-      if (_.get(state.datasets[datasetId], 'pointdata[locationId]')) {
+  loadPointDataForLocation({ commit, state, getters }, { datasetIds, locationId }) {
+    const datasetIdsArray = isArray(datasetIds) ? datasetIds : datasetIds.split(',')
+    datasetIdsArray.forEach(datasetId => {
+      if (_.get(state, `datasets[${datasetId}]vector[${locationId}]`)) {
         return
       }
 
+      const activeRaster = _.get(getters, 'activeRasterData')
+      let currentTime = _.get(activeRaster, 'date')
+
+      const timeseries = _.get(state, `datasets[${datasetId}].raster.imageTimeseries`)
+      let lastTime = _.get(_.last(timeseries), 'date')
+      const dateFormat = _.get(activeRaster, 'dateFormat')
+      currentTime = moment(currentTime, dateFormat)
+      lastTime = moment(lastTime, dateFormat)
+      const now = currentTime.isAfter(lastTime) ? lastTime : currentTime
+
       const parameters = {
         locationId,
-        startTime: moment()
-          .subtract(3, 'days')
+        startTime: moment(now, dateFormat)
+          .subtract(5, 'days')
           .format('YYYY-MM-DDTHH:mm:ssZ'),
-        endTime: moment()
+        endTime: moment(now, dateFormat)
           .add(5, 'days')
           .format('YYYY-MM-DDTHH:mm:ssZ'),
         datasetId,
       }
+
       getFromApi('timeseries', parameters).then(response => {
-        const pointDataType = _.get(state.datasets[datasetId].metadata, 'pointData')
+        const pointDataType = _.get(state, `datasets[${datasetId}].metadata.pointData`)
 
         // Depending on the pointDataType different responses are expected.
         // images -> just an url to a svg image

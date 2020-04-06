@@ -170,7 +170,7 @@ describe('loadPointDataForLocation', () => {
         .format('YYYY-MM-DDTHH:mm:ssZ'),
       locationId: 'loc1',
       startTime: moment()
-        .subtract(3, 'days')
+        .subtract(5, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
     })
     expect(commit.mock.calls[0]).toEqual([
@@ -215,7 +215,7 @@ describe('loadPointDataForLocation', () => {
         .format('YYYY-MM-DDTHH:mm:ssZ'),
       locationId: 'loc1',
       startTime: moment()
-        .subtract(3, 'days')
+        .subtract(5, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
     })
 
@@ -259,7 +259,7 @@ describe('loadPointDataForLocation', () => {
         .format('YYYY-MM-DDTHH:mm:ssZ'),
       locationId: 'loc1',
       startTime: moment()
-        .subtract(3, 'days')
+        .subtract(5, 'days')
         .format('YYYY-MM-DDTHH:mm:ssZ'),
     })
 

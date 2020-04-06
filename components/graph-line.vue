@@ -1,10 +1,10 @@
 <template>
   <figure
-    class="graph-line"
     :class="{
       'graph-line__collapsible': collapsible,
       'graph-line--collapsed': isCollapsed,
     }"
+    class="graph-line"
   >
     <ui-button-icon
       v-if="collapsible"
@@ -17,7 +17,7 @@
     <figcaption class="graph-line__caption strong" @click="toggleCollapsedDataset(parameterId)">
       {{ title }}
     </figcaption>
-    <div v-if="!isCollapsed" class="graph-line__aspect-ratio" :class="{ image: type === 'images' }">
+    <div v-if="!isCollapsed" :class="{ image: type === 'images' }" class="graph-line__aspect-ratio">
       <v-chart
         v-if="type === 'line' || type === 'scatter'"
         :ref="title"
@@ -331,7 +331,7 @@
   .graph-line__message {
     position: absolute;
     right: 0;
-    bottom: -1rem;
+    bottom: 0;
   }
 
   .graph-line__download {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="layer-legend">
     <svg viewBox="0 0 100 5">
       <defs>
         <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="0">
@@ -33,6 +33,9 @@
 </script>
 
 <style>
+  .layer-legend {
+    max-width: 300px;
+  }
   #legend-span {
     width: 100%;
     height: 10px;
