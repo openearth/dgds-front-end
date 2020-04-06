@@ -1,20 +1,21 @@
 <template>
   <nav
-    class="navigation-bar"
     :class="{ 'navigation-bar--expanded': sidebarExpanded }"
     @transitionend="onTransitionEnd"
+    class="navigation-bar"
   >
     <div class="navigation-bar__logo">
-      <img :src="logo" width="24" />
+      <icon v-show="!sidebarExpanded" name="deltares" size="large" />
+      <span class="ui-button-icon__label bodytext-m">Deltares</span>
     </div>
 
     <ul class="navigation-bar__list">
       <li v-for="(theme, key) in getThemes" :key="key">
         <div class="navigation-bar__list-item">
           <ui-button-icon
-            kind="quiet"
             :class="{ 'ui-button-icon--active': isActive(theme.id) }"
             @click="toggleTheme(theme.id)"
+            kind="quiet"
           >
             <icon :name="`theme-${theme.id}`" />
             <span class="ui-button-icon__label bodytext-m">{{ theme.name }}</span>
@@ -171,10 +172,13 @@
 
   .navigation-bar__logo {
     padding: 0.75rem var(--spacing-default);
+    height: 59px;
+    display: flex;
+    align-items: center;
   }
 
   .navigation-bar__logo img {
-    width: 30px;
+    width: 32px;
     padding: 0.125rem;
   }
 
