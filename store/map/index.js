@@ -30,7 +30,11 @@ export const state = getDefaultState()
 
 export const mutations = {
   resetMap(state) {
-    Object.assign(state, getDefaultState())
+    state.activeDatasetIds = []
+    state.activeLocationIds = []
+    state.activeTheme = {}
+    state.collapsedDatasets = []
+    state.loadingRasterLayers = false
   },
   setActiveDatasetIds(state, ids) {
     state.activeDatasetIds = ids
