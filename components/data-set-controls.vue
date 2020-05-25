@@ -20,7 +20,7 @@
               @click="toggleRasterLayer(dataset.id)"
             />
           </div>
-          <div v-if="dataset.toolTip" @click="onTooltipClick(dataset.id)" class="tooltip">
+          <div v-if="dataset.toolTip" class="tooltip" @click="onTooltipClick(dataset.id)">
             <icon name="info" />
           </div>
         </div>

@@ -14,7 +14,7 @@
         map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
         :preserve-drawing-buffer="true"
       >
-        <v-mapbox-navigation-control position="bottom-right" />
+        <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" />
         <v-mapbox-selected-point-layer :geometry="geometry" />
         <v-mapbox-info-text-layer :geometry="infoTextGeometry" :message="mapboxMessage" />
         <v-mapbox-vector-layer
