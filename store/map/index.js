@@ -16,7 +16,7 @@ import getFromApi from '../../lib/request/get'
 
 const getId = get('id')
 
-export const state = () => ({
+export const getDefaultState = () => ({
   activeDatasetIds: [],
   activeLocationIds: [],
   activeRasterLayerId: '',
@@ -26,7 +26,12 @@ export const state = () => ({
   geographicalScope: '',
 })
 
+export const state = getDefaultState()
+
 export const mutations = {
+  resetMap(state) {
+    Object.assign(state, getDefaultState())
+  },
   setActiveDatasetIds(state, ids) {
     state.activeDatasetIds = ids
   },
