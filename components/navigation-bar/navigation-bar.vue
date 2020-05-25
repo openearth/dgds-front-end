@@ -1,8 +1,8 @@
 <template>
   <nav
     :class="{ 'navigation-bar--expanded': sidebarExpanded }"
-    @transitionend="onTransitionEnd"
     class="navigation-bar"
+    @transitionend="onTransitionEnd"
   >
     <ui-button-icon class="navigation-bar__logo" kind="quiet" @click="resetSettings">
       <icon name="deltares" size="large" />
@@ -14,8 +14,8 @@
         <div class="navigation-bar__list-item">
           <ui-button-icon
             :class="{ 'ui-button-icon--active': isActive(theme.id) }"
-            @click="toggleTheme(theme.id)"
             kind="quiet"
+            @click="toggleTheme(theme.id)"
           >
             <icon :name="`theme-${theme.id}`" />
             <span class="ui-button-icon__label bodytext-m">{{ theme.name }}</span>
