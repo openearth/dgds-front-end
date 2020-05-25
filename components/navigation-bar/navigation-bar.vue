@@ -65,7 +65,7 @@
       },
     },
     methods: {
-      ...mapMutations('map', ['resetMap', 'toggleActiveTheme']),
+      ...mapMutations('map', ['resetMap', 'setActiveRasterLayer', 'toggleActiveTheme']),
       ...mapMutations('preferences', ['resetPreferences']),
       isActive(id) {
         return this.activeTheme === id
@@ -76,6 +76,7 @@
       resetSettings() {
         this.resetMap()
         this.resetPreferences()
+        this.setActiveRasterLayer('gb')
 
         this.activeTheme = null
 
