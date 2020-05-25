@@ -22,6 +22,7 @@ export const getDefaultState = () => ({
   activeRasterLayerId: '',
   activeTheme: {},
   collapsedDatasets: [],
+  defaultRasterLayerId: '',
   loadingRasterLayers: false,
   geographicalScope: '',
 })
@@ -63,6 +64,9 @@ export const mutations = {
   },
   setActiveRasterLayer(state, id) {
     state.activeRasterLayerId = id
+  },
+  setDefaultRasterLayer(state, id) {
+    state.defaultRasterLayerId = id
   },
   toggleCollapsedDataset(state, id) {
     // Updates the collapsedDatasets array, when id already exists in this Array
@@ -121,6 +125,7 @@ export const actions = {
           const rasterActive = _.get(set, 'rasterActiveOnLoad')
           if (rasterActive) {
             commit('setActiveRasterLayer', set.id)
+            commit('setDefaultRasterLayer', set.id)
           }
         }
       })

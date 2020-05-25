@@ -60,6 +60,7 @@
     computed: {
       ...mapGetters('map/themes', ['getThemes', 'getActiveTheme']),
       ...mapState('preferences', ['sidebarExpanded']),
+      ...mapState('map', ['defaultRasterLayerId']),
       logo() {
         return require('~/assets/images/deltares_avatar.png')
       },
@@ -76,7 +77,7 @@
       resetSettings() {
         this.resetMap()
         this.resetPreferences()
-        this.setActiveRasterLayer('gb')
+        this.setActiveRasterLayer(this.defaultRasterLayerId)
 
         this.activeTheme = null
 
