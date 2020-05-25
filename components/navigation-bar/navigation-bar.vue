@@ -4,10 +4,10 @@
     class="navigation-bar"
     @transitionend="onTransitionEnd"
   >
-    <div class="navigation-bar__logo">
-      <icon v-show="!sidebarExpanded" name="deltares" size="large" />
+    <ui-button-icon class="navigation-bar__logo" kind="quiet" @click="resetSettings">
+      <icon name="deltares" size="large" />
       <span class="ui-button-icon__label bodytext-m">Deltares</span>
-    </div>
+    </ui-button-icon>
 
     <ul class="navigation-bar__list">
       <li v-for="(theme, key) in getThemes" :key="key">
@@ -60,17 +60,28 @@
     computed: {
       ...mapGetters('map/themes', ['getThemes', 'getActiveTheme']),
       ...mapState('preferences', ['sidebarExpanded']),
+      ...mapState('map', ['defaultRasterLayerId']),
       logo() {
         return require('~/assets/images/deltares_avatar.png')
       },
     },
     methods: {
-      ...mapMutations('map', ['toggleActiveTheme']),
+      ...mapMutations('map', ['resetMap', 'setActiveRasterLayer', 'toggleActiveTheme']),
+      ...mapMutations('preferences', ['resetPreferences']),
       isActive(id) {
         return this.activeTheme === id
       },
       onTransitionEnd() {
         this.$store.commit('preferences/setSidebarAnimating', { animating: false })
+      },
+      resetSettings() {
+        this.resetMap()
+        this.resetPreferences()
+        this.setActiveRasterLayer(this.defaultRasterLayerId)
+
+        this.activeTheme = null
+
+        this.$router.push({ path: '/' })
       },
       toggleTheme(id) {
         this.toggleActiveTheme(id)
@@ -180,6 +191,11 @@
   .navigation-bar__logo img {
     width: 32px;
     padding: 0.125rem;
+  }
+
+  .navigation-bar__logo .icon {
+    width: 30px;
+    height: 30px;
   }
 
   .navigation-bar__list {

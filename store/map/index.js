@@ -16,17 +16,27 @@ import getFromApi from '../../lib/request/get'
 
 const getId = get('id')
 
-export const state = () => ({
+export const getDefaultState = () => ({
   activeDatasetIds: [],
   activeLocationIds: [],
   activeRasterLayerId: '',
   activeTheme: {},
   collapsedDatasets: [],
+  defaultRasterLayerId: '',
   loadingRasterLayers: false,
   geographicalScope: '',
 })
 
+export const state = getDefaultState()
+
 export const mutations = {
+  resetMap(state) {
+    state.activeDatasetIds = []
+    state.activeLocationIds = []
+    state.activeTheme = {}
+    state.collapsedDatasets = []
+    state.loadingRasterLayers = false
+  },
   setActiveDatasetIds(state, ids) {
     state.activeDatasetIds = ids
   },
@@ -54,6 +64,9 @@ export const mutations = {
   },
   setActiveRasterLayer(state, id) {
     state.activeRasterLayerId = id
+  },
+  setDefaultRasterLayer(state, id) {
+    state.defaultRasterLayerId = id
   },
   toggleCollapsedDataset(state, id) {
     // Updates the collapsedDatasets array, when id already exists in this Array
@@ -112,6 +125,7 @@ export const actions = {
           const rasterActive = _.get(set, 'rasterActiveOnLoad')
           if (rasterActive) {
             commit('setActiveRasterLayer', set.id)
+            commit('setDefaultRasterLayer', set.id)
           }
         }
       })
