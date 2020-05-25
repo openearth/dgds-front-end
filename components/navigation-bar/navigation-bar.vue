@@ -65,7 +65,8 @@
       },
     },
     methods: {
-      ...mapMutations('map', ['toggleActiveTheme']),
+      ...mapMutations('map', ['resetMap', 'toggleActiveTheme']),
+      ...mapMutations('preferences', ['resetPreferences']),
       isActive(id) {
         return this.activeTheme === id
       },
@@ -73,6 +74,12 @@
         this.$store.commit('preferences/setSidebarAnimating', { animating: false })
       },
       resetSettings() {
+        this.resetMap()
+        this.resetPreferences()
+
+        this.activeTheme = null
+
+        this.$router.push({ path: '/' })
       },
       toggleTheme(id) {
         this.toggleActiveTheme(id)
