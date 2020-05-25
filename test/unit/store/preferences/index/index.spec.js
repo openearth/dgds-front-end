@@ -6,5 +6,5 @@ test('Initial state', () => {
     sidebarExpanded: false,
     user: null,
   }
-  expect(state()).toEqual(initialState)
+  expect(state).toEqual(initialState)
 })

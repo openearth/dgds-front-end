@@ -10,5 +10,5 @@ test('Initial state', () => {
     loadingRasterLayers: false,
     geographicalScope: '',
   }
-  expect(state()).toEqual(initialState)
+  expect(state).toEqual(initialState)
 })
