@@ -158,6 +158,11 @@
     border-radius: 0;
   }
 
+  .navigation-bar .ui-button-icon:hover .ui-button-icon__label {
+    opacity: 1;
+    transform: translateX(15px);
+  }
+
   .navigation-bar__list:first-of-type .ui-button-icon .icon {
     width: 30px;
     height: 30px;
