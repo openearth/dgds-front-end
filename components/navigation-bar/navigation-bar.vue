@@ -133,7 +133,7 @@
   .ui-button-icon__label {
     position: absolute;
     left: 5rem;
-    min-width: 150px;
+    min-width: 160px;
     transform: translateX(-10px);
     transition: opacity 0.1s ease, transform 0.2s ease;
     opacity: 0;
