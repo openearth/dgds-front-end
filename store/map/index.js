@@ -155,15 +155,21 @@ export const actions = {
         return
       }
 
+      // Get the current time of the active raster layer
       const activeRaster = _.get(getters, 'activeRasterData')
       let currentTime = _.get(activeRaster, 'date')
 
-      const timeseries = _.get(state, `datasets[${datasetId}].raster.imageTimeseries`)
-      let lastTime = _.get(_.last(timeseries), 'date')
+      let now = moment()
       const dateFormat = _.get(activeRaster, 'dateFormat')
-      currentTime = moment(currentTime, dateFormat)
-      lastTime = moment(lastTime, dateFormat)
-      const now = currentTime.isAfter(lastTime) ? lastTime : currentTime
+      if (currentTime) {
+        // If there is a date by the active raster layer, check if that date
+        // falls within the range of the timeseries dates.
+        const timeseries = _.get(state, `datasets[${datasetId}].raster.imageTimeseries`)
+        let lastTime = _.get(_.last(timeseries), 'date')
+        currentTime = moment(currentTime, dateFormat)
+        lastTime = moment(lastTime, dateFormat)
+        now = currentTime.isAfter(lastTime) ? lastTime : currentTime
+      }
 
       const parameters = {
         locationId,
