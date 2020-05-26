@@ -34,7 +34,7 @@
     },
     mounted() {
       this.map = this.getMap()
-      if (this.map.loaded()) {
+      if (this.map) {
         this.updateMap()
       }
     },
