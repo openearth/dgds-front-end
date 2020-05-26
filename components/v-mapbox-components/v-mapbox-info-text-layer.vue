@@ -22,6 +22,20 @@
         map: null,
         selectedLayers: [
           {
+            id: 'info_point_layer',
+            type: 'circle',
+            source: {
+              type: 'geojson',
+              data: {},
+            },
+            paint: {
+              'circle-color': 'black',
+              'circle-radius': 3,
+              'circle-stroke-width': 2,
+              'circle-stroke-color': 'white',
+            },
+          },
+          {
             id: 'info_text_layer',
             type: 'symbol',
             source: {
@@ -39,20 +53,6 @@
               'text-halo-blur': 2,
             },
           },
-          {
-            id: 'info_point_layer',
-            type: 'circle',
-            source: {
-              type: 'geojson',
-              data: {},
-            },
-            paint: {
-              'circle-color': 'black',
-              'circle-radius': 3,
-              'circle-stroke-width': 2,
-              'circle-stroke-color': 'white',
-            },
-          },
         ],
       }
     },
@@ -67,6 +67,7 @@
           if (selectedLayer.type === 'symbol') {
             this.map.setLayoutProperty(layerId, 'text-field', this.message)
           }
+
           this.map.moveLayer(layerId)
         })
       },
