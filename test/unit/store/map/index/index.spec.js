@@ -7,6 +7,7 @@ test('Initial state', () => {
     activeRasterLayerId: '',
     activeTheme: {},
     collapsedDatasets: [],
+    defaultRasterLayerId: '',
     loadingRasterLayers: false,
     geographicalScope: '',
   }
