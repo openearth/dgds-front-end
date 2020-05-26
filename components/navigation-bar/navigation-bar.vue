@@ -14,7 +14,6 @@
         <div class="navigation-bar__list-item">
           <ui-button-icon
             :class="{ 'ui-button-icon--active': isActive(theme.id) }"
-            kind="quiet"
             @click="toggleTheme(theme.id)"
           >
             <icon :name="`theme-${theme.id}`" />
