@@ -27,7 +27,6 @@
           type="text"
           :label="`Min (${unit})`"
           placeholder="Min value"
-          disabled
         />
       </div>
       <div v-if="!editingRange" class="layer-legend__range-max" @click="editRange">
