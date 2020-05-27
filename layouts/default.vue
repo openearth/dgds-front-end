@@ -11,12 +11,16 @@
         id="map"
         ref="map"
         :access-token="mapboxAccessToken"
+        container="map"
         map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
-        :preserve-drawing-buffer="true"
       >
         <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" />
-        <v-mapbox-selected-point-layer :geometry="geometry" />
-        <v-mapbox-info-text-layer :geometry="infoTextGeometry" :message="mapboxMessage" />
+        <v-mapbox-selected-point-layer v-if="mapLoaded" :geometry="geometry" />
+        <v-mapbox-info-text-layer
+          v-if="mapLoaded"
+          :geometry="infoTextGeometry"
+          :message="mapboxMessage"
+        />
         <v-mapbox-vector-layer
           v-for="vectorLayer in vectorLayers"
           :key="vectorLayer.id"
@@ -25,22 +29,22 @@
           :active-theme="activeTheme"
           @select-locations="selectLocations"
         />
-        <v-mapbox-raster-layer :options="rasterLayer" @click="getFeatureInfo" />
-        <v-mapbox-flowmap-layer v-if="showFlowmapLayer" :options="flowmapLayer" />
+        <v-mapbox-raster-layer v-if="mapLoaded" :options="rasterLayer" @click="getFeatureInfo" />
+        <v-mapbox-flowmap-layer v-if="mapLoaded && showFlowmapLayer" :options="flowmapLayer" />
       </v-mapbox>
     </client-only>
 
     <data-set-controls
       :datasets="datasetsInActiveTheme"
-      class="default-layout__data-set-controls"
       @toggle-location-dataset="toggleLocationDataset"
       @toggle-raster-layer="toggleRasterLayer"
+      class="default-layout__data-set-controls"
     />
 
     <time-stamp
       v-show="activeTimestamp !== '' && getActiveRasterLayer"
-      class="default-layout__timestamp"
       @update-timestep="removeInfoText"
+      class="default-layout__timestamp"
     />
 
     <nuxt />
@@ -85,6 +89,7 @@
       mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
       locationsLayers: [],
       activeLocation: null,
+      mapLoaded: false,
       geometry: {
         type: 'Point',
         coordinates: [],
@@ -197,6 +202,7 @@
           console.log({ err })
         })
       this.setGeographicalScope('global')
+      this.mapLoaded = true
     },
     methods: {
       ...mapMutations('map', [
