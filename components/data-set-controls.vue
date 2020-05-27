@@ -31,8 +31,7 @@
           />
         </div>
         <div v-if="getActiveRasterLayer === dataset.id" class="data-set-controls__legend">
-          <layer-legend class="data-set-controls__legend-bar" />
-          <p>[{{ dataset.units }}]</p>
+          <layer-legend class="data-set-controls__legend-bar" :unit="dataset.units" />
         </div>
       </li>
     </ul>
