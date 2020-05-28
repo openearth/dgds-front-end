@@ -17,8 +17,8 @@
       <rect width="100" height="10" x="0" y="0" fill="url('#gradient')" />
     </svg>
     <div class="layer-legend__range unselectable">
-      <div v-if="!editingRange" class="layer-legend__range-min" @click="editRange">
-        {{ minValue }}{{ unit }}
+      <div v-if="!editingRange" class="layer-legend__range-min">
+        <ui-button kind="quiet" @click="editRange">{{ minValue }}{{ unit }}</ui-button>
       </div>
       <div v-else class="layer-legend__range-min layer-legend__range-min--editing">
         <ui-text-input
@@ -30,7 +30,7 @@
         />
       </div>
       <div v-if="!editingRange" class="layer-legend__range-max" @click="editRange">
-        {{ maxValue }}{{ unit }}
+        <ui-button kind="quiet" @click="editRange">{{ maxValue }}{{ unit }}</ui-button>
       </div>
       <div v-else class="layer-legend__range-max layer-legend__range-max--editing">
         <ui-text-input
@@ -87,10 +87,6 @@
 </script>
 
 <style>
-  .layer-legend {
-    max-width: 300px;
-  }
-
   .layer-legend__range {
     display: flex;
     justify-content: space-between;
@@ -103,6 +99,10 @@
     padding: 10px;
   }
 
+  .layer-legend__range .ui-button--quiet {
+    color: var(--color-text-color);
+  }
+
   .layer-legend__range-min,
   .layer-legend__range-max {
     cursor: pointer;
@@ -110,12 +110,18 @@
 
   .layer-legend__range-min--editing,
   .layer-legend__range-max--editing {
-    flex: 0 0 85px;
+    padding: 10px 0 0;
+    flex: 0 0 115px;
+    max-width: 115px;
+  }
+
+  .layer-legend__range-min--editing .ui-text-input input,
+  .layer-legend__range-max--editing .ui-text-input input {
+    max-width: 75px;
   }
 
   .layer-legend__range-max--editing {
     text-align: right;
-    margin-left: auto;
   }
 
   .layer-legend__range-save {
