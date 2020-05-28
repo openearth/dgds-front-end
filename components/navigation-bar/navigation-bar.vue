@@ -14,7 +14,6 @@
         <div class="navigation-bar__list-item">
           <ui-button-icon
             :class="{ 'ui-button-icon--active': isActive(theme.id) }"
-            kind="quiet"
             @click="toggleTheme(theme.id)"
           >
             <icon :name="`theme-${theme.id}`" />
@@ -134,7 +133,7 @@
   .ui-button-icon__label {
     position: absolute;
     left: 5rem;
-    min-width: 150px;
+    min-width: 160px;
     transform: translateX(-10px);
     transition: opacity 0.1s ease, transform 0.2s ease;
     opacity: 0;
@@ -157,6 +156,11 @@
     height: auto;
     padding: 0.75rem var(--spacing-default);
     border-radius: 0;
+  }
+
+  .navigation-bar .ui-button-icon:hover .ui-button-icon__label {
+    opacity: 1;
+    transform: translateX(15px);
   }
 
   .navigation-bar__list:first-of-type .ui-button-icon .icon {
