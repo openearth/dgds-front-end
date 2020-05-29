@@ -6,21 +6,26 @@
       </h2>
     </template>
     <template v-slot:body>
-      <graph-line
-        v-for="(data, index) in datasets"
-        :key="index"
-        :image-url="data.imageUrl"
-        :category="data.category"
-        :series="[data.serie]"
-        :title="data.datasetName"
-        :theme="activeTheme"
-        :collapsible="true"
-        :units="data.units"
-        :type="data.type"
-        :parameter-id="data.id"
-        :set-mark-point="data.id === getActiveRasterLayer"
-        :time-step="getTimeStep"
-      />
+      <template v-if="hasSerieData">
+        <graph-line
+          v-for="(data, index) in datasets"
+          :key="index"
+          :image-url="data.imageUrl"
+          :category="data.category"
+          :series="[data.serie]"
+          :title="data.datasetName"
+          :theme="activeTheme"
+          :collapsible="true"
+          :units="data.units"
+          :type="data.type"
+          :parameter-id="data.id"
+          :set-mark-point="data.id === getActiveRasterLayer"
+          :time-step="getTimeStep"
+        />
+      </template>
+      <template v-else>
+        <p>No data available.</p>
+      </template>
     </template>
   </ui-tray>
 </template>
@@ -51,6 +56,9 @@
         )
 
         return flatten(result)
+      },
+      hasSerieData() {
+        return this.datasets[0] && this.datasets[0].serie.length
       },
       locations() {
         return this.$route.params.locationId

@@ -34,7 +34,9 @@
     },
     mounted() {
       this.map = this.getMap()
-      this.updateMap()
+      if (this.map) {
+        this.updateMap()
+      }
     },
     beforeDestroy() {
       const layer = this.layer
