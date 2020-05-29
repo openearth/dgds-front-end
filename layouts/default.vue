@@ -40,15 +40,15 @@
 
     <data-set-controls
       :datasets="datasetsInActiveTheme"
+      class="default-layout__data-set-controls"
       @toggle-location-dataset="toggleLocationDataset"
       @toggle-raster-layer="toggleRasterLayer"
-      class="default-layout__data-set-controls"
     />
 
     <time-stamp
       v-show="activeTimestamp !== '' && getActiveRasterLayer"
-      @update-timestep="removeInfoText"
       class="default-layout__timestamp"
+      @update-timestep="removeInfoText"
     />
 
     <nuxt />
