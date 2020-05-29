@@ -34,9 +34,7 @@
     },
     mounted() {
       this.map = this.getMap()
-      if (this.map.loaded()) {
-        this.updateMap()
-      }
+      this.updateMap()
     },
     beforeDestroy() {
       const layer = this.layer
@@ -47,9 +45,6 @@
       }
     },
     methods: {
-      deferredMountedTo(map) {
-        this.updateMap()
-      },
       updateMap() {
         if (this.map.getLayer(this.layer.id)) {
           this.map.setFilter(this.layer.id, this.layer.filter)

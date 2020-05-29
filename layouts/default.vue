@@ -7,12 +7,14 @@
     class="default-layout"
   >
     <client-only>
+      <!-- TODO: now usign an blanc style as background due to disappearing text labels,
+    use custom style again -->
       <v-mapbox
         id="map"
         ref="map"
         :access-token="mapboxAccessToken"
         container="map"
-        map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
+        map-style="mapbox://styles/global-data-viewer/ckaqyfcc63q1w1io3l3bpd50h?fresh=true"
       >
         <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" />
         <v-mapbox-selected-point-layer v-if="mapLoaded" :geometry="geometry" />
@@ -21,14 +23,16 @@
           :geometry="infoTextGeometry"
           :message="mapboxMessage"
         />
-        <v-mapbox-vector-layer
-          v-for="vectorLayer in vectorLayers"
-          :key="vectorLayer.id"
-          :name="vectorLayer.id"
-          :layer="vectorLayer"
-          :active-theme="activeTheme"
-          @select-locations="selectLocations"
-        />
+        <template v-if="mapLoaded">
+          <v-mapbox-vector-layer
+            v-for="vectorLayer in vectorLayers"
+            :key="vectorLayer.id"
+            :name="vectorLayer.id"
+            :layer="vectorLayer"
+            :active-theme="activeTheme"
+            @select-locations="selectLocations"
+          />
+        </template>
         <v-mapbox-raster-layer v-if="mapLoaded" :options="rasterLayer" @click="getFeatureInfo" />
         <v-mapbox-flowmap-layer v-if="mapLoaded && showFlowmapLayer" :options="flowmapLayer" />
       </v-mapbox>
@@ -202,7 +206,39 @@
           console.log({ err })
         })
       this.setGeographicalScope('global')
-      this.mapLoaded = true
+      this.$nextTick(() => {
+        // Wait for refs to be loaded
+        this.map = this.$refs.map.map
+        this.map.on('load', () => {
+          // Wait for map to be loaded and then add background labels and features
+          this.map.addLayer({
+            id: 'background-labels',
+            type: 'raster',
+            source: {
+              type: 'raster',
+              tiles: [
+                'https://api.mapbox.com/styles/v1/global-data-viewer/ckarrxvmx05rv1ips1l3vgluh/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZ2xvYmFsLWRhdGEtdmlld2VyIiwiYSI6ImNqdG9lYWQ3NTFsNWk0M3Fqb2Q5dXBpeWUifQ.3DvxuGByM33VNa59rDogWw',
+              ],
+              tileSize: 256,
+            },
+          })
+          this.map.addLayer({
+            id: 'background-features',
+            type: 'raster',
+            source: {
+              type: 'raster',
+              tiles: [
+                'https://api.mapbox.com/styles/v1/global-data-viewer/ckarrxnck9xjy1iqtqt0spezq/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZ2xvYmFsLWRhdGEtdmlld2VyIiwiYSI6ImNqdG9lYWQ3NTFsNWk0M3Fqb2Q5dXBpeWUifQ.3DvxuGByM33VNa59rDogWw',
+              ],
+              tileSize: 256,
+            },
+          })
+          this.map.on('styledata', () => {
+            // Wait on changed bakground before notifying all mapbox layers to be added
+            this.mapLoaded = true
+          })
+        })
+      })
     },
     methods: {
       ...mapMutations('map', [
