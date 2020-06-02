@@ -49,7 +49,7 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
   import UiButton from '~/components/ui-button'
   import UiTextInput from '~/components/ui-text-input'
 
@@ -69,18 +69,31 @@
       }
     },
     computed: {
-      ...mapGetters('map', ['activeRasterLegendData']),
+      ...mapGetters('map', ['activeRasterData', 'activeRasterLegendData']),
     },
     mounted() {
-      this.minValue = this.activeRasterLegendData.min
-      this.maxValue = this.activeRasterLegendData.max
+      const { min, max } = this.activeRasterLegendData
+      this.minValue = min.toString()
+      this.maxValue = max.toString()
     },
     methods: {
+      ...mapActions('map', ['retrieveRasterLayerByImageId']),
       editRange() {
         this.editingRange = true
       },
       saveRange() {
         this.editingRange = false
+
+        this.postUpdatedRange()
+      },
+      postUpdatedRange(id) {
+        const { imageId } = this.activeRasterData
+        const range = {
+          min: this.minValue,
+          max: this.maxValue,
+        }
+
+        this.retrieveRasterLayerByImageId({ imageId, range })
       },
     },
   }
