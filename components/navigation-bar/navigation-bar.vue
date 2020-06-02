@@ -158,7 +158,7 @@
     border-radius: 0;
   }
 
-  .navigation-bar .ui-button-icon:hover .ui-button-icon__label {
+  .navigation-bar__list .ui-button-icon:hover .ui-button-icon__label {
     opacity: 1;
     transform: translateX(15px);
   }
