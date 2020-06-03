@@ -11,8 +11,8 @@
         id="map"
         ref="map"
         :access-token="mapboxAccessToken"
-        map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
         :preserve-drawing-buffer="true"
+        map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
       >
         <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" />
         <v-mapbox-selected-point-layer :geometry="geometry" />
