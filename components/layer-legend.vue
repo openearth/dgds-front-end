@@ -43,6 +43,7 @@
       </div>
       <div v-if="editingRange" class="layer-legend__range-buttons">
         <ui-button kind="quiet" @click="editingRange = false">Cancel</ui-button>
+        <ui-button kind="secondary" @click="resetRange">Reset</ui-button>
         <ui-button kind="primary" @click="saveRange">Save</ui-button>
       </div>
     </div>
@@ -65,7 +66,9 @@
     data() {
       return {
         editingRange: false,
+        defaultMinValue: '',
         minValue: '',
+        defaultMaxValue: '',
         maxValue: '',
       }
     },
@@ -75,7 +78,9 @@
     mounted() {
       const { min, max } = this.activeRasterLegendData
       this.minValue = min.toString()
+      this.defaultMinValue = min.toString()
       this.maxValue = max.toString()
+      this.defaultMaxValue = max.toString()
     },
     methods: {
       ...mapActions('map', ['retrieveRasterLayerByImageId']),
@@ -87,7 +92,11 @@
 
         this.postUpdatedRange()
       },
-      postUpdatedRange(id) {
+      resetRange() {
+        this.minValue = this.defaultMinValue
+        this.maxValue = this.defaultMaxValue
+      },
+      postUpdatedRange() {
         const { imageId } = this.activeRasterData
         const range = {
           min: this.minValue,
@@ -141,11 +150,11 @@
   .layer-legend__range-buttons {
     display: flex;
     flex: 1 1 100%;
-    justify-content: flex-end;
     margin-top: 10px;
   }
 
-  .layer-legend__range-buttons .ui-button {
-    margin-left: 10px;
+  .layer-legend__range-buttons .ui-button--secondary {
+    margin-right: 10px;
+    margin-left: auto;
   }
 </style>
