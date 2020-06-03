@@ -8,13 +8,13 @@
   >
     <ui-button-icon
       v-if="collapsible"
+      @click="toggleCollapsedDataset(parameterId)"
       class="graph-line__toggle"
       label="Toggle"
-      @click="toggleCollapsedDataset(parameterId)"
     >
       <icon name="action-chevron-down" />
     </ui-button-icon>
-    <figcaption class="graph-line__caption strong" @click="toggleCollapsedDataset(parameterId)">
+    <figcaption @click="toggleCollapsedDataset(parameterId)" class="graph-line__caption strong">
       {{ title }}
     </figcaption>
     <div v-if="!isCollapsed" :class="{ image: type === 'images' }" class="graph-line__aspect-ratio">
@@ -26,8 +26,21 @@
         class="graph-line__chart"
       />
       <img v-if="type === 'images'" :src="imageUrl" class="graph-line__chart graph-image" />
-      <ui-button v-if="user" class="graph-line__download" kind="secondary" @click="download">
+      <ui-button
+        v-if="user && type !== 'images'"
+        @click="downloadJson"
+        class="graph-line__download"
+        kind="secondary"
+      >
         Download data
+      </ui-button>
+      <ui-button
+        v-if="user && type === 'images'"
+        @click="downloadImage"
+        class="graph-line__download"
+        kind="secondary"
+      >
+        Download image
       </ui-button>
       <p v-else class="graph-line__message">
         <icon name="info" />
@@ -253,7 +266,7 @@
         const result = merge(dataOptions, baseOptions, theme)
         return result
       },
-      download() {
+      downloadJson() {
         const fileName = `${this.title}.json`
 
         const data = {
@@ -270,6 +283,11 @@
 
         // Save the file
         saveAs(fileToSave, fileName)
+      },
+      downloadImage() {
+        const fileName = `${this.title}.svg`
+        // Save the file
+        saveAs(this.imageUrl, fileName)
       },
     },
   }
