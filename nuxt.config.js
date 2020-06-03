@@ -67,6 +67,7 @@ export default {
     { src: '~/plugins/bootstrap', ssr: false },
     { src: '~/plugins/polyfills', ssr: false },
     { src: '~/plugins/vuelidate', ssr: false },
+    { src: '~/plugins/vue-gtag', ssr: false },
   ],
 
   /*
