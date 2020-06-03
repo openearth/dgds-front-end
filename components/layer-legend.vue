@@ -42,7 +42,7 @@
         />
       </div>
       <div v-if="editingRange" class="layer-legend__range-buttons">
-        <ui-button kind="quiet" @click="editingRange = false">Cancel</ui-button>
+        <ui-button kind="quiet" @click="cancelEditRange">Cancel</ui-button>
         <ui-button kind="secondary" @click="resetRange">Reset</ui-button>
         <ui-button kind="primary" @click="saveRange">Save</ui-button>
       </div>
@@ -84,6 +84,12 @@
     },
     methods: {
       ...mapActions('map', ['retrieveRasterLayerByImageId']),
+      cancelEditRange() {
+        this.minValue = this.defaultMinValue
+        this.maxValue = this.defaultMaxValue
+
+        this.editingRange = false
+      },
       editRange() {
         this.editingRange = true
       },
