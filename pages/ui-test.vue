@@ -91,6 +91,18 @@
     </section>
     <section class="section">
       <h2 class="h2">
+        Input
+      </h2>
+      <ui-text-input
+        id="text-input"
+        v-model="textInput"
+        type="text"
+        label="Input label"
+        placeholder="placeholder"
+      />
+    </section>
+    <section class="section">
+      <h2 class="h2">
         Typography
       </h2>
       <h1>The quick brown fox jumps over the lazy dog.</h1>
@@ -128,6 +140,7 @@
   import UiButtonIcon from '../components/ui-button-icon'
   import Icon from '~/components/icon'
   import UiSelect from '~/components/ui-select'
+  import UiTextInput from '~/components/ui-text-input'
 
   export default {
     layout: 'ui-test',
@@ -139,6 +152,7 @@
       UiCheckbox,
       Icon,
       UiSelect,
+      UiTextInput,
     },
     data() {
       return {
@@ -157,6 +171,7 @@
           },
         ],
         selectedOption: 'option1',
+        textInput: '',
       }
     },
   }
