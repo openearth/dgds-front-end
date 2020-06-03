@@ -41,8 +41,9 @@
           placeholder="Max value"
         />
       </div>
-      <div v-if="editingRange" class="layer-legend__range-save">
-        <ui-button kind="secondary" @click="saveRange">Save</ui-button>
+      <div v-if="editingRange" class="layer-legend__range-buttons">
+        <ui-button kind="quiet" @click="editingRange = false">Cancel</ui-button>
+        <ui-button kind="primary" @click="saveRange">Save</ui-button>
       </div>
     </div>
   </div>
@@ -102,9 +103,9 @@
 <style>
   .layer-legend__range {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
     flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
     width: 100%;
   }
 
@@ -123,9 +124,9 @@
 
   .layer-legend__range-min--editing,
   .layer-legend__range-max--editing {
-    padding: 10px 0 0;
     flex: 0 0 115px;
     max-width: 115px;
+    padding: 10px 0 0;
   }
 
   .layer-legend__range-min--editing .ui-text-input input,
@@ -137,12 +138,14 @@
     text-align: right;
   }
 
-  .layer-legend__range-save {
+  .layer-legend__range-buttons {
+    display: flex;
     flex: 1 1 100%;
+    justify-content: flex-end;
     margin-top: 10px;
   }
 
-  .layer-legend__range-save .ui-button {
-    float: right;
+  .layer-legend__range-buttons .ui-button {
+    margin-left: 10px;
   }
 </style>
