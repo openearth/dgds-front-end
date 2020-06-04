@@ -4,7 +4,12 @@
     class="navigation-bar"
     @transitionend="onTransitionEnd"
   >
-    <ui-button-icon class="navigation-bar__logo" kind="quiet" @click="resetSettings">
+    <ui-button-icon
+      data-v-step="1"
+      class="navigation-bar__logo"
+      kind="quiet"
+      @click="resetSettings"
+    >
       <icon name="deltares" size="large" />
       <span class="ui-button-icon__label bodytext-m">Deltares</span>
     </ui-button-icon>
@@ -13,6 +18,7 @@
       <li v-for="(theme, key) in getThemes" :key="key">
         <div class="navigation-bar__list-item">
           <ui-button-icon
+            :data-v-step="theme.name === 'Flooding' ? '2' : false"
             :class="{ 'ui-button-icon--active': isActive(theme.id) }"
             @click="toggleTheme(theme.id)"
           >

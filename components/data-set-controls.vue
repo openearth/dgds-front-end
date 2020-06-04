@@ -1,10 +1,14 @@
 <template>
-  <panel class="data-set-controls">
+  <panel class="data-set-controls" data-v-step="3">
     <template v-slot:header>
       <h3 class="h4">{{ themeName }}</h3>
     </template>
     <ul class="data-set-controls__list">
-      <li v-for="dataset in datasets" :key="dataset.id">
+      <li
+        v-for="(dataset, index) in datasets"
+        :key="dataset.id"
+        :data-v-step="index === 1 ? '4' : false"
+      >
         <div class="data-set-controls__item">
           <icon :name="`dataset-${dataset.id}`" />
           <span class="data-set-controls__item-title">{{ dataset.name }}</span>

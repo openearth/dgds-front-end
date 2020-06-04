@@ -13,6 +13,7 @@
         :access-token="mapboxAccessToken"
         :preserve-drawing-buffer="true"
         map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
+        data-v-step="5"
       >
         <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" />
         <v-mapbox-selected-point-layer :geometry="geometry" />
@@ -87,27 +88,90 @@
       VMapboxInfoTextLayer,
       Sidebar,
     },
-    data: () => ({
-      mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
-      locationsLayers: [],
-      activeLocation: null,
-      geometry: {
-        type: 'Point',
-        coordinates: [],
-      },
-      infoTextGeometry: {
-        type: 'Point',
-        coordinates: [],
-      },
-      mapboxMessage: '',
-    }),
+    data() {
+      return {
+        mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
+        locationsLayers: [],
+        activeLocation: null,
+        geometry: {
+          type: 'Point',
+          coordinates: [],
+        },
+        infoTextGeometry: {
+          type: 'Point',
+          coordinates: [],
+        },
+        mapboxMessage: '',
+        introductionCallbacks: {
+          onNextStep: this.stepCallback,
+          onPreviousStep: this.stepCallback,
+          onFinish: this.finishCallback,
+        },
+        introductionOptions: {
+          useKeyboardNavigation: true,
+          labels: {
+            buttonSkip: 'Skip introduction',
+          },
+        },
+        introductionSteps: [
+          {
+            target: '[data-v-step="1"]',
+            content: 'Welcome to BlueEarth Data!',
+            params: {
+              placement: 'right',
+            },
+          },
+          {
+            target: '[data-v-step="2"]',
+            content: 'BlueEarth Data is organized by theme.',
+            params: {
+              placement: 'right',
+            },
+          },
+          {
+            target: '[data-v-step="3"]',
+            content: 'Datasets for each theme are listed here.',
+            params: {
+              placement: 'left',
+            },
+          },
+          {
+            target: '[data-v-step="4"]',
+            content: 'Toggle spatial maps and time series for each dataset.',
+            params: {
+              placement: 'bottom',
+            },
+          },
+          {
+            target: '[data-v-step="5"]',
+            content: 'Click on a data point on the map to see more details.',
+            params: {
+              placement: 'bottom',
+            },
+          },
+          {
+            target: '[data-v-step="6"]',
+            content: 'You can download data if you are registered and logged in.',
+            params: {
+              placement: 'bottom',
+            },
+          },
+          {
+            target: '[data-v-step="6"]',
+            content: 'Have fun!',
+            params: {
+              placement: 'bottom',
+            },
+          },
+        ],
+      }
+    },
     computed: {
       ...mapState('preferences', ['theme', 'sidebarAnimating', 'sidebarExpanded']),
       ...mapState('map', ['activeLocationIds', 'loadingRasterLayers']),
       ...mapGetters('map', [
         'activeRasterData',
         'activeFlowmapData',
-
         'activeVectorData',
         'activeDatasetsLocations',
         'datasetsInActiveTheme',
@@ -190,6 +254,9 @@
       },
     },
     mounted() {
+      this.$tours.introductionTour.start()
+      this.setGeographicalScope('global')
+
       auth
         .getUser()
         .then(user => {
@@ -202,7 +269,6 @@
         .catch(err => {
           console.log({ err })
         })
-      this.setGeographicalScope('global')
     },
     methods: {
       ...mapMutations('map', [
@@ -215,6 +281,18 @@
           type: 'Point',
           coordinates: [],
         }
+      },
+      stepCallback(step) {
+        if (step === 2) {
+          this.$router.push({ path: '/wl' })
+        }
+
+        if (step === 3) {
+          this.$router.push({ path: '/wl/diva_idp_med_10' })
+        }
+      },
+      finishCallback() {
+        this.$router.push({ path: '/' })
       },
       updateFilter(layer) {
         // if there is a filterIds, concatenate the values into filter
