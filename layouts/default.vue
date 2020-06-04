@@ -48,6 +48,12 @@
     <sidebar />
 
     <disclaimer-modal />
+
+    <v-tour
+      name="introductionTour"
+      :steps="introductionSteps"
+      :callbacks="introductionCallbacks"
+    ></v-tour>
   </div>
 </template>
 
