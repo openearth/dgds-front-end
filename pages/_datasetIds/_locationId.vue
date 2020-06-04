@@ -1,5 +1,5 @@
 <template>
-  <ui-tray @on-close="close" class="location">
+  <ui-tray class="location" @on-close="close">
     <template v-slot:header>
       <h2 class="h3">
         {{ locations }}
