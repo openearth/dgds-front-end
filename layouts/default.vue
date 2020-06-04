@@ -13,6 +13,7 @@
         id="map"
         ref="map"
         :access-token="mapboxAccessToken"
+        @mb-load="setStyleLayers"
         container="map"
         map-style="mapbox://styles/global-data-viewer/ckaqyfcc63q1w1io3l3bpd50h?fresh=true"
       >
@@ -40,15 +41,15 @@
 
     <data-set-controls
       :datasets="datasetsInActiveTheme"
-      class="default-layout__data-set-controls"
       @toggle-location-dataset="toggleLocationDataset"
       @toggle-raster-layer="toggleRasterLayer"
+      class="default-layout__data-set-controls"
     />
 
     <time-stamp
       v-show="activeTimestamp !== '' && getActiveRasterLayer"
-      class="default-layout__timestamp"
       @update-timestep="removeInfoText"
+      class="default-layout__timestamp"
     />
 
     <nuxt />
@@ -206,39 +207,6 @@
           console.log({ err })
         })
       this.setGeographicalScope('global')
-      this.$nextTick(() => {
-        // Wait for refs to be loaded
-        this.map = this.$refs.map.map
-        this.map.on('load', () => {
-          // Wait for map to be loaded and then add background labels and features
-          this.map.addLayer({
-            id: 'background-labels',
-            type: 'raster',
-            source: {
-              type: 'raster',
-              tiles: [
-                'https://api.mapbox.com/styles/v1/global-data-viewer/ckarrxvmx05rv1ips1l3vgluh/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZ2xvYmFsLWRhdGEtdmlld2VyIiwiYSI6ImNqdG9lYWQ3NTFsNWk0M3Fqb2Q5dXBpeWUifQ.3DvxuGByM33VNa59rDogWw',
-              ],
-              tileSize: 256,
-            },
-          })
-          this.map.addLayer({
-            id: 'background-features',
-            type: 'raster',
-            source: {
-              type: 'raster',
-              tiles: [
-                'https://api.mapbox.com/styles/v1/global-data-viewer/ckarrxnck9xjy1iqtqt0spezq/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiZ2xvYmFsLWRhdGEtdmlld2VyIiwiYSI6ImNqdG9lYWQ3NTFsNWk0M3Fqb2Q5dXBpeWUifQ.3DvxuGByM33VNa59rDogWw',
-              ],
-              tileSize: 256,
-            },
-          })
-          this.map.on('styledata', () => {
-            // Wait on changed bakground before notifying all mapbox layers to be added
-            this.mapLoaded = true
-          })
-        })
-      })
     },
     methods: {
       ...mapMutations('map', [
@@ -246,6 +214,39 @@
         'setActiveRasterLayer',
         'setGeographicalScope',
       ]),
+
+      setStyleLayers() {
+        // Wait for refs to be loaded
+        console.log(this.$refs, _.get(this.$refs, 'map.map'))
+        this.map = this.$refs.map.map
+        // Wait for map to be loaded and then add background labels and features
+        this.map.addLayer({
+          id: 'background-labels',
+          type: 'raster',
+          source: {
+            type: 'raster',
+            tiles: [
+              `https://api.mapbox.com/styles/v1/global-data-viewer/ckarrxvmx05rv1ips1l3vgluh/tiles/256/{z}/{x}/{y}@2x?access_token=${this.mapboxAccessToken}`,
+            ],
+            tileSize: 256,
+          },
+        })
+        this.map.addLayer({
+          id: 'background-features',
+          type: 'raster',
+          source: {
+            type: 'raster',
+            tiles: [
+              `https://api.mapbox.com/styles/v1/global-data-viewer/ckarrxnck9xjy1iqtqt0spezq/tiles/256/{z}/{x}/{y}@2x?access_token=${this.mapboxAccessToken}`,
+            ],
+            tileSize: 256,
+          },
+        })
+        this.map.on('styledata', () => {
+          // Wait on changed bakground before notifying all mapbox layers to be added
+          this.mapLoaded = true
+        })
+      },
       removeInfoText() {
         this.infoTextGeometry = {
           type: 'Point',
