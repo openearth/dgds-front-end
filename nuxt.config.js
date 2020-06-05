@@ -57,6 +57,7 @@ export default {
     '~/css/transitions.css',
     '~/css/typography.css',
     '~/css/markdown.css',
+    '~/css/tour.css',
   ],
 
   /*
