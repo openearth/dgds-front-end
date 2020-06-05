@@ -37,7 +37,7 @@
         </ui-button-icon>
       </li>
       <li>
-        <ui-button-icon @click="toggleAccount" data-v-step="6">
+        <ui-button-icon data-v-step="6" @click="toggleAccount">
           <icon name="account" />
           <span class="ui-button-icon__label bodytext-m">Account</span>
         </ui-button-icon>
