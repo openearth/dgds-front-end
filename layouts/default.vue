@@ -88,76 +88,74 @@
       VMapboxInfoTextLayer,
       Sidebar,
     },
-    data() {
-      return {
-        mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
-        locationsLayers: [],
-        activeLocation: null,
-        geometry: {
-          type: 'Point',
-          coordinates: [],
+    data: () => ({
+      mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
+      locationsLayers: [],
+      activeLocation: null,
+      geometry: {
+        type: 'Point',
+        coordinates: [],
+      },
+      infoTextGeometry: {
+        type: 'Point',
+        coordinates: [],
+      },
+      mapboxMessage: '',
+      introductionOptions: {
+        useKeyboardNavigation: true,
+      },
+      introductionSteps: [
+        {
+          target: '[data-v-step="1"]',
+          content: 'Welcome to BlueEarth Data!',
+          params: {
+            placement: 'right',
+          },
         },
-        infoTextGeometry: {
-          type: 'Point',
-          coordinates: [],
+        {
+          target: '[data-v-step="2"]',
+          content: 'BlueEarth Data is organized by theme.',
+          params: {
+            placement: 'right',
+          },
         },
-        mapboxMessage: '',
-        introductionOptions: {
-          useKeyboardNavigation: true,
+        {
+          target: '[data-v-step="3"]',
+          content: 'Datasets for each theme are listed here.',
+          params: {
+            placement: 'left',
+          },
         },
-        introductionSteps: [
-          {
-            target: '[data-v-step="1"]',
-            content: 'Welcome to BlueEarth Data!',
-            params: {
-              placement: 'right',
-            },
+        {
+          target: '[data-v-step="4"]',
+          content: 'Toggle spatial maps and time series for each dataset.',
+          params: {
+            placement: 'bottom',
           },
-          {
-            target: '[data-v-step="2"]',
-            content: 'BlueEarth Data is organized by theme.',
-            params: {
-              placement: 'right',
-            },
+        },
+        {
+          target: '[data-v-step="5"]',
+          content: 'Click on a data point on the map to see more details.',
+          params: {
+            placement: 'bottom',
           },
-          {
-            target: '[data-v-step="3"]',
-            content: 'Datasets for each theme are listed here.',
-            params: {
-              placement: 'left',
-            },
+        },
+        {
+          target: '[data-v-step="6"]',
+          content: 'You can download data if you are registered and logged in.',
+          params: {
+            placement: 'right',
           },
-          {
-            target: '[data-v-step="4"]',
-            content: 'Toggle spatial maps and time series for each dataset.',
-            params: {
-              placement: 'bottom',
-            },
+        },
+        {
+          target: '[data-v-step="6"]',
+          content: 'Have fun!',
+          params: {
+            placement: 'right',
           },
-          {
-            target: '[data-v-step="5"]',
-            content: 'Click on a data point on the map to see more details.',
-            params: {
-              placement: 'bottom',
-            },
-          },
-          {
-            target: '[data-v-step="6"]',
-            content: 'You can download data if you are registered and logged in.',
-            params: {
-              placement: 'right',
-            },
-          },
-          {
-            target: '[data-v-step="6"]',
-            content: 'Have fun!',
-            params: {
-              placement: 'right',
-            },
-          },
-        ],
-      }
-    },
+        },
+      ],
+    }),
     computed: {
       ...mapState('preferences', ['theme', 'sidebarAnimating', 'sidebarExpanded']),
       ...mapState('map', ['activeLocationIds', 'loadingRasterLayers']),
