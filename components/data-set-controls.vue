@@ -24,7 +24,7 @@
               @click="toggleRasterLayer(dataset.id)"
             />
           </div>
-          <div v-if="dataset.toolTip" @click="onTooltipClick(dataset.id)" class="tooltip">
+          <div v-if="dataset.toolTip" class="tooltip" @click="onTooltipClick(dataset.id)">
             <icon name="info" />
           </div>
         </div>
@@ -42,10 +42,10 @@
           <ui-select
             id="layer-options-dropdown"
             v-model="selectedLayer"
-            @change="updateRasterLayer"
             :options="optionItems(dataset.layerOptions)"
             :label="`Configure ${dataset.name} layer`"
             class="data-set-controls__select-layer"
+            @change="updateRasterLayer"
           />
         </div>
         <div v-if="getActiveRasterLayer === dataset.id" class="data-set-controls__legend">
