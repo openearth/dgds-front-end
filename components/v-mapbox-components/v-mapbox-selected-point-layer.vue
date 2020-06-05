@@ -46,13 +46,12 @@
         this.map.moveLayer(this.selectedLayer.id)
       },
     },
-    methods: {
-      deferredMountedTo(map) {
-        this.map = map
-        this.selectedLayer.source.data = this.geometry
-        map.addLayer(this.selectedLayer)
-        this.map.moveLayer(this.selectedLayer.id)
-      },
+    mounted() {
+      this.map = this.getMap()
+      this.selectedLayer.source.data = this.geometry
+      this.map.addLayer(this.selectedLayer)
+      this.map.moveLayer(this.selectedLayer.id)
     },
+    inject: ['getMap'],
   }
 </script>

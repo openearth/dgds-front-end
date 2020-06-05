@@ -14,7 +14,11 @@
           </h2>
         </template>
         <template v-slot:body>
-          <vue-markdown class="markdown" :source="aboutText" />
+          <vue-markdown
+            class="markdown"
+            :source="aboutText"
+            :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+          />
         </template>
       </ui-tray>
     </transition>
