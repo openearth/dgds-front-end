@@ -100,8 +100,9 @@
       ...mapActions('map', ['retrieveRasterLayerByImageId']),
       getNewRasterLayer(serie) {
         if (this.getActiveRasterLayer) {
+          const imageId = _.get(serie, 'imageId')
           // For each update of the timeslider adjust the raster layer to the new time
-          this.retrieveRasterLayerByImageId(_.get(serie, 'imageId'))
+          this.retrieveRasterLayerByImageId({ imageId })
           this.$emit('update-timestep')
         }
       },
