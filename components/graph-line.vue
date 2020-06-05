@@ -8,13 +8,13 @@
   >
     <ui-button-icon
       v-if="collapsible"
+      @click="toggleCollapsedDataset(parameterId)"
       class="graph-line__toggle"
       label="Toggle"
-      @click="toggleCollapsedDataset(parameterId)"
     >
       <icon name="action-chevron-down" />
     </ui-button-icon>
-    <figcaption class="graph-line__caption strong" @click="toggleCollapsedDataset(parameterId)">
+    <figcaption @click="toggleCollapsedDataset(parameterId)" class="graph-line__caption strong">
       {{ title }}
     </figcaption>
     <div
@@ -32,17 +32,17 @@
       <img v-else :src="imageUrl" class="graph-line__image" />
       <ui-button
         v-if="user && (isLine || isScatter)"
+        @click="downloadJson"
         class="graph-line__download"
         kind="secondary"
-        @click="downloadJson"
       >
         Download data
       </ui-button>
       <ui-button
         v-if="user && isImage"
+        @click="downloadImage"
         class="graph-line__download"
         kind="secondary"
-        @click="downloadImage"
       >
         Download image
       </ui-button>
@@ -209,9 +209,6 @@
       isScatter() {
         return this.type === 'scatter'
       },
-    },
-    methods: {
-      ...mapMutations('map', ['toggleCollapsedDataset']),
       graphData() {
         let series = []
         let markPointCoord = []
@@ -275,6 +272,10 @@
         const result = merge(dataOptions, baseOptions, theme)
         return result
       },
+    },
+    methods: {
+      ...mapMutations('map', ['toggleCollapsedDataset']),
+
       downloadJson() {
         const fileName = `${this.title}.json`
 
