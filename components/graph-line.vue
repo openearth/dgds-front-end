@@ -303,20 +303,13 @@
 </script>
 
 <style>
-  .graph-image {
-    height: 600px;
-    background-repeat: no-repeat;
-    background-size: 50% 100%;
-  }
-
   .graph-line {
     position: relative;
-    --caption-height: 3rem;
   }
 
   .graph-line__aspect-ratio {
     position: relative;
-    min-height: 360px;
+    min-height: 400px;
   }
 
   .graph-line__aspect-ratio--image {
@@ -328,7 +321,13 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 90%;
+    height: 85%;
+  }
+
+  .graph-line__image {
+    height: 600px;
+    background-repeat: no-repeat;
+    background-size: 50% 100%;
   }
 
   .graph-line__collapsible .graph-line__caption {
@@ -349,7 +348,7 @@
   }
 
   .graph-line__caption {
-    height: var(--caption-height);
+    height: 3rem;
     padding: var(--spacing-small);
     background-color: var(--color-background);
   }
