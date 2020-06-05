@@ -50,11 +50,7 @@
 
     <disclaimer-modal />
 
-    <v-tour
-      name="introductionTour"
-      :steps="introductionSteps"
-      :callbacks="introductionCallbacks"
-    ></v-tour>
+    <v-tour name="introductionTour" :steps="introductionSteps"></v-tour>
   </div>
 </template>
 
