@@ -286,8 +286,34 @@
       },
       downloadImage() {
         const fileName = `${this.title}.svg`
-        // Save the file
-        saveAs(this.imageUrl, fileName)
+
+        fetch(this.imageUrl)
+          .then(res => {
+            return res.text()
+          })
+          .then(response => {
+            // create elements
+            const parser = new DOMParser()
+            const doc = parser.parseFromString(response, 'image/svg+xml')
+            const svg = doc.getElementsByTagName('svg')[0]
+            const style = document.createElement('style')
+
+            // set style
+            style.innerHTML = `svg {
+              background-color: black;
+            }`
+            svg.append(style)
+
+            // convert to url
+            const data = new XMLSerializer().serializeToString(doc)
+            const svgBlob = new Blob([data], {
+              type: 'image/svg+xml;charset=utf-8',
+            })
+            const svgUrl = URL.createObjectURL(svgBlob)
+
+            // Save the file
+            saveAs(svgUrl, fileName)
+          })
       },
     },
   }
