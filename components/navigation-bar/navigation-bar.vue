@@ -18,7 +18,7 @@
       <li v-for="(theme, key) in getThemes" :key="key">
         <div class="navigation-bar__list-item">
           <ui-button-icon
-            :data-v-step="theme.name === 'Flooding' ? '2' : false"
+            :data-v-step="key === 'fl' ? '2' : false"
             :class="{ 'ui-button-icon--active': isActive(theme.id) }"
             @click="toggleTheme(theme.id)"
           >
