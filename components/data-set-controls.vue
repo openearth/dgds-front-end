@@ -31,6 +31,7 @@
         <div v-if="dataset.toolTip && hoverId === dataset.id" class="data-set-controls__tooltip">
           <vue-markdown
             :source="dataset.toolTip"
+            :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
             class="data-set-controls__tooltip-text markdown"
           />
         </div>
