@@ -51,11 +51,13 @@ export default {
   css: [
     'mapbox-gl/dist/mapbox-gl.css',
     'material-design-icons/iconfont/material-icons.css',
+    'vue-tour/dist/vue-tour.css',
     '~/css/main.css',
     '~/css/helpers.css',
     '~/css/transitions.css',
     '~/css/typography.css',
     '~/css/markdown.css',
+    '~/css/tour.css',
   ],
 
   /*
@@ -68,6 +70,7 @@ export default {
     { src: '~/plugins/polyfills', ssr: false },
     { src: '~/plugins/vuelidate', ssr: false },
     { src: '~/plugins/vue-gtag', ssr: false },
+    { src: '~/plugins/vue-tour', ssr: false },
   ],
 
   /*

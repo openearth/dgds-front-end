@@ -13,6 +13,7 @@
         :access-token="mapboxAccessToken"
         :preserve-drawing-buffer="true"
         map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
+        data-v-step="5"
       >
         <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" />
         <v-mapbox-selected-point-layer :geometry="geometry" />
@@ -48,6 +49,8 @@
     <sidebar />
 
     <disclaimer-modal />
+
+    <v-tour name="introduction" :steps="tourSteps" :options="tourConfig"></v-tour>
   </div>
 </template>
 
@@ -57,6 +60,7 @@
   import update from 'lodash/fp/update'
   import { mapState, mapGetters, mapMutations } from 'vuex'
   import auth from '../auth'
+  import { tourConfig, tourSteps } from '../plugins/vue-tour'
   import DataSetControls from '../components/data-set-controls'
   import TimeStamp from '../components/time-stamp'
   import getVectorLayer from '../lib/mapbox/layers/get-vector-layer'
@@ -82,6 +86,8 @@
       Sidebar,
     },
     data: () => ({
+      tourConfig,
+      tourSteps,
       mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
       locationsLayers: [],
       activeLocation: null,
@@ -101,7 +107,6 @@
       ...mapGetters('map', [
         'activeRasterData',
         'activeFlowmapData',
-
         'activeVectorData',
         'activeDatasetsLocations',
         'datasetsInActiveTheme',
@@ -184,6 +189,9 @@
       },
     },
     mounted() {
+      this.$tours.introduction.start()
+      this.setGeographicalScope('global')
+
       auth
         .getUser()
         .then(user => {
@@ -196,7 +204,6 @@
         .catch(err => {
           console.log({ err })
         })
-      this.setGeographicalScope('global')
     },
     methods: {
       ...mapMutations('map', [
