@@ -25,7 +25,7 @@
       <v-chart
         v-if="isLine || isScatter"
         :ref="title"
-        :options="options"
+        :options="graphData"
         :autoresize="true"
         class="graph-line__chart"
       />
@@ -200,9 +200,6 @@
       isCollapsed() {
         return this.getCollapsedDatasets.includes(this.parameterId)
       },
-      options() {
-        const series = this.graphData()
-        return series
       isLine() {
         return this.type === 'line'
       },
