@@ -5,7 +5,6 @@
       'graph-line--collapsed': isCollapsed,
     }"
     class="graph-line"
-    data-v-step="6"
   >
     <ui-button-icon
       v-if="collapsible"

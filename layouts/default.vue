@@ -102,16 +102,8 @@
           coordinates: [],
         },
         mapboxMessage: '',
-        introductionCallbacks: {
-          onNextStep: this.stepCallback,
-          onPreviousStep: this.stepCallback,
-          onFinish: this.finishCallback,
-        },
         introductionOptions: {
           useKeyboardNavigation: true,
-          labels: {
-            buttonSkip: 'Skip introduction',
-          },
         },
         introductionSteps: [
           {
@@ -153,14 +145,14 @@
             target: '[data-v-step="6"]',
             content: 'You can download data if you are registered and logged in.',
             params: {
-              placement: 'bottom',
+              placement: 'right',
             },
           },
           {
             target: '[data-v-step="6"]',
             content: 'Have fun!',
             params: {
-              placement: 'bottom',
+              placement: 'right',
             },
           },
         ],
@@ -281,18 +273,6 @@
           type: 'Point',
           coordinates: [],
         }
-      },
-      stepCallback(step) {
-        if (step === 2) {
-          this.$router.push({ path: '/wl' })
-        }
-
-        if (step === 3) {
-          this.$router.push({ path: '/wl/diva_idp_med_10' })
-        }
-      },
-      finishCallback() {
-        this.$router.push({ path: '/' })
       },
       updateFilter(layer) {
         // if there is a filterIds, concatenate the values into filter
