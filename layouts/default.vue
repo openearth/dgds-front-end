@@ -7,41 +7,50 @@
     class="default-layout"
   >
     <client-only>
+      <!-- TODO: now usign an blanc style as background due to disappearing text labels,
+    use custom style again -->
       <v-mapbox
         id="map"
         ref="map"
         :access-token="mapboxAccessToken"
+        @mb-load="setStyleLayers"
         :preserve-drawing-buffer="true"
-        map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
+        map-style="mapbox://styles/global-data-viewer/ckaqyfcc63q1w1io3l3bpd50h?fresh=true"
         data-v-step="5"
       >
         <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" />
-        <v-mapbox-selected-point-layer :geometry="geometry" />
-        <v-mapbox-info-text-layer :geometry="infoTextGeometry" :message="mapboxMessage" />
-        <v-mapbox-vector-layer
-          v-for="vectorLayer in vectorLayers"
-          :key="vectorLayer.id"
-          :name="vectorLayer.id"
-          :layer="vectorLayer"
-          :active-theme="activeTheme"
-          @select-locations="selectLocations"
+        <v-mapbox-selected-point-layer v-if="mapLoaded" :geometry="geometry" />
+        <v-mapbox-info-text-layer
+          v-if="mapLoaded"
+          :geometry="infoTextGeometry"
+          :message="mapboxMessage"
         />
-        <v-mapbox-raster-layer :options="rasterLayer" @click="getFeatureInfo" />
-        <v-mapbox-flowmap-layer v-if="showFlowmapLayer" :options="flowmapLayer" />
+        <template v-if="mapLoaded">
+          <v-mapbox-vector-layer
+            v-for="vectorLayer in vectorLayers"
+            :key="vectorLayer.id"
+            :name="vectorLayer.id"
+            :layer="vectorLayer"
+            :active-theme="activeTheme"
+            @select-locations="selectLocations"
+          />
+        </template>
+        <v-mapbox-raster-layer v-if="mapLoaded" :options="rasterLayer" @click="getFeatureInfo" />
+        <v-mapbox-flowmap-layer v-if="mapLoaded && showFlowmapLayer" :options="flowmapLayer" />
       </v-mapbox>
     </client-only>
 
     <data-set-controls
       :datasets="datasetsInActiveTheme"
-      class="default-layout__data-set-controls"
       @toggle-location-dataset="toggleLocationDataset"
       @toggle-raster-layer="toggleRasterLayer"
+      class="default-layout__data-set-controls"
     />
 
     <time-stamp
-      v-if="activeTimestamp && getActiveRasterLayer && !loadingRasterLayers"
-      class="default-layout__timestamp"
+      v-show="activeTimestamp !== '' && getActiveRasterLayer"
       @update-timestep="removeInfoText"
+      class="default-layout__timestamp"
     />
 
     <nuxt />
@@ -91,6 +100,7 @@
       mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
       locationsLayers: [],
       activeLocation: null,
+      mapLoaded: false,
       geometry: {
         type: 'Point',
         coordinates: [],
@@ -211,6 +221,39 @@
         'setActiveRasterLayer',
         'setGeographicalScope',
       ]),
+
+      setStyleLayers() {
+        // Wait for refs to be loaded
+        console.log(this.$refs, _.get(this.$refs, 'map.map'))
+        this.map = this.$refs.map.map
+        // Wait for map to be loaded and then add background labels and features
+        this.map.addLayer({
+          id: 'background-labels',
+          type: 'raster',
+          source: {
+            type: 'raster',
+            tiles: [
+              `https://api.mapbox.com/styles/v1/global-data-viewer/ckarrxvmx05rv1ips1l3vgluh/tiles/256/{z}/{x}/{y}@2x?access_token=${this.mapboxAccessToken}`,
+            ],
+            tileSize: 256,
+          },
+        })
+        this.map.addLayer({
+          id: 'background-features',
+          type: 'raster',
+          source: {
+            type: 'raster',
+            tiles: [
+              `https://api.mapbox.com/styles/v1/global-data-viewer/ckarrxnck9xjy1iqtqt0spezq/tiles/256/{z}/{x}/{y}@2x?access_token=${this.mapboxAccessToken}`,
+            ],
+            tileSize: 256,
+          },
+        })
+        this.map.on('styledata', () => {
+          // Wait on changed bakground before notifying all mapbox layers to be added
+          this.mapLoaded = true
+        })
+      },
       removeInfoText() {
         this.infoTextGeometry = {
           type: 'Point',

@@ -35,7 +35,7 @@ describe('add', () => {
         type: 'raster',
       },
     })
-    expect(mapbox.addLayer.mock.calls[0][1]).toBe('water-border')
+    expect(mapbox.addLayer.mock.calls[0][1]).toBe('background-features')
   })
   test('dont add when tiles are empty', () => {
     const mapbox = {
@@ -66,7 +66,7 @@ describe('update', () => {
     rasterLayer.update(mapbox)
     expect(removeLayer).toHaveBeenCalledWith('raster')
     expect(removeSource).toHaveBeenCalledWith('raster')
-    expect(addLayer).toHaveBeenCalledWith(rasterLayer, 'water-border')
+    expect(addLayer).toHaveBeenCalledWith(rasterLayer, 'background-features')
   })
 
   test('do not remove layer when its not defined in mapbox', () => {
@@ -84,7 +84,7 @@ describe('update', () => {
     rasterLayer.update(mapbox)
     expect(removeLayer).not.toHaveBeenCalledWith('raster')
     expect(removeSource).not.toHaveBeenCalledWith('raster')
-    expect(addLayer).toHaveBeenCalledWith(rasterLayer, 'water-border')
+    expect(addLayer).toHaveBeenCalledWith(rasterLayer, 'background-features')
   })
 
   test('do not add new layer when tiles are empty', () => {
