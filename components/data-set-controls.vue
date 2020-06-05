@@ -36,12 +36,16 @@
         >
           <ui-select
             id="layer-options-dropdown"
-            v-model="layerSelected"
-            :options="dataset.layerOptions"
+            v-model="selectedLayer"
+            @change="updateRasterLayer"
+            :options="optionItems(dataset.layerOptions)"
+            :label="`Configure ${dataset.name} layer`"
+            class="data-set-controls__select-layer"
           />
         </div>
         <div v-if="getActiveRasterLayer === dataset.id" class="data-set-controls__legend">
-          <layer-legend class="data-set-controls__legend-bar" :unit="dataset.units" />
+          <layer-legend class="data-set-controls__legend-bar" />
+          <p>[{{ dataset.units }}]</p>
         </div>
       </li>
     </ul>
@@ -49,7 +53,7 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import VueMarkdown from 'vue-markdown'
   import _ from 'lodash'
   import Icon from './icon'
@@ -70,9 +74,22 @@
     data() {
       return {
         hoverId: null,
-        layerSelected: '',
+        selectedLayer: '',
       }
     },
+    watch: {
+      activeRasterData: {
+        handler(data) {
+          const datasets = this.getDatasets
+          const raster = datasets[this.getActiveRasterLayer]
+          if (raster.layerOptions) {
+            this.selectedLayer = raster.name
+          }
+        },
+        deep: true,
+      },
+    },
+
     computed: {
       ...mapGetters('map', [
         'getActiveRasterLayer',
@@ -83,18 +100,9 @@
       themeName() {
         return _.get(this.getActiveTheme, 'name') || 'All datasets'
       },
-      // layerSelected: {
-      //   get() {
-      //     console.log(this.activeRasterData)
-      //     return this.activeRasterData.layerOptions.find(data => data.selected === true)
-      //   },
-      //   set(val) {
-      //     console.log(val)
-      //     this.dataset
-      //   },
-      // },
     },
     methods: {
+      ...mapActions('map', ['retrieveRasterLayerByImageId']),
       onTooltipClick(id) {
         this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
       },
@@ -115,6 +123,22 @@
       },
       checkRaster(id) {
         return _.has(this.getDatasets, `${id}.raster`)
+      },
+      updateRasterLayer(value) {
+        const datasets = this.getDatasets
+        const raster = datasets[this.getActiveRasterLayer]
+        const option = raster.metadata.layerOptions.find(opt => {
+          return opt.band === this.selectedLayer
+        })
+        this.retrieveRasterLayerByImageId({ imageId: raster.raster.imageId, band: option.band })
+      },
+      optionItems(layers) {
+        // Add value to the array to use in the ui-select
+        const options = layers.map(layer => {
+          layer.value = layer.band
+          return layer
+        })
+        return options
       },
     },
   }
@@ -199,7 +223,8 @@
   }
 
   .data-set-controls__legend-bar {
-    flex: 0 0 100%;
+    flex: 1 1 auto;
+    margin-right: 0.5rem;
   }
 
   .data-set-controls__legend p {
@@ -207,5 +232,8 @@
   }
   .data-set-controls__item-radio {
     width: 32px;
+  }
+  .data-set-controls__select-layer {
+    margin-top: var(--spacing-small);
   }
 </style>

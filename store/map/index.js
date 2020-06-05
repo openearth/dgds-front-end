@@ -132,11 +132,12 @@ export const actions = {
     })
   },
 
-  retrieveRasterLayerByImageId({ commit, state, getters }, { imageId, range }) {
+  retrieveRasterLayerByImageId({ commit, state, getters }, options) {
     commit('setLoadingRasterLayers', true)
+    const imageId = options.imageId
     const dataset = getters.getActiveRasterLayer
-    const params = range ? `?min=${range.min}&max=${range.max}` : ''
-
+    let params = options.range ? `?min=${options.range.min}&max=${options.range.max}` : ''
+    params += options.band ? `?band=${options.band}` : ''
     // Retrieve complete new rasterLayer by imageId and dataset
     return getFromApi(`datasets/${dataset}/${imageId}${params}`).then(val => {
       commit('updateRasterLayer', { dataset, rasterLayer: val })
