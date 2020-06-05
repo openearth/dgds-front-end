@@ -27,6 +27,12 @@
         <p>No data available.</p>
       </template>
     </template>
+    <template v-slot:footer>
+      <p class="bodytext-s">
+        Global datasets are generated with great care but may locally contain inaccuracies. See the
+        dataset descriptions for more information.
+      </p>
+    </template>
   </ui-tray>
 </template>
 
