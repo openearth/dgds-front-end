@@ -14,7 +14,7 @@
         ref="map"
         :access-token="mapboxAccessToken"
         @mb-load="setStyleLayers"
-        container="map"
+        :preserve-drawing-buffer="true"
         map-style="mapbox://styles/global-data-viewer/ckaqyfcc63q1w1io3l3bpd50h?fresh=true"
       >
         <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" />
@@ -46,11 +46,10 @@
       class="default-layout__data-set-controls"
     />
 
-    <time-stamp
-      v-show="activeTimestamp !== '' && getActiveRasterLayer"
-      @update-timestep="removeInfoText"
-      class="default-layout__timestamp"
-    />
+    <time-stamp v-show="activeTimestamp !== '' && getActiveRasterLayer" v-if="activeTimestamp &&
+    getActiveRasterLayer && !loadingRasterLayers" <<<<<<< h-e-a-d =======
+    class="default-layout__timestamp" >>>>>>> master @update-timestep="removeInfoText"
+    class="default-layout__timestamp" />
 
     <nuxt />
 
@@ -107,7 +106,7 @@
     }),
     computed: {
       ...mapState('preferences', ['theme', 'sidebarAnimating', 'sidebarExpanded']),
-      ...mapState('map', ['activeLocationIds']),
+      ...mapState('map', ['activeLocationIds', 'loadingRasterLayers']),
       ...mapGetters('map', [
         'activeRasterData',
         'activeFlowmapData',

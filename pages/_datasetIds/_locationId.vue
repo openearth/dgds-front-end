@@ -58,7 +58,11 @@
         return flatten(result)
       },
       hasSerieData() {
-        return this.datasets[0] && this.datasets[0].serie.length
+        if (_.get(this.datasets, '[0].type') === 'images') {
+          return _.get(this.datasets, '[0].imageUrl')
+        } else {
+          return _.get(this.datasets, '[0].serie') && _.get(this.datasets, '[0].serie').length > 0
+        }
       },
       locations() {
         return this.$route.params.locationId
