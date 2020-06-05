@@ -20,7 +20,7 @@
               @click="toggleRasterLayer(dataset.id)"
             />
           </div>
-          <div v-if="dataset.toolTip" class="tooltip" @click="onTooltipClick(dataset.id)">
+          <div v-if="dataset.toolTip" @click="onTooltipClick(dataset.id)" class="tooltip">
             <icon name="info" />
           </div>
         </div>
@@ -28,6 +28,16 @@
           <vue-markdown
             :source="dataset.toolTip"
             class="data-set-controls__tooltip-text markdown"
+          />
+        </div>
+        <div
+          v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
+          class="data-set-controls__options"
+        >
+          <ui-select
+            id="layer-options-dropdown"
+            v-model="layerSelected"
+            :options="dataset.layerOptions"
           />
         </div>
         <div v-if="getActiveRasterLayer === dataset.id" class="data-set-controls__legend">
@@ -48,9 +58,10 @@
   import Panel from './panel'
   import UiRadio from './ui-radio'
   import UiToggle from './ui-toggle'
+  import UiSelect from './ui-select'
 
   export default {
-    components: { Icon, LayerLegend, Panel, UiRadio, UiToggle, VueMarkdown },
+    components: { Icon, LayerLegend, Panel, UiRadio, UiToggle, VueMarkdown, UiSelect },
     props: {
       datasets: {
         type: Array,
@@ -60,6 +71,7 @@
     data() {
       return {
         hoverId: null,
+        layerSelected: '',
       }
     },
     computed: {
@@ -72,6 +84,16 @@
       themeName() {
         return _.get(this.getActiveTheme, 'name') || 'All datasets'
       },
+      // layerSelected: {
+      //   get() {
+      //     console.log(this.activeRasterData)
+      //     return this.activeRasterData.layerOptions.find(data => data.selected === true)
+      //   },
+      //   set(val) {
+      //     console.log(val)
+      //     this.dataset
+      //   },
+      // },
     },
     methods: {
       onTooltipClick(id) {
