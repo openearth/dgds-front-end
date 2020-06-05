@@ -17,17 +17,21 @@
     <figcaption class="graph-line__caption strong" @click="toggleCollapsedDataset(parameterId)">
       {{ title }}
     </figcaption>
-    <div v-if="!isCollapsed" :class="{ image: type === 'images' }" class="graph-line__aspect-ratio">
+    <div
+      v-if="!isCollapsed"
+      :class="{ 'graph-line__aspect-ratio--image': isImage }"
+      class="graph-line__aspect-ratio"
+    >
       <v-chart
-        v-if="type === 'line' || type === 'scatter'"
+        v-if="isLine || isScatter"
         :ref="title"
         :options="options"
         :autoresize="true"
         class="graph-line__chart"
       />
-      <img v-if="type === 'images'" :src="imageUrl" class="graph-line__chart graph-image" />
+      <img v-else :src="imageUrl" class="graph-line__image" />
       <ui-button
-        v-if="user && type !== 'images'"
+        v-if="user && (isLine || isScatter)"
         class="graph-line__download"
         kind="secondary"
         @click="downloadJson"
@@ -35,14 +39,14 @@
         Download data
       </ui-button>
       <ui-button
-        v-if="user && type === 'images'"
+        v-if="user && isImage"
         class="graph-line__download"
         kind="secondary"
         @click="downloadImage"
       >
         Download image
       </ui-button>
-      <p v-else class="graph-line__message">
+      <p v-if="!user" class="graph-line__message">
         <icon name="info" />
         Please log in to download data
       </p>
@@ -199,6 +203,14 @@
       options() {
         const series = this.graphData()
         return series
+      isLine() {
+        return this.type === 'line'
+      },
+      isImage() {
+        return this.type === 'images'
+      },
+      isScatter() {
+        return this.type === 'scatter'
       },
     },
     methods: {
@@ -294,10 +306,6 @@
 </script>
 
 <style>
-  .graph-line__aspect-ratio.image {
-    height: 600px;
-  }
-
   .graph-image {
     height: 600px;
     background-repeat: no-repeat;
@@ -312,6 +320,10 @@
   .graph-line__aspect-ratio {
     position: relative;
     min-height: 360px;
+  }
+
+  .graph-line__aspect-ratio--image {
+    height: 600px;
   }
 
   .graph-line__chart {
