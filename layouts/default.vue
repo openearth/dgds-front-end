@@ -46,10 +46,11 @@
       class="default-layout__data-set-controls"
     />
 
-    <time-stamp v-show="activeTimestamp !== '' && getActiveRasterLayer" v-if="activeTimestamp &&
-    getActiveRasterLayer && !loadingRasterLayers" <<<<<<< h-e-a-d =======
-    class="default-layout__timestamp" >>>>>>> master @update-timestep="removeInfoText"
-    class="default-layout__timestamp" />
+    <time-stamp
+      v-show="activeTimestamp !== '' && getActiveRasterLayer"
+      @update-timestep="removeInfoText"
+      class="default-layout__timestamp"
+    />
 
     <nuxt />
 
