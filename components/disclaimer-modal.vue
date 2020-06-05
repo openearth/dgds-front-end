@@ -3,8 +3,17 @@
     <div class="modal__wrapper">
       <panel class="modal__card">
         <div class="modal__card-text">
-          <vue-markdown id="user-agreements" class="markdown" :source="userAgreements" />
-          <vue-markdown class="markdown" :source="cookieAgreement" />
+          <vue-markdown
+            id="user-agreements"
+            class="markdown"
+            :source="userAgreements"
+            :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+          />
+          <vue-markdown
+            class="markdown"
+            :source="cookieAgreement"
+            :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+          />
         </div>
         <template v-slot:footer>
           <div class="modal__card-actions form-group">

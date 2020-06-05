@@ -72,16 +72,15 @@
         })
       },
     },
-    methods: {
-      deferredMountedTo(map) {
-        this.map = map
-        this.selectedLayers.forEach(selectedLayer => {
-          selectedLayer.source.data = this.geometry
-          map.addLayer(selectedLayer)
-          this.map.moveLayer(selectedLayer.id)
-        })
-      },
+    mounted() {
+      this.map = this.getMap()
+      this.selectedLayers.forEach(selectedLayer => {
+        selectedLayer.source.data = this.geometry
+        this.map.addLayer(selectedLayer)
+        this.map.moveLayer(selectedLayer.id)
+      })
     },
+    inject: ['getMap'],
     render() {
       return null
     },
