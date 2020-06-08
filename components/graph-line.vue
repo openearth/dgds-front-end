@@ -209,9 +209,6 @@
       isScatter() {
         return this.type === 'scatter'
       },
-    },
-    methods: {
-      ...mapMutations('map', ['toggleCollapsedDataset']),
       graphData() {
         let series = []
         let markPointCoord = []
@@ -275,6 +272,10 @@
         const result = merge(dataOptions, baseOptions, theme)
         return result
       },
+    },
+    methods: {
+      ...mapMutations('map', ['toggleCollapsedDataset']),
+
       downloadJson() {
         const fileName = `${this.title}.json`
 
