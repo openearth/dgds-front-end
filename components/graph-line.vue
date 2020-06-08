@@ -8,13 +8,13 @@
   >
     <ui-button-icon
       v-if="collapsible"
+      @click="toggleCollapsedDataset(parameterId)"
       class="graph-line__toggle"
       label="Toggle"
-      @click="toggleCollapsedDataset(parameterId)"
     >
       <icon name="action-chevron-down" />
     </ui-button-icon>
-    <figcaption class="graph-line__caption strong" @click="toggleCollapsedDataset(parameterId)">
+    <figcaption @click="toggleCollapsedDataset(parameterId)" class="graph-line__caption strong">
       {{ title }}
     </figcaption>
     <div
@@ -32,17 +32,17 @@
       <img v-else :src="imageUrl" class="graph-line__image" />
       <ui-button
         v-if="user && (isLine || isScatter)"
+        @click="downloadJson"
         class="graph-line__download"
         kind="secondary"
-        @click="downloadJson"
       >
         Download data
       </ui-button>
       <ui-button
         v-if="user && isImage"
+        @click="downloadImage"
         class="graph-line__download"
         kind="secondary"
-        @click="downloadImage"
       >
         Download image
       </ui-button>
@@ -329,6 +329,16 @@
 </script>
 
 <style>
+  .graph-line__aspect-ratio.image {
+    height: 1200px;
+  }
+
+  .graph-image {
+    height: 1200px;
+    background-repeat: no-repeat;
+    background-size: 50% 100%;
+  }
+
   .graph-line {
     position: relative;
   }
