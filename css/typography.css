@@ -70,3 +70,8 @@ body {
   font-size: .75rem;
   line-height: 1.125rem;
 }
+
+.bodytext-xs {
+  font-size: .5rem;
+  line-height: 1rem;
+}
