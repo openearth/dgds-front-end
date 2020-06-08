@@ -330,6 +330,16 @@
 </script>
 
 <style>
+  .graph-line__aspect-ratio.image {
+    height: 1200px;
+  }
+
+  .graph-image {
+    height: 1200px;
+    background-repeat: no-repeat;
+    background-size: 50% 100%;
+  }
+
   .graph-line {
     position: relative;
   }
