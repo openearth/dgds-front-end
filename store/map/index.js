@@ -140,7 +140,7 @@ export const actions = {
     params += options.band ? `?band=${options.band}` : ''
     // Retrieve complete new rasterLayer by imageId and dataset
     return getFromApi(`datasets/${dataset}/${imageId}${params}`).then(val => {
-      commit('updateRasterLayer', { dataset, rasterLayer: val })
+      commit('updateRasterLayer', { dataset, rasterLayer: val.rasterLayer })
       commit('setLoadingRasterLayers', false)
     })
   },
@@ -293,7 +293,7 @@ export const getters = {
     }
     return _.get(datasets, `${activeRasterLayerId}.raster`)
   },
-  activeRasterLegendData({ datasets, activeRasterLayerId, activeDatasets }) {
+  activeRasterLegendData({ datasets, activeRasterLayerId }) {
     // Return the active raster data tiles (if not defined, return [])
     if (activeRasterLayerId === '' || activeRasterLayerId === null) {
       return []

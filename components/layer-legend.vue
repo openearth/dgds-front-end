@@ -60,7 +60,7 @@
     props: {
       unit: {
         type: String,
-        required: true,
+        default: () => '',
       },
     },
     data() {
@@ -75,15 +75,26 @@
     computed: {
       ...mapGetters('map', ['activeRasterData', 'activeRasterLegendData']),
     },
+    watch: {
+      activeRasterLegendData: {
+        handler() {
+          this.updateMinMax()
+        },
+        deep: true,
+      },
+    },
     mounted() {
-      const { min, max } = this.activeRasterLegendData
-      this.minValue = min.toString()
-      this.defaultMinValue = min.toString()
-      this.maxValue = max.toString()
-      this.defaultMaxValue = max.toString()
+      this.updateMinMax()
     },
     methods: {
       ...mapActions('map', ['retrieveRasterLayerByImageId']),
+      updateMinMax() {
+        const { min, max } = this.activeRasterLegendData
+        this.minValue = min.toString()
+        this.defaultMinValue = min.toString()
+        this.maxValue = max.toString()
+        this.defaultMaxValue = max.toString()
+      },
       cancelEditRange() {
         this.minValue = this.defaultMinValue
         this.maxValue = this.defaultMaxValue

@@ -59,7 +59,7 @@
 
     <disclaimer-modal />
 
-    <v-tour name="introduction" :steps="tourSteps" :options="tourConfig"></v-tour>
+    <v-tour :steps="tourSteps" :options="tourConfig" name="introduction"></v-tour>
   </div>
 </template>
 
@@ -224,7 +224,6 @@
 
       setStyleLayers() {
         // Wait for refs to be loaded
-        console.log(this.$refs, _.get(this.$refs, 'map.map'))
         this.map = this.$refs.map.map
         // Wait for map to be loaded and then add background labels and features
         this.map.addLayer({

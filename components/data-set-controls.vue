@@ -86,9 +86,10 @@
       activeRasterData: {
         handler(data) {
           const datasets = this.getDatasets
-          const raster = datasets[this.getActiveRasterLayer]
-          if (raster.layerOptions) {
-            this.selectedLayer = raster.name
+          const meta = datasets[this.getActiveRasterLayer].metadata
+          const raster = datasets[this.getActiveRasterLayer].raster
+          if (meta.layerOptions) {
+            this.selectedLayer = raster.band
           }
         },
         deep: true,
