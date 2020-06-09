@@ -137,7 +137,14 @@ export const actions = {
     const imageId = options.imageId
     const dataset = getters.getActiveRasterLayer
     let params = options.range ? `?min=${options.range.min}&max=${options.range.max}` : ''
-    params += options.band ? `?band=${options.band}` : ''
+
+    // If band has changed, use band from options. If band is not defined use already set band
+    if (options.band) {
+      params += `?band=${options.band}`
+    } else if (_.get(getters, 'activeRasterData.band')) {
+      params += `?band=${_.get(getters, 'activeRasterData.band')}`
+    }
+    console.log(params)
     // Retrieve complete new rasterLayer by imageId and dataset
     return getFromApi(`datasets/${dataset}/${imageId}${params}`).then(val => {
       commit('updateRasterLayer', { dataset, rasterLayer: val.rasterLayer })
