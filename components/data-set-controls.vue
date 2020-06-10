@@ -24,7 +24,7 @@
               @click="toggleRasterLayer(dataset.id)"
             />
           </div>
-          <div v-if="dataset.toolTip" class="tooltip" @click="onTooltipClick(dataset.id)">
+          <div v-if="dataset.toolTip" @click="onTooltipClick(dataset.id)" class="tooltip">
             <icon name="info" />
           </div>
         </div>
@@ -42,10 +42,10 @@
           <ui-select
             id="layer-options-dropdown"
             v-model="selectedLayer"
-            :options="optionItems(dataset.layerOptions)"
+            :options="options(dataset.layerOptions)"
             :label="`Configure ${dataset.name} layer`"
-            class="data-set-controls__select-layer"
             @change="updateRasterLayer"
+            class="data-set-controls__select-layer"
           />
         </div>
         <div v-if="getActiveRasterLayer === dataset.id" class="data-set-controls__legend">
@@ -108,7 +108,7 @@
       },
     },
     methods: {
-      ...mapActions('map', ['retrieveRasterLayerByImageId']),
+      ...mapActions('map', ['retrieveRasterLayer']),
       onTooltipClick(id) {
         this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
       },
@@ -136,15 +136,14 @@
         const option = raster.metadata.layerOptions.find(opt => {
           return opt.band === this.selectedLayer
         })
-        this.retrieveRasterLayerByImageId({ imageId: raster.raster.imageId, band: option.band })
+        this.retrieveRasterLayer({ imageId: raster.raster.imageId, band: option.band })
       },
-      optionItems(layers) {
+      items(options) {
         // Add value to the array to use in the ui-select
-        const options = layers.map(layer => {
-          layer.value = layer.band
-          return layer
+        return options.map(option => {
+          option.value = option.band
+          return option
         })
-        return options
       },
     },
   }
