@@ -1,5 +1,5 @@
 <template>
-  <ui-tray class="location" @on-close="close">
+  <ui-tray @on-close="close" class="location">
     <template v-slot:header>
       <h2 class="h3">
         {{ locations }}
@@ -26,6 +26,12 @@
       <template v-else>
         <p>No data available.</p>
       </template>
+    </template>
+    <template v-slot:footer>
+      <p class="bodytext-xs disclaimer">
+        Global datasets are generated with great care but may locally contain inaccuracies. See the
+        dataset descriptions for more information.
+      </p>
     </template>
   </ui-tray>
 </template>
@@ -108,5 +114,9 @@
 
   .default-layout--sidebar-expanded .location {
     left: var(--nav-bar-expanded-width);
+  }
+
+  .disclaimer {
+    text-align: center;
   }
 </style>
