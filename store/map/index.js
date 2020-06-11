@@ -132,21 +132,26 @@ export const actions = {
     })
   },
 
-  retrieveRasterLayerByImageId({ commit, state, getters }, options) {
+  retrieveRasterLayerByImageId({ commit, state, getters }, { imageId, options }) {
+    options = options || {}
     commit('setLoadingRasterLayers', true)
-    const imageId = options.imageId
     const dataset = getters.getActiveRasterLayer
-    let params = options.range ? `?min=${options.range.min}&max=${options.range.max}` : ''
-
     // If band has changed, use band from options. If band is not defined use already set band
-    if (options.band) {
-      params += `?band=${options.band}`
-    } else if (_.get(getters, 'activeRasterData.band')) {
-      params += `?band=${_.get(getters, 'activeRasterData.band')}`
+    if (!_.get(options, 'band') && _.get(getters, 'activeRasterData.band')) {
+      options.band = _.get(getters, 'activeRasterData.band')
     }
-    console.log(params)
+
+    if (!_.get(options, 'min') && _.get(getters, 'activeRasterData.min')) {
+      options.min = _.get(getters, 'activeRasterData.min')
+    }
+
+    if (!_.get(options, 'max') && _.get(getters, 'activeRasterData.max')) {
+      options.max = _.get(getters, 'activeRasterData.max')
+    }
+    const params = new URLSearchParams(options)
     // Retrieve complete new rasterLayer by imageId and dataset
-    return getFromApi(`datasets/${dataset}/${imageId}${params}`).then(val => {
+    return getFromApi(`datasets/${dataset}/${imageId}?${params}`).then(val => {
+      // If the range is set manually we don't want to update the default raster laayer
       commit('updateRasterLayer', { dataset, rasterLayer: val.rasterLayer })
       commit('setLoadingRasterLayers', false)
     })

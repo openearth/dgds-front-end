@@ -42,14 +42,18 @@
           <ui-select
             id="layer-options-dropdown"
             v-model="selectedLayer"
-            :options="options(dataset.layerOptions)"
+            :options="items(dataset.layerOptions)"
             :label="`Configure ${dataset.name} layer`"
             @change="updateRasterLayer"
             class="data-set-controls__select-layer"
           />
         </div>
-        <div v-if="getActiveRasterLayer === dataset.id" class="data-set-controls__legend">
-          <layer-legend class="data-set-controls__legend-bar" />
+        <div
+          v-if="checkRaster(dataset.id)"
+          v-show="getActiveRasterLayer === dataset.id"
+          class="data-set-controls__legend"
+        >
+          <layer-legend :datasetId="dataset.id" class="data-set-controls__legend-bar" />
           <p>[{{ dataset.units }}]</p>
         </div>
       </li>
@@ -108,7 +112,7 @@
       },
     },
     methods: {
-      ...mapActions('map', ['retrieveRasterLayer']),
+      ...mapActions('map', ['retrieveRasterLayerByImageId']),
       onTooltipClick(id) {
         this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
       },
@@ -136,7 +140,10 @@
         const option = raster.metadata.layerOptions.find(opt => {
           return opt.band === this.selectedLayer
         })
-        this.retrieveRasterLayer({ imageId: raster.raster.imageId, band: option.band })
+        this.retrieveRasterLayerByImageId({
+          imageId: raster.raster.imageId,
+          options: { band: option.band },
+        })
       },
       items(options) {
         // Add value to the array to use in the ui-select

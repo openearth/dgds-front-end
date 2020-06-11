@@ -2,9 +2,9 @@
   <div class="layer-legend">
     <svg viewBox="0 0 100 5">
       <defs>
-        <linearGradient id="gradient" x1="0" x2="1" y1="0" y2="0">
+        <linearGradient :id="`gradient-${datasetId}`" x1="0" x2="1" y1="0" y2="0">
           <stop
-            v-for="(stop, index) in activeRasterLegendData.linearGradient"
+            v-for="(stop, index) in linearGradient"
             :key="index"
             :offset="stop.offset"
             :style="{
@@ -14,7 +14,7 @@
           />
         </linearGradient>
       </defs>
-      <rect width="100" height="10" x="0" y="0" fill="url('#gradient')" />
+      <rect :fill="`url(#gradient-${datasetId})`" width="100" height="10" x="0" y="0" />
     </svg>
     <div class="layer-legend__range unselectable">
       <div v-if="!editingRange" class="layer-legend__range-min">
@@ -52,15 +52,16 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
+  import _ from 'lodash'
   import UiButton from '~/components/ui-button'
   import UiTextInput from '~/components/ui-text-input'
 
   export default {
     components: { UiButton, UiTextInput },
     props: {
-      unit: {
+      datasetId: {
         type: String,
-        default: () => '',
+        required: true,
       },
     },
     data() {
@@ -70,29 +71,27 @@
         minValue: '',
         defaultMaxValue: '',
         maxValue: '',
+        dataset: {},
+        unit: '',
+        linearGradient: {},
       }
     },
     computed: {
-      ...mapGetters('map', ['activeRasterData', 'activeRasterLegendData']),
-    },
-    watch: {
-      activeRasterLegendData: {
-        handler() {
-          this.updateMinMax()
-        },
-        deep: true,
-      },
+      ...mapGetters('map', ['getDatasets', 'activeRasterData', 'activeRasterLegendData']),
     },
     mounted() {
+      this.dataset = this.getDatasets[this.datasetId]
+      this.unit = _.get(this.dataset, 'metadata.units')
       this.updateMinMax()
+      this.linearGradient = _.get(this.dataset, 'raster.linearGradient')
     },
     methods: {
-      ...mapActions('map', ['retrieveRasterLayer']),
+      ...mapActions('map', ['retrieveRasterLayerByImageId']),
       updateMinMax() {
-        const { min, max } = this.activeRasterLegendData
+        const { min, max } = _.get(this.dataset, 'raster')
         this.minValue = min.toString()
-        this.defaultMinValue = min.toString()
         this.maxValue = max.toString()
+        this.defaultMinValue = min.toString()
         this.defaultMaxValue = max.toString()
       },
       cancelEditRange() {
@@ -106,7 +105,6 @@
       },
       saveRange() {
         this.editingRange = false
-
         this.postUpdatedRange()
       },
       resetRange() {
@@ -114,12 +112,12 @@
         this.maxValue = this.defaultMaxValue
       },
       postUpdatedRange() {
-        const { imageId } = this.activeRasterData
+        const { imageId } = this.dataset.raster
         const range = {
           min: this.minValue,
           max: this.maxValue,
         }
-        this.retrieveRasterLayer({ imageId, range })
+        this.retrieveRasterLayerByImageId({ imageId, options: { min: range.min, max: range.max } })
       },
     },
   }

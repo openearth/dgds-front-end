@@ -97,12 +97,12 @@
       },
     },
     methods: {
-      ...mapActions('map', ['retrieveRasterLayer']),
+      ...mapActions('map', ['retrieveRasterLayerByImageId']),
       getNewRasterLayer(serie) {
         if (this.getActiveRasterLayer) {
           const imageId = _.get(serie, 'imageId')
           // For each update of the timeslider adjust the raster layer to the new time
-          this.retrieveRasterLayer({ imageId })
+          this.retrieveRasterLayerByImageId({ imageId })
           this.$emit('update-timestep')
         }
       },
