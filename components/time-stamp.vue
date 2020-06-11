@@ -6,8 +6,8 @@
     <time-slider
       :dates="activeRasterData.imageTimeseries"
       :set-time-index="dateIndex"
-      start-at="end"
       @update-timestep="getNewRasterLayer"
+      start-at="end"
     >
       <template v-slot:backButton="{ back }">
         <ui-button-icon :disabled="getLoadingState" @click="back">
@@ -18,9 +18,9 @@
         <ui-select
           id="timeslider-dropdown"
           v-model="timestamp"
-          label="Select a timestamp"
           :options="timeseriesItems"
           :disabled="loadingRasterLayers"
+          label="Select a timestamp"
         />
       </template>
       <template v-slot:forwardButton="{ forward }">

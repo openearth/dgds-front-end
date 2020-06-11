@@ -14,9 +14,11 @@
         ref="map"
         :access-token="mapboxAccessToken"
         :preserve-drawing-buffer="true"
+        @mb-load="setStyleLayers"
+        :zoom="1"
+        :center="[0, 0]"
         map-style="mapbox://styles/global-data-viewer/ckaqyfcc63q1w1io3l3bpd50h?fresh=true"
         data-v-step="5"
-        @mb-load="setStyleLayers"
       >
         <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" />
         <v-mapbox-selected-point-layer v-if="mapLoaded" :geometry="geometry" />
@@ -42,15 +44,15 @@
 
     <data-set-controls
       :datasets="datasetsInActiveTheme"
-      class="default-layout__data-set-controls"
       @toggle-location-dataset="toggleLocationDataset"
       @toggle-raster-layer="toggleRasterLayer"
+      class="default-layout__data-set-controls"
     />
 
     <time-stamp
       v-show="activeTimestamp !== '' && getActiveRasterLayer"
-      class="default-layout__timestamp"
       @update-timestep="removeInfoText"
+      class="default-layout__timestamp"
     />
 
     <nuxt />
@@ -59,7 +61,7 @@
 
     <disclaimer-modal />
 
-    <v-tour name="introduction" :steps="tourSteps" :options="tourConfig"></v-tour>
+    <v-tour :steps="tourSteps" :options="tourConfig" name="introduction"></v-tour>
   </div>
 </template>
 
@@ -224,7 +226,6 @@
 
       setStyleLayers() {
         // Wait for refs to be loaded
-        console.log(this.$refs, _.get(this.$refs, 'map.map'))
         this.map = this.$refs.map.map
         // Wait for map to be loaded and then add background labels and features
         this.map.addLayer({

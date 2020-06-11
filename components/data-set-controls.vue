@@ -24,7 +24,7 @@
               @click="toggleRasterLayer(dataset.id)"
             />
           </div>
-          <div v-if="dataset.toolTip" class="tooltip" @click="onTooltipClick(dataset.id)">
+          <div v-if="dataset.toolTip" @click="onTooltipClick(dataset.id)" class="tooltip">
             <icon name="info" />
           </div>
         </div>
@@ -35,8 +35,26 @@
             class="data-set-controls__tooltip-text markdown"
           />
         </div>
-        <div v-if="getActiveRasterLayer === dataset.id" class="data-set-controls__legend">
-          <layer-legend class="data-set-controls__legend-bar" :unit="dataset.units" />
+        <div
+          v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
+          class="data-set-controls__options"
+        >
+          <ui-select
+            id="layer-options-dropdown"
+            v-model="selectedLayer"
+            :options="items(dataset.layerOptions)"
+            :label="`Configure ${dataset.name} layer`"
+            @change="updateRasterLayer"
+            class="data-set-controls__select-layer"
+          />
+        </div>
+        <div
+          v-if="checkRaster(dataset.id)"
+          v-show="getActiveRasterLayer === dataset.id"
+          class="data-set-controls__legend"
+        >
+          <layer-legend :datasetId="dataset.id" class="data-set-controls__legend-bar" />
+          <p>[{{ dataset.units }}]</p>
         </div>
       </li>
     </ul>
@@ -44,7 +62,7 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import VueMarkdown from 'vue-markdown'
   import _ from 'lodash'
   import Icon from './icon'
@@ -52,9 +70,10 @@
   import Panel from './panel'
   import UiRadio from './ui-radio'
   import UiToggle from './ui-toggle'
+  import UiSelect from './ui-select'
 
   export default {
-    components: { Icon, LayerLegend, Panel, UiRadio, UiToggle, VueMarkdown },
+    components: { Icon, LayerLegend, Panel, UiRadio, UiToggle, VueMarkdown, UiSelect },
     props: {
       datasets: {
         type: Array,
@@ -64,8 +83,23 @@
     data() {
       return {
         hoverId: null,
+        selectedLayer: '',
       }
     },
+    watch: {
+      activeRasterData: {
+        handler(data) {
+          const datasets = this.getDatasets
+          const meta = datasets[this.getActiveRasterLayer].metadata
+          const raster = datasets[this.getActiveRasterLayer].raster
+          if (meta.layerOptions) {
+            this.selectedLayer = raster.band
+          }
+        },
+        deep: true,
+      },
+    },
+
     computed: {
       ...mapGetters('map', [
         'getActiveRasterLayer',
@@ -78,6 +112,7 @@
       },
     },
     methods: {
+      ...mapActions('map', ['retrieveRasterLayerByImageId']),
       onTooltipClick(id) {
         this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
       },
@@ -98,6 +133,24 @@
       },
       checkRaster(id) {
         return _.has(this.getDatasets, `${id}.raster`)
+      },
+      updateRasterLayer(value) {
+        const datasets = this.getDatasets
+        const raster = datasets[this.getActiveRasterLayer]
+        const option = raster.metadata.layerOptions.find(opt => {
+          return opt.band === this.selectedLayer
+        })
+        this.retrieveRasterLayerByImageId({
+          imageId: raster.raster.imageId,
+          options: { band: option.band },
+        })
+      },
+      items(options) {
+        // Add value to the array to use in the ui-select
+        return options.map(option => {
+          option.value = option.band
+          return option
+        })
       },
     },
   }
@@ -182,7 +235,8 @@
   }
 
   .data-set-controls__legend-bar {
-    flex: 0 0 100%;
+    flex: 1 1 auto;
+    margin-right: 0.5rem;
   }
 
   .data-set-controls__legend p {
@@ -190,5 +244,8 @@
   }
   .data-set-controls__item-radio {
     width: 32px;
+  }
+  .data-set-controls__select-layer {
+    margin-top: var(--spacing-small);
   }
 </style>
