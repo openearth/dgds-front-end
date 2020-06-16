@@ -14,7 +14,7 @@
         ref="map"
         :access-token="mapboxAccessToken"
         :preserve-drawing-buffer="true"
-        :zoom="1"
+        :zoom="1.8"
         :center="[0, 0]"
         map-style="mapbox://styles/global-data-viewer/ckaqyfcc63q1w1io3l3bpd50h?fresh=true"
         data-v-step="5"
