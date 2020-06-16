@@ -15,6 +15,7 @@
         </template>
         <template v-slot:body>
           <vue-markdown
+            class="markdown"
             :watches="['source']"
             :source="aboutText"
             :anchor-attributes="{ target: '_blank' }"
@@ -75,7 +76,7 @@
       ...mapGetters('map', ['getActiveTheme']),
     },
     mounted() {
-      fetch('docs/about-text.md')
+      fetch('/docs/about-text.md')
         .then(res => {
           return res.text()
         })

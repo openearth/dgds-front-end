@@ -18,18 +18,10 @@
         <template v-slot:footer>
           <div class="modal__card-actions form-group">
             <div class="modal__card-actions__checkboxes">
-              <ui-checkbox
-                watches="['source']"
-                :checked="agree"
-                @input="setTarget($event, 'agree')"
-              >
+              <ui-checkbox :checked="agree" @input="setTarget($event, 'agree')">
                 I agree with the Conditions of Use
               </ui-checkbox>
-              <ui-checkbox
-                watches="['source']"
-                :checked="cookie"
-                @input="setTarget($event, 'cookie')"
-              >
+              <ui-checkbox :checked="cookie" @input="setTarget($event, 'cookie')">
                 I consent with the use of cookies
               </ui-checkbox>
             </div>
@@ -78,7 +70,7 @@
       }
     },
     mounted() {
-      fetch('docs/user-agreements.md')
+      fetch('/docs/user-agreements.md')
         .then(res => {
           return res.text()
         })
@@ -86,7 +78,7 @@
           this.userAgreements = response
         })
 
-      fetch('docs/cookie-agreements.md')
+      fetch('/docs/cookie-agreements.md')
         .then(res => {
           return res.text()
         })
