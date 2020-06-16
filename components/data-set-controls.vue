@@ -43,7 +43,7 @@
             id="layer-options-dropdown"
             v-model="selectedLayer"
             :options="items(dataset.layerOptions)"
-            :label="`Configure ${dataset.name} layer`"
+            :label="`Select ${dataset.name}`"
             class="data-set-controls__select-layer"
             @change="updateRasterLayer"
           />
