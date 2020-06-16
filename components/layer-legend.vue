@@ -18,7 +18,7 @@
     </svg>
     <div class="layer-legend__range unselectable">
       <div v-if="!editingRange" class="layer-legend__range-min">
-        <ui-button @click="editRange" kind="quiet">{{ minValue }}{{ unit }}</ui-button>
+        <ui-button kind="quiet" @click="editRange">{{ minValue }}{{ unit }}</ui-button>
       </div>
       <div v-else class="layer-legend__range-min layer-legend__range-min--editing">
         <ui-text-input
@@ -29,8 +29,8 @@
           placeholder="Min value"
         />
       </div>
-      <div v-if="!editingRange" @click="editRange" class="layer-legend__range-max">
-        <ui-button @click="editRange" kind="quiet">{{ maxValue }}{{ unit }}</ui-button>
+      <div v-if="!editingRange" class="layer-legend__range-max" @click="editRange">
+        <ui-button kind="quiet" @click="editRange">{{ maxValue }}{{ unit }}</ui-button>
       </div>
       <div v-else class="layer-legend__range-max layer-legend__range-max--editing">
         <ui-text-input
@@ -42,9 +42,9 @@
         />
       </div>
       <div v-if="editingRange" class="layer-legend__range-buttons">
-        <ui-button @click="cancelEditRange" kind="quiet">Cancel</ui-button>
-        <ui-button @click="resetRange" kind="secondary">Reset</ui-button>
-        <ui-button @click="saveRange" kind="primary">Save</ui-button>
+        <ui-button kind="quiet" @click="cancelEditRange">Cancel</ui-button>
+        <ui-button kind="secondary" @click="resetRange">Reset</ui-button>
+        <ui-button kind="primary" @click="saveRange">Save</ui-button>
       </div>
     </div>
   </div>

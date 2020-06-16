@@ -1,5 +1,5 @@
 <template>
-  <ui-tray @on-close="close" class="location">
+  <ui-tray class="location" @on-close="close">
     <template v-slot:header>
       <h2 class="h3">
         {{ locations }}
@@ -28,7 +28,7 @@
       </template>
     </template>
     <template v-slot:footer>
-      <p class="bodytext-xs disclaimer">
+      <p class="bodytext-xs disclaimer-message">
         Global datasets are generated with great care but may locally contain inaccuracies. See the
         dataset descriptions for more information.
       </p>
@@ -116,7 +116,7 @@
     left: var(--nav-bar-expanded-width);
   }
 
-  .disclaimer {
+  .disclaimer-message {
     text-align: center;
   }
 </style>

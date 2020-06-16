@@ -6,8 +6,8 @@
     <time-slider
       :dates="activeRasterData.imageTimeseries"
       :set-time-index="dateIndex"
-      @update-timestep="getNewRasterLayer"
       start-at="end"
+      @update-timestep="getNewRasterLayer"
     >
       <template v-slot:backButton="{ back }">
         <ui-button-icon :disabled="getLoadingState" @click="back">
