@@ -330,12 +330,13 @@
 </script>
 
 <style>
-  .graph-line__aspect-ratio.image {
+  .graph-line__aspect-ratio--image {
     height: 1200px;
   }
 
-  .graph-image {
+  .graph-line__image {
     height: 1200px;
+    max-width: 100%;
     background-repeat: no-repeat;
     background-size: 50% 100%;
   }
@@ -349,22 +350,12 @@
     min-height: 400px;
   }
 
-  .graph-line__aspect-ratio--image {
-    height: 600px;
-  }
-
   .graph-line__chart {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 85%;
-  }
-
-  .graph-line__image {
-    height: 600px;
-    background-repeat: no-repeat;
-    background-size: 50% 100%;
   }
 
   .graph-line__collapsible .graph-line__caption {
