@@ -89,6 +89,9 @@
     watch: {
       activeRasterData: {
         handler(data) {
+          if (data.length === 0) {
+            return
+          }
           const datasets = this.getDatasets
           const meta = datasets[this.getActiveRasterLayer].metadata
           const raster = datasets[this.getActiveRasterLayer].raster
