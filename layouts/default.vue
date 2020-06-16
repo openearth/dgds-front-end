@@ -15,10 +15,9 @@
         :access-token="mapboxAccessToken"
         :preserve-drawing-buffer="true"
         :zoom="1.8"
-        :center="[0, 0]"
-        map-style="mapbox://styles/global-data-viewer/ckaqyfcc63q1w1io3l3bpd50h?fresh=true"
+        map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm?fresh=true"
         data-v-step="5"
-        @mb-load="setStyleLayers"
+        @mb-load="mapLoaded = true"
       >
         <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" />
         <v-mapbox-selected-point-layer v-if="mapLoaded" :geometry="geometry" />
@@ -223,38 +222,6 @@
         'setActiveRasterLayer',
         'setGeographicalScope',
       ]),
-
-      setStyleLayers() {
-        // Wait for refs to be loaded
-        this.map = this.$refs.map.map
-        // Wait for map to be loaded and then add background labels and features
-        this.map.addLayer({
-          id: 'background-labels',
-          type: 'raster',
-          source: {
-            type: 'raster',
-            tiles: [
-              `https://api.mapbox.com/styles/v1/global-data-viewer/ckarrxvmx05rv1ips1l3vgluh/tiles/256/{z}/{x}/{y}@2x?access_token=${this.mapboxAccessToken}`,
-            ],
-            tileSize: 256,
-          },
-        })
-        this.map.addLayer({
-          id: 'background-features',
-          type: 'raster',
-          source: {
-            type: 'raster',
-            tiles: [
-              `https://api.mapbox.com/styles/v1/global-data-viewer/ckarrxnck9xjy1iqtqt0spezq/tiles/256/{z}/{x}/{y}@2x?access_token=${this.mapboxAccessToken}`,
-            ],
-            tileSize: 256,
-          },
-        })
-        this.map.on('styledata', () => {
-          // Wait on changed bakground before notifying all mapbox layers to be added
-          this.mapLoaded = true
-        })
-      },
       removeInfoText() {
         this.infoTextGeometry = {
           type: 'Point',
