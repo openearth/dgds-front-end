@@ -15,9 +15,9 @@
         </template>
         <template v-slot:body>
           <vue-markdown
-            class="markdown"
+            :watches="['source']"
             :source="aboutText"
-            :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+            :anchor-attributes="{ target: '_blank' }"
           />
         </template>
       </ui-tray>
@@ -56,7 +56,6 @@
   import UiButton from '../../components/ui-button'
   import UiTray from '../../components/ui-tray'
   import AccountDetails from '../../components/account-details'
-  import aboutText from '~/assets/docs/about-text.md'
 
   export default {
     components: {
@@ -69,11 +68,20 @@
     data: () => ({
       aboutOpen: false,
       accountOpen: false,
-      aboutText: aboutText.html,
+      aboutText: '',
     }),
     computed: {
       ...mapState('preferences', ['user']),
       ...mapGetters('map', ['getActiveTheme']),
+    },
+    mounted() {
+      fetch('docs/about-text.md')
+        .then(res => {
+          return res.text()
+        })
+        .then(response => {
+          this.aboutText = response
+        })
     },
     methods: {
       login() {

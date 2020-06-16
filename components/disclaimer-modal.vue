@@ -18,10 +18,18 @@
         <template v-slot:footer>
           <div class="modal__card-actions form-group">
             <div class="modal__card-actions__checkboxes">
-              <ui-checkbox :checked="agree" @input="setTarget($event, 'agree')">
+              <ui-checkbox
+                watches="['source']"
+                :checked="agree"
+                @input="setTarget($event, 'agree')"
+              >
                 I agree with the Conditions of Use
               </ui-checkbox>
-              <ui-checkbox :checked="cookie" @input="setTarget($event, 'cookie')">
+              <ui-checkbox
+                watches="['source']"
+                :checked="cookie"
+                @input="setTarget($event, 'cookie')"
+              >
                 I consent with the use of cookies
               </ui-checkbox>
             </div>
@@ -46,9 +54,6 @@
   import UiCheckbox from './ui-checkbox.vue'
   import UiButton from './ui-button.vue'
 
-  import userAgreements from '~/assets/docs/user-agreements.md'
-  import cookieAgreement from '~/assets/docs/cookie-agreements.md'
-
   export default {
     components: {
       UiCheckbox,
@@ -59,8 +64,8 @@
     data() {
       return {
         open: true,
-        userAgreements: userAgreements.html,
-        cookieAgreement: cookieAgreement.html,
+        userAgreements: '',
+        cookieAgreement: '',
         agree: false,
         cookie: false,
       }
@@ -71,6 +76,23 @@
       if (this.agree) {
         this.open = false
       }
+    },
+    mounted() {
+      fetch('docs/user-agreements.md')
+        .then(res => {
+          return res.text()
+        })
+        .then(response => {
+          this.userAgreements = response
+        })
+
+      fetch('docs/cookie-agreements.md')
+        .then(res => {
+          return res.text()
+        })
+        .then(response => {
+          this.cookieAgreement = response
+        })
     },
     validations: {
       cookie: {
