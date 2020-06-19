@@ -6,4 +6,4 @@ Deltares uses two types of cookies for this website: functional cookies and anal
 
 The functional cookies are used to identify you for the duration of your session, and are needed to make the website work properly. The session cookie is removed by your browser after you close your browser.
 
-The analytical cookies in anonymous mode are used to measure your and other visitors’ use of this website, for purposes of improving the website. Your IP address is anonymized so that it is never stored or written to disk. For more information, please see the Google Analytics’ Privacy Overview and Google Analytics Cookie Usage on Websites.  
+The analytical cookies in anonymous mode are used to measure your and other visitors’ use of this website, for purposes of improving the website. Your IP address is anonymized so that it is never stored or written to disk. For more information, please see the Google Analytics’ Privacy Overview and Google Analytics Cookie Usage on Websites.

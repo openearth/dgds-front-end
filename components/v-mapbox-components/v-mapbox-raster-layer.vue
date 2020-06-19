@@ -51,7 +51,7 @@
 
             // Only add if tiles in source are not empty
             if (get('source.tiles[0]', newOptions)) {
-              this.map.addLayer(newOptions, 'background-features')
+              this.map.addLayer(newOptions, 'water-border')
             }
           }
         },
@@ -68,7 +68,7 @@
     mounted() {
       this.map = this.getMap()
       this.id = this.options.id
-      this.map.addLayer(this.options, 'background-features')
+      this.map.addLayer(this.options, 'water-border')
       this.map.on('click', event => {
         const bbox = {
           type: 'Point',

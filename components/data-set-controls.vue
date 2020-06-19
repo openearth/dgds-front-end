@@ -24,7 +24,7 @@
               @click="toggleRasterLayer(dataset.id)"
             />
           </div>
-          <div v-if="dataset.toolTip" @click="onTooltipClick(dataset.id)" class="tooltip">
+          <div v-if="dataset.toolTip" class="tooltip" @click="onTooltipClick(dataset.id)">
             <icon name="info" />
           </div>
         </div>
@@ -43,9 +43,9 @@
             id="layer-options-dropdown"
             v-model="selectedLayer"
             :options="items(dataset.layerOptions)"
-            :label="`Configure ${dataset.name} layer`"
-            @change="updateRasterLayer"
+            :label="`Select ${dataset.name}`"
             class="data-set-controls__select-layer"
+            @change="updateRasterLayer"
           />
         </div>
         <div
@@ -53,7 +53,7 @@
           v-show="getActiveRasterLayer === dataset.id"
           class="data-set-controls__legend"
         >
-          <layer-legend :datasetId="dataset.id" class="data-set-controls__legend-bar" />
+          <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
           <p>[{{ dataset.units }}]</p>
         </div>
       </li>
@@ -89,6 +89,9 @@
     watch: {
       activeRasterData: {
         handler(data) {
+          if (data.length === 0) {
+            return
+          }
           const datasets = this.getDatasets
           const meta = datasets[this.getActiveRasterLayer].metadata
           const raster = datasets[this.getActiveRasterLayer].raster

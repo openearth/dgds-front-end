@@ -46,9 +46,6 @@
   import UiCheckbox from './ui-checkbox.vue'
   import UiButton from './ui-button.vue'
 
-  import userAgreements from '~/assets/docs/user-agreements.md'
-  import cookieAgreement from '~/assets/docs/cookie-agreements.md'
-
   export default {
     components: {
       UiCheckbox,
@@ -59,8 +56,8 @@
     data() {
       return {
         open: true,
-        userAgreements: userAgreements.html,
-        cookieAgreement: cookieAgreement.html,
+        userAgreements: '',
+        cookieAgreement: '',
         agree: false,
         cookie: false,
       }
@@ -71,6 +68,23 @@
       if (this.agree) {
         this.open = false
       }
+    },
+    mounted() {
+      fetch('/docs/user-agreements.md')
+        .then(res => {
+          return res.text()
+        })
+        .then(response => {
+          this.userAgreements = response
+        })
+
+      fetch('/docs/cookie-agreements.md')
+        .then(res => {
+          return res.text()
+        })
+        .then(response => {
+          this.cookieAgreement = response
+        })
     },
     validations: {
       cookie: {
