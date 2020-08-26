@@ -86,6 +86,17 @@
         selectedLayer: '',
       }
     },
+    computed: {
+      ...mapGetters('map', [
+        'getActiveRasterLayer',
+        'getActiveTheme',
+        'getDatasets',
+        'activeRasterData',
+      ]),
+      themeName() {
+        return _.get(this.getActiveTheme, 'name') || 'All datasets'
+      },
+    },
     watch: {
       activeRasterData: {
         handler(data) {
@@ -100,18 +111,6 @@
           }
         },
         deep: true,
-      },
-    },
-
-    computed: {
-      ...mapGetters('map', [
-        'getActiveRasterLayer',
-        'getActiveTheme',
-        'getDatasets',
-        'activeRasterData',
-      ]),
-      themeName() {
-        return _.get(this.getActiveTheme, 'name') || 'All datasets'
       },
     },
     methods: {

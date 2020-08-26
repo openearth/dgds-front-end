@@ -2,6 +2,7 @@
   import _ from 'lodash'
   import distance from '@turf/distance'
   import { point } from '@turf/turf'
+  import { mapGetters } from 'vuex'
 
   export default {
     props: {
@@ -21,6 +22,9 @@
         map: null,
       }
     },
+    computed: {
+      ...mapGetters('map', ['activeVectorData']),
+    },
     watch: {
       layer: {
         handler(newValue) {
@@ -37,6 +41,22 @@
       if (this.map) {
         this.updateMap()
       }
+      const location = this.$route.params.locationId
+      setTimeout(() => {
+        if (location) {
+          // If a location is chosen beforehand, find the features on the map and zoom to that location
+          const features = this.map.queryRenderedFeatures()
+          const feature = features.find(feat => feat.properties.locationId === location)
+          this.map.panTo({
+            lng: feature.geometry.coordinates[0],
+            lat: feature.geometry.coordinates[1],
+          })
+          this.$emit('select-locations', {
+            features: [feature],
+            geometry: feature.geometry,
+          })
+        }
+      }, 1500)
     },
     beforeDestroy() {
       const layer = this.layer
