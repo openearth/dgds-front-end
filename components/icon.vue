@@ -69,11 +69,13 @@
     height: 24px;
     margin: auto;
     font-size: 24px;
+    color: var(--color-text-color);
   }
 
   .mdi-icon--large {
     width: 36px;
     height: 36px;
     font-size: 36px;
+    color: var(--color-text-color);
   }
 </style>

@@ -55,7 +55,7 @@
 
     <nuxt />
 
-    <sidebar />
+    <sidebar @toggle-tour="showTour($event)" />
 
     <disclaimer-modal />
 
@@ -68,6 +68,7 @@
   import _ from 'lodash'
   import update from 'lodash/fp/update'
   import { mapState, mapGetters, mapMutations } from 'vuex'
+  import * as Cookies from 'tiny-cookie'
   import auth from '../auth'
   import { tourConfig, tourSteps } from '../plugins/vue-tour'
   import DataSetControls from '../components/data-set-controls'
@@ -199,7 +200,7 @@
       },
     },
     mounted() {
-      this.$tours.introduction.start()
+      this.showTour()
       this.setGeographicalScope('global')
 
       auth
@@ -221,6 +222,13 @@
         'setActiveRasterLayer',
         'setGeographicalScope',
       ]),
+      showTour(hideTour = Cookies.get('hideTour')) {
+        console.log(hideTour)
+        if (!hideTour) {
+          this.$tours.introduction.start()
+          Cookies.set('hideTour', false)
+        }
+      },
       removeInfoText() {
         this.infoTextGeometry = {
           type: 'Point',

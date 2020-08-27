@@ -4,6 +4,7 @@
       @toggle-about="toggleAbout"
       @toggle-account="toggleAccount"
       @change-theme="changeTheme"
+      @toggle-tour="$emit('toggle-tour', $event)"
     />
 
     <transition name="slide" mode="out-in">

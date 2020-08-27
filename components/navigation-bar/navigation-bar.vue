@@ -31,6 +31,12 @@
 
     <ul class="navigation-bar__list">
       <li>
+        <ui-button-icon @click="$emit('toggle-tour', false)">
+          <icon :mdi="true" name="flag_outline" />
+          <span class="ui-button-icon__label bodytext-m">Tour</span>
+        </ui-button-icon>
+      </li>
+      <li>
         <ui-button-icon @click="toggleAbout">
           <icon name="info" />
           <span class="ui-button-icon__label bodytext-m">About</span>
