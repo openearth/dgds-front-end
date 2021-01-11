@@ -3,8 +3,17 @@
     <div class="modal__wrapper">
       <panel class="modal__card">
         <div class="modal__card-text">
-          <vue-markdown id="user-agreements" class="markdown" :source="userAgreements" />
-          <vue-markdown class="markdown" :source="cookieAgreement" />
+          <vue-markdown
+            id="user-agreements"
+            class="markdown"
+            :source="userAgreements"
+            :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+          />
+          <vue-markdown
+            class="markdown"
+            :source="cookieAgreement"
+            :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+          />
         </div>
         <template v-slot:footer>
           <div class="modal__card-actions form-group">
@@ -37,9 +46,6 @@
   import UiCheckbox from './ui-checkbox.vue'
   import UiButton from './ui-button.vue'
 
-  import userAgreements from '~/assets/docs/user-agreements.md'
-  import cookieAgreement from '~/assets/docs/cookie-agreements.md'
-
   export default {
     components: {
       UiCheckbox,
@@ -50,8 +56,8 @@
     data() {
       return {
         open: true,
-        userAgreements: userAgreements.html,
-        cookieAgreement: cookieAgreement.html,
+        userAgreements: '',
+        cookieAgreement: '',
         agree: false,
         cookie: false,
       }
@@ -62,6 +68,23 @@
       if (this.agree) {
         this.open = false
       }
+    },
+    mounted() {
+      fetch('/docs/user-agreements.md')
+        .then(res => {
+          return res.text()
+        })
+        .then(response => {
+          this.userAgreements = response
+        })
+
+      fetch('/docs/cookie-agreements.md')
+        .then(res => {
+          return res.text()
+        })
+        .then(response => {
+          this.cookieAgreement = response
+        })
     },
     validations: {
       cookie: {

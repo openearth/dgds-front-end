@@ -7,30 +7,36 @@
     class="default-layout"
   >
     <client-only>
+      <!-- TODO: now usign an blanc style as background due to disappearing text labels,
+    use custom style again -->
       <v-mapbox
         id="map"
         ref="map"
         :access-token="mapboxAccessToken"
-        map-style="mapbox://styles/global-data-viewer/ckaqxk1vr93rn1io1wlv0oftt"
         :preserve-drawing-buffer="true"
+        map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
+        data-v-step="5"
+        @mb-load="mapLoaded = true"
       >
         <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" />
-        <v-mapbox-selected-point-layer v-if="false" :geometry="geometry" />
+        <v-mapbox-selected-point-layer v-if="mapLoaded" :geometry="geometry" />
         <v-mapbox-info-text-layer
-          v-if="false"
+          v-if="mapLoaded"
           :geometry="infoTextGeometry"
           :message="mapboxMessage"
         />
-        <v-mapbox-vector-layer
-          v-for="vectorLayer in vectorLayers"
-          :key="vectorLayer.id"
-          :name="vectorLayer.id"
-          :layer="vectorLayer"
-          :active-theme="activeTheme"
-          @select-locations="selectLocations"
-        />
-        <v-mapbox-raster-layer v-if="true" :options="rasterLayer" @click="getFeatureInfo" />
-        <v-mapbox-flowmap-layer v-if="showFlowmapLayer" :options="flowmapLayer" />
+        <template v-if="mapLoaded">
+          <v-mapbox-vector-layer
+            v-for="vectorLayer in vectorLayers"
+            :key="vectorLayer.id"
+            :name="vectorLayer.id"
+            :layer="vectorLayer"
+            :active-theme="activeTheme"
+            @select-locations="selectLocations"
+          />
+        </template>
+        <v-mapbox-raster-layer v-if="mapLoaded" :options="rasterLayer" @click="getFeatureInfo" />
+        <v-mapbox-flowmap-layer v-if="mapLoaded && showFlowmapLayer" :options="flowmapLayer" />
       </v-mapbox>
     </client-only>
 
@@ -52,6 +58,8 @@
     <sidebar />
 
     <disclaimer-modal />
+
+    <v-tour :steps="tourSteps" :options="tourConfig" name="introduction"></v-tour>
   </div>
 </template>
 
@@ -61,6 +69,7 @@
   import update from 'lodash/fp/update'
   import { mapState, mapGetters, mapMutations } from 'vuex'
   import auth from '../auth'
+  import { tourConfig, tourSteps } from '../plugins/vue-tour'
   import DataSetControls from '../components/data-set-controls'
   import TimeStamp from '../components/time-stamp'
   import getVectorLayer from '../lib/mapbox/layers/get-vector-layer'
@@ -86,9 +95,12 @@
       Sidebar,
     },
     data: () => ({
+      tourConfig,
+      tourSteps,
       mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
       locationsLayers: [],
       activeLocation: null,
+      mapLoaded: false,
       geometry: {
         type: 'Point',
         coordinates: [],
@@ -101,11 +113,10 @@
     }),
     computed: {
       ...mapState('preferences', ['theme', 'sidebarAnimating', 'sidebarExpanded']),
-      ...mapState('map', ['activeLocationIds']),
+      ...mapState('map', ['activeLocationIds', 'loadingRasterLayers']),
       ...mapGetters('map', [
         'activeRasterData',
         'activeFlowmapData',
-
         'activeVectorData',
         'activeDatasetsLocations',
         'datasetsInActiveTheme',
@@ -188,6 +199,9 @@
       },
     },
     mounted() {
+      this.$tours.introduction.start()
+      this.setGeographicalScope('global')
+
       auth
         .getUser()
         .then(user => {
@@ -200,7 +214,6 @@
         .catch(err => {
           console.log({ err })
         })
-      this.setGeographicalScope('global')
     },
     methods: {
       ...mapMutations('map', [

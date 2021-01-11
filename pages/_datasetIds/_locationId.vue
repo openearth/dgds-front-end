@@ -27,6 +27,12 @@
         <p>No data available.</p>
       </template>
     </template>
+    <template v-slot:footer>
+      <p class="bodytext-xs disclaimer-message">
+        Global datasets are generated with great care but may locally contain inaccuracies. See the
+        dataset descriptions for more information.
+      </p>
+    </template>
   </ui-tray>
 </template>
 
@@ -58,7 +64,11 @@
         return flatten(result)
       },
       hasSerieData() {
-        return this.datasets[0] && this.datasets[0].serie.length
+        if (_.get(this.datasets, '[0].type') === 'images') {
+          return _.get(this.datasets, '[0].imageUrl')
+        } else {
+          return _.get(this.datasets, '[0].serie') && _.get(this.datasets, '[0].serie').length > 0
+        }
       },
       locations() {
         return this.$route.params.locationId
@@ -104,5 +114,9 @@
 
   .default-layout--sidebar-expanded .location {
     left: var(--nav-bar-expanded-width);
+  }
+
+  .disclaimer-message {
+    text-align: center;
   }
 </style>

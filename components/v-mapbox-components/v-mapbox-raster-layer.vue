@@ -65,19 +65,18 @@
         this.map.removeSource(layer.id)
       }
     },
-    methods: {
-      deferredMountedTo(map) {
-        this.map = map
-        this.id = this.options.id
-        this.map.addLayer(this.options, 'water-border')
-        this.map.on('click', event => {
-          const bbox = {
-            type: 'Point',
-            coordinates: [event.lngLat.lng, event.lngLat.lat],
-          }
-          this.$emit('click', bbox)
-        })
-      },
+    mounted() {
+      this.map = this.getMap()
+      this.id = this.options.id
+      this.map.addLayer(this.options, 'water-border')
+      this.map.on('click', event => {
+        const bbox = {
+          type: 'Point',
+          coordinates: [event.lngLat.lng, event.lngLat.lat],
+        }
+        this.$emit('click', bbox)
+      })
     },
+    inject: ['getMap'],
   }
 </script>

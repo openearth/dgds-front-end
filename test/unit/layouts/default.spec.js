@@ -98,6 +98,7 @@ describe('Default', () => {
       mocks: {
         $route: { params: { datasetIds: 'cd' }, name: 'datasetIds-locationId' },
         $router: { push: routerPush },
+        $tours: { introduction: { start: jest.fn() } },
       },
     })
 
@@ -120,6 +121,7 @@ describe('Default', () => {
           name: 'datasetIds-locationId',
         },
         $router: { push: routerPush },
+        $tours: { introduction: { start: jest.fn() } },
       },
     })
 
@@ -142,6 +144,7 @@ describe('Default', () => {
           name: 'datasetIds-locationId',
         },
         $router: { push: routerPush },
+        $tours: { introduction: { start: jest.fn() } },
       },
     })
 

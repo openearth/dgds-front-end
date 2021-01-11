@@ -132,13 +132,27 @@ export const actions = {
     })
   },
 
-  retrieveRasterLayerByImageId({ commit, state, getters }, imageId) {
+  retrieveRasterLayerByImageId({ commit, state, getters }, { imageId, options }) {
+    options = options || {}
     commit('setLoadingRasterLayers', true)
     const dataset = getters.getActiveRasterLayer
+    // If band has changed, use band from options. If band is not defined use already set band
+    if (!_.get(options, 'band') && _.get(getters, 'activeRasterData.band')) {
+      options.band = _.get(getters, 'activeRasterData.band')
+    }
 
+    if (!_.get(options, 'min') && _.get(getters, 'activeRasterData.min')) {
+      options.min = _.get(getters, 'activeRasterData.min')
+    }
+
+    if (!_.get(options, 'max') && _.get(getters, 'activeRasterData.max')) {
+      options.max = _.get(getters, 'activeRasterData.max')
+    }
+    const params = new URLSearchParams(options)
     // Retrieve complete new rasterLayer by imageId and dataset
-    return getFromApi(`datasets/${dataset}/${imageId}`).then(val => {
-      commit('updateRasterLayer', { dataset, rasterLayer: val })
+    return getFromApi(`datasets/${dataset}/${imageId}?${params}`).then(val => {
+      // If the range is set manually we don't want to update the default raster laayer
+      commit('updateRasterLayer', { dataset, rasterLayer: val.rasterLayer })
       commit('setLoadingRasterLayers', false)
     })
   },
@@ -291,7 +305,7 @@ export const getters = {
     }
     return _.get(datasets, `${activeRasterLayerId}.raster`)
   },
-  activeRasterLegendData({ datasets, activeRasterLayerId, activeDatasets }) {
+  activeRasterLegendData({ datasets, activeRasterLayerId }) {
     // Return the active raster data tiles (if not defined, return [])
     if (activeRasterLayerId === '' || activeRasterLayerId === null) {
       return []

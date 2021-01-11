@@ -17,19 +17,36 @@
     <figcaption class="graph-line__caption strong" @click="toggleCollapsedDataset(parameterId)">
       {{ title }}
     </figcaption>
-    <div v-if="!isCollapsed" :class="{ image: type === 'images' }" class="graph-line__aspect-ratio">
+    <div
+      v-if="!isCollapsed"
+      :class="{ 'graph-line__aspect-ratio--image': isImage }"
+      class="graph-line__aspect-ratio"
+    >
       <v-chart
-        v-if="type === 'line' || type === 'scatter'"
+        v-if="isLine || isScatter"
         :ref="title"
-        :options="options"
+        :options="graphData"
         :autoresize="true"
         class="graph-line__chart"
       />
-      <img v-if="type === 'images'" :src="imageUrl" class="graph-line__chart graph-image" />
-      <ui-button v-if="user" class="graph-line__download" kind="secondary" @click="download">
+      <img v-else :src="imageUrl" class="graph-line__image" />
+      <ui-button
+        v-if="user && (isLine || isScatter)"
+        class="graph-line__download"
+        kind="secondary"
+        @click="downloadJson"
+      >
         Download data
       </ui-button>
-      <p v-else class="graph-line__message">
+      <ui-button
+        v-if="user && isImage"
+        class="graph-line__download"
+        kind="secondary"
+        @click="downloadImage"
+      >
+        Download image
+      </ui-button>
+      <p v-if="!user" class="graph-line__message">
         <icon name="info" />
         Please log in to download data
       </p>
@@ -183,13 +200,15 @@
       isCollapsed() {
         return this.getCollapsedDatasets.includes(this.parameterId)
       },
-      options() {
-        const series = this.graphData()
-        return series
+      isLine() {
+        return this.type === 'line'
       },
-    },
-    methods: {
-      ...mapMutations('map', ['toggleCollapsedDataset']),
+      isImage() {
+        return this.type === 'images'
+      },
+      isScatter() {
+        return this.type === 'scatter'
+      },
       graphData() {
         let series = []
         let markPointCoord = []
@@ -253,7 +272,11 @@
         const result = merge(dataOptions, baseOptions, theme)
         return result
       },
-      download() {
+    },
+    methods: {
+      ...mapMutations('map', ['toggleCollapsedDataset']),
+
+      downloadJson() {
         const fileName = `${this.title}.json`
 
         const data = {
@@ -271,29 +294,60 @@
         // Save the file
         saveAs(fileToSave, fileName)
       },
+      downloadImage() {
+        const fileName = `${this.title}.svg`
+
+        fetch(this.imageUrl)
+          .then(res => {
+            return res.text()
+          })
+          .then(response => {
+            // create elements
+            const parser = new DOMParser()
+            const doc = parser.parseFromString(response, 'image/svg+xml')
+            const svg = doc.getElementsByTagName('svg')[0]
+            const style = document.createElement('style')
+
+            // set style
+            style.innerHTML = `svg {
+              background-color: black;
+            }`
+            svg.append(style)
+
+            // convert to url
+            const data = new XMLSerializer().serializeToString(doc)
+            const svgBlob = new Blob([data], {
+              type: 'image/svg+xml;charset=utf-8',
+            })
+            const svgUrl = URL.createObjectURL(svgBlob)
+
+            // Save the file
+            saveAs(svgUrl, fileName)
+          })
+      },
     },
   }
 </script>
 
 <style>
-  .graph-line__aspect-ratio.image {
-    height: 600px;
+  .graph-line__aspect-ratio--image {
+    height: 1200px;
   }
 
-  .graph-image {
-    height: 600px;
+  .graph-line__image {
+    height: 1200px;
+    max-width: 100%;
     background-repeat: no-repeat;
     background-size: 50% 100%;
   }
 
   .graph-line {
     position: relative;
-    --caption-height: 3rem;
   }
 
   .graph-line__aspect-ratio {
     position: relative;
-    min-height: 360px;
+    min-height: 400px;
   }
 
   .graph-line__chart {
@@ -301,7 +355,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 90%;
+    height: 85%;
   }
 
   .graph-line__collapsible .graph-line__caption {
@@ -322,7 +376,7 @@
   }
 
   .graph-line__caption {
-    height: var(--caption-height);
+    height: 3rem;
     padding: var(--spacing-small);
     background-color: var(--color-background);
   }

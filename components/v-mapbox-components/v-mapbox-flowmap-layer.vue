@@ -40,9 +40,6 @@
       }
     },
     methods: {
-      deferredMountedTo(map) {
-        this.createLayer(map)
-      },
       createLayer(map) {
         // check if already created
         const oldLayer = map.getLayer('particle')
