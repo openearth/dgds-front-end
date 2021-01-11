@@ -1,4 +1,6 @@
 <script>
+  import { mapGetters } from 'vuex'
+
   // https://github.com/mapbox/webgl-wind
   import * as windGl from '@openearth/windgl'
 
@@ -16,6 +18,9 @@
       return {
         layer: null,
       }
+    },
+    computed: {
+      ...mapGetters('map', ['activeFlowmapData']),
     },
     mounted() {
       const map = this.getMap()
@@ -47,10 +52,9 @@
         }
 
         // get the tile source, will be replaced by options once  backend is fully  implemented
-        let url =
-          'https://storage.googleapis.com/dgds-data-public/flowmap/glossis/tiles/glossis-current-202003310000/tile.json'
-        url = 'glossis/tile.json'
-        const source = windGl.source(url)
+        const url = this.activeFlowmapData.url
+        const tileUrl = url.replace('{z}/{x}/{y}.png', 'tile.json')
+        const source = windGl.source(tileUrl)
         // Add the visualisation layer
         const layerConfig = {
           type: 'particles',

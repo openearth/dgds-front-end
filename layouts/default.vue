@@ -11,12 +11,16 @@
         id="map"
         ref="map"
         :access-token="mapboxAccessToken"
-        map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
+        map-style="mapbox://styles/global-data-viewer/ckaqxk1vr93rn1io1wlv0oftt"
         :preserve-drawing-buffer="true"
       >
         <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" />
-        <v-mapbox-selected-point-layer :geometry="geometry" />
-        <v-mapbox-info-text-layer :geometry="infoTextGeometry" :message="mapboxMessage" />
+        <v-mapbox-selected-point-layer v-if="false" :geometry="geometry" />
+        <v-mapbox-info-text-layer
+          v-if="false"
+          :geometry="infoTextGeometry"
+          :message="mapboxMessage"
+        />
         <v-mapbox-vector-layer
           v-for="vectorLayer in vectorLayers"
           :key="vectorLayer.id"
@@ -25,7 +29,7 @@
           :active-theme="activeTheme"
           @select-locations="selectLocations"
         />
-        <v-mapbox-raster-layer :options="rasterLayer" @click="getFeatureInfo" />
+        <v-mapbox-raster-layer v-if="true" :options="rasterLayer" @click="getFeatureInfo" />
         <v-mapbox-flowmap-layer v-if="showFlowmapLayer" :options="flowmapLayer" />
       </v-mapbox>
     </client-only>
