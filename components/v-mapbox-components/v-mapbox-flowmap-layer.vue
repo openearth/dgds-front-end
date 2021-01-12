@@ -48,8 +48,9 @@
           return
         }
 
-        // get the tile source, will be replaced by options once  backend is fully  implemented
+        // get the tile source
         const url = this.activeFlowmapData.url
+        // the tile.json contains extra information
         const tileUrl = url.replace('{z}/{x}/{y}.png', 'tile.json')
         const source = windGl.source(tileUrl)
         // Add the visualisation layer
@@ -57,17 +58,19 @@
           type: 'particles',
           after: 'waterway-label',
           properties: {
+            // Make particles go faster as we reach zoom level 8
             'particle-speed': ['interpolate', ['linear'], ['zoom'], 0, 1.5, 8, 30],
+            // Make particles greenish (triad wrt purple) and vary lightness a bit
             'particle-color': [
               'interpolate',
               ['linear'],
               ['get', 'speed'],
               0.0,
-              'hsla(154, 40%, 93%, 0.5)',
+              'hsla(154, 60%, 93%, 0.5)',
               0.1,
-              'hsla(154, 40%, 53%, 1)',
+              'hsla(154, 60%, 53%, 1)',
               1.0,
-              'hsla(154, 40%, 20%, 1)',
+              'hsla(154, 60%, 20%, 1)',
             ],
           },
         }
