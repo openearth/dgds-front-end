@@ -57,8 +57,18 @@
           type: 'particles',
           after: 'waterway-label',
           properties: {
-            'particle-speed': ['interpolate', ['linear'], ['zoom'], 0, 0.9, 8, 1.5],
-            'particle-color': 'rgba(60, 60, 90, 0.9)',
+            'particle-speed': ['interpolate', ['linear'], ['zoom'], 0, 1.5, 8, 30],
+            'particle-color': [
+              'interpolate',
+              ['linear'],
+              ['get', 'speed'],
+              0.0,
+              'hsla(154, 40%, 93%, 0.5)',
+              0.1,
+              'hsla(154, 40%, 53%, 1)',
+              1.0,
+              'hsla(154, 40%, 20%, 1)',
+            ],
           },
         }
 
@@ -75,7 +85,7 @@
           ),
         )
         layer.maxzoom = 7
-        layer.minzoom = 1
+        layer.minzoom = 0
         if (after) {
           // add it inline (before the label)
           map.addLayer(layer, after)
