@@ -1,4 +1,6 @@
 <script>
+  import { mapGetters } from 'vuex'
+
   // https://github.com/mapbox/webgl-wind
   import * as windGl from '@openearth/windgl'
 
@@ -16,6 +18,9 @@
       return {
         layer: null,
       }
+    },
+    computed: {
+      ...mapGetters('map', ['activeFlowmapData']),
     },
     mounted() {
       const map = this.getMap()
@@ -43,18 +48,30 @@
           return
         }
 
-        // get the tile source, will be replaced by options once  backend is fully  implemented
-        let url =
-          'https://storage.googleapis.com/dgds-data-public/flowmap/glossis/tiles/glossis-current-202003310000/tile.json'
-        url = 'glossis/tile.json'
-        const source = windGl.source(url)
+        // get the tile source
+        const url = this.activeFlowmapData.url
+        // the tile.json contains extra information
+        const tileUrl = url.replace('{z}/{x}/{y}.png', 'tile.json')
+        const source = windGl.source(tileUrl)
         // Add the visualisation layer
         const layerConfig = {
           type: 'particles',
           after: 'waterway-label',
           properties: {
-            'particle-speed': ['interpolate', ['linear'], ['zoom'], 0, 0.9, 8, 1.5],
-            'particle-color': 'rgba(60, 60, 90, 0.9)',
+            // Make particles go faster as we reach zoom level 8
+            'particle-speed': ['interpolate', ['linear'], ['zoom'], 0, 1.5, 8, 30],
+            // Make particles greenish (triad wrt purple) and vary lightness a bit
+            'particle-color': [
+              'interpolate',
+              ['linear'],
+              ['get', 'speed'],
+              0.0,
+              'hsla(154, 60%, 93%, 0.5)',
+              0.1,
+              'hsla(154, 60%, 53%, 1)',
+              1.0,
+              'hsla(154, 60%, 20%, 1)',
+            ],
           },
         }
 
@@ -71,7 +88,7 @@
           ),
         )
         layer.maxzoom = 7
-        layer.minzoom = 1
+        layer.minzoom = 0
         if (after) {
           // add it inline (before the label)
           map.addLayer(layer, after)
