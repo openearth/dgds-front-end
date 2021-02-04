@@ -18,7 +18,7 @@
     </svg>
     <div class="layer-legend__range unselectable">
       <div v-if="!editingRange" class="layer-legend__range-min">
-        <ui-button kind="quiet" @click="editRange">{{ minValue }}{{ unit }}</ui-button>
+        <ui-button kind="quiet" @click="editRange">{{ minValue }}</ui-button>
       </div>
       <div v-else class="layer-legend__range-min layer-legend__range-min--editing">
         <ui-text-input
@@ -30,7 +30,7 @@
         />
       </div>
       <div v-if="!editingRange" class="layer-legend__range-max" @click="editRange">
-        <ui-button kind="quiet" @click="editRange">{{ maxValue }}{{ unit }}</ui-button>
+        <ui-button kind="quiet" @click="editRange">{{ maxValue }}</ui-button>
       </div>
       <div v-else class="layer-legend__range-max layer-legend__range-max--editing">
         <ui-text-input
