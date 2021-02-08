@@ -49,6 +49,8 @@ Article 2: Specific purpose and allowed use per dataset
 - 2.11 Groundwater declining trend and Evaporation deficit (CRUCIAL) Data
   - 2.11.1 The Groundwater declining trend and Evaporation deficit (CRUCIAL) data are provided to give User a merely indicative first view of groundwater changes and the evapodation deficit at a location or area of User’s choice. It is noted the global data sources used are generally of rather coarse spatial resolution and dedicated local studies may be needed for more detailed output.
   - 2.11.2 The Groundwater declining trend and Evaporation deficit (CRUCIAL) data should be considered as indicative data, which were validated to a limited extent. User hereby agrees NOT to use the Groundwater declining trend and Evaporation deficit (CRUCIAL) data products for any official reporting, decision-making or operational purposes. 
+- 2.12 Global Lowland LiDAR Digital Terrain Model Data (GLL_DTM)
+  - 2.12.1 The purpose of the Global Lowland LiDAR Digital Terrain Model is to support the analysis and interpretation of the other Data Products by the User.
 
 Article 3: License
 - 3.1	Deltares grants User a non-exclusive, worldwide, royalty-free, non-transferable and non-sublicensable license to use the Website and its Data Products strictly for the purpose and in accordance with the limitations specified in this User Agreement. This license is provided solely under the condition that User complies with the provisions of this User Agreement.
@@ -80,6 +82,7 @@ Article 6: No warranty, indemnification
   - 6.2.7 GTSM Data Products: Deltares does not guarantee, or imply in any way, that the Global Tide and Surge Model (GTSM) Data Products will correspond to actual water level or tidal conditions at User’s selected area(s).
   - 6.2.8 Chlorophyll Indicator Data Products: Deltares does not guarantee, or imply in any way, that the Chlorophyll Indicator Data will correspond to actual Chlorophyll concentrations at User’s selected area(s) and timeframe(s).
   - 6.2.9 Groundwater declining trend and Evaporation deficit (CRUCIAL) Products: Deltares does not guarantee, or imply in any way, that the Groundwater declining trend and Evaporation deficit (CRUCIAL) will correspond to actual groundwater changes and evaporation deficits at User’s selected area(s) and timeframe(s).
+  - 6.2.10 Global Lowland LiDAR Digital Terrain Model Data is licensed under the CC by 4.0 license.
 - 6.3	The Website may contain links to websites of third parties and while these links are selected with all possible care, Deltares cannot guarantee the contents and the functioning of the website of third parties.
 - 6.4	Deltares expressly disclaims any implied warranty or merchantability, fitness for a particular purpose, or for failure of performance and any and all liability for any loss or damage whatsoever suffered as a result of User’s use or reliance upon the Website and the resulting Data Products.
 - 6.5	Furthermore, Deltares does not guarantee that the Website and resulting Data Products are free of viruses and work without errors and/or interruptions.
