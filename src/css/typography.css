@@ -1,0 +1,76 @@
+@font-face {
+  font-family: 'sansa_con_probold';
+  src: url('/fonts/sansapro-bold-webfont.woff2') format('woff2'),
+       url('/fonts/sansapro-bold-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  font-size: 100%;
+  font-weight: normal;
+  line-height: 1rem;
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+.strong {
+  font-weight: bold;
+}
+
+.h1,
+.h2,
+.h3,
+.h4 {
+  font-family: 'sansa_con_probold';
+}
+
+.h1 {
+  font-size: 2.5rem;
+  line-height: 3.75rem;
+}
+
+.h2 {
+  font-size: 2rem;
+  line-height: 3rem;
+}
+
+.h3 {
+  font-size: 1.5rem;
+  line-height: 2.25rem;
+}
+
+.h4 {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.bodytext-xl {
+  font-size: 1.5rem;
+  line-height: 2.25rem;
+}
+
+.bodytext-l {
+  font-size: 1.25rem;
+  line-height: 2rem;
+}
+
+.bodytext-m {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.bodytext-s {
+  font-size: .75rem;
+  line-height: 1.125rem;
+}
+
+.bodytext-xs {
+  font-size: .5rem;
+  line-height: 1rem;
+}
