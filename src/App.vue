@@ -14,7 +14,7 @@ import SideMenu from '@/components/SideMenu'
 
 import auth from '@/components/auth'
 
-import { mapMutations } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 
 export default {
   name: 'App',
@@ -28,10 +28,12 @@ export default {
     //
   }),
   mounted () {
+    this.loadDatasets()
     this.getUser()
   },
   methods: {
     ...mapMutations(['setUser']),
+    ...mapActions({ loadDatasets: 'loadDatasets' }),
     getUser () {
       console.log('get user')
       auth

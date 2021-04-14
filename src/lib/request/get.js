@@ -3,7 +3,7 @@ import identity from 'lodash/identity'
 
 import error from './error'
 
-const base = process.env.SERVER_URL
+const base = process.env.VUE_APP_SERVER_URL
 
 /**
  * Gets JSON response from the provided enpoint from the API
