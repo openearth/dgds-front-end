@@ -52,13 +52,9 @@ export default {
       return _.get(this.user, 'phone', '--')
     }
   },
-  mounted () {
-    console.log(process.env)
-  },
   methods: {
     ...mapMutations(['setUser']),
     login () {
-      console.log(window.location.origin)
       auth.signinRedirect({ state: window.location.origin })
     },
     logout () {

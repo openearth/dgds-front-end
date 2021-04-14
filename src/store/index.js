@@ -1,17 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import preferences from './preferences'
+import theme from './preferences/theme.js'
+import map from './map'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
-    user: null
-  },
-  mutations: {
-    setUser (state, user) {
-      state.user = user
-    }
-  },
-  actions: {
+  modules: {
+    map,
+    preferences,
+    theme
   }
 })

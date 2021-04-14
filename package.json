@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "lint:fix": "lint -- --fix"
   },
   "dependencies": {
     "core-js": "^3.6.5",
@@ -14,7 +15,6 @@
     "oidc-client": "^1.11.5",
     "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
-    "vue-markdown": "^2.2.4",
     "vue-router": "^3.2.0",
     "vue2mapbox-gl": "^0.13.0",
     "vuetify": "^2.4.0",
@@ -38,6 +38,7 @@
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^6.2.2",
     "lint-staged": "^9.5.0",
+    "markdown-loader": "^6.0.0",
     "node-sass": "^4.12.0",
     "sass": "^1.32.0",
     "sass-loader": "^10.0.0",

@@ -1,3 +1,6 @@
+const marked = require('marked')
+const renderer = new marked.Renderer()
+
 module.exports = {
   transpileDependencies: [
     'vuetify'
@@ -14,6 +17,21 @@ module.exports = {
         {
           test: /\.svg$/,
           loader: 'vue-html-loader'
+        },
+        {
+          test: /\.md$/,
+          use: [
+            {
+              loader: 'vue-html-loader'
+            },
+            {
+              loader: 'markdown-loader',
+              options: {
+                pedantic: true,
+                renderer
+              }
+            }
+          ]
         }
       ]
     }
