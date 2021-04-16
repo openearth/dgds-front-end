@@ -96,7 +96,34 @@ export default {
       this.setActivePanels()
     },
     toggleLocationDataset (id) {
-      this.$emit('toggle-location-dataset', id)
+      let oldParams = _.get(this.$route, 'params.datasetIds')
+      // const newRouteObject = Object.assign({}, this.$route)
+      let newParams
+
+      if (!oldParams) {
+        // If oldParams is undefined, set newParams by id
+        newParams = id
+      } else {
+        // Else check if new id should be removed or added to new route
+        oldParams = oldParams.split(',')
+        if (oldParams.includes(id)) {
+          // if oldparams already includes id, remove from route
+          newParams = oldParams.filter(param => param !== id)
+          if (newParams.length === 0) {
+            newParams = undefined
+          } else {
+            newParams = newParams.join(',')
+          }
+        } else {
+          // else add id to route and zoomtobbox
+          newParams = `${oldParams},${id}`
+        }
+      }
+      if (newParams) {
+        this.$router.push({ name: 'datasetIds', params: { datasetIds: newParams } })
+      } else {
+        this.$router.push('/')
+      }
     },
     toggleRasterLayer (id) {
       if (this.getActiveRasterLayer === id) {

@@ -4,16 +4,19 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 
 export default {
-  data () {
-    return {
+  watch: {
+    '$route.params.datasetIds' () {
+      this.storeActiveDatasets(this.$route.params.datasetIds)
     }
   },
-  components: {
-  },
   mounted () {
-    console.log('datasetids mounted with: ')
+    this.storeActiveDatasets(this.$route.params.datasetIds)
+  },
+  methods: {
+    ...mapActions(['storeActiveDatasets'])
   }
 }
 </script>

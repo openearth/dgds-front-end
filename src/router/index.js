@@ -6,6 +6,7 @@ import Silent from '../views/auth/silent'
 import Callback from '../views/auth/callback'
 import Logout from '../views/auth/logout'
 import DatasetIds from '../views/DatasetIds'
+import LocationIds from '../views/datasetIds/LocationIds'
 
 Vue.use(VueRouter)
 
@@ -17,7 +18,12 @@ const routes = [
   {
     path: '/:datasetIds',
     name: 'datasetIds',
-    component: DatasetIds
+    component: DatasetIds,
+    children: [{
+      path: ':locationIds',
+      name: 'locationIds',
+      component: LocationIds
+    }]
   },
   {
     path: '/about',

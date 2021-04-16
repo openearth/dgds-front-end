@@ -22,7 +22,6 @@
         :key="vectorLayer.id"
         :name="vectorLayer.id"
         :layer="vectorLayer"
-        :active-theme="activeTheme"
         @select-locations="selectLocations"
       />
     </template>
@@ -53,6 +52,22 @@ export default {
     VMapboxFlowmapLayer,
     VMapboxSelectedPointLayer,
     VMapboxInfoTextLayer
+  },
+  watch: {
+    $route: {
+      handler (routeObj) {
+        if (routeObj.params.datasetIds === undefined) {
+          this.clearActiveDatasetIds()
+        }
+        if (routeObj.params.locationId === undefined) {
+          this.geometry = {
+            type: 'Point',
+            coordinates: []
+          }
+        }
+      },
+      deep: true
+    }
   },
   data () {
     return {
@@ -136,7 +151,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations('map', [
+    ...mapMutations([
       'clearActiveDatasetIds',
       'setActiveRasterLayer',
       'setGeographicalScope'
@@ -232,65 +247,13 @@ export default {
           locationIds.push(feature.properties[locId])
         }
       })
-      // this.updateRoute({
-      //   name: 'datasetIds-locationId',
-      //   params: { datasetIds, locationId: head(locationIds) }
-      // })
+      this.$router.push({ name: 'locationIds', params: { locationIds: _.head(locationIds) } })
     },
     toggleRasterLayer (event) {
       this.setActiveRasterLayer(event)
       this.removeInfoText()
       this.zoomToBbox(this.getActiveRasterLayer)
-    },
-    toggleLocationDataset (id) {
-      let oldParams = _.get(this.$route, 'params.datasetIds')
-      // const newRouteObject = Object.assign({}, this.$route)
-      let newParams
-
-      // TODO: there are too many if/else scenarios, this should be solved by
-      // moving the zoomtobbox logic towards the global/regional themes in
-      // the left panel, instead on these datasets.
-
-      if (!oldParams) {
-        // If oldParams is undefined, set newParams by id
-        newParams = id
-        this.zoomToBbox(id)
-      } else {
-        // Else check if new id should be removed or added to new route
-        oldParams = oldParams.split(',')
-        if (oldParams.includes(id)) {
-          // if oldparams already includes id, remove from route
-          newParams = oldParams.filter(param => param !== id)
-          if (newParams.length === 0) {
-            // If there are no datasets anymore, set the scop back to 'global'
-            this.setGeographicalScope('global')
-            newParams = undefined
-          } else {
-            newParams = newParams.join(',')
-          }
-        } else {
-          // else add id to route and zoomtobbox
-          newParams = `${oldParams},${id}`
-          this.zoomToBbox(id)
-        }
-      }
-      // newRouteObject.params.datasetIds = newParams
-      // this.updateRoute(newRouteObject)
     }
-    // updateRoute (routeObj) {
-    //   // Update route with route object
-    //   const { datasetIds, locationId } = routeObj.params
-    //   if (datasetIds === undefined) {
-    //     this.geometry = {
-    //       type: 'Point',
-    //       coordinates: []
-    //     }
-    //   }
-    //   if (datasetIds === undefined && locationId !== undefined) {
-    //     routeObj = update('params.locationId', () => undefined, routeObj)
-    //   }
-    //   this.$router.push(routeObj)
-    // }
   }
 
 }

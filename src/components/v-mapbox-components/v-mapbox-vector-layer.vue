@@ -10,10 +10,6 @@ export default {
         return {}
       },
       type: Object
-    },
-    activeTheme: {
-      type: String,
-      required: true
     }
   },
   data () {
@@ -27,9 +23,6 @@ export default {
         this.updateMap()
       },
       deep: true
-    },
-    activeTheme () {
-      this.setActiveFilter()
     }
   },
   mounted () {
