@@ -85,7 +85,8 @@ export default {
   },
   data () {
     return {
-      activePanels: []
+      activePanels: [],
+      hoverId: ''
     }
   },
   methods: {
@@ -93,9 +94,6 @@ export default {
     onTooltipClick (id) {
       this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
       this.setActivePanels()
-    },
-    onMouseLeave () {
-      this.hoverId = null
     },
     toggleLocationDataset (id) {
       this.$emit('toggle-location-dataset', id)
@@ -123,19 +121,11 @@ export default {
         options: { band: option.band }
       })
     },
-    items (options) {
-      // Add value to the array to use in the ui-select
-      return options.map(option => {
-        option.value = option.band
-        return option
-      })
-    },
     setActivePanels () {
       const active = this.datasets.flatMap((dataset, index) => {
         const activeDataset = this.hoverId === dataset.id || this.getActiveRasterLayer === dataset.id
         return activeDataset ? index : []
       })
-      console.log(active)
       this.activePanels = active
     }
   }
