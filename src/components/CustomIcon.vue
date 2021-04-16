@@ -15,6 +15,10 @@ export default {
       type: String,
       default: ''
     },
+    iconFolder: {
+      type: String,
+      default: null
+    },
     size: {
       type: String,
       default: null
@@ -24,7 +28,8 @@ export default {
     icon () {
       try {
         console.log(this.name)
-        return require(`../assets/icons/icon-${this.name}.svg`)
+        const subFolder = this.iconFolder ? `${this.iconFolder}/` : ''
+        return require(`../assets/icons/${subFolder}icon-${this.name}.svg`)
       } catch {
         return require('../assets/icons/icon-placeholder.svg')
       }

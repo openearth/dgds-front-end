@@ -22,16 +22,16 @@
         <v-divider></v-divider>
         <v-list-item-group color="primary">
           <v-list-item
-            v-for="item in items"
-            :key="item.title"
-            link
-            :to="{ name: item.name }"
+            v-for="item in getThemes"
+            :key="item.name"
+            @click="toggleTheme(item.id)"
+            :active="isActive(item.id)"
           >
             <v-list-item-icon>
-              <v-icon>{{ item.icon }}</v-icon>
+              <custom-icon :name="item.id" iconFolder="themes" />
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
+              <v-list-item-title>{{ item.name }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -66,16 +66,38 @@
 
 <script>
 import CustomIcon from '@/components/CustomIcon'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
   components: {
     CustomIcon
   },
+  computed: {
+    ...mapGetters(['getThemes', 'getActiveTheme'])
+  },
   data () {
     return {
       drawer: true,
       items: [{ title: 'Editor', name: 'editor', icon: 'mdi-circle-edit-outline' }],
-      mini: true
+      mini: true,
+      activeTheme: null
+    }
+  },
+  methods: {
+    ...mapMutations(['toggleActiveTheme']),
+    isActive (id) {
+      return this.activeTheme === id
+    },
+    toggleTheme (id) {
+      this.toggleActiveTheme(id)
+
+      if (this.activeTheme === id) {
+        this.activeTheme = null
+      } else {
+        this.activeTheme = id
+      }
+
+      this.$emit('change-theme')
     }
   }
 }

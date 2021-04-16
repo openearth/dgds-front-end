@@ -15,7 +15,7 @@ export const getters = {
 }
 
 export default {
-  state: () => state,
+  state,
   mutations,
   getters
 }

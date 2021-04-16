@@ -1,3 +1,5 @@
+import theme from './theme.js'
+
 export const getDefaultState = () => ({
   sidebarAnimating: false,
   sidebarExpanded: false,
@@ -22,6 +24,9 @@ export const mutations = {
 }
 
 export default {
-  state: () => state,
-  mutations
+  state,
+  mutations,
+  modules: {
+    theme
+  }
 }

@@ -1,11 +1,11 @@
 <template>
-  <v-navigation-drawer class="pl-16" permanent absolute width="40vw" height="100%">
-    <v-container fill-height>
-      <h2 class="h3 flex-shrink-1">
+  <v-navigation-drawer class="pl-16" permanent absolute width="40vw">
+    <v-container class="account d-flex flex-column">
+      <h2 class="h3">
         About
       </h2>
       <div
-        class="markdown flex-grow-1 scrollbar"
+        class="markdown flex-grow-1 py-3 scrollbar"
         :watches="['source']"
         v-html="aboutText"
         :anchor-attributes="{ target: '_blank' }"

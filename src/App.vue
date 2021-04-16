@@ -3,6 +3,7 @@
     <side-menu />
     <v-main>
       <router-view />
+      <data-set-controls />
       <map-component />
     </v-main>
   </v-app>
@@ -11,6 +12,7 @@
 <script>
 import MapComponent from '@/components/MapComponent'
 import SideMenu from '@/components/SideMenu'
+import DataSetControls from '@/components/DataSetControls'
 
 import auth from '@/components/auth'
 
@@ -21,9 +23,9 @@ export default {
 
   components: {
     MapComponent,
-    SideMenu
+    SideMenu,
+    DataSetControls
   },
-
   data: () => ({
     //
   }),

@@ -13,6 +13,8 @@ import _ from 'lodash'
 import moment from 'moment'
 import { includesIn, getIn, wrapInProperty } from '../../lib/utils'
 import getFromApi from '../../lib/request/get'
+import datasets from './datasets.js'
+import themes from './themes.js'
 
 const getId = get('id')
 
@@ -102,24 +104,24 @@ export const actions = {
       })
 
       // Add themes to store.themes
-      val.themes.forEach(theme => commit('themes/addTheme', theme))
+      val.themes.forEach(theme => commit('addTheme', theme))
 
       val.datasets.forEach(set => {
         // Add metadata to store.datasets (excluding vectorLayer and rasterLayer)
-        commit('datasets/addMetadata', _.omit(set, ['vectorLayer', 'rasterLayer', 'flowmapLayer']))
+        commit('addMetadata', _.omit(set, ['vectorLayer', 'rasterLayer', 'flowmapLayer']))
 
         // Add vectorlayer to store.datasets if available
         if (_.has(set, 'vectorLayer')) {
-          commit('datasets/addDatasetVector', set)
+          commit('addDatasetVector', set)
         }
 
         // Flowmap for currents and  wind
         if (_.has(set, 'flowmapLayer')) {
-          commit('datasets/addDatasetFlowmap', set)
+          commit('addDatasetFlowmap', set)
         }
         // Add rasterLayer to store.datasets if available
         if (_.has(set, 'rasterLayer') && _.get(set, 'rasterLayer.url') !== null) {
-          commit('datasets/addDatasetRaster', set)
+          commit('addDatasetRaster', set)
 
           // If key rasterActiveOnLoad is true, turn this layer on on load
           const rasterActive = _.get(set, 'rasterActiveOnLoad')
@@ -150,7 +152,7 @@ export const actions = {
     }
     const params = new URLSearchParams(options)
     // Retrieve complete new rasterLayer by imageId and dataset
-    return getFromApi(`datasets/${dataset}/${imageId}?${params}`).then(val => {
+    return getFromApi(`${dataset}/${imageId}?${params}`).then(val => {
       // If the range is set manually we don't want to update the default raster laayer
       commit('updateRasterLayer', { dataset, rasterLayer: val.rasterLayer })
       commit('setLoadingRasterLayers', false)
@@ -203,7 +205,7 @@ export const actions = {
         // images -> just an url to a svg image
         // line or scatter -> data to create echarts graph
         if (pointDataType === 'images') {
-          commit('datasets/addDatasetPointData', {
+          commit('addDatasetPointData', {
             id: datasetId,
             data: {
               [locationId]: {
@@ -221,7 +223,7 @@ export const actions = {
             category = category.concat(res.events.map(event => moment(event.timeStamp).format()))
           })
 
-          commit('datasets/addDatasetPointData', {
+          commit('addDatasetPointData', {
             id: datasetId,
             data: {
               [locationId]: {
@@ -406,8 +408,12 @@ export const getters = {
 }
 
 export default {
-  state: () => state,
+  state,
   actions,
   mutations,
-  getters
+  getters,
+  modules: {
+    datasets,
+    themes
+  }
 }

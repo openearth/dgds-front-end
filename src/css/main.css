@@ -1,3 +1,11 @@
 html {
   overflow-y: hidden;
 }
+
+:root {
+  --spacing-default: 1.5rem;
+  --spacing-large: calc(var(--spacing-default) * 2);
+  --spacing-small: 1rem;
+
+  --icon-size: 30px;
+}
