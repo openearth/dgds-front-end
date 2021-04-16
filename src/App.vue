@@ -3,7 +3,9 @@
     <side-menu />
     <v-main>
       <router-view />
-      <data-set-controls />
+      <data-set-controls
+        :datasets="datasetsInActiveTheme"
+      />
       <map-component />
     </v-main>
   </v-app>
@@ -16,7 +18,7 @@ import DataSetControls from '@/components/DataSetControls'
 
 import auth from '@/components/auth'
 
-import { mapMutations, mapActions } from 'vuex'
+import { mapMutations, mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'App',
@@ -32,6 +34,9 @@ export default {
   mounted () {
     this.loadDatasets()
     this.getUser()
+  },
+  computed: {
+    ...mapGetters(['datasetsInActiveTheme'])
   },
   methods: {
     ...mapMutations(['setUser']),

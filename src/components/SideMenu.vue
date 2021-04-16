@@ -12,12 +12,7 @@
           <v-list-item-avatar>
             <custom-icon name="deltares" />
           </v-list-item-avatar>
-
           <v-list-item-title>Deltares</v-list-item-title>
-
-          <v-btn icon @click.stop="mini = !mini">
-            <v-icon>mdi-chevron-left</v-icon>
-          </v-btn>
         </v-list-item>
         <v-divider></v-divider>
         <v-list-item-group color="primary">

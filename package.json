@@ -10,6 +10,9 @@
     "lint:fix": "lint -- --fix"
   },
   "dependencies": {
+    "@openearth/windgl": "^0.1.2",
+    "@turf/distance": "^6.3.0",
+    "@turf/turf": "^6.3.0",
     "core-js": "^3.6.5",
     "mapbox-gl": "^2.2.0",
     "oidc-client": "^1.11.5",
