@@ -1,7 +1,7 @@
 <template>
   <div class="data-set-controls">
     <v-card dark raised height="100%">
-      <v-card-title>
+      <v-card-title class="h3">
         {{ themeName }}
       </v-card-title>
       <v-card-text class='scrollbar data-set-controls--card'>
@@ -175,14 +175,26 @@ export default {
   height: calc(100% - 64px);
 }
 
+.data-set-controls__tooltip-text::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: 4px;
+  width: 0;
+  height: 0;
+  border-right: 8px solid transparent;
+  border-bottom: 8px solid var(--v-quietHover-base);
+  border-left: 8px solid transparent;
+}
+
 .data-set-controls__tooltip-text {
   position: relative;
   flex: 0 0 100%;
   width: 100%;
   padding: 0.5rem 0.75rem;
   border-radius: 5px;
-  background-color: var(--color-quiet-hover);
+  background-color: var(--v-quietHover-base);
   box-shadow: 4px 6px 20px -4px rgba(0, 0, 0, 0.5);
-  color: var(--color-text-color);
+  color: var(--v-textColor-base);
 }
 </style>

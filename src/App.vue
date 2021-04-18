@@ -32,6 +32,7 @@ export default {
     //
   }),
   mounted () {
+    console.log(this.$vuetify.theme.themes.dark)
     this.loadDatasets()
     this.getUser()
   },

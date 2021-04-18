@@ -1,7 +1,7 @@
 <template>
 <v-navigation-drawer class="pl-16" permanent absolute width="40vw">
   <v-container class="account d-flex flex-column">
-    <h2 class="h3">
+    <h2 class="h2">
       Account
     </h2>
     <div class="account-details flex-grow-1 py-3">

@@ -6,12 +6,12 @@
 <script>
 export default {
   watch: {
-    '$route.params.locationIds' () {
-      console.log('change in locationIds', this.$route.params.locationIds)
+    '$route' () {
+      console.log('change in locationIds', this.$route.params.locationIds, this.$route)
     }
   },
   mounted () {
-    console.log('mounted locationIds', this.$route.params.locationIds)
+    console.log('mounted locationIds', this.$route.params.locationIds, this.$route)
   }
 }
 </script>
