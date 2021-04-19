@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer class="pl-16" permanent absolute width="40vw">
+  <v-navigation-drawer class="pl-16" permanent absolute width="40vw" color="background">
     <v-container class="account d-flex flex-column">
       <h2 class="h2">
         About

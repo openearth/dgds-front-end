@@ -247,7 +247,7 @@ export default {
           locationIds.push(feature.properties[locId])
         }
       })
-      this.$router.push({ name: 'locationIds', params: { locationIds: _.head(locationIds) } })
+      this.$router.push({ name: 'locationId', params: { locationId: _.head(locationIds) } })
     },
     toggleRasterLayer (event) {
       this.setActiveRasterLayer(event)

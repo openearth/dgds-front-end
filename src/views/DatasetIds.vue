@@ -9,7 +9,6 @@ import { mapActions } from 'vuex'
 export default {
   watch: {
     '$route.params.datasetIds' () {
-      console.log('change in locationIds', this.$route)
       this.storeActiveDatasets(this.$route.params.datasetIds)
     }
   },

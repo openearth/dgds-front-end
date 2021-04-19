@@ -1,8 +1,10 @@
 <template>
   <v-app>
-    <side-menu />
+    <side-menu @toggle-account="account = !account" @toggle-about="about = !about"  />
     <v-main>
       <router-view />
+      <about-panel v-if="about" />
+      <account-panel v-if="account" />
       <data-set-controls
         :datasets="datasetsInActiveTheme"
       />
@@ -15,24 +17,26 @@
 import MapComponent from '@/components/MapComponent'
 import SideMenu from '@/components/SideMenu'
 import DataSetControls from '@/components/DataSetControls'
-
+import AboutPanel from '@/components/AboutPanel.vue'
+import AccountPanel from '@/components/AccountPanel.vue'
 import auth from '@/components/auth'
 
 import { mapMutations, mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'App',
-
   components: {
     MapComponent,
     SideMenu,
-    DataSetControls
+    DataSetControls,
+    AboutPanel,
+    AccountPanel
   },
   data: () => ({
-    //
+    account: false,
+    about: false
   }),
   mounted () {
-    console.log(this.$vuetify.theme.themes.dark)
     this.loadDatasets()
     this.getUser()
   },

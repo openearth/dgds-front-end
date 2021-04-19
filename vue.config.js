@@ -6,7 +6,7 @@ module.exports = {
     'vuetify'
   ],
   devServer: {
-    port: 8001
+    port: 8000
   },
   chainWebpack: config => {
     config.module.rules.delete('svg')

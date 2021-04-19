@@ -1,5 +1,5 @@
 <template>
-<v-navigation-drawer class="pl-16" permanent absolute width="40vw">
+<v-navigation-drawer class="pl-16" permanent absolute width="40vw" color="background">
   <v-container class="account d-flex flex-column">
     <h2 class="h2">
       Account
@@ -45,17 +45,19 @@ export default {
       return _.get(this.user, 'name', '--')
     },
     email () {
-      console.log(this.user)
       return _.get(this.user, 'email', '--')
     },
     phone () {
       return _.get(this.user, 'phone', '--')
     }
   },
+  mounted () {
+    console.log(this.user)
+  },
   methods: {
     ...mapMutations(['setUser']),
     login () {
-      auth.signinRedirect({ state: window.location.origin })
+      auth.signinRedirect({ state: window.location.href })
     },
     logout () {
       auth.signoutRedirect({ state: '/portal' })

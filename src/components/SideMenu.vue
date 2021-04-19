@@ -1,11 +1,12 @@
 <template>
-  <v-card>
+  <v-card color="background">
     <v-navigation-drawer
       v-model="drawer"
       :mini-variant.sync="mini"
       stateless
       fixed
       expand-on-hover
+      color="background"
     >
       <v-list dense class="pa-0">
         <v-list-item class="px-2" link :to="{ name: 'home' }">
@@ -36,7 +37,7 @@
       <template v-slot:append>
         <v-list dense class="pa-0">
           <v-list-item-group color="primary" class="bottom-menu">
-            <v-list-item link :to="{ name: 'about' }">
+            <v-list-item @click="$emit('toggle-about')">
               <v-list-item-icon>
                 <custom-icon name="info" />
               </v-list-item-icon>
@@ -44,7 +45,7 @@
                 <v-list-item-title>About</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item link :to="{ name: 'account' }">
+            <v-list-item @click="$emit('toggle-account')">
               <v-list-item-icon>
                 <custom-icon name="account" />
               </v-list-item-icon>

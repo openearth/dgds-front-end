@@ -12,45 +12,46 @@
           multiple
           readonly
           lazy>
-          <v-expansion-panel
-            v-for="(dataset) in datasets"
-            :key="dataset.id"
-          >
-            <v-expansion-panel-header hide-actions>
-              <v-row>
-                <custom-icon class="mr-1 my-auto" :name="dataset.id" iconFolder="datasets" />
-                <span class="my-auto">{{ dataset.name }}</span>
-                <v-spacer />
-                <v-switch
-                  class="my-auto"
-                  v-if="checkVector(dataset.id)"
-                  dense
-                  flat
-                  v-model="dataset.visible"
-                  @change="toggleLocationDataset(dataset.id)"
-                ></v-switch>
-                <v-radio
-                  dense
-                  class="my-auto"
-                  v-if="checkRaster(dataset.id)"
-                  :value="dataset.id === getActiveRasterLayer"
-                  @click="toggleRasterLayer(dataset.id)"
-                ></v-radio>
-                <v-btn icon class="my-auto" @click="onTooltipClick(dataset.id)" >
-                  <custom-icon v-if="dataset.toolTip" name="info" />
-                </v-btn>
-              </v-row>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
-              <div v-if="dataset.toolTip && hoverId === dataset.id" class="data-set-controls__tooltip">
-                <div
-                  v-html="dataset.toolTip"
-                  :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
-                  class="data-set-controls__tooltip-text markdown"
-                />
-              </div>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
+          <v-radio-group v-model="activeRasterLayer">
+            <v-expansion-panel
+              v-for="(dataset) in datasets"
+              :key="dataset.id"
+            >
+              <v-expansion-panel-header hide-actions>
+                <v-row>
+                  <custom-icon class="mr-1 my-auto" :name="dataset.id" iconFolder="datasets" />
+                  <span class="my-auto">{{ dataset.name }}</span>
+                  <v-spacer />
+                  <v-switch
+                    class="my-auto"
+                    v-if="checkVector(dataset.id)"
+                    dense
+                    flat
+                    v-model="dataset.visible"
+                    @change="toggleLocationDataset(dataset.id)"
+                  ></v-switch>
+                  <v-radio
+                    dense
+                    class="my-auto"
+                    v-if="checkRaster(dataset.id)"
+                    :value="dataset.id"
+                  ></v-radio>
+                  <v-btn icon class="my-auto" @click="onTooltipClick(dataset.id)" >
+                    <custom-icon v-if="dataset.toolTip" name="info" />
+                  </v-btn>
+                </v-row>
+              </v-expansion-panel-header>
+              <v-expansion-panel-content>
+                <div v-if="dataset.toolTip && hoverId === dataset.id" class="data-set-controls__tooltip">
+                  <div
+                    v-html="dataset.toolTip"
+                    :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+                    class="data-set-controls__tooltip-text markdown"
+                  />
+                </div>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-radio-group>
         </v-expansion-panels>
       </v-card-text>
     </v-card>
@@ -59,7 +60,7 @@
 
 <script>
 import CustomIcon from '@/components/CustomIcon'
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapActions, mapMutations } from 'vuex'
 import _ from 'lodash'
 
 export default {
@@ -81,6 +82,17 @@ export default {
     ]),
     themeName () {
       return _.get(this.getActiveTheme, 'name') || 'All datasets'
+    },
+    activeRasterLayer: {
+      get () {
+        return this.getActiveRasterLayer
+      },
+      set (id) {
+        if (this.getActiveRasterLayer === id) {
+          id = null
+        }
+        this.setActiveRasterLayer(id)
+      }
     }
   },
   data () {
@@ -90,7 +102,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions('map', ['retrieveRasterLayerByImageId']),
+    ...mapMutations(['setActiveRasterLayer']),
+    ...mapActions(['retrieveRasterLayerByImageId']),
     onTooltipClick (id) {
       this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
       this.setActivePanels()
@@ -124,12 +137,6 @@ export default {
       } else {
         this.$router.push('/')
       }
-    },
-    toggleRasterLayer (id) {
-      if (this.getActiveRasterLayer === id) {
-        id = null
-      }
-      this.$emit('toggle-raster-layer', id)
     },
     checkVector (id) {
       return _.has(this.getDatasets, `${id}.vector`)
