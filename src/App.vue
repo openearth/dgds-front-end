@@ -5,9 +5,8 @@
       <router-view />
       <about-panel v-if="about" />
       <account-panel v-if="account" />
-      <data-set-controls
-        :datasets="datasetsInActiveTheme"
-      />
+      <data-set-controls :datasets="datasetsInActiveTheme" />
+      <time-stamp v-show="activeTimestamp !== '' && getActiveRasterLayer"/>
       <map-component />
     </v-main>
   </v-app>
@@ -19,6 +18,7 @@ import SideMenu from '@/components/SideMenu'
 import DataSetControls from '@/components/DataSetControls'
 import AboutPanel from '@/components/AboutPanel.vue'
 import AccountPanel from '@/components/AccountPanel.vue'
+import TimeStamp from '@/components/TimeStamp.vue'
 import auth from '@/components/auth'
 
 import { mapMutations, mapActions, mapGetters } from 'vuex'
@@ -30,7 +30,8 @@ export default {
     SideMenu,
     DataSetControls,
     AboutPanel,
-    AccountPanel
+    AccountPanel,
+    TimeStamp
   },
   data: () => ({
     account: false,
@@ -41,7 +42,7 @@ export default {
     this.getUser()
   },
   computed: {
-    ...mapGetters(['datasetsInActiveTheme'])
+    ...mapGetters(['datasetsInActiveTheme', 'getActiveRasterLayer', 'activeTimestamp'])
   },
   methods: {
     ...mapMutations(['setUser']),

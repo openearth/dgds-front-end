@@ -1,27 +1,30 @@
 <template>
-  <div class="data-set-controls">
-    <v-card dark raised height="100%">
-      <v-card-title class="h3">
-        {{ themeName }}
-      </v-card-title>
-      <v-card-text class='scrollbar data-set-controls--card'>
-        <v-expansion-panels
-          accordion
-          flat
-          :value="activePanels"
-          multiple
-          readonly
-          lazy>
-          <v-radio-group v-model="activeRasterLayer">
-            <v-expansion-panel
-              v-for="(dataset) in datasets"
-              :key="dataset.id"
-            >
-              <v-expansion-panel-header hide-actions>
-                <v-row>
-                  <custom-icon class="mr-1 my-auto" :name="dataset.id" iconFolder="datasets" />
-                  <span class="my-auto">{{ dataset.name }}</span>
-                  <v-spacer />
+  <v-card dark raised height="80vh" class="pa-0 data-set-controls">
+    <v-card-title class="h3">
+      {{ themeName }}
+    </v-card-title>
+    <v-card-text class='scrollbar data-set-controls__text px-0 pb-0'>
+      <v-expansion-panels
+        accordion
+        flat
+        :value="activePanels"
+        multiple
+        readonly
+        lazy>
+        <v-radio-group v-model="activeRasterLayer" class='data-set-controls__group'>
+          <v-expansion-panel
+            v-for="(dataset) in datasets"
+            :key="dataset.id"
+          >
+            <v-expansion-panel-header hide-actions>
+              <v-row>
+                <v-col cols="1" class="ma-auto pa-0">
+                  <custom-icon :name="dataset.id" iconFolder="datasets" />
+                </v-col>
+                <v-col cols="7" class="ma-auto pa-0">
+                  <span class="ml-2 d-sm-none d-md-flex">{{ dataset.name }}</span>
+                </v-col>
+                <v-col cols="2" class="ma-auto pa-0">
                   <v-switch
                     class="my-auto"
                     v-if="checkVector(dataset.id)"
@@ -30,36 +33,43 @@
                     v-model="dataset.visible"
                     @change="toggleLocationDataset(dataset.id)"
                   ></v-switch>
+                </v-col>
+                <v-col cols="1" class="ma-auto pa-0">
                   <v-radio
                     dense
-                    class="my-auto"
                     v-if="checkRaster(dataset.id)"
                     :value="dataset.id"
+                    @click="setRasterLayer(dataset.id)"
                   ></v-radio>
+                </v-col>
+                <v-col cols="1" class="ma-auto pa-0">
                   <v-btn icon class="my-auto" @click="onTooltipClick(dataset.id)" >
                     <custom-icon v-if="dataset.toolTip" name="info" />
                   </v-btn>
-                </v-row>
-              </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <div v-if="dataset.toolTip && hoverId === dataset.id" class="data-set-controls__tooltip">
-                  <div
-                    v-html="dataset.toolTip"
-                    :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
-                    class="data-set-controls__tooltip-text markdown"
+                </v-col>
+              </v-row>
+            </v-expansion-panel-header>
+            <v-expansion-panel-content class="pa-0">
+              <div v-if="dataset.toolTip && hoverId === dataset.id" class="data-set-controls__tooltip">
+                <div
+                  v-html="dataset.toolTip"
+                  class="data-set-controls__tooltip-text markdown"
                   />
                 </div>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-radio-group>
-        </v-expansion-panels>
-      </v-card-text>
-    </v-card>
-  </div>
+                <div v-if="checkRaster(dataset.id) && activeRasterLayer === dataset.id">
+                  <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
+              </div>
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+        </v-radio-group>
+      </v-expansion-panels>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
 import CustomIcon from '@/components/CustomIcon'
+import LayerLegend from '@/components/LayerLegend'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import _ from 'lodash'
 
@@ -71,7 +81,8 @@ export default {
     }
   },
   components: {
-    CustomIcon
+    CustomIcon,
+    LayerLegend
   },
   computed: {
     ...mapGetters([
@@ -82,23 +93,13 @@ export default {
     ]),
     themeName () {
       return _.get(this.getActiveTheme, 'name') || 'All datasets'
-    },
-    activeRasterLayer: {
-      get () {
-        return this.getActiveRasterLayer
-      },
-      set (id) {
-        if (this.getActiveRasterLayer === id) {
-          id = null
-        }
-        this.setActiveRasterLayer(id)
-      }
     }
   },
   data () {
     return {
       activePanels: [],
-      hoverId: ''
+      hoverId: '',
+      activeRasterLayer: this.getActiveRasterLayer
     }
   },
   methods: {
@@ -133,7 +134,6 @@ export default {
         }
       }
       params.datasetIds = newParams
-      console.log(params)
       let path = `/${params.datasetIds}`
       if (_.has(params, 'locationId')) {
         path = `${path}/${params.locationId}`
@@ -151,6 +151,7 @@ export default {
       return _.has(this.getDatasets, `${id}.raster`)
     },
     updateRasterLayer (value) {
+      console.log('komt ie hier?')
       const datasets = this.getDatasets
       const raster = datasets[this.getActiveRasterLayer]
       const option = raster.metadata.layerOptions.find(opt => {
@@ -161,9 +162,19 @@ export default {
         options: { band: option.band }
       })
     },
+    setRasterLayer (id) {
+      if (this.getActiveRasterLayer === id) {
+        id = null
+      }
+      this.setActiveRasterLayer(id)
+      this.activeRasterLayer = this.getActiveRasterLayer
+      console.log(id, this.getActiveRasterLayer)
+      this.setActivePanels()
+    },
     setActivePanels () {
+      // map which panel is showing the legend layer or the information layer)
       const active = this.datasets.flatMap((dataset, index) => {
-        const activeDataset = this.hoverId === dataset.id || this.getActiveRasterLayer === dataset.id
+        const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id
         return activeDataset ? index : []
       })
       this.activePanels = active
@@ -177,15 +188,26 @@ export default {
   position: absolute;
   top: var(--spacing-default);
   right: var(--spacing-default);
-  height: 70vh;
   z-index: 5;
-  min-width: 500px;
-  width: min-content;
+  width: 30vw;
+  max-width: 400px;
+  min-width: 250px;
+  max-height: 70vh;
 }
 
-.data-set-controls--card {
+.data-set-controls__text {
+  height: 90%;
+}
+
+.data-set-controls__group {
+  height: 100%;
+  width: 100%;
+}
+
+.data-set-controls__tooltip, .data-set-controls__tooltip {
   position: relative;
-  height: calc(100% - 64px);
+  width: 100%;
+  height: 100%;
 }
 
 .data-set-controls__tooltip-text::before {
@@ -202,9 +224,6 @@ export default {
 
 .data-set-controls__tooltip-text {
   position: relative;
-  flex: 0 0 100%;
-  width: 100%;
-  padding: 0.5rem 0.75rem;
   border-radius: 5px;
   background-color: var(--v-quietHover-base);
   box-shadow: 4px 6px 20px -4px rgba(0, 0, 0, 0.5);

@@ -20,7 +20,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('map', ['activeFlowmapData'])
+    ...mapGetters(['activeFlowmapData'])
   },
   mounted () {
     const map = this.getMap()
