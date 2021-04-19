@@ -34,13 +34,13 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import auth from '@/components/auth'
 import _ from 'lodash'
 
 export default {
   computed: {
-    ...mapState(['user']),
+    ...mapGetters(['user']),
     name () {
       return _.get(this.user, 'name', '--')
     },
@@ -52,7 +52,7 @@ export default {
     }
   },
   mounted () {
-    console.log(this.user)
+    console.log(this.user, this.$store)
   },
   methods: {
     ...mapMutations(['setUser']),

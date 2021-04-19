@@ -110,7 +110,7 @@ export default {
     },
     toggleLocationDataset (id) {
       let oldParams = _.get(this.$route, 'params.datasetIds')
-      // const newRouteObject = Object.assign({}, this.$route)
+      const params = this.$route.params
       let newParams
 
       if (!oldParams) {
@@ -132,8 +132,14 @@ export default {
           newParams = `${oldParams},${id}`
         }
       }
+      params.datasetIds = newParams
+      console.log(params)
+      let path = `/${params.datasetIds}`
+      if (_.has(params, 'locationId')) {
+        path = `${path}/${params.locationId}`
+      }
       if (newParams) {
-        this.$router.push({ name: 'datasetIds', params: { datasetIds: newParams } })
+        this.$router.push({ path, params })
       } else {
         this.$router.push('/')
       }

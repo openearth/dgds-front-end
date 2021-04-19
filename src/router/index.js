@@ -24,13 +24,11 @@ const routes = [
     component: Logout
   }, {
     path: '/:datasetIds',
-    name: 'datasetIds',
-    component: DatasetIds
-  },
-  {
-    path: '/:datasetIds/:locationId',
-    name: 'locationId',
-    component: LocationId
+    component: DatasetIds,
+    children: [{
+      path: ':locationId',
+      component: LocationId
+    }]
   }
 ]
 

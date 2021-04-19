@@ -5,10 +5,10 @@
         {{ locations }}
       </h2>
       <div class="flex-grow-1 py-3 scrollbar">
-        <v-expansion-panels v-if="hasSerieData" flat accordion multiple>
+        <v-expansion-panels v-if="hasSerieData" flat accordion multiple v-model="expandedDatasets">
           <v-expansion-panel
-            v-for="(data, index) in datasets"
-            :key="index"
+            v-for="data in datasets"
+            :key="data.id"
           >
             <v-expansion-panel-header class="h4">
               {{ data.datasetName }}
@@ -46,11 +46,17 @@ import GraphLine from '@/components/GraphLine'
 
 export default {
   components: { GraphLine },
+  data () {
+    return {
+      expandedDatasets: []
+    }
+  },
   computed: {
     ...mapGetters([
       'activePointDataPerDataset',
       'getActiveRasterLayer',
-      'activeRasterData'
+      'activeRasterData',
+      'getCollapsedDatasets'
     ]),
     datasets () {
       const activePointData = this.activePointDataPerDataset
@@ -78,12 +84,13 @@ export default {
       }
     }
   },
+  watch: {
+    '$route.params.locationId' () {
+      this.updateLocationPanel()
+    }
+  },
   mounted () {
-    const { datasetIds, locationId } = this.$route.params
-    console.log(this.$route.params, datasetIds)
-    this.location = locationId
-    this.setActiveLocationIds([locationId])
-    this.loadPointDataForLocation({ datasetIds, locationId })
+    this.updateLocationPanel()
   },
   destroyed () {
     this.clearActiveLocationIds()
@@ -91,6 +98,22 @@ export default {
   methods: {
     ...mapActions(['loadPointDataForLocation']),
     ...mapMutations(['clearActiveLocationIds', 'setActiveLocationIds']),
+    updateLocationPanel () {
+      const { datasetIds, locationId } = this.$route.params
+      this.location = locationId
+      this.setActiveLocationIds([locationId])
+      this.loadPointDataForLocation({ datasetIds, locationId })
+
+      // Expand all panels
+      const expIds = this.getCollapsedDatasets.map(data => data.id)
+      const datasetIndex = []
+      this.datasets.forEach((data, index) => {
+        if (!expIds.includes(data.id)) {
+          datasetIndex.push(index)
+        }
+      })
+      this.expandedDatasets = datasetIndex
+    },
     close () {
       this.$router.push({
         name: 'datasetIds',

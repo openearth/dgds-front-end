@@ -47,12 +47,11 @@ export default {
     ...mapMutations(['setUser']),
     ...mapActions({ loadDatasets: 'loadDatasets' }),
     getUser () {
-      console.log('get user')
       auth
         .getUser()
         .then(user => {
           if (user !== null) {
-            this.setUser(user.profile)
+            this.setUser({ user: user.profile })
           } else {
             this.setUser(null)
           }

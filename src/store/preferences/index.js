@@ -23,10 +23,17 @@ export const mutations = {
   }
 }
 
+export const getters = {
+  user (state) {
+    return state.user
+  }
+}
+
 export default {
   state,
   mutations,
   modules: {
     theme
-  }
+  },
+  getters
 }

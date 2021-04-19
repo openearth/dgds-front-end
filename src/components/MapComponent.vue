@@ -237,7 +237,6 @@ export default {
       // On the selection (by mouse event on map) of a location update the
       // route accordingly
       this.geometry = detail.geometry
-      // const { datasetIds } = this.$route.params
       const locationIds = []
       detail.features.forEach(feature => {
         // When a layer has a metadata with locationIdField use this layer and
@@ -247,7 +246,9 @@ export default {
           locationIds.push(feature.properties[locId])
         }
       })
-      this.$router.push({ name: 'locationId', params: { locationId: _.head(locationIds) } })
+      const params = this.$route.params
+      params.locationId = _.head(locationIds)
+      this.$router.push({ path: `/${params.datasetIds}/${params.locationId}`, params })
     },
     toggleRasterLayer (event) {
       this.setActiveRasterLayer(event)

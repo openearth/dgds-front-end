@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import merge from 'lodash/merge'
 import moment from 'moment'
 import VChart from 'vue-echarts'
@@ -202,9 +202,8 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['colors']),
+    ...mapGetters(['colors', 'user']),
     ...mapGetters(['getCollapsedDatasets', 'activeTimestamp']),
-    ...mapState(['user']),
     isCollapsed () {
       return this.getCollapsedDatasets.includes(this.parameterId)
     },
