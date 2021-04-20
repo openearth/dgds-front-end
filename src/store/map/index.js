@@ -152,7 +152,7 @@ export const actions = {
     }
     const params = new URLSearchParams(options)
     // Retrieve complete new rasterLayer by imageId and dataset
-    return getFromApi(`${dataset}/${imageId}?${params}`).then(val => {
+    return getFromApi(`datasets/${dataset}/${imageId}?${params}`).then(val => {
       // If the range is set manually we don't want to update the default raster laayer
       commit('updateRasterLayer', { dataset, rasterLayer: val.rasterLayer })
       commit('setLoadingRasterLayers', false)

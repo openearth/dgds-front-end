@@ -118,6 +118,5 @@ export default {
   left: calc(56px + var(--spacing-default));
   max-width: 20rem;
   margin-right: calc(var(--spacing-default));
-  z-index: 10;
 }
 </style>

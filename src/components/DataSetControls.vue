@@ -56,8 +56,19 @@
                   class="data-set-controls__tooltip-text markdown"
                   />
                 </div>
+                <v-select
+                  v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
+                  v-model="selectedLayer"
+                  :items="dataset.layerOptions"
+                  :label="`Select layer`"
+                  @change="updateRasterLayer"
+                  return-object
+                  flat
+                  item-text="name"
+                  dense
+                />
                 <div v-if="checkRaster(dataset.id) && activeRasterLayer === dataset.id">
-                  <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
+                <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
               </div>
             </v-expansion-panel-content>
           </v-expansion-panel>
@@ -99,7 +110,24 @@ export default {
     return {
       activePanels: [],
       hoverId: '',
-      activeRasterLayer: this.getActiveRasterLayer
+      activeRasterLayer: this.getActiveRasterLayer,
+      selectedLayer: ''
+    }
+  },
+  watch: {
+    activeRasterData: {
+      handler (data) {
+        if (data.length === 0) {
+          return
+        }
+        const datasets = this.getDatasets
+        const meta = datasets[this.getActiveRasterLayer].metadata
+        const raster = datasets[this.getActiveRasterLayer].raster
+        if (meta.layerOptions) {
+          this.selectedLayer = raster.band
+        }
+      },
+      deep: true
     }
   },
   methods: {
@@ -151,15 +179,11 @@ export default {
       return _.has(this.getDatasets, `${id}.raster`)
     },
     updateRasterLayer (value) {
-      console.log('komt ie hier?')
       const datasets = this.getDatasets
       const raster = datasets[this.getActiveRasterLayer]
-      const option = raster.metadata.layerOptions.find(opt => {
-        return opt.band === this.selectedLayer
-      })
       this.retrieveRasterLayerByImageId({
         imageId: raster.raster.imageId,
-        options: { band: option.band }
+        options: { band: value.band }
       })
     },
     setRasterLayer (id) {
@@ -168,7 +192,6 @@ export default {
       }
       this.setActiveRasterLayer(id)
       this.activeRasterLayer = this.getActiveRasterLayer
-      console.log(id, this.getActiveRasterLayer)
       this.setActivePanels()
     },
     setActivePanels () {
