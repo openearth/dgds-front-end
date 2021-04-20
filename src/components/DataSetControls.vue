@@ -32,6 +32,7 @@
                     dense
                     flat
                     v-model="dataset.visible"
+                    color="formActive"
                     @change="toggleLocationDataset(dataset.id)"
                   ></v-switch>
                 </v-col>
@@ -41,6 +42,7 @@
                     v-if="checkRaster(dataset.id)"
                     :value="dataset.id"
                     @click="setRasterLayer(dataset.id)"
+                    color="formActive"
                   ></v-radio>
                 </v-col>
                 <v-col cols="1" class="ma-auto pa-0">

@@ -9,6 +9,7 @@
       <map-component />
       <time-stamp v-show="activeTimestamp !== '' && getActiveRasterLayer"/>
       <v-tour :steps="tourSteps" :options="tourConfig" name="introduction"></v-tour>
+      <legal-dialog />
     </v-main>
   </v-app>
 </template>
@@ -21,6 +22,7 @@ import AboutPanel from '@/components/AboutPanel.vue'
 import AccountPanel from '@/components/AccountPanel.vue'
 import TimeStamp from '@/components/TimeStamp.vue'
 import auth from '@/components/auth'
+import LegalDialog from '@/components/LegalDialog.vue'
 import { tourConfig, tourSteps } from '@/plugins/vue-tour'
 
 import { mapMutations, mapActions, mapGetters } from 'vuex'
@@ -33,7 +35,8 @@ export default {
     DataSetControls,
     AboutPanel,
     AccountPanel,
-    TimeStamp
+    TimeStamp,
+    LegalDialog
   },
   data: () => ({
     tourConfig,
