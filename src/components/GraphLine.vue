@@ -1,16 +1,16 @@
 
 <template>
   <div>
-    <v-container>
-      <v-col cols="12" class='graph-line'>
+    <v-container class="pa-0">
+      <v-col cols="12" class="graph-line pa-0">
         <v-chart
-          v-if='isLine || isScatter'
-          :ref='title'
-          :option='graphData'
-          :autoresize='true'
-          class='graph-line__chart'
+          v-if="isLine || isScatter"
+          :ref="title"
+          :option="graphData"
+          :autoresize="true"
+          class="graph-line__chart"
         />
-        <img v-else :src='imageUrl' class='graph-line__image' />
+        <img v-else :src="imageUrl" class="graph-line__image" />
       </v-col>
       <v-col cols="12">
         <v-btn

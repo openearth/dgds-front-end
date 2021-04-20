@@ -55,8 +55,9 @@
             <v-expansion-panel-content class="pa-0">
               <div v-if="dataset.toolTip && hoverId === dataset.id" class="data-set-controls__tooltip">
                 <div
-                  v-html="dataset.toolTip"
+                  v-html="markedTooltip(dataset.toolTip)"
                   class="data-set-controls__tooltip-text markdown"
+                  :anchor-attributes="{ target: '_blank' }"
                   />
                 </div>
                 <v-select
@@ -85,6 +86,7 @@
 import CustomIcon from '@/components/CustomIcon'
 import LayerLegend from '@/components/LayerLegend'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
+import marked from 'marked'
 import _ from 'lodash'
 
 export default {
@@ -140,6 +142,9 @@ export default {
   methods: {
     ...mapMutations(['setActiveRasterLayer']),
     ...mapActions(['retrieveRasterLayerByImageId']),
+    markedTooltip (text) {
+      return marked(text)
+    },
     onTooltipClick (id) {
       this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
       this.setActivePanels()

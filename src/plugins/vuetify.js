@@ -6,7 +6,7 @@ import '@mdi/font/css/materialdesignicons.css'
 
 Vue.use(Vuetify)
 const colors = getColors('dark')
-console.log(colors)
+
 export default new Vuetify({
   icons: {
     iconfont: 'mdi'
