@@ -1,6 +1,5 @@
 import Oidc from 'oidc-client'
 
-console.log(window.location.origin)
 const oidcSettings = {
   authority: `${process.env.VUE_APP_AUTH_AUTHORITY}`,
   client_id: `${process.env.VUE_APP_AUTH_ID}`,

@@ -1,5 +1,5 @@
 {
-  "name": "bed-frontend",
+  "name": "BlueEarth Data services",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -23,6 +23,7 @@
     "vue": "^2.6.11",
     "vue-echarts": "^6.0.0-rc.4",
     "vue-router": "^3.2.0",
+    "vue-tour": "^2.0.0",
     "vue2mapbox-gl": "^0.13.0",
     "vuetify": "^2.4.0",
     "vuex": "^3.4.0"

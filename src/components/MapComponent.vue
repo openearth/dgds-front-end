@@ -9,7 +9,7 @@
     :trackResize="'false'"
     @mb-load="mapLoaded = true"
   >
-    <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" />
+    <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" data-v-step="5"/>
     <v-mapbox-selected-point-layer v-if="mapLoaded" :geometry="geometry" />
     <v-mapbox-info-text-layer
       v-if="mapLoaded"

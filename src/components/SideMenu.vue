@@ -11,7 +11,7 @@
       <v-list dense class="pa-0">
         <v-list-item class="px-2" link :to="{ name: 'home' }">
           <v-list-item-avatar>
-            <custom-icon name="deltares" />
+            <custom-icon name="deltares" data-v-step="1"/>
           </v-list-item-avatar>
           <v-list-item-title>Deltares</v-list-item-title>
         </v-list-item>
@@ -23,7 +23,7 @@
             @click="toggleTheme(item.id)"
             :active="isActive(item.id)"
           >
-            <v-list-item-icon>
+            <v-list-item-icon :data-v-step="item.id === 'fl' ? '2' : false">
               <custom-icon :name="item.id" iconFolder="themes" />
             </v-list-item-icon>
             <v-list-item-content>
@@ -50,7 +50,7 @@
                 <custom-icon name="account" />
               </v-list-item-icon>
               <v-list-item-content>
-                <v-list-item-title>Account</v-list-item-title>
+                <v-list-item-title data-v-step="6">Account</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list-item-group>

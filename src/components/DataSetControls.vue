@@ -1,5 +1,5 @@
 <template>
-  <v-card dark raised height="80vh" class="pa-0 data-set-controls">
+  <v-card dark raised height="80vh" class="pa-0 data-set-controls" data-v-step="3">
     <v-card-title class="h3">
       {{ themeName }}
     </v-card-title>
@@ -13,8 +13,9 @@
         lazy>
         <v-radio-group v-model="activeRasterLayer" class='data-set-controls__group'>
           <v-expansion-panel
-            v-for="(dataset) in datasets"
+            v-for="(dataset, index) in datasets"
             :key="dataset.id"
+            :data-v-step="index === 1 ? '4' : false"
           >
             <v-expansion-panel-header hide-actions>
               <v-row>

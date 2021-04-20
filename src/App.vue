@@ -6,8 +6,9 @@
       <about-panel v-if="about" />
       <account-panel v-if="account" />
       <data-set-controls :datasets="datasetsInActiveTheme" />
-      <time-stamp v-show="activeTimestamp !== '' && getActiveRasterLayer"/>
       <map-component />
+      <time-stamp v-show="activeTimestamp !== '' && getActiveRasterLayer"/>
+      <v-tour :steps="tourSteps" :options="tourConfig" name="introduction"></v-tour>
     </v-main>
   </v-app>
 </template>
@@ -20,6 +21,7 @@ import AboutPanel from '@/components/AboutPanel.vue'
 import AccountPanel from '@/components/AccountPanel.vue'
 import TimeStamp from '@/components/TimeStamp.vue'
 import auth from '@/components/auth'
+import { tourConfig, tourSteps } from '@/plugins/vue-tour'
 
 import { mapMutations, mapActions, mapGetters } from 'vuex'
 
@@ -34,10 +36,13 @@ export default {
     TimeStamp
   },
   data: () => ({
+    tourConfig,
+    tourSteps,
     account: false,
     about: false
   }),
   mounted () {
+    this.$tours.introduction.start()
     this.loadDatasets()
     this.getUser()
   },

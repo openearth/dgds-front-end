@@ -51,9 +51,6 @@ export default {
       return _.get(this.user, 'phone', '--')
     }
   },
-  mounted () {
-    console.log(this.user, this.$store)
-  },
   methods: {
     ...mapMutations(['setUser']),
     login () {
