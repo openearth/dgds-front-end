@@ -23,7 +23,6 @@ export const getDefaultState = () => ({
   activeLocationIds: [],
   activeRasterLayerId: '',
   activeTheme: {},
-  collapsedDatasets: [],
   defaultRasterLayerId: '',
   loadingRasterLayers: false,
   geographicalScope: ''
@@ -36,7 +35,6 @@ export const mutations = {
     state.activeDatasetIds = []
     state.activeLocationIds = []
     state.activeTheme = {}
-    state.collapsedDatasets = []
     state.loadingRasterLayers = false
   },
   setActiveDatasetIds (state, ids) {
@@ -70,16 +68,6 @@ export const mutations = {
   setDefaultRasterLayer (state, id) {
     state.defaultRasterLayerId = id
   },
-  toggleCollapsedDataset (state, id) {
-    // Updates the collapsedDatasets array, when id already exists in this Array
-    // it will be removed from the array, otherwise it will be added.
-    if (state.collapsedDatasets.includes(id)) {
-      state.collapsedDatasets = state.collapsedDatasets.filter(set => set !== id)
-    } else {
-      state.collapsedDatasets.push(id)
-    }
-  },
-
   updateRasterLayer (state, { dataset, rasterLayer }) {
     Object.assign(state.datasets[dataset].raster, rasterLayer)
   },
@@ -254,9 +242,6 @@ export const getters = {
   },
   getActiveRasterLayer (state, id) {
     return state.activeRasterLayerId
-  },
-  getCollapsedDatasets (state) {
-    return state.collapsedDatasets
   },
   getLoadingState (state) {
     return state.loadingRasterLayers

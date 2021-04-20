@@ -58,8 +58,7 @@ export default {
     ...mapGetters([
       'activePointDataPerDataset',
       'getActiveRasterLayer',
-      'activeRasterData',
-      'getCollapsedDatasets'
+      'activeRasterData'
     ]),
     datasets () {
       const activePointData = this.activePointDataPerDataset
@@ -90,10 +89,14 @@ export default {
   watch: {
     '$route.params.locationId' () {
       this.updateLocationPanel()
+    },
+    activePointDataPerDataset () {
+      this.expandedDatasets = [...Array(this.datasets.length).keys()]
     }
   },
   mounted () {
     this.updateLocationPanel()
+    this.expandedDatasets = [...Array(this.datasets.length).keys()]
   },
   destroyed () {
     this.clearActiveLocationIds()
@@ -106,16 +109,6 @@ export default {
       this.location = locationId
       this.setActiveLocationIds([locationId])
       this.loadPointDataForLocation({ datasetIds, locationId })
-
-      // Expand all panels
-      const expIds = this.getCollapsedDatasets.map(data => data.id)
-      const datasetIndex = []
-      this.datasets.forEach((data, index) => {
-        if (!expIds.includes(data.id)) {
-          datasetIndex.push(index)
-        }
-      })
-      this.expandedDatasets = datasetIndex
     },
     close () {
       this.$router.push({

@@ -9,9 +9,9 @@
       color="background"
     >
       <v-list dense class="pa-0">
-        <v-list-item class="px-2" link :to="{ name: 'home' }">
+        <v-list-item class="px-2" link :to="{ name: 'home' }" data-v-step="1">
           <v-list-item-avatar>
-            <custom-icon name="deltares" data-v-step="1"/>
+            <custom-icon name="deltares"/>
           </v-list-item-avatar>
           <v-list-item-title>Deltares</v-list-item-title>
         </v-list-item>
@@ -22,8 +22,9 @@
             :key="item.name"
             @click="toggleTheme(item.id)"
             :active="isActive(item.id)"
+            :data-v-step="item.id === 'fl' ? '2' : false"
           >
-            <v-list-item-icon :data-v-step="item.id === 'fl' ? '2' : false">
+            <v-list-item-icon>
               <custom-icon :name="item.id" iconFolder="themes" />
             </v-list-item-icon>
             <v-list-item-content>

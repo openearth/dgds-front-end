@@ -27,7 +27,7 @@
                 </v-col>
                 <v-col cols="2" class="ma-auto pa-0">
                   <v-switch
-                    class="my-auto"
+                    class="my-auto switch"
                     v-if="checkVector(dataset.id)"
                     dense
                     flat
@@ -263,5 +263,10 @@ export default {
   background-color: var(--v-quietHover-base);
   box-shadow: 4px 6px 20px -4px rgba(0, 0, 0, 0.5);
   color: var(--v-textColor-base);
+}
+
+.switch {
+  top: 8px;
+  position: relative;
 }
 </style>

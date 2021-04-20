@@ -96,16 +96,3 @@ describe('setActiveRasterLayer', () => {
     expect(state.activeRasterLayerId).toEqual('wd')
   })
 })
-
-describe('toggleCollapsedDataset', () => {
-  test('add or remove id from state.collapsedDatasets with id in payload', () => {
-    const state = {
-      collapsedDatasets: []
-    }
-    mutations.toggleCollapsedDataset(state, 'wd')
-    expect(state.collapsedDatasets).toEqual(['wd'])
-
-    mutations.toggleCollapsedDataset(state, 'wd')
-    expect(state.collapsedDatasets).toEqual([])
-  })
-})

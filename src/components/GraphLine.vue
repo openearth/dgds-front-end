@@ -203,10 +203,7 @@ export default {
   },
   computed: {
     ...mapGetters(['colors', 'user']),
-    ...mapGetters(['getCollapsedDatasets', 'activeTimestamp']),
-    isCollapsed () {
-      return this.getCollapsedDatasets.includes(this.parameterId)
-    },
+    ...mapGetters(['activeTimestamp']),
     isLine () {
       return this.type === 'line'
     },

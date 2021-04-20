@@ -1,33 +1,32 @@
-.default-layout .v-step {
+.v-tour .v-step {
   background-color: var(--v-blue100-base);
   -webkit-filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
-  margin: 1rem;
 }
 
-.default-layout .v-step .v-step__arrow {
+.v-tour .v-step .v-step__arrow {
   border-color: var(--v-blue100-base);
 }
 
-.default-layout .v-step .v-step__content {
+.v-tour .v-step .v-step__content {
   text-align: left;
   font-size: 1rem;
   line-height: 1.3rem;
 }
 
-.default-layout .v-step .v-step__buttons {
+.v-tour .v-step .v-step__buttons {
   display: flex;
 }
 
-.default-layout .v-step .v-step__button-skip {
+.v-tour .v-step .v-step__button-skip {
   margin-right: auto;
 }
 
-.default-layout .v-step .v-step__button {
+.v-tour .v-step .v-step__button {
   height: auto;
   padding: 4px 8px;
 }
 
-.default-layout .v-step .v-step__button:hover {
+.v-tour .v-step .v-step__button:hover {
   color: var(--v-blue100-base);
 }
