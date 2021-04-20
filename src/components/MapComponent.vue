@@ -45,6 +45,7 @@ import VMapboxInfoTextLayer from '@/components/v-mapbox-components/v-mapbox-info
 export default {
   mounted () {
     this.map = this.$refs.map.map
+    this.zoomToLastDatasetId()
   },
   components: {
     VMapboxVectorLayer,
@@ -54,19 +55,27 @@ export default {
     VMapboxInfoTextLayer
   },
   watch: {
-    $route: {
-      handler (routeObj) {
-        if (routeObj.params.datasetIds === undefined) {
-          this.clearActiveDatasetIds()
+    '$route.params.datasetIds' (val) {
+      if (!val) {
+        this.clearActiveDatasetIds()
+        this.setGeographicalScope('global')
+      } else {
+        this.zoomToLastDatasetId()
+      }
+    },
+    '$route.params.locationId' (val) {
+      if (!val) {
+        this.geometry = {
+          type: 'Point',
+          coordinates: []
         }
-        if (routeObj.params.locationId === undefined) {
-          this.geometry = {
-            type: 'Point',
-            coordinates: []
-          }
-        }
-      },
-      deep: true
+      } else {
+        // TODO: Here comes the piece of magic to update
+        // the map whenever you come in via different route
+      }
+    },
+    rasterLayer (val) {
+      this.removeInfoText()
     }
   },
   data () {
@@ -156,6 +165,11 @@ export default {
       'setActiveRasterLayer',
       'setGeographicalScope'
     ]),
+    zoomToLastDatasetId () {
+      const params = _.get(this.$route, 'params.datasetIds')
+      const ids = params.split(',')
+      this.zoomToBbox(ids[ids.length - 1])
+    },
     removeInfoText () {
       this.infoTextGeometry = {
         type: 'Point',

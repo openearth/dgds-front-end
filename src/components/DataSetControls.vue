@@ -63,12 +63,14 @@
                 <v-select
                   v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
                   v-model="selectedLayer"
+                  :value="selectedLayer"
                   :items="dataset.layerOptions"
                   :label="`Select layer`"
                   @change="updateRasterLayer"
                   return-object
                   flat
                   item-text="name"
+                  item-value="band"
                   dense
                 />
                 <div v-if="checkRaster(dataset.id) && activeRasterLayer === dataset.id">
