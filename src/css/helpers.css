@@ -16,3 +16,9 @@
   border-radius: 1rem;
   border: 4px solid var(--v-background-base);
 }
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}

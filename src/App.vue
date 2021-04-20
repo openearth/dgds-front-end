@@ -1,10 +1,10 @@
 <template>
   <v-app>
-    <side-menu @toggle-account="account = !account" @toggle-about="about = !about"  />
+    <side-menu @toggle-account="togglePanel('account')" @toggle-about="togglePanel('about')"  />
     <v-main>
       <router-view />
-      <about-panel v-if="about" />
-      <account-panel v-if="account" />
+      <about-panel v-if="panel === 'about'" @close-about="panel = false" />
+      <account-panel v-if="panel === 'account'" @close-account="panel = false"/>
       <data-set-controls :datasets="datasetsInActiveTheme" />
       <map-component />
       <time-stamp v-show="activeTimestamp !== '' && getActiveRasterLayer"/>
@@ -41,8 +41,7 @@ export default {
   data: () => ({
     tourConfig,
     tourSteps,
-    account: false,
-    about: false
+    panel: false
   }),
   mounted () {
     this.$tours.introduction.start()
@@ -68,6 +67,13 @@ export default {
         .catch(err => {
           console.log({ err })
         })
+    },
+    togglePanel (name) {
+      if (this.panel === name) {
+        this.panel = false
+      } else {
+        this.panel = name
+      }
     }
   }
 }

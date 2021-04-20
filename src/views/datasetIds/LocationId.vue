@@ -4,6 +4,9 @@
       <h2 class="h2">
         {{ locations }}
       </h2>
+      <v-btn icon class="close-button" @click="close">
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
       <div class="flex-grow-1 py-3 scrollbar">
         <v-expansion-panels v-if="hasSerieData" flat accordion multiple v-model="expandedDatasets">
           <v-expansion-panel
@@ -116,7 +119,7 @@ export default {
     },
     close () {
       this.$router.push({
-        name: 'datasetIds',
+        path: `/${this.$route.params.datasetIds}`,
         params: { datasetIds: this.$route.params.datasetIds }
       })
     }

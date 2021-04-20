@@ -1,11 +1,12 @@
 .default-layout .v-step {
-  background-color: var(--color-blue-100);
+  background-color: var(--v-blue100-base);
   -webkit-filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
   filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.5));
+  margin: 1rem;
 }
 
 .default-layout .v-step .v-step__arrow {
-  border-color: var(--color-blue-100);
+  border-color: var(--v-blue100-base);
 }
 
 .default-layout .v-step .v-step__content {
@@ -28,5 +29,5 @@
 }
 
 .default-layout .v-step .v-step__button:hover {
-  color: var(--color-blue-100);
+  color: var(--v-blue100-base);
 }

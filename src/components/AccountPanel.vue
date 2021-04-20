@@ -4,6 +4,9 @@
     <h2 class="h2">
       Account
     </h2>
+    <v-btn icon class="close-button" @click="$emit('close-account')">
+      <v-icon>mdi-close</v-icon>
+    </v-btn>
     <div class="account-details flex-grow-1 py-3">
       <h3 class="h4 mb-3">
         Account Details

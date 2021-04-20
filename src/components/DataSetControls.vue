@@ -113,7 +113,7 @@ export default {
     return {
       activePanels: [],
       hoverId: '',
-      activeRasterLayer: this.getActiveRasterLayer,
+      activeRasterLayer: '',
       selectedLayer: ''
     }
   },
@@ -129,9 +129,13 @@ export default {
         if (meta.layerOptions) {
           this.selectedLayer = raster.band
         }
+        this.activeRasterLayer = this.getActiveRasterLayer
       },
       deep: true
     }
+  },
+  mounted () {
+    this.activeRasterLayer = this.getActiveRasterLayer
   },
   methods: {
     ...mapMutations(['setActiveRasterLayer']),
