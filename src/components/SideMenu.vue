@@ -18,7 +18,7 @@
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
-        <v-list-item-group color="primary">
+        <v-list-item-group color="primary" active-class="active-theme">
           <v-list-item
             v-for="item in getThemes"
             :key="item.name"
@@ -39,7 +39,7 @@
       <v-spacer />
       <template v-slot:append>
         <v-list dense class="pa-0">
-          <v-list-item-group color="primary" class="bottom-menu" active-class="primary--text">
+          <v-list-item-group class="bottom-menu" active-class="active-theme">
             <v-list-item @click="$emit('toggle-about')">
               <v-list-item-icon class="mr-6">
                 <custom-icon name="info" />
@@ -106,5 +106,9 @@ export default {
 .bottom-menu {
   position: absolute;
   bottom: 0;
+}
+
+.active-theme {
+  color: var(--v-blue100-base) !important;
 }
 </style>
