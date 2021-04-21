@@ -52,7 +52,8 @@ import {
 
 import {
   LineChart,
-  ScatterChart
+  ScatterChart,
+  LinesChart
 } from 'echarts/charts'
 
 import {
@@ -60,7 +61,8 @@ import {
   TooltipComponent,
   MarkLineComponent,
   MarkPointComponent,
-  DataZoomComponent
+  DataZoomComponent,
+  TimelineComponent
 } from 'echarts/components'
 
 import { use } from 'echarts/core'
@@ -73,7 +75,9 @@ use([
   TooltipComponent,
   MarkLineComponent,
   MarkPointComponent,
-  DataZoomComponent
+  DataZoomComponent,
+  TimelineComponent,
+  LinesChart
 ])
 
 use([CanvasRenderer])

@@ -7,16 +7,16 @@
       <v-btn icon class="close-button" @click="close">
         <v-icon>mdi-close</v-icon>
       </v-btn>
-      <div class="flex-grow-1 py-3 scrollbar">
-        <v-expansion-panels v-if="hasSerieData" flat accordion multiple v-model="expandedDatasets">
+      <div class="flex-grow-1 py-3 scrollbar" align-space-between>
+        <v-expansion-panels v-if="hasSerieData" flat accordion multiple v-model="expandedDatasets" color="background">
           <v-expansion-panel
             v-for="data in datasets"
             :key="data.id"
           >
-            <v-expansion-panel-header class="h4">
+            <v-expansion-panel-header class="h4" color="background" dark>
               {{ data.datasetName }}
             </v-expansion-panel-header>
-            <v-expansion-panel-content>
+            <v-expansion-panel-content color="background">
               <graph-line
                 :image-url="data.imageUrl"
                 :category="data.category"
@@ -36,6 +36,10 @@
         <template v-else>
           <p>No data available.</p>
         </template>
+      </div>
+      <div class="flex-shrink-1 bodytext-xs disclaimer">
+        Global datasets are generated with great care but may locally contain inaccuracies. See the
+        dataset descriptions for more information.
       </div>
     </v-container>
   </v-navigation-drawer>
@@ -90,6 +94,9 @@ export default {
     '$route.params.locationId' () {
       this.updateLocationPanel()
     },
+    '$route.params.datasetIds' () {
+      this.updateLocationPanel()
+    },
     activePointDataPerDataset () {
       this.expandedDatasets = [...Array(this.datasets.length).keys()]
     }
@@ -120,4 +127,8 @@ export default {
 }
 </script>
 
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+.disclaimer {
+  text-align: center;
+}
+</style>

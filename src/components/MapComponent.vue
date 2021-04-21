@@ -167,6 +167,9 @@ export default {
     ]),
     zoomToLastDatasetId () {
       const params = _.get(this.$route, 'params.datasetIds')
+      if (!params) {
+        return
+      }
       const ids = params.split(',')
       this.zoomToBbox(ids[ids.length - 1])
     },
