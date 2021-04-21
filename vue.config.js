@@ -10,6 +10,10 @@ module.exports = {
       appleTouchIcon: 'favicon.ico',
       maskIcon: 'favicon.ico',
       msTileImage: 'favicon.ico'
+    },
+    workboxPluginMode: 'InjectManifest',
+    workboxOptions: {
+      swSrc: 'dev/sw.js'
     }
   },
   transpileDependencies: [

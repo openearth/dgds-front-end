@@ -9,11 +9,11 @@
       color="background"
     >
       <v-list dense class="pa-0">
-        <v-list-item class="px-2" link :to="{ name: 'home' }" data-v-step="1">
-          <v-list-item-avatar>
-            <custom-icon name="deltares"/>
+        <v-list-item class="px-2" @click="$router.push({ name: 'home' })" data-v-step="1">
+          <v-list-item-avatar >
+            <custom-icon name="deltares" size="large"/>
           </v-list-item-avatar>
-          <v-list-item-title>Deltares</v-list-item-title>
+          <v-list-item-title color="primary">Deltares</v-list-item-title>
         </v-list-item>
         <v-divider></v-divider>
         <v-list-item-group color="primary">
@@ -25,7 +25,7 @@
             :data-v-step="item.id === 'fl' ? '2' : false"
           >
             <v-list-item-icon>
-              <custom-icon :name="item.id" iconFolder="themes" />
+              <custom-icon :name="item.id" iconFolder="themes" size="large"/>
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>{{ item.name }}</v-list-item-title>
@@ -40,7 +40,7 @@
           <v-list-item-group color="primary" class="bottom-menu">
             <v-list-item @click="$emit('toggle-about')">
               <v-list-item-icon>
-                <custom-icon name="info" />
+                <custom-icon name="info" size="large" />
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title>About</v-list-item-title>
@@ -48,7 +48,7 @@
             </v-list-item>
             <v-list-item @click="$emit('toggle-account')">
               <v-list-item-icon>
-                <custom-icon name="account" />
+                <custom-icon name="account" size="large" />
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title data-v-step="6">Account</v-list-item-title>

@@ -7,6 +7,10 @@
   font-display: swap;
 }
 
+.v-application {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
 html {
   font-size: 100%;
   font-weight: normal;
@@ -17,7 +21,6 @@ body {
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
-
 
 .strong {
   font-weight: bold;
