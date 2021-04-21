@@ -21,16 +21,16 @@
         <v-list-item-group color="primary" active-class="active-theme">
           <v-list-item
             v-for="item in getThemes"
-            :key="item.name"
-            @click="toggleTheme(item.id)"
-            :active="isActive(item.id)"
-            :data-v-step="item.id === 'fl' ? '2' : false"
+            :key="item"
+            @click="toggleTheme(item)"
+            :active="isActive(item)"
+            :data-v-step="item === 'Flooding' ? '2' : false"
           >
             <v-list-item-icon class="mr-6">
-              <custom-icon :name="item.id" iconFolder="themes"/>
+              <custom-icon :name="item" iconFolder="themes"/>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title>{{ item.name }}</v-list-item-title>
+              <v-list-item-title>{{ item }}</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>

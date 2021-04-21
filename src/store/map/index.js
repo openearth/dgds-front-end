@@ -78,48 +78,58 @@ export const mutations = {
 
 export const actions = {
   loadDatasets ({ commit }) {
-    return getFromApi('datasets').then(val => {
-      // Loop over datasets to get a list of available datasets per theme
-      val.themes.map(theme => {
-        theme.datasets = _.compact(
-          val.datasets.map(set => {
-            if (set.themes.includes(theme.id)) {
-              return set.id
-            }
-          })
-        )
-        return theme
+    fetch(process.env.VUE_APP_CATALOG_URL)
+      .then(res => {
+        return res.json()
       })
-
-      // Add themes to store.themes
-      val.themes.forEach(theme => commit('addTheme', theme))
-
-      val.datasets.forEach(set => {
-        // Add metadata to store.datasets (excluding vectorLayer and rasterLayer)
-        commit('addMetadata', _.omit(set, ['vectorLayer', 'rasterLayer', 'flowmapLayer']))
-
-        // Add vectorlayer to store.datasets if available
-        if (_.has(set, 'vectorLayer')) {
-          commit('addDatasetVector', set)
-        }
-
-        // Flowmap for currents and  wind
-        if (_.has(set, 'flowmapLayer')) {
-          commit('addDatasetFlowmap', set)
-        }
-        // Add rasterLayer to store.datasets if available
-        if (_.has(set, 'rasterLayer') && _.get(set, 'rasterLayer.url') !== null) {
-          commit('addDatasetRaster', set)
-
-          // If key rasterActiveOnLoad is true, turn this layer on on load
-          const rasterActive = _.get(set, 'rasterActiveOnLoad')
-          if (rasterActive) {
-            commit('setActiveRasterLayer', set.id)
-            commit('setDefaultRasterLayer', set.id)
-          }
-        }
+      .then(datasets => {
+        console.log(datasets)
+        // Set themes
+        const themes = _.get(datasets, 'summaries.keywords')
+        themes.forEach(theme => commit('addTheme', theme))
       })
-    })
+    // return getFromApi('datasets').then(val => {
+    //   // Loop over datasets to get a list of available datasets per theme
+    //   val.themes.map(theme => {
+    //     theme.datasets = _.compact(
+    //       val.datasets.map(set => {
+    //         if (set.themes.includes(theme.id)) {
+    //           return set.id
+    //         }
+    //       })
+    //     )
+    //     return theme
+    //   })
+
+    //   // Add themes to store.themes
+    //   val.themes.forEach(theme => commit('addTheme', theme))
+
+    //   val.datasets.forEach(set => {
+    //     // Add metadata to store.datasets (excluding vectorLayer and rasterLayer)
+    //     commit('addMetadata', _.omit(set, ['vectorLayer', 'rasterLayer', 'flowmapLayer']))
+
+    //     // Add vectorlayer to store.datasets if available
+    //     if (_.has(set, 'vectorLayer')) {
+    //       commit('addDatasetVector', set)
+    //     }
+
+    //     // Flowmap for currents and  wind
+    //     if (_.has(set, 'flowmapLayer')) {
+    //       commit('addDatasetFlowmap', set)
+    //     }
+    //     // Add rasterLayer to store.datasets if available
+    //     if (_.has(set, 'rasterLayer') && _.get(set, 'rasterLayer.url') !== null) {
+    //       commit('addDatasetRaster', set)
+
+    //       // If key rasterActiveOnLoad is true, turn this layer on on load
+    //       const rasterActive = _.get(set, 'rasterActiveOnLoad')
+    //       if (rasterActive) {
+    //         commit('setActiveRasterLayer', set.id)
+    //         commit('setDefaultRasterLayer', set.id)
+    //       }
+    //     }
+    //   })
+    // })
   },
 
   retrieveRasterLayerByImageId ({ commit, state, getters }, { imageId, options }) {
