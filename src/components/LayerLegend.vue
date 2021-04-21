@@ -1,7 +1,7 @@
 <template>
   <v-container class="ma-0 pa-0">
     <v-row>
-      <v-col cols="10" class="ma-0 pa-0">
+      <v-col cols="9" class="ma-0 pa-0 pl-2">
         <svg viewBox="0 0 100 5">
           <defs>
             <linearGradient :id="`gradient-${datasetId}`" x1="0" x2="1" y1="0" y2="0">
@@ -26,7 +26,7 @@
           {{ minValue }}
         </v-btn>
       </v-col>
-      <v-col v-else cols="5" class="ma-0">
+      <v-col v-else cols="4" class="ma-0">
         <v-text-field
           id="range-min"
           v-model="minValue"
@@ -34,12 +34,12 @@
           placeholder="Min value"
         ></v-text-field>
       </v-col>
-      <v-col v-if="!editingRange" cols="1" offset="8" class="pa-0">
+      <v-col v-if="!editingRange" cols="1" offset="6" class="pa-0">
         <v-btn @click="editRange" small plain icon>
           {{ maxValue }}
         </v-btn>
       </v-col>
-      <v-col v-else cols="5" class="ma-0">
+      <v-col v-else cols="4" class="ma-0">
         <v-text-field
           id="range-max"
           v-model="maxValue"
@@ -47,7 +47,7 @@
           placeholder="Max value"
         ></v-text-field>
       </v-col>
-      <v-col cols="2" class="my-auto pa-0 unit-text">
+      <v-col cols="4" class="my-auto pa-0 unit-text">
         [{{ unit }}]
       </v-col>
     </v-row>

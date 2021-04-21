@@ -1,5 +1,5 @@
 <template>
-  <v-card dark raised height="80vh" class="pa-0 data-set-controls" data-v-step="3">
+  <v-card dark raised max-height="80vh" class="pa-0 data-set-controls" data-v-step="3">
     <v-card-title class="h3">
       {{ themeName }}
     </v-card-title>
@@ -11,7 +11,7 @@
         multiple
         readonly
         lazy>
-        <v-radio-group v-model="activeRasterLayer" class='data-set-controls__group'>
+        <v-radio-group v-model="activeRasterLayer" class='data-set-controls__group ma-0'>
           <v-expansion-panel
             v-for="(dataset, index) in datasets"
             :key="dataset.id"
@@ -61,6 +61,7 @@
                   />
                 </div>
                 <v-select
+                  class="pa-2"
                   v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
                   v-model="selectedLayer"
                   :value="selectedLayer"
@@ -223,13 +224,14 @@ export default {
 <style scoped>
 .data-set-controls {
   position: absolute;
+  display: flex;
+  flex-direction: column;
   top: var(--spacing-default);
   right: var(--spacing-default);
   z-index: 5;
   width: 30vw;
   max-width: 400px;
   min-width: 250px;
-  max-height: 70vh;
 }
 
 .data-set-controls__text {

@@ -1,14 +1,16 @@
 <template>
   <div class="time-slider">
-    <div class="time-slider__button">
-      <slot v-if="timeIndex !== 0" :back="back" name="backButton" />
-    </div>
-    <div class="time-slider__text">
-      <slot name="label" />
-    </div>
-    <div class="time-slider__button">
-      <slot v-if="timeIndex !== dates.length - 1" :forward="forward" name="forwardButton" />
-    </div>
+    <v-row>
+      <v-col cols="2" class="my-auto">
+        <slot v-if="timeIndex !== 0" :back="back" name="backButton" />
+      </v-col>
+      <v-col cols="8">
+        <slot name="label" />
+      </v-col>
+      <v-col cols="2" class="my-auto">
+        <slot v-if="timeIndex !== dates.length - 1" :forward="forward" name="forwardButton" />
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -94,27 +96,3 @@ export default {
   }
 }
 </script>
-
-<style>
-  .time-slider {
-    display: flex;
-    align-items: center;
-  }
-
-  .time-slider .ui-select {
-    min-width: 155px;
-  }
-
-  .time-slider .ui-select__label {
-    display: none;
-  }
-
-  .time-slider__button .icon {
-    color: var(--v-textColor-base);
-  }
-
-  .time-slider__text {
-    flex: 1 1 auto;
-    margin: 0 var(--spacing-small);
-  }
-</style>

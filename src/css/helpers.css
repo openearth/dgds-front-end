@@ -22,3 +22,25 @@
   top: 1rem;
   right: 1rem;
 }
+
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--v-formBase-base) var(--v-background-base);
+  background-color: var(--v-background-base);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: var(--v-formBase-base);
+  border-radius: 1rem;
+  border: 4px solid var(--v-background-base);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--v-formBase-base);
+}

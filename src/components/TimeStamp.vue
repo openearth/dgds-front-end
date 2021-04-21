@@ -15,15 +15,17 @@
         </v-btn>
       </template>
       <template v-slot:label>
-        <v-select
+        <v-combobox
           id="timeslider-dropdown"
           v-model="timestamp"
           :items="timeseriesItems"
           :disabled="loadingRasterLayers"
           label="Select a timestamp"
           flat
-          return-object
           item-text="name"
+          item-value="value"
+          return-object
+          color="formBase"
         />
       </template>
       <template v-slot:forwardButton="{ forward }">
@@ -88,7 +90,7 @@ export default {
         }
         const series = _.get(this.activeRasterData, 'imageTimeseries')
         series.find((serie, i) => {
-          if (moment(val, 'DD-MM-YYYY HH:mm').isSame(moment(serie.date))) {
+          if (moment(val.value, 'DD-MM-YYYY HH:mm').isSame(moment(serie.date))) {
             this.dateIndex = i
             this.getNewRasterLayer(serie)
             return true
