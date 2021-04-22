@@ -13,6 +13,7 @@ import _ from 'lodash'
 import moment from 'moment'
 import { includesIn, getIn, wrapInProperty } from '../../lib/utils'
 import getFromApi from '../../lib/request/get'
+import getCatalog from '@/lib/request/get-catalog'
 import datasets from './datasets.js'
 import themes from './themes.js'
 
@@ -22,7 +23,7 @@ export const getDefaultState = () => ({
   activeDatasetIds: [],
   activeLocationIds: [],
   activeRasterLayerId: '',
-  activeTheme: {},
+  activeTheme: '',
   defaultRasterLayerId: '',
   loadingRasterLayers: false,
   geographicalScope: ''
@@ -34,7 +35,7 @@ export const mutations = {
   resetMap (state) {
     state.activeDatasetIds = []
     state.activeLocationIds = []
-    state.activeTheme = {}
+    state.activeTheme = ''
     state.loadingRasterLayers = false
   },
   setActiveDatasetIds (state, ids) {
@@ -47,10 +48,10 @@ export const mutations = {
     state.activeDatasetIds = []
   },
   toggleActiveTheme (state, id) {
-    if (state.activeTheme.id === id) {
-      state.activeTheme = {}
+    if (state.activeTheme === id) {
+      state.activeTheme = ''
     } else {
-      state.activeTheme = state.themes[id]
+      state.activeTheme = id
     }
   },
   clearActiveTheme (state) {
@@ -78,15 +79,21 @@ export const mutations = {
 
 export const actions = {
   loadDatasets ({ commit }) {
-    fetch(process.env.VUE_APP_CATALOG_URL)
-      .then(res => {
-        return res.json()
-      })
+    getCatalog(process.env.VUE_APP_CATALOG_URL)
       .then(datasets => {
         console.log(datasets)
-        // Set themes
+        // Add themes to store.themes
         const themes = _.get(datasets, 'summaries.keywords')
         themes.forEach(theme => commit('addTheme', theme))
+
+        const childs = datasets.links.filter(ds => ds.rel === 'child')
+        childs.forEach(child => {
+          getCatalog(child.href)
+            .then(dataset => {
+              commit('addDataset', dataset)
+            })
+        })
+
       })
     // return getFromApi('datasets').then(val => {
     //   // Loop over datasets to get a list of available datasets per theme
@@ -382,23 +389,18 @@ export const getters = {
     return activePointDataPerDataset
   },
   datasetsInActiveTheme (state) {
-    const ids = state.activeDatasetIds
-    let sets = values(state.datasets)
-
-    if (state.activeTheme.datasets !== undefined) {
-      const themeids = state.activeTheme.datasets
-      sets = values(state.datasets).filter(set => {
-        return themeids.includes(set.metadata.id)
+    const sets = values(state.datasets)
+    const activeSets = {}
+    if (state.activeTheme !== '') {
+      sets.forEach(set => {
+        if (set.keywords.includes(state.activeTheme)) {
+          activeSets[set.id] = set
+        }
       })
+      return activeSets
+    } else {
+      return state.datasets
     }
-    const metadataSets = sets.map(set => {
-      return _.get(set, 'metadata')
-    })
-    const visible = metadataSets.map(obj => merge(obj, { visible: getId(obj) }))
-    return visible.map(set => {
-      set.visible = ids.includes(set.id)
-      return set
-    })
   }
 }
 

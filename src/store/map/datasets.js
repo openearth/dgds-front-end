@@ -71,11 +71,15 @@ export const mutations = {
     const pointData = getPointData(state[id])
     Vue.set(state[id], 'pointData', merge(pointData, data))
   },
-  addMetadata (state, _metadata) {
-    if (!state[_metadata.id]) Vue.set(state, _metadata.id, {})
-    const metadata = getMetadata(state[_metadata.id])
-    Vue.set(state[_metadata.id], 'metadata', merge(metadata, _metadata))
+  addDataset (state, dataset) {
+    console.log(dataset, dataset.id)
+    Vue.set(state, dataset.id, dataset)
   }
+  // addMetadata (state, _metadata) {
+  //   if (!state[_metadata.id]) Vue.set(state, _metadata.id, {})
+  //   const metadata = getMetadata(state[_metadata.id])
+  //   Vue.set(state[_metadata.id], 'metadata', merge(metadata, _metadata))
+  // }
 }
 
 export default {
