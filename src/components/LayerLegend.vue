@@ -93,9 +93,9 @@ export default {
   },
   mounted () {
     this.dataset = this.getDatasets[this.datasetId]
-    this.unit = _.get(this.dataset, 'metadata.units')
+    this.unit = _.get(this.dataset, 'properties.deltares:units')
     this.updateMinMax()
-    this.linearGradient = _.get(this.dataset, 'raster.linearGradient')
+    this.linearGradient = _.get(this.activeRasterData, 'raster.linearGradient')
   },
   methods: {
     ...mapActions(['retrieveRasterLayerByImageId']),

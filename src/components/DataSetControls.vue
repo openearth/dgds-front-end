@@ -75,7 +75,7 @@
                   item-value="band"
                   dense
                 />
-                <div v-if="checkLayerType(dataset.id, 'gee') && activeRasterLayer === dataset.id">
+              <div v-if="checkLayerType(dataset.id, 'gee') && activeRasterLayer === dataset.id">
                 <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
               </div>
             </v-expansion-panel-content>
@@ -123,29 +123,29 @@ export default {
       selectedLayer: ''
     }
   },
-  watch: {
-    activeRasterData: {
-      handler (data) {
-        if (data.length === 0) {
-          return
-        }
-        const datasets = this.getDatasets
-        const meta = datasets[this.getActiveRasterLayer].metadata
-        const raster = datasets[this.getActiveRasterLayer].raster
-        if (meta.layerOptions) {
-          this.selectedLayer = raster.band
-        }
-        this.activeRasterLayer = this.getActiveRasterLayer
-      },
-      deep: true
-    }
-  },
+  // watch: {
+  //   activeRasterData: {
+  //     handler (data) {
+  //       if (data.length === 0) {
+  //         return
+  //       }
+  //       const datasets = this.getDatasets
+  //       const meta = datasets[this.getActiveRasterLayer].metadata
+  //       const raster = datasets[this.getActiveRasterLayer].raster
+  //       if (meta.layerOptions) {
+  //         this.selectedLayer = raster.band
+  //       }
+  //       this.activeRasterLayer = this.getActiveRasterLayer
+  //     },
+  //     deep: true
+  //   }
+  // },
   mounted () {
     this.activeRasterLayer = this.getActiveRasterLayer
   },
   methods: {
     ...mapMutations(['setActiveRasterLayer']),
-    ...mapActions(['retrieveRasterLayerByImageId']),
+    ...mapActions(['retrieveRasterLayerByImageId', 'loadActiveRasterLayer']),
     markedTooltip (text) {
       return marked(text)
     },
@@ -215,7 +215,9 @@ export default {
         id = null
       }
       this.setActiveRasterLayer(id)
-      this.activeRasterLayer = this.getActiveRasterLayer
+      this.loadActiveRasterLayer(id)
+      // this.setActiveRasterLayer(id)
+      // this.activeRasterLayer = this.getActiveRasterLayer
       this.setActivePanels()
     },
     setActivePanels () {

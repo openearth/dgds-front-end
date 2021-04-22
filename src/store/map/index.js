@@ -22,6 +22,7 @@ import themes from './themes.js'
 export const getDefaultState = () => ({
   activeDatasetIds: [],
   activeLocationIds: [],
+  activeRasterData: {},
   activeRasterLayerId: '',
   activeTheme: '',
   defaultRasterLayerId: '',
@@ -65,6 +66,9 @@ export const mutations = {
   },
   setActiveRasterLayer (state, id) {
     state.activeRasterLayerId = id
+  },
+  setActiveRasterData (state, data) {
+    state.activeRasterData = data
   },
   setDefaultRasterLayer (state, id) {
     state.defaultRasterLayerId = id
@@ -137,7 +141,30 @@ export const actions = {
     //   })
     // })
   },
-
+  loadActiveRasterLayer ({ state, commit }, id) {
+    // Store active raster data, if null leave empty, otherwise retrieve
+    // new data from link
+    if (!id) {
+      commit('setActiveRasterData', {})
+      return
+    }
+    const layers = _.get(state, `datasets.${id}.links`)
+    console.log(layers, state.datasets)
+    layers.forEach(layer => {
+      const title = _.get(layer, 'title')
+      if (!title) {
+        return false
+      }
+      const regex = `${id}-(.+)`
+      const layerType = title.match(regex)[1]
+      if (layerType === 'gee') {
+        getCatalog(layer.href)
+          .then(rasterData => {
+            commit('setActiveRasterData', rasterData)
+          })
+      }
+    })
+  },
   retrieveRasterLayerByImageId ({ commit, state, getters }, { imageId, options }) {
     options = options || {}
     commit('setLoadingRasterLayers', true)
@@ -300,14 +327,17 @@ export const getters = {
       return ''
     }
   },
-
-  activeRasterData ({ datasets, activeRasterLayerId, activeDatasets }) {
-    // Return the active raster data tiles (if not defined, return [])
-    if (activeRasterLayerId === '' || activeRasterLayerId === null) {
-      return []
-    }
-    return _.get(datasets, `${activeRasterLayerId}.raster`)
+  activeRasterData (state) {
+    return state.activeRasterData
   },
+
+  // activeRasterData ({ datasets, activeRasterLayerId, activeDatasets }) {
+  //   // Return the active raster data tiles (if not defined, return [])
+  //   if (activeRasterLayerId === '' || activeRasterLayerId === null) {
+  //     return []
+  //   }
+  //   return _.get(datasets, `${activeRasterLayerId}.raster`)
+  // },
   activeRasterLegendData ({ datasets, activeRasterLayerId }) {
     // Return the active raster data tiles (if not defined, return [])
     if (activeRasterLayerId === '' || activeRasterLayerId === null) {
