@@ -17,11 +17,11 @@ describe('loadDatasets', () => {
     getFromApi.mockResolvedValue(apiResult)
     await actions.loadDatasets({ commit })
     expect(commit.mock.calls[0]).toEqual([
-      'themes/addTheme',
+      'addTheme',
       { id: 'theme1', name: 'theme1Name', datasets: ['par1'] }
     ])
     expect(commit.mock.calls[1]).toEqual([
-      'datasets/addMetadata',
+      'addMetadata',
       {
         id: 'par1',
         foo: 'bar',
@@ -29,11 +29,11 @@ describe('loadDatasets', () => {
       }
     ])
     expect(commit.mock.calls[2]).toEqual([
-      'datasets/addDatasetVector',
+      'addDatasetVector',
       { id: 'par1', foo: 'bar', themes: ['theme1'], vectorLayer: {} }
     ])
     expect(commit.mock.calls[3]).toEqual([
-      'datasets/addMetadata',
+      'addMetadata',
       {
         id: 'par2',
         baz: 'blub',
@@ -41,7 +41,7 @@ describe('loadDatasets', () => {
       }
     ])
     expect(commit.mock.calls[4]).toEqual([
-      'datasets/addDatasetRaster',
+      'addDatasetRaster',
       { id: 'par2', baz: 'blub', themes: ['theme2'], rasterLayer: {} }
     ])
   })
@@ -174,7 +174,7 @@ describe('loadPointDataForLocation', () => {
         .format('YYYY-MM-DDTHH:mm:ssZ')
     })
     expect(commit.mock.calls[0]).toEqual([
-      'datasets/addDatasetPointData',
+      'addDatasetPointData',
       {
         id: 'par1',
         data: {
@@ -186,7 +186,7 @@ describe('loadPointDataForLocation', () => {
       }
     ])
     expect(commit.mock.calls[1]).toEqual([
-      'datasets/addDatasetPointData',
+      'addDatasetPointData',
       {
         data: {
           loc1: {
@@ -220,7 +220,7 @@ describe('loadPointDataForLocation', () => {
     })
 
     expect(commit.mock.calls[0]).toEqual([
-      'datasets/addDatasetPointData',
+      'addDatasetPointData',
       {
         id: 'par3',
         data: {
@@ -264,7 +264,7 @@ describe('loadPointDataForLocation', () => {
     })
 
     expect(commit.mock.calls[0]).toEqual([
-      'datasets/addDatasetPointData',
+      'addDatasetPointData',
       {
         data: {
           loc1: {
