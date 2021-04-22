@@ -2,6 +2,7 @@ const marked = require('marked')
 const renderer = new marked.Renderer()
 
 module.exports = {
+
   pwa: {
     name: 'BlueEarth Data services',
     iconPaths: {
@@ -9,11 +10,8 @@ module.exports = {
       favicon16: 'favicon.ico',
       appleTouchIcon: 'favicon.ico',
       maskIcon: 'favicon.ico',
-      msTileImage: 'favicon.ico'
-    },
-    workboxPluginMode: 'InjectManifest',
-    workboxOptions: {
-      swSrc: 'dev/sw.js'
+      msTileImage: 'favicon.ico',
+      androidChrome192: 'favicon.ico'
     }
   },
   transpileDependencies: [

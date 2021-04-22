@@ -34,12 +34,12 @@
           placeholder="Min value"
         ></v-text-field>
       </v-col>
-      <v-col v-if="!editingRange" cols="1" offset="6" class="pa-0">
+      <v-col v-if="!editingRange" cols="1" offset="7" class="pa-0">
         <v-btn @click="editRange" small plain icon>
           {{ maxValue }}
         </v-btn>
       </v-col>
-      <v-col v-else cols="4" class="ma-0">
+      <v-col v-else cols="4" offset="1" class="ma-0">
         <v-text-field
           id="range-max"
           v-model="maxValue"
@@ -47,7 +47,7 @@
           placeholder="Max value"
         ></v-text-field>
       </v-col>
-      <v-col cols="4" class="my-auto pa-0 unit-text">
+      <v-col cols="3" class="my-auto pa-0 unit-text bodytext-s">
         [{{ unit }}]
       </v-col>
     </v-row>
