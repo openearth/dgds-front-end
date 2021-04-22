@@ -69,7 +69,9 @@ export default {
     this.map = this.getMap()
     this.id = this.options.id
     console.log(this.options.source.tiles)
-    this.map.addLayer(this.options, 'water-border')
+    if (this.options.source.tiles) {
+      this.map.addLayer(this.options, 'water-border')
+    }
     this.map.on('click', event => {
       const bbox = {
         type: 'Point',

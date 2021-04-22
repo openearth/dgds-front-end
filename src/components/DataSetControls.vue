@@ -10,14 +10,14 @@
         :value="activePanels"
         multiple
         readonly
-        lazy>
+        color="background">
         <v-radio-group v-model="activeRasterLayer" class='data-set-controls__group ma-0'>
           <v-expansion-panel
             v-for="(dataset, index) in datasets"
             :key="dataset.id"
             :data-v-step="index === 1 ? '4' : false"
           >
-            <v-expansion-panel-header hide-actions>
+            <v-expansion-panel-header hide-actions color="background" dark>
               <v-row>
                 <v-col cols="1" class="ma-auto pa-0">
                   <custom-icon :name="dataset.id" iconFolder="datasets" />
@@ -52,12 +52,13 @@
                 </v-col>
               </v-row>
             </v-expansion-panel-header>
-            <v-expansion-panel-content class="pa-0">
+            <v-expansion-panel-content class="pa-0" color="background">
               <div v-if="dataset.toolTip && hoverId === dataset.id" class="data-set-controls__tooltip">
                 <div
                   v-html="markedTooltip(dataset.toolTip)"
-                  class="data-set-controls__tooltip-text markdown"
+                  class="data-set-controls__tooltip-text markdown pa-2"
                   :anchor-attributes="{ target: '_blank' }"
+                  :watches="['source']"
                   />
                 </div>
                 <v-select
@@ -272,5 +273,9 @@ export default {
 .switch {
   top: 8px;
   position: relative;
+}
+
+.v-expansion-panel {
+  border-color: var(--v-background-base);
 }
 </style>
