@@ -1,6 +1,3 @@
-import entries from 'lodash/entries'
-import identity from 'lodash/identity'
-
 import error from './error'
 
 export default async function get (catalogUrl) {

@@ -17,7 +17,7 @@ import getCatalog from '@/lib/request/get-catalog'
 import datasets from './datasets.js'
 import themes from './themes.js'
 
-const getId = get('id')
+// const getId = get('id')
 
 export const getDefaultState = () => ({
   activeDatasetIds: [],
@@ -93,7 +93,6 @@ export const actions = {
               commit('addDataset', dataset)
             })
         })
-
       })
     // return getFromApi('datasets').then(val => {
     //   // Loop over datasets to get a list of available datasets per theme

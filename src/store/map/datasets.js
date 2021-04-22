@@ -14,13 +14,13 @@ const getOrEmptyVector = getOrEmpty(emptyLocationsObject)
 const getOrEmptyPointData = getOrEmpty(emptyObject)
 const getOrEmptyRaster = getOrEmpty(emptyObject)
 const getOrEmptyFlowmap = getOrEmpty(emptyObject)
-const getOrEmptyMetadata = getOrEmpty(emptyObject)
+// const getOrEmptyMetadata = getOrEmpty(emptyObject)
 
 const getPointData = pipe([get('pointData'), getOrEmptyPointData])
 const getVectorData = pipe([get('vector'), getOrEmptyVector])
 const getRasterData = pipe([get('raster'), getOrEmptyRaster])
 const getFlowmapData = pipe([get('flowmap'), getOrEmptyFlowmap])
-const getMetadata = pipe([get('metadata'), getOrEmptyMetadata])
+// const getMetadata = pipe([get('metadata'), getOrEmptyMetadata])
 
 export const state = () => ({})
 
