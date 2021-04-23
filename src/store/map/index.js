@@ -1,5 +1,4 @@
 import isArray from 'lodash/isArray'
-import get from 'lodash/fp/get'
 import flatten from 'lodash/fp/flatten'
 import _ from 'lodash'
 import moment from 'moment'
@@ -17,7 +16,6 @@ export const getDefaultState = () => ({
   vectorDataCollection: {},
   activeRasterLayerId: 'el',
   activeTheme: '',
-  defaultRasterLayerId: '',
   loadingRasterLayers: false,
   geographicalScope: ''
 })
@@ -170,18 +168,24 @@ export const actions = {
         let links = _.get(dataset, 'links', [])
         links = links.filter(link => link.rel === 'item')
         const rasterLayer = links[links.length - 1]
-        console.log(dataset, links, rasterLayer)
         dispatch('loadActiveRasterLayer', rasterLayer)
       })
   },
   loadActiveRasterLayer ({ state, commit }, rasterLayer) {
-    console.log('load active raster item', rasterLayer)
     getCatalog(rasterLayer.href)
       .then(dataset => {
         console.log(dataset)
         commit('addActiveRasterLayer', { data: dataset })
       })
   },
+  // TODO: load active flowmap layer
+  // loadActiveFlowmapLayer ({ state, commit }, flowLayer) {
+  //   getCatalog(flowLayer.href)
+  //     .then(dataset => {
+  //       console.log(dataset)
+  //       commit('addActiveRasterLayer', { data: dataset })
+  //     })
+  // },
   retrieveRasterLayerByImageId ({ commit, state, getters }, { imageId, options }) {
     options = options || {}
     commit('setLoadingRasterLayers', true)
@@ -288,7 +292,6 @@ export const actions = {
       }
 
       const url = _.get(state, `vectorDataCollection[${datasetId}].assets.graph.href`)
-      console.log(state.vectorDataCollection, datasetId, url)
       getFromApi('', parameters, url)
         .then(response => {
           console.log(response)
@@ -344,9 +347,6 @@ export const getters = {
   },
   getDatasets (state) {
     return state.datasets
-  },
-  knownDatasetIds (state) {
-    return Object.keys(state.datasets)
   },
   getActiveRasterLayer (state, id) {
     return state.activeRasterLayerId
@@ -404,24 +404,13 @@ export const getters = {
   //   }
   //   return _.get(datasets, `${activeRasterLayerId}.raster`)
   // },
-  activeRasterLegendData ({ datasets, activeRasterLayerId }) {
-    // Return the active raster data tiles (if not defined, return [])
-    if (activeRasterLayerId === '' || activeRasterLayerId === null) {
-      return []
-    }
-    const raster = get(`${activeRasterLayerId}.raster`, datasets)
-    return {
-      linearGradient: raster.linearGradient,
-      min: raster.min,
-      max: raster.max
-    }
-  },
 
   activeFlowmapData ({ datasets, activeRasterLayerId }) {
     // return the  flowmap data
     if (activeRasterLayerId === '' || activeRasterLayerId === null) {
       return []
     }
+
     return _.get(datasets, `${activeRasterLayerId}.flowmap`)
   },
 

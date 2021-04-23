@@ -89,7 +89,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getDatasets', 'activeRasterData', 'activeRasterLegendData'])
+    ...mapGetters(['getDatasets', 'activeRasterData'])
   },
   mounted () {
     this.dataset = this.getDatasets[this.datasetId]

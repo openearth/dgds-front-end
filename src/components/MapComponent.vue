@@ -229,7 +229,7 @@ export default {
         return
       }
 
-      fetch(this.activeRasterData.featureInfoUrl, {
+      fetch(this.activeRasterData.assets.featureinfo.href, {
         method: 'POST',
         body: JSON.stringify(parameters),
         mode: 'cors',
@@ -240,6 +240,7 @@ export default {
         .then(response => response.json())
         .then(resp => {
           if (resp.value) {
+            // TODO: fix unit
             const units = _.get(this.getDatasets, `${this.getActiveRasterLayer}.metadata.units`)
             this.mapboxMessage = `${resp.value} [${units}]`
             this.infoTextGeometry = bbox
