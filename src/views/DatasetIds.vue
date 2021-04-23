@@ -10,14 +10,15 @@ import { mapActions } from 'vuex'
 export default {
   watch: {
     '$route.params.datasetIds' () {
-      this.storeActiveDatasets(this.$route.params.datasetIds)
+      this.storeActiveVectorIds(this.$route.params.datasetIds)
+      this.triggerActiveVector()
     }
   },
   mounted () {
-    this.storeActiveDatasets(this.$route.params.datasetIds)
+    this.storeActiveVectorIds(this.$route.params.datasetIds)
   },
   methods: {
-    ...mapActions(['storeActiveDatasets'])
+    ...mapActions(['storeActiveVectorIds', 'triggerActiveVector'])
   }
 }
 </script>

@@ -1,17 +1,14 @@
 import isArray from 'lodash/isArray'
 import identity from 'lodash/fp/identity'
-import filter from 'lodash/fp/filter'
 import get from 'lodash/fp/get'
-import has from 'lodash/fp/has'
 import map from 'lodash/fp/map'
 import merge from 'lodash/fp/merge'
 import pipe from 'lodash/fp/pipe'
 import values from 'lodash/fp/values'
 import flatten from 'lodash/fp/flatten'
-import uniq from 'lodash/fp/uniq'
 import _ from 'lodash'
 import moment from 'moment'
-import { includesIn, getIn, wrapInProperty } from '../../lib/utils'
+import { includesIn, wrapInProperty } from '../../lib/utils'
 import getFromApi from '../../lib/request/get'
 import getCatalog from '@/lib/request/get-catalog'
 import datasets from './datasets.js'
@@ -23,6 +20,7 @@ export const getDefaultState = () => ({
   activeDatasetIds: [],
   activeLocationIds: [],
   activeRasterData: {},
+  vectorDataCollection: {},
   activeRasterLayerId: '',
   activeTheme: '',
   defaultRasterLayerId: '',
@@ -67,6 +65,12 @@ export const mutations = {
   setActiveRasterLayer (state, id) {
     state.activeRasterLayerId = id
   },
+  setVectorData (state, { id, data }) {
+    state.vectorDataCollection[id] = data
+  },
+  addActiveVectorLayer (state, { id, data }) {
+    state.vectorDataCollection[id].layers.push(data)
+  },
   setActiveRasterData (state, data) {
     state.activeRasterData = data
   },
@@ -82,10 +86,11 @@ export const mutations = {
 }
 
 export const actions = {
-  loadDatasets ({ commit }) {
+  loadDatasets ({ commit, dispatch }) {
+    // Retrieve the first 2 layers of the stac collection, the general metadata
+    // and the childs including all datasets
     getCatalog(process.env.VUE_APP_CATALOG_URL)
       .then(datasets => {
-        console.log(datasets)
         // Add themes to store.themes
         const themes = _.get(datasets, 'summaries.keywords')
         themes.forEach(theme => commit('addTheme', theme))
@@ -95,6 +100,12 @@ export const actions = {
           getCatalog(child.href)
             .then(dataset => {
               commit('addDataset', dataset)
+              // If we start at a subroute with active dataset ids, directly
+              // load the vector layers
+              if (state.activeDatasetIds.includes(dataset.id)) {
+                _.set(state.datasets, `${dataset.id}.visible`, true)
+                dispatch('loadVectorLayer', dataset)
+              }
             })
         })
       })
@@ -149,7 +160,6 @@ export const actions = {
       return
     }
     const layers = _.get(state, `datasets.${id}.links`)
-    console.log(layers, state.datasets)
     layers.forEach(layer => {
       const title = _.get(layer, 'title')
       if (!title) {
@@ -190,9 +200,50 @@ export const actions = {
     })
   },
 
-  storeActiveDatasets ({ commit, state, getters }, _ids) {
+  storeActiveVectorIds ({ commit, state, getters, dispatch }, _ids) {
+    // First set the activeDatasetIds
     const ids = isArray(_ids) ? _ids : _ids.split(',')
     commit('setActiveDatasetIds', ids)
+  },
+
+  triggerActiveVector ({ state, dispatch }) {
+    // When changing the active vector layers, check whether a new vectorlayer needs
+    // to be loaded.s
+    state.activeDatasetIds.forEach(datasetId => {
+      if (!_.has(state, `vectorDataCollection.${datasetId}`)) {
+        dispatch('loadVectorLayer', (state.datasets[datasetId]))
+      }
+    })
+  },
+  loadVectorLayer ({ state, dispatch }, dataset) {
+    if (!_.has(state.vectorDataCollection, dataset.id)) {
+      const links = _.get(dataset, 'links')
+      const collectionUrl = links.find(child => child.title === `${dataset.id}-mapbox`).href
+      dispatch('loadLayerCollection', {
+        collectionUrl,
+        setCollectionCommit: 'setVectorData',
+        addLayerCommit: 'addActiveVectorLayer',
+        datasetId: dataset.id
+      })
+    }
+  },
+
+  loadLayerCollection ({ commit }, { collectionUrl, setCollectionCommit, addLayerCommit, datasetId }) {
+    // Retrieve a layer collection and it's underlaying collection
+    getCatalog(collectionUrl)
+      .then(dataset => {
+        dataset.layers = []
+        console.log(dataset)
+        commit(setCollectionCommit, { id: datasetId, data: dataset })
+        const itemLinks = _.get(dataset, 'links')
+        const items = itemLinks.filter(child => child.rel === 'item')
+        items.forEach(item => {
+          getCatalog(item.href)
+            .then(layerData => {
+              commit(addLayerCommit, { id: datasetId, data: layerData })
+            })
+        })
+      })
   },
 
   loadPointDataForLocation ({ commit, state, getters }, { datasetIds, locationId }) {
@@ -270,6 +321,9 @@ export const actions = {
 }
 
 export const getters = {
+  activeDatasetIds (state) {
+    return state.activeDatasetIds
+  },
   // TODO: check if  all these functions are needed/used
   getActiveTheme (state) {
     return state.activeTheme
@@ -289,26 +343,25 @@ export const getters = {
   getLoadingState (state) {
     return state.loadingRasterLayers
   },
-  knownLocationIds (state) {
-    const getInDatasets = getIn(state.datasets)
-    const getLocationId = map(get('properties.locationId'))
-    const featuresInDatasets = id => getInDatasets(`${id}.locations.features`)
-    const getKnownLocationIds = pipe([
-      Object.keys,
-      filter(featuresInDatasets),
-      map(pipe([featuresInDatasets, getLocationId])),
-      flatten,
-      uniq
-    ])
+  // knownLocationIds (state) {
+  //   const getInDatasets = getIn(state.datasets)
+  //   const getLocationId = map(get('properties.locationId'))
+  //   const featuresInDatasets = id => getInDatasets(`${id}.locations.features`)
+  //   const getKnownLocationIds = pipe([
+  //     Object.keys,
+  //     filter(featuresInDatasets),
+  //     map(pipe([featuresInDatasets, getLocationId])),
+  //     flatten,
+  //     uniq
+  //   ])
 
-    return getKnownLocationIds(state.datasets)
-  },
+  //   return getKnownLocationIds(state.datasets)
+  // },
 
   activeDatasets (state) {
-    const { activeDatasetIds, datasets } = state
-    const getInDatasets = getIn(datasets)
-
-    return activeDatasetIds.map(getInDatasets).filter(identity)
+    return state.activeDatasetIds.map(id => {
+      return _.get(state, `datasets.${id}`)
+    })
   },
 
   activeTimestamp (state, { activeRasterData }) {
@@ -359,13 +412,42 @@ export const getters = {
     return _.get(datasets, `${activeRasterLayerId}.flowmap`)
   },
 
-  activeVectorData ({ activeLocationIds }, { activeDatasets }) {
-    // Retrieve for active layers where vector data is available the data
-    const vectorLayers = activeDatasets.filter(has('vector'))
-    const mapboxLayers = vectorLayers.map(layer => {
-      return get('vector.mapboxLayer', layer)
+  activeVectorData (state) {
+    const vectorDatasets = state.activeDatasetIds.map(datasetId => {
+      return _.get(state, `vectorDataCollection.${datasetId}`)
     })
-    return mapboxLayers.filter(identity)
+
+    const mapboxLayers = []
+
+    // TODO: This can be a bit more generic for my taste
+    vectorDatasets.forEach(dataset => {
+      if (!_.has(dataset, 'layers')) {
+        return
+      }
+      dataset.layers.forEach(layer => {
+        const mapboxLayer = {}
+        Object.entries(layer.properties).forEach(([id, prop]) => {
+          const regex = 'deltares:(.+)'
+          const propId = id.match(regex)
+          if (_.get(propId, '1')) {
+            mapboxLayer[propId[1]] = prop
+          }
+        })
+        mapboxLayers.push(mapboxLayer)
+      })
+    })
+    return mapboxLayers
+    // return Object.values(state.vectorDataCollection).filter((id, data) => {
+    //   console.log(data, id, state.activeDatasetIds.includes(id))
+    //   return state.activeDatasetIds.includes(id)
+    // })
+
+    // Retrieve for active layers where vector data is available the data
+    // const vectorLayers = activeDatasets.filter(has('vector'))
+    // const mapboxLayers = vectorLayers.map(layer => {
+    //   return get('vector.mapboxLayer', layer)
+    // })
+    // return mapboxLayers.filter(identity)
   },
   activeDatasetsLocations ({ activeLocationIds }, { activeDatasets }) {
     // Retrieve for the active datasets the locations

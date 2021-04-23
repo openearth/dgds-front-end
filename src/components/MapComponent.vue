@@ -106,7 +106,8 @@ export default {
       'activeDatasets',
       'getActiveRasterLayer',
       'getDatasets',
-      'getGeographicalScope'
+      'getGeographicalScope',
+      'knownVectorData'
     ]),
     rasterLayer () {
       const rasterLayer = getRasterLayer()
@@ -126,6 +127,7 @@ export default {
     vectorLayers () {
       // Returns an array with unique mapboxlayers.
       // Get active vectorlayers and flatten, all mapboxlayers into 1 array
+
       const vectorLayers = _.flatten(this.activeVectorData)
       // Get Default vector mapboxlayer
       const defaultVectorLayer = getVectorLayer()
