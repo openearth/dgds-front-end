@@ -1,22 +1,22 @@
 import Vue from 'vue'
 // import _ from 'lodash'
-// import get from 'lodash/fp/get'
-// import pipe from 'lodash/fp/pipe'
-// import merge from 'lodash/fp/merge'
-// import identity from 'lodash/fp/identity'
-// import { when } from '../../lib/utils'
+import get from 'lodash/fp/get'
+import pipe from 'lodash/fp/pipe'
+import merge from 'lodash/fp/merge'
+import identity from 'lodash/fp/identity'
+import { when } from '../../lib/utils'
 
-// const emptyObject = () => ({})
+const emptyObject = () => ({})
 // const emptyLocationsObject = () => ({})
 
-// const getOrEmpty = empty => when(identity, identity, empty)
+const getOrEmpty = empty => when(identity, identity, empty)
 // const getOrEmptyVector = getOrEmpty(emptyLocationsObject)
-// const getOrEmptyPointData = getOrEmpty(emptyObject)
+const getOrEmptyPointData = getOrEmpty(emptyObject)
 // const getOrEmptyRaster = getOrEmpty(emptyObject)
 // const getOrEmptyFlowmap = getOrEmpty(emptyObject)
 // const getOrEmptyMetadata = getOrEmpty(emptyObject)
 
-// const getPointData = pipe([get('pointData'), getOrEmptyPointData])
+const getPointData = pipe([get('pointData'), getOrEmptyPointData])
 // const getVectorData = pipe([get('vector'), getOrEmptyVector])
 // const getRasterData = pipe([get('raster'), getOrEmptyRaster])
 // const getFlowmapData = pipe([get('flowmap'), getOrEmptyFlowmap])
@@ -66,11 +66,11 @@ export const mutations = {
   //   rasterLayer.tiles = [_.get(rasterLayer, 'url')]
   //   Vue.set(state[id], 'raster', rasterLayer)
   // },
-  // addDatasetPointData (state, { id, data }) {
-  //   if (!state[id]) Vue.set(state, id, {})
-  //   const pointData = getPointData(state[id])
-  //   Vue.set(state[id], 'pointData', merge(pointData, data))
-  // },
+  addDatasetPointData (state, { id, data }) {
+    if (!state[id]) Vue.set(state, id, {})
+    const pointData = getPointData(state[id])
+    Vue.set(state[id], 'pointData', merge(pointData, data))
+  },
   addDataset (state, dataset) {
     Vue.set(state, dataset.id, dataset)
   }

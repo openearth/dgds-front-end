@@ -270,6 +270,7 @@ export default {
     },
     toggleRasterLayer (event) {
       this.setActiveRasterLayerId(event)
+      this.loadActiveRasterItem()
       this.removeInfoText()
       this.zoomToBbox(this.getActiveRasterLayer)
     }

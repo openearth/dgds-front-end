@@ -65,11 +65,11 @@ export const mutations = {
   addActiveVectorLayer (state, { id, data }) {
     state.vectorDataCollection[id].layers.push(data)
   },
-  setRasterData (state, { id, data }) {
+  setRasterData (state, { data }) {
     state.activeRasterData = data
   },
-  addRasterLayers (state, { id, data }) {
-    state.activeRasterData.layers.push(data)
+  addActiveRasterLayer (state, { data }) {
+    state.activeRasterData.layer = data
   },
   // setActiveRasterData (state, data) {
   //   state.activeRasterData = data
@@ -105,6 +105,9 @@ export const actions = {
               if (state.activeDatasetIds.includes(dataset.id)) {
                 _.set(state.datasets, `${dataset.id}.visible`, true)
                 dispatch('loadVectorLayer', dataset)
+              }
+              if (dataset.id === state.activeRasterLayerId) {
+                dispatch('loadActiveRasterData', dataset.id)
               }
             })
         })
@@ -152,7 +155,7 @@ export const actions = {
     //   })
     // })
   },
-  loadActiveRasterLayer ({ state, commit, dispatch }, id) {
+  loadActiveRasterData ({ state, commit, dispatch }, id) {
     // Store active raster data, if null leave empty, otherwise retrieve
     // new data from link
     if (!id) {
@@ -163,9 +166,20 @@ export const actions = {
     const collectionUrl = links.find(child => child.title === `${id}-gee`).href
     getCatalog(collectionUrl)
       .then(dataset => {
-        dataset.layers = []
-        console.log(dataset)
         commit('setRasterData', { id: id, data: dataset })
+        let links = _.get(dataset, 'links', [])
+        links = links.filter(link => link.rel === 'item')
+        const rasterLayer = links[links.length - 1]
+        console.log(dataset, links, rasterLayer)
+        dispatch('loadActiveRasterLayer', rasterLayer)
+      })
+  },
+  loadActiveRasterLayer ({ state, commit }, rasterLayer) {
+    console.log('load active raster item', rasterLayer)
+    getCatalog(rasterLayer.href)
+      .then(dataset => {
+        console.log(dataset)
+        commit('addActiveRasterLayer', { data: dataset })
       })
   },
   retrieveRasterLayerByImageId ({ commit, state, getters }, { imageId, options }) {
@@ -226,7 +240,6 @@ export const actions = {
     getCatalog(collectionUrl)
       .then(dataset => {
         dataset.layers = []
-        console.log(dataset)
         commit(setCollectionCommit, { id: datasetId, data: dataset })
         const itemLinks = _.get(dataset, 'links')
         const items = itemLinks.filter(child => child.rel === 'item')
@@ -241,12 +254,12 @@ export const actions = {
 
   loadPointDataForLocation ({ commit, state, getters }, { datasetIds, locationId }) {
     const datasetIdsArray = isArray(datasetIds) ? datasetIds : datasetIds.split(',')
-    console.log(datasetIdsArray)
     datasetIdsArray.forEach(datasetId => {
       if (_.get(state, `datasets[${datasetId}]vector[${locationId}]`)) {
         return
       }
 
+      // TODO: this time is still done for the old code. Needs update, use activeTimesatmp?
       // Get the current time of the active raster layer
       const activeRaster = _.get(getters, 'activeRasterData')
       let currentTime = _.get(activeRaster, 'date')
@@ -274,42 +287,46 @@ export const actions = {
         datasetId
       }
 
-      getFromApi('timeseries', parameters).then(response => {
-        const pointDataType = _.get(state, `datasets[${datasetId}].metadata.pointData`)
+      const url = _.get(state, `vectorDataCollection[${datasetId}].assets.graph.href`)
+      console.log(state.vectorDataCollection, datasetId, url)
+      getFromApi('', parameters, url)
+        .then(response => {
+          console.log(response)
+          const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltaers:pointData`)
 
-        // Depending on the pointDataType different responses are expected.
-        // images -> just an url to a svg image
-        // line or scatter -> data to create echarts graph
-        if (pointDataType === 'images') {
-          commit('addDatasetPointData', {
-            id: datasetId,
-            data: {
-              [locationId]: {
-                imageUrl: response
+          // Depending on the pointDataType different responses are expected.
+          // images -> just an url to a svg image
+          // line or scatter -> data to create echarts graph
+          if (pointDataType === 'images') {
+            commit('addDatasetPointData', {
+              id: datasetId,
+              data: {
+                [locationId]: {
+                  imageUrl: response
+                }
               }
-            }
-          })
-        } else {
-          let category = []
-          let serie = []
-          const eventResults = response.results.filter(res => _.has(res, 'events'))
+            })
+          } else {
+            let category = []
+            let serie = []
+            const eventResults = response.results.filter(res => _.has(res, 'events'))
 
-          eventResults.forEach(res => {
-            serie = serie.concat(res.events.map(event => event.value))
-            category = category.concat(res.events.map(event => moment(event.timeStamp).format()))
-          })
+            eventResults.forEach(res => {
+              serie = serie.concat(res.events.map(event => event.value))
+              category = category.concat(res.events.map(event => moment(event.timeStamp).format()))
+            })
 
-          commit('addDatasetPointData', {
-            id: datasetId,
-            data: {
-              [locationId]: {
-                category,
-                serie
+            commit('addDatasetPointData', {
+              id: datasetId,
+              data: {
+                [locationId]: {
+                  category,
+                  serie
+                }
               }
-            }
-          })
-        }
-      })
+            })
+          }
+        })
     })
   }
 }
@@ -364,10 +381,12 @@ export const getters = {
     }
     // Retrieve the timestamp from te activeRasterData and combine this into a string
     // using the dateformat given
-    const date = _.get(activeRasterData, 'date')
-    const dateFormat = _.get(activeRasterData, 'dateFormat')
-
-    if (date && dateFormat) {
+    // let links = _.get(activeRasterData, 'links', [])
+    // links = links.filter(link => link.rel === 'item')
+    // const date = _.get(links[links.length - 1], 'date')
+    const date = _.get(activeRasterData, 'layer.date', [])
+    const dateFormat = 'YYYY-MM-DDTHH:mm:ss'
+    if (date) {
       const timeStamp = moment(date, dateFormat).format('DD-MM-YYYY HH:mm')
       return timeStamp
     } else {
