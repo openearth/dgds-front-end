@@ -101,9 +101,7 @@ export default {
       'activeRasterData',
       'activeFlowmapData',
       'activeVectorData',
-      'activeDatasetsLocations',
       'activeTimestamp',
-      'activeDatasets',
       'getActiveRasterLayer',
       'getDatasets',
       'getGeographicalScope',
@@ -111,7 +109,7 @@ export default {
     ]),
     rasterLayer () {
       const rasterLayer = getRasterLayer()
-      rasterLayer.source.tiles = [_.get(this.activeRasterData, 'url')]
+      rasterLayer.source.tiles = [_.get(this.activeRasterData, 'layers[0].assets.visual.href')]
       return rasterLayer
     },
     flowmapLayer () {
@@ -164,7 +162,7 @@ export default {
   methods: {
     ...mapMutations([
       'clearActiveDatasetIds',
-      'setActiveRasterLayer',
+      'setActiveRasterLayerId',
       'setGeographicalScope'
     ]),
     zoomToLastDatasetId () {
@@ -209,13 +207,14 @@ export default {
       }, 1000)
     },
     getFeatureInfo (bbox) {
-      if (!this.getActiveRasterLayer) {
+      if (!this.activeRasterData) {
         this.removeInfoText()
         return
       }
+      console.log(this.activeRasterData)
 
       const parameters = {
-        imageId: this.activeRasterData.imageId,
+        imageId: _.get(this.activeRasterData, 'layers[0].properties.deltares:imageId'),
         bbox
       }
 
@@ -260,7 +259,7 @@ export default {
       detail.features.forEach(feature => {
         // When a layer has a metadata with locationIdField use this layer and
         // get the locationId usin this field
-        const locId = _.get(feature, 'layer.metadata.locationIdField')
+        const locId = _.get(feature, 'layer.metadata.deltares:locationIdField')
         if (locId) {
           locationIds.push(feature.properties[locId])
         }
@@ -270,7 +269,7 @@ export default {
       this.$router.push({ path: `/${params.datasetIds}/${params.locationId}`, params })
     },
     toggleRasterLayer (event) {
-      this.setActiveRasterLayer(event)
+      this.setActiveRasterLayerId(event)
       this.removeInfoText()
       this.zoomToBbox(this.getActiveRasterLayer)
     }

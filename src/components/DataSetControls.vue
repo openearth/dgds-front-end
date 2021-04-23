@@ -144,7 +144,7 @@ export default {
     this.activeRasterLayer = this.getActiveRasterLayer
   },
   methods: {
-    ...mapMutations(['setActiveRasterLayer']),
+    ...mapMutations(['setActiveRasterLayerId']),
     ...mapActions(['retrieveRasterLayerByImageId', 'loadActiveRasterLayer']),
     markedTooltip (text) {
       return marked(text)
@@ -214,7 +214,7 @@ export default {
       if (this.getActiveRasterLayer === id) {
         id = null
       }
-      this.setActiveRasterLayer(id)
+      this.setActiveRasterLayerId(id)
       this.loadActiveRasterLayer(id)
       // this.setActiveRasterLayer(id)
       // this.activeRasterLayer = this.getActiveRasterLayer

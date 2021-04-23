@@ -1,14 +1,8 @@
 import isArray from 'lodash/isArray'
-import identity from 'lodash/fp/identity'
 import get from 'lodash/fp/get'
-import map from 'lodash/fp/map'
-import merge from 'lodash/fp/merge'
-import pipe from 'lodash/fp/pipe'
-import values from 'lodash/fp/values'
 import flatten from 'lodash/fp/flatten'
 import _ from 'lodash'
 import moment from 'moment'
-import { includesIn, wrapInProperty } from '../../lib/utils'
 import getFromApi from '../../lib/request/get'
 import getCatalog from '@/lib/request/get-catalog'
 import datasets from './datasets.js'
@@ -21,7 +15,7 @@ export const getDefaultState = () => ({
   activeLocationIds: [],
   activeRasterData: {},
   vectorDataCollection: {},
-  activeRasterLayerId: '',
+  activeRasterLayerId: 'el',
   activeTheme: '',
   defaultRasterLayerId: '',
   loadingRasterLayers: false,
@@ -62,7 +56,7 @@ export const mutations = {
   clearActiveLocationIds (state) {
     state.activeLocationIds = []
   },
-  setActiveRasterLayer (state, id) {
+  setActiveRasterLayerId (state, id) {
     state.activeRasterLayerId = id
   },
   setVectorData (state, { id, data }) {
@@ -71,15 +65,21 @@ export const mutations = {
   addActiveVectorLayer (state, { id, data }) {
     state.vectorDataCollection[id].layers.push(data)
   },
-  setActiveRasterData (state, data) {
+  setRasterData (state, { id, data }) {
     state.activeRasterData = data
   },
-  setDefaultRasterLayer (state, id) {
-    state.defaultRasterLayerId = id
+  addRasterLayers (state, { id, data }) {
+    state.activeRasterData.layers.push(data)
   },
-  updateRasterLayer (state, { dataset, rasterLayer }) {
-    Object.assign(state.datasets[dataset].raster, rasterLayer)
-  },
+  // setActiveRasterData (state, data) {
+  //   state.activeRasterData = data
+  // },
+  // setDefaultRasterLayer (state, id) {
+  //   state.defaultRasterLayerId = id
+  // },
+  // updateRasterLayer (state, { dataset, rasterLayer }) {
+  //   Object.assign(state.datasets[dataset].raster, rasterLayer)
+  // },
   setLoadingRasterLayers (state, loading) {
     state.loadingRasterLayers = loading
   }
@@ -152,28 +152,21 @@ export const actions = {
     //   })
     // })
   },
-  loadActiveRasterLayer ({ state, commit }, id) {
+  loadActiveRasterLayer ({ state, commit, dispatch }, id) {
     // Store active raster data, if null leave empty, otherwise retrieve
     // new data from link
     if (!id) {
-      commit('setActiveRasterData', {})
+      commit('setRasterData', {})
       return
     }
-    const layers = _.get(state, `datasets.${id}.links`)
-    layers.forEach(layer => {
-      const title = _.get(layer, 'title')
-      if (!title) {
-        return false
-      }
-      const regex = `${id}-(.+)`
-      const layerType = title.match(regex)[1]
-      if (layerType === 'gee') {
-        getCatalog(layer.href)
-          .then(rasterData => {
-            commit('setActiveRasterData', rasterData)
-          })
-      }
-    })
+    const links = _.get(state.datasets[id], 'links')
+    const collectionUrl = links.find(child => child.title === `${id}-gee`).href
+    getCatalog(collectionUrl)
+      .then(dataset => {
+        dataset.layers = []
+        console.log(dataset)
+        commit('setRasterData', { id: id, data: dataset })
+      })
   },
   retrieveRasterLayerByImageId ({ commit, state, getters }, { imageId, options }) {
     options = options || {}
@@ -248,6 +241,7 @@ export const actions = {
 
   loadPointDataForLocation ({ commit, state, getters }, { datasetIds, locationId }) {
     const datasetIdsArray = isArray(datasetIds) ? datasetIds : datasetIds.split(',')
+    console.log(datasetIdsArray)
     datasetIdsArray.forEach(datasetId => {
       if (_.get(state, `datasets[${datasetId}]vector[${locationId}]`)) {
         return
@@ -360,7 +354,7 @@ export const getters = {
 
   activeDatasets (state) {
     return state.activeDatasetIds.map(id => {
-      return _.get(state, `datasets.${id}`)
+      return _.get(state, `vectorDataCollection.${id}`)
     })
   },
 
@@ -413,13 +407,12 @@ export const getters = {
   },
 
   activeVectorData (state) {
+    // Retrieve a list with actual mapbox layers from the active vector layers
     const vectorDatasets = state.activeDatasetIds.map(datasetId => {
       return _.get(state, `vectorDataCollection.${datasetId}`)
     })
 
     const mapboxLayers = []
-
-    // TODO: This can be a bit more generic for my taste
     vectorDatasets.forEach(dataset => {
       if (!_.has(dataset, 'layers')) {
         return
@@ -433,6 +426,7 @@ export const getters = {
             mapboxLayer[propId[1]] = prop
           }
         })
+        mapboxLayer.metadata = dataset.properties
         mapboxLayers.push(mapboxLayer)
       })
     })
@@ -449,31 +443,31 @@ export const getters = {
     // })
     // return mapboxLayers.filter(identity)
   },
-  activeDatasetsLocations ({ activeLocationIds }, { activeDatasets }) {
-    // Retrieve for the active datasets the locations
-    const getActiveProperty = feature =>
-      pipe([get('properties.locationId'), includesIn(activeLocationIds), active => ({ active })])(
-        feature
-      )
+  // activeDatasetsLocations ({ activeLocationIds }, { activeDatasets }) {
+  //   // Retrieve for the active datasets the locations
+  //   const getActiveProperty = feature =>
+  //     pipe([get('properties.locationId'), includesIn(activeLocationIds), active => ({ active })])(
+  //       feature
+  //     )
 
-    const addActiveProperty = feature =>
-      pipe([
-        get('properties'),
-        merge(getActiveProperty(feature)),
-        wrapInProperty('properties'),
-        merge(feature)
-      ])(feature)
+  //   const addActiveProperty = feature =>
+  //     pipe([
+  //       get('properties'),
+  //       merge(getActiveProperty(feature)),
+  //       wrapInProperty('properties'),
+  //       merge(feature)
+  //     ])(feature)
 
-    const enhanceFeatureWithActiveState = location =>
-      pipe([get('features'), map(addActiveProperty), wrapInProperty('features'), merge(location)])(
-        location
-      )
+  //   const enhanceFeatureWithActiveState = location =>
+  //     pipe([get('features'), map(addActiveProperty), wrapInProperty('features'), merge(location)])(
+  //       location
+  //     )
 
-    return activeDatasets
-      .map(get('locations'))
-      .filter(identity)
-      .map(enhanceFeatureWithActiveState)
-  },
+  //   return activeDatasets
+  //     .map(get('locations'))
+  //     .filter(identity)
+  //     .map(enhanceFeatureWithActiveState)
+  // },
   activePointDataPerDataset (state) {
     const { activeLocationIds, activeDatasetIds, datasets } = state
     const activePointDataPerDataset = {}
@@ -500,7 +494,7 @@ export const getters = {
     return activePointDataPerDataset
   },
   datasetsInActiveTheme (state) {
-    const sets = values(state.datasets)
+    const sets = _.values(state.datasets)
     const activeSets = {}
     if (state.activeTheme !== '') {
       sets.forEach(set => {
