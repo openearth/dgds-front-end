@@ -109,7 +109,8 @@ export default {
     ]),
     rasterLayer () {
       const rasterLayer = getRasterLayer()
-      rasterLayer.source.tiles = [_.get(this.activeRasterData, 'layers[0].assets.visual.href')]
+      rasterLayer.source.tiles = [_.get(this.activeRasterData, 'layer.assets.visual.href')]
+      console.log(rasterLayer)
       return rasterLayer
     },
     flowmapLayer () {

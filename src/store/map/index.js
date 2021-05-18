@@ -6,6 +6,7 @@ import getFromApi from '../../lib/request/get'
 import getCatalog from '@/lib/request/get-catalog'
 import datasets from './datasets.js'
 import themes from './themes.js'
+import Vue from 'vue'
 
 // const getId = get('id')
 
@@ -64,10 +65,13 @@ export const mutations = {
     state.vectorDataCollection[id].layers.push(data)
   },
   setRasterData (state, { data }) {
+    console.log('setrasterdata')
     state.activeRasterData = data
   },
   addActiveRasterLayer (state, { data }) {
-    state.activeRasterData.layer = data
+    console.log('addactiverasterdata')
+    // state.activeRasterData.layer = data
+    Vue.set(state.activeRasterData, 'layer', data)
   },
   // setActiveRasterData (state, data) {
   //   state.activeRasterData = data
@@ -168,10 +172,12 @@ export const actions = {
         let links = _.get(dataset, 'links', [])
         links = links.filter(link => link.rel === 'item')
         const rasterLayer = links[links.length - 1]
+        console.log(dataset, links, rasterLayer)
         dispatch('loadActiveRasterLayer', rasterLayer)
       })
   },
   loadActiveRasterLayer ({ state, commit }, rasterLayer) {
+    console.log(rasterLayer)
     getCatalog(rasterLayer.href)
       .then(dataset => {
         console.log(dataset)
@@ -292,7 +298,15 @@ export const actions = {
       }
 
       const url = _.get(state, `vectorDataCollection[${datasetId}].assets.graph.href`)
-      getFromApi('', parameters, url)
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(parameters),
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => response.json())
         .then(response => {
           console.log(response)
           const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltaers:pointData`)

@@ -32,6 +32,7 @@ export default {
   watch: {
     options: {
       handler (newOptions) {
+        console.log('watching options', this.options)
         if (this.map) {
           const source = this.map.getSource(this.id)
           const layer = this.map.getLayer(this.id)
@@ -68,7 +69,7 @@ export default {
   mounted () {
     this.map = this.getMap()
     this.id = this.options.id
-    console.log(this.options.source.tiles)
+    console.log(this.options, this.options.source.tiles)
     if (this.options.source.tiles) {
       this.map.addLayer(this.options, 'water-border')
     }
