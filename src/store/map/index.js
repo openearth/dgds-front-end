@@ -65,11 +65,9 @@ export const mutations = {
     state.vectorDataCollection[id].layers.push(data)
   },
   setRasterData (state, { data }) {
-    console.log('setrasterdata')
     state.activeRasterData = data
   },
   addActiveRasterLayer (state, { data }) {
-    console.log('addactiverasterdata')
     // state.activeRasterData.layer = data
     Vue.set(state.activeRasterData, 'layer', data)
   },
@@ -172,15 +170,12 @@ export const actions = {
         let links = _.get(dataset, 'links', [])
         links = links.filter(link => link.rel === 'item')
         const rasterLayer = links[links.length - 1]
-        console.log(dataset, links, rasterLayer)
         dispatch('loadActiveRasterLayer', rasterLayer)
       })
   },
   loadActiveRasterLayer ({ state, commit }, rasterLayer) {
-    console.log(rasterLayer)
     getCatalog(rasterLayer.href)
       .then(dataset => {
-        console.log(dataset)
         commit('addActiveRasterLayer', { data: dataset })
       })
   },
@@ -308,7 +303,6 @@ export const actions = {
       })
         .then(response => response.json())
         .then(response => {
-          console.log(response)
           const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltaers:pointData`)
 
           // Depending on the pointDataType different responses are expected.

@@ -110,7 +110,6 @@ export default {
     rasterLayer () {
       const rasterLayer = getRasterLayer()
       rasterLayer.source.tiles = [_.get(this.activeRasterData, 'layer.assets.visual.href')]
-      console.log(rasterLayer)
       return rasterLayer
     },
     flowmapLayer () {
@@ -212,15 +211,14 @@ export default {
         this.removeInfoText()
         return
       }
-      console.log(this.activeRasterData)
 
       const parameters = {
-        imageId: _.get(this.activeRasterData, 'layers[0].properties.deltares:imageId'),
+        imageId: _.get(this.activeRasterData, 'layer.properties.deltares:imageId'),
         bbox
       }
 
-      const band = _.get(this.activeRasterData, 'band')
-      const func = _.get(this.activeRasterData, 'function')
+      const band = _.get(this.activeRasterData, 'layer.properties.deltares:band')
+      const func = _.get(this.activeRasterData, 'layer.properties.deltares:function')
 
       if (band) {
         parameters.band = band
@@ -230,7 +228,7 @@ export default {
         return
       }
 
-      fetch(this.activeRasterData.assets.featureinfo.href, {
+      fetch(_.get(this.activeRasterData, 'assets.featureinfo.href'), {
         method: 'POST',
         body: JSON.stringify(parameters),
         mode: 'cors',
@@ -242,7 +240,8 @@ export default {
         .then(resp => {
           if (resp.value) {
             // TODO: fix unit
-            const units = _.get(this.getDatasets, `${this.getActiveRasterLayer}.metadata.units`)
+            const dataset = this.getDatasets[this.getActiveRasterLayer]
+            const units = _.get(dataset, 'properties.deltares:units')
             this.mapboxMessage = `${resp.value} [${units}]`
             this.infoTextGeometry = bbox
           } else {

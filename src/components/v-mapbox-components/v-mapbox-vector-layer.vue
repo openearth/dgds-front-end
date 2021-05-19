@@ -115,7 +115,6 @@ export default {
         // and take the feature nearest to center..
         const index = distances.indexOf(Math.min.apply(null, distances))
         const nextFeat = feats[index]
-        console.log(nextFeat)
         this.$emit('select-locations', {
           features: [nextFeat],
           geometry: nextFeat.geometry

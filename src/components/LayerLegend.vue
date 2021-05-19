@@ -95,13 +95,13 @@ export default {
     this.dataset = this.getDatasets[this.datasetId]
     this.unit = _.get(this.dataset, 'properties.deltares:units')
     this.updateMinMax()
-    this.linearGradient = _.get(this.activeRasterData, 'properties.deltares:palette')
+    this.linearGradient = _.get(this.activeRasterData, 'layer.properties.deltares:linearGradient')
   },
   methods: {
     ...mapActions(['retrieveRasterLayerByImageId']),
     updateMinMax () {
-      const min = _.get(this.activeRasterData, 'properties.deltares:min', '')
-      const max = _.get(this.activeRasterData, 'properties.deltares:max', '')
+      const min = _.get(this.activeRasterData, 'layer.properties.deltares:min', '')
+      const max = _.get(this.activeRasterData, 'layer.properties.deltares:max', '')
       this.minValue = min.toString()
       this.maxValue = max.toString()
       this.defaultMinValue = min.toString()
