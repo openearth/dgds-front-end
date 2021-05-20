@@ -188,12 +188,14 @@ export default {
     zoomToBbox (datasetId) {
       setTimeout(() => {
         const oldScope = this.getGeographicalScope
-        const metadata = _.get(this.getDatasets, `[${datasetId}].metadata`)
-        const newScope = _.get(metadata, 'scope')
+        const newScope = _.get(this.getDatasets, `${datasetId}.properties.deltares:scope`)
+        console.log(oldScope, newScope)
         // If the new scope is global or the same as the old scope, do nothing
         if (newScope === 'regional' && oldScope !== newScope) {
           // If layer is toggled on and has a bbox, zoom to that layer
-          const bbox = metadata.bbox
+          const coords = _.get(this.getDatasets, `${datasetId}.extent.spatial.bbox[0]`)
+          const bbox = [[coords[0], coords[1]], [coords[2], coords[3]]]
+          console.log(bbox, coords)
           if (bbox) {
             this.$refs.map.map.fitBounds(bbox)
           }
