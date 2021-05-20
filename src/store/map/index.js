@@ -131,7 +131,6 @@ export const actions = {
         dispatch('loadActiveRasterLayer', rasterLayer)
       })
     const flowUrl = links.find(child => child.title === `${id}-flow`)
-    console.log(flowUrl)
     if (flowUrl) {
       getCatalog(flowUrl.href)
         .then(dataset => {
@@ -391,7 +390,6 @@ export const getters = {
   // },
 
   activeFlowmapData (state) {
-    console.log(state.activeRasterData)
     return state.activeFlowmapLayer
   },
 

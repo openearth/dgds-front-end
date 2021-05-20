@@ -114,7 +114,6 @@ export default {
     },
     flowmapLayer () {
       const flowmapLayer = getRasterLayer()
-      console.log(this.activeFlowmapData)
       // const url = [_.get(this.activeRasterData, 'flowmapLayer.assets.flowmap.href')]
       flowmapLayer.source.tiles = [_.get(this.activeFlowmapData, 'assets.flowmap.href')]
       return flowmapLayer
@@ -152,7 +151,6 @@ export default {
       return newLayers
     },
     showFlowmapLayer () {
-      console.log(_.isEmpty(this.activeFlowmapData))
       return !_.isEmpty(this.activeFlowmapData)
     }
   },

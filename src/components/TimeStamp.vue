@@ -7,7 +7,7 @@
       :dates="timeseriesItems"
       :set-time-index="dateIndex"
       start-at="end"
-      @update-timestep="loadActiveRasterLayer"
+      @update-timestep="getNewRasterLayer"
     >
       <template v-slot:backButton="{ back }">
         <v-btn icon :disabled="getLoadingState" @click="back">
@@ -44,11 +44,6 @@ import moment from 'moment'
 import TimeSlider from '@/components/time-slider/TimeSlider.vue'
 
 export default {
-  data () {
-    return {
-      dateIndex: 0 // use input dropdown to, change the index of the timeslider accordingly
-    }
-  },
   components: {
     TimeSlider
   },
@@ -74,6 +69,11 @@ export default {
       const filteredSeries = series.filter(serie => serie.rel === 'item')
       return filteredSeries
     },
+    dateIndex () {
+      return this.timeseriesItems.findIndex(item => {
+        return item.date === this.activeTimestamp
+      })
+    },
     timestamp: {
       // This is the input for the v-model of the select of the dropdown menu
       get () {
@@ -85,8 +85,6 @@ export default {
         }
         this.timeseriesItems.forEach((serie, i) => {
           if (moment(val.date, 'DD-MM-YYYY HH:mm').isSame(moment(serie.date, 'DD-MM-YYYY HH:mm'))) {
-            console.log(val.date, serie.date, i, serie)
-            this.dateIndex = i
             this.loadActiveRasterLayer(serie)
             return true
           }
@@ -97,9 +95,7 @@ export default {
   methods: {
     ...mapActions(['retrieveRasterLayerByImageId', 'loadActiveRasterLayer']),
     getNewRasterLayer (serie) {
-      if (this.getActiveRasterLayer) {
-        this.loadActiveRasterLayer(serie)
-      }
+      this.loadActiveRasterLayer(serie)
     }
   }
 }

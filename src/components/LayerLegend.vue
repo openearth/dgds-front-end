@@ -95,12 +95,10 @@ export default {
     this.dataset = this.getDatasets[this.datasetId]
     this.unit = _.get(this.dataset, 'properties.deltares:units')
     this.updateMinMax()
-    console.log('mounted')
     this.linearGradient = _.get(this.activeRasterData, 'layer.properties.deltares:linearGradient')
   },
   watch: {
     activeRasterData () {
-      console.log('watch active raster data', this.activeRasterData)
       this.updateMinMax()
       this.linearGradient = {}
       this.linearGradient = _.get(this.activeRasterData, 'layer.properties.deltares:linearGradient')
