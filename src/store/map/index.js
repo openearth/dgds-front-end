@@ -112,48 +112,6 @@ export const actions = {
             })
         })
       })
-    // return getFromApi('datasets').then(val => {
-    //   // Loop over datasets to get a list of available datasets per theme
-    //   val.themes.map(theme => {
-    //     theme.datasets = _.compact(
-    //       val.datasets.map(set => {
-    //         if (set.themes.includes(theme.id)) {
-    //           return set.id
-    //         }
-    //       })
-    //     )
-    //     return theme
-    //   })
-
-    //   // Add themes to store.themes
-    //   val.themes.forEach(theme => commit('addTheme', theme))
-
-    //   val.datasets.forEach(set => {
-    //     // Add metadata to store.datasets (excluding vectorLayer and rasterLayer)
-    //     commit('addMetadata', _.omit(set, ['vectorLayer', 'rasterLayer', 'flowmapLayer']))
-
-    //     // Add vectorlayer to store.datasets if available
-    //     if (_.has(set, 'vectorLayer')) {
-    //       commit('addDatasetVector', set)
-    //     }
-
-    //     // Flowmap for currents and  wind
-    //     if (_.has(set, 'flowmapLayer')) {
-    //       commit('addDatasetFlowmap', set)
-    //     }
-    //     // Add rasterLayer to store.datasets if available
-    //     if (_.has(set, 'rasterLayer') && _.get(set, 'rasterLayer.url') !== null) {
-    //       commit('addDatasetRaster', set)
-
-    //       // If key rasterActiveOnLoad is true, turn this layer on on load
-    //       const rasterActive = _.get(set, 'rasterActiveOnLoad')
-    //       if (rasterActive) {
-    //         commit('setActiveRasterLayer', set.id)
-    //         commit('setDefaultRasterLayer', set.id)
-    //       }
-    //     }
-    //   })
-    // })
   },
   loadActiveRasterData ({ state, commit, dispatch }, id) {
     // Store active raster data, if null leave empty, otherwise retrieve
@@ -166,15 +124,38 @@ export const actions = {
     const collectionUrl = links.find(child => child.title === `${id}-gee`).href
     getCatalog(collectionUrl)
       .then(dataset => {
-        commit('setRasterData', { id: id, data: dataset })
         let links = _.get(dataset, 'links', [])
         links = links.filter(link => link.rel === 'item')
         const rasterLayer = links[links.length - 1]
+        const result = links.map(serie => {
+          serie.date = moment(serie.date, 'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY HH:mm')
+          return serie
+        })
+        dataset.links = result
+        commit('setRasterData', { id: id, data: dataset })
+
         dispatch('loadActiveRasterLayer', rasterLayer)
       })
   },
-  loadActiveRasterLayer ({ state, commit }, rasterLayer) {
-    getCatalog(rasterLayer.href)
+  loadActiveRasterLayer ({ state, getters, commit }, rasterLayer) {
+    // Load the active item (depending on activeTimestamp), this function is also
+    // used to update the raster layer when the min and max has changed (using the
+    // properties of the activeRasterData)
+    if (!rasterLayer) {
+      rasterLayer = state.activeRasterData.links.find(item => {
+        return getters.activeTimestamp === item.date
+      })
+    }
+    const properties = _.get(state.activeRasterData, 'layer.properties', {})
+    const url = new URL(rasterLayer.href)
+
+    if (_.get(properties, 'deltares:min')) {
+      url.searchParams.set('min', _.get(properties, 'deltares:min'))
+    }
+    if (_.get(properties, 'deltares:max')) {
+      url.searchParams.set('max', _.get(properties, 'deltares:max'))
+    }
+    getCatalog(url.href)
       .then(dataset => {
         commit('addActiveRasterLayer', { data: dataset })
       })
@@ -188,6 +169,7 @@ export const actions = {
   //     })
   // },
   retrieveRasterLayerByImageId ({ commit, state, getters }, { imageId, options }) {
+    console.log(options)
     options = options || {}
     commit('setLoadingRasterLayers', true)
     const dataset = getters.getActiveRasterLayer
@@ -392,10 +374,12 @@ export const getters = {
     // let links = _.get(activeRasterData, 'links', [])
     // links = links.filter(link => link.rel === 'item')
     // const date = _.get(links[links.length - 1], 'date')
-    const date = _.get(activeRasterData, 'layer.date', [])
-    const dateFormat = 'YYYY-MM-DDTHH:mm:ss'
+    const date = _.get(activeRasterData, 'layer.properties.deltares:date', [])
+    console.log(date)
+    const dateFormat = 'YYYY-MM-DD HH:mm:ss'
     if (date) {
       const timeStamp = moment(date, dateFormat).format('DD-MM-YYYY HH:mm')
+      console.log(timeStamp)
       return timeStamp
     } else {
       return ''

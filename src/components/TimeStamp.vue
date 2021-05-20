@@ -70,12 +70,9 @@ export default {
           }
         ]
       }
-      let series = _.get(this.activeRasterData, 'links') || []
-      series = series.filter(serie => serie.rel === 'item')
-      return series.map(serie => {
-        serie.date = moment(serie.date).format('DD-MM-YYYY HH:mm')
-        return serie
-      })
+      const series = _.clone(_.get(this.activeRasterData, 'links') || [])
+      const filteredSeries = series.filter(serie => serie.rel === 'item')
+      return filteredSeries
     },
     timestamp: {
       // This is the input for the v-model of the select of the dropdown menu
@@ -86,12 +83,11 @@ export default {
         if (!val) {
           return
         }
-        let series = _.get(this.activeRasterData, 'links') || []
-        series = series.filter(serie => serie.rel === 'item')
-        series.forEach((serie, i) => {
-          if (moment(val.date, 'DD-MM-YYYY HH:mm').isSame(moment(serie.date))) {
+        this.timeseriesItems.forEach((serie, i) => {
+          if (moment(val.date, 'DD-MM-YYYY HH:mm').isSame(moment(serie.date, 'DD-MM-YYYY HH:mm'))) {
+            console.log(val.date, serie.date, i, serie)
             this.dateIndex = i
-            this.loadActiveRasterLayer()
+            this.loadActiveRasterLayer(serie)
             return true
           }
         })
@@ -102,11 +98,7 @@ export default {
     ...mapActions(['retrieveRasterLayerByImageId', 'loadActiveRasterLayer']),
     getNewRasterLayer (serie) {
       if (this.getActiveRasterLayer) {
-        // const imageId = _.get(serie, 'imageId')
-        this.loadActiveRasterLayer()
-        // For each update of the timeslider adjust the raster layer to the new time
-        // this.retrieveRasterLayerByImageId({ imageId })
-        // this.$emit('update-timestep')
+        this.loadActiveRasterLayer(serie)
       }
     }
   }

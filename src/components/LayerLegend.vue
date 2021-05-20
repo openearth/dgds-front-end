@@ -95,10 +95,19 @@ export default {
     this.dataset = this.getDatasets[this.datasetId]
     this.unit = _.get(this.dataset, 'properties.deltares:units')
     this.updateMinMax()
+    console.log('mounted')
     this.linearGradient = _.get(this.activeRasterData, 'layer.properties.deltares:linearGradient')
   },
+  watch: {
+    activeRasterData () {
+      console.log('watch active raster data', this.activeRasterData)
+      this.updateMinMax()
+      this.linearGradient = {}
+      this.linearGradient = _.get(this.activeRasterData, 'layer.properties.deltares:linearGradient')
+    }
+  },
   methods: {
-    ...mapActions(['retrieveRasterLayerByImageId']),
+    ...mapActions(['loadActiveRasterLayer']),
     updateMinMax () {
       const min = _.get(this.activeRasterData, 'layer.properties.deltares:min', '')
       const max = _.get(this.activeRasterData, 'layer.properties.deltares:max', '')
@@ -110,7 +119,6 @@ export default {
     cancelEditRange () {
       this.minValue = this.defaultMinValue
       this.maxValue = this.defaultMaxValue
-
       this.editingRange = false
     },
     editRange () {
@@ -118,19 +126,14 @@ export default {
     },
     saveRange () {
       this.editingRange = false
-      this.postUpdatedRange()
+      _.set(this.activeRasterData, 'layer.properties.deltares:min', this.minValue)
+      _.set(this.activeRasterData, 'layer.properties.deltares:max', this.maxValue)
+      console.log(this.activeRasterData)
+      this.loadActiveRasterLayer()
     },
     resetRange () {
       this.minValue = this.defaultMinValue
       this.maxValue = this.defaultMaxValue
-    },
-    postUpdatedRange () {
-      const { imageId } = this.dataset.raster
-      const range = {
-        min: this.minValue,
-        max: this.maxValue
-      }
-      this.retrieveRasterLayerByImageId({ imageId, options: { min: range.min, max: range.max } })
     }
   }
 }
