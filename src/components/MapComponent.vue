@@ -114,12 +114,9 @@ export default {
     },
     flowmapLayer () {
       const flowmapLayer = getRasterLayer()
-      const flowmapData = this.activeFlowmapData
-      const url = _.get(flowmapData, 'url')
-      if (url) {
-        // should this be done using Vue.set?
-        flowmapLayer.source.tiles = [url]
-      }
+      console.log(this.activeFlowmapData)
+      // const url = [_.get(this.activeRasterData, 'flowmapLayer.assets.flowmap.href')]
+      flowmapLayer.source.tiles = [_.get(this.activeFlowmapData, 'assets.flowmap.href')]
       return flowmapLayer
     },
     vectorLayers () {
@@ -155,8 +152,8 @@ export default {
       return newLayers
     },
     showFlowmapLayer () {
-      const layer = this.getActiveRasterLayer
-      return layer === 'cc'
+      console.log(_.isEmpty(this.activeFlowmapData))
+      return !_.isEmpty(this.activeFlowmapData)
     }
   },
   methods: {

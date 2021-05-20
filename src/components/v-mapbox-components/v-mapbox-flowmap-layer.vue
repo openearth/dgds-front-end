@@ -1,6 +1,4 @@
 <script>
-import { mapGetters } from 'vuex'
-
 // https://github.com/mapbox/webgl-wind
 import * as windGl from '@openearth/windgl'
 
@@ -18,9 +16,6 @@ export default {
     return {
       layer: null
     }
-  },
-  computed: {
-    ...mapGetters(['activeFlowmapData'])
   },
   mounted () {
     const map = this.getMap()
@@ -49,7 +44,8 @@ export default {
       }
 
       // get the tile source
-      const url = this.activeFlowmapData.url
+      const url = _.get(this.options, 'source.tiles[0]')
+      console.log(url)
       // the tile.json contains extra information
       const tileUrl = url.replace('{z}/{x}/{y}.png', 'tile.json')
       const source = windGl.source(tileUrl)

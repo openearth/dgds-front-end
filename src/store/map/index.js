@@ -16,6 +16,7 @@ export const getDefaultState = () => ({
   activeRasterData: {},
   vectorDataCollection: {},
   activeRasterLayerId: 'el',
+  activeFlowmapLayer: {},
   activeTheme: '',
   loadingRasterLayers: false,
   geographicalScope: ''
@@ -68,18 +69,11 @@ export const mutations = {
     state.activeRasterData = data
   },
   addActiveRasterLayer (state, { data }) {
-    // state.activeRasterData.layer = data
     Vue.set(state.activeRasterData, 'layer', data)
   },
-  // setActiveRasterData (state, data) {
-  //   state.activeRasterData = data
-  // },
-  // setDefaultRasterLayer (state, id) {
-  //   state.defaultRasterLayerId = id
-  // },
-  // updateRasterLayer (state, { dataset, rasterLayer }) {
-  //   Object.assign(state.datasets[dataset].raster, rasterLayer)
-  // },
+  addActiveFlowmapLayer (state, data) {
+    state.activeFlowmapLayer = data
+  },
   setLoadingRasterLayers (state, loading) {
     state.loadingRasterLayers = loading
   }
@@ -136,6 +130,16 @@ export const actions = {
 
         dispatch('loadActiveRasterLayer', rasterLayer)
       })
+    const flowUrl = links.find(child => child.title === `${id}-flow`)
+    console.log(flowUrl)
+    if (flowUrl) {
+      getCatalog(flowUrl.href)
+        .then(dataset => {
+          commit('addActiveFlowmapLayer', dataset)
+        })
+    } else {
+      commit('addActiveFlowmapLayer', {})
+    }
   },
   loadActiveRasterLayer ({ state, getters, commit }, rasterLayer) {
     // Load the active item (depending on activeTimestamp), this function is also
@@ -160,16 +164,7 @@ export const actions = {
         commit('addActiveRasterLayer', { data: dataset })
       })
   },
-  // TODO: load active flowmap layer
-  // loadActiveFlowmapLayer ({ state, commit }, flowLayer) {
-  //   getCatalog(flowLayer.href)
-  //     .then(dataset => {
-  //       console.log(dataset)
-  //       commit('addActiveRasterLayer', { data: dataset })
-  //     })
-  // },
   retrieveRasterLayerByImageId ({ commit, state, getters }, { imageId, options }) {
-    console.log(options)
     options = options || {}
     commit('setLoadingRasterLayers', true)
     const dataset = getters.getActiveRasterLayer
@@ -375,11 +370,9 @@ export const getters = {
     // links = links.filter(link => link.rel === 'item')
     // const date = _.get(links[links.length - 1], 'date')
     const date = _.get(activeRasterData, 'layer.properties.deltares:date', [])
-    console.log(date)
     const dateFormat = 'YYYY-MM-DD HH:mm:ss'
     if (date) {
       const timeStamp = moment(date, dateFormat).format('DD-MM-YYYY HH:mm')
-      console.log(timeStamp)
       return timeStamp
     } else {
       return ''
@@ -397,13 +390,9 @@ export const getters = {
   //   return _.get(datasets, `${activeRasterLayerId}.raster`)
   // },
 
-  activeFlowmapData ({ datasets, activeRasterLayerId }) {
-    // return the  flowmap data
-    if (activeRasterLayerId === '' || activeRasterLayerId === null) {
-      return []
-    }
-
-    return _.get(datasets, `${activeRasterLayerId}.flowmap`)
+  activeFlowmapData (state) {
+    console.log(state.activeRasterData)
+    return state.activeFlowmapLayer
   },
 
   activeVectorData (state) {

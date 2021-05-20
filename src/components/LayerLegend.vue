@@ -128,7 +128,6 @@ export default {
       this.editingRange = false
       _.set(this.activeRasterData, 'layer.properties.deltares:min', this.minValue)
       _.set(this.activeRasterData, 'layer.properties.deltares:max', this.maxValue)
-      console.log(this.activeRasterData)
       this.loadActiveRasterLayer()
     },
     resetRange () {
