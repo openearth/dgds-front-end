@@ -98,9 +98,11 @@ export default {
   computed: {
     ...mapState(['activeLocationIds', 'loadingRasterLayers']),
     ...mapGetters([
+      'activeDatasetIds',
       'activeRasterData',
       'activeFlowmapData',
       'activeVectorData',
+      'activeVectorLayers',
       'activeTimestamp',
       'getActiveRasterLayer',
       'getDatasets',
@@ -118,11 +120,15 @@ export default {
       flowmapLayer.source.tiles = [_.get(this.activeFlowmapData, 'assets.flowmap.href')]
       return flowmapLayer
     },
+    showFlowmapLayer () {
+      return !_.isEmpty(this.activeFlowmapData)
+    },
     vectorLayers () {
       // Returns an array with unique mapboxlayers.
       // Get active vectorlayers and flatten, all mapboxlayers into 1 array
+      const activeVectorLayers = this.getMapboxLayers(this.activeVectorData)
 
-      const vectorLayers = _.flatten(this.activeVectorData)
+      const vectorLayers = _.flatten(activeVectorLayers)
       // Get Default vector mapboxlayer
       const defaultVectorLayer = getVectorLayer()
       // get all unique layerIds
@@ -149,9 +155,6 @@ export default {
         return mergedFilter
       })
       return newLayers
-    },
-    showFlowmapLayer () {
-      return !_.isEmpty(this.activeFlowmapData)
     }
   },
   methods: {
@@ -160,6 +163,32 @@ export default {
       'setActiveRasterLayerId',
       'setGeographicalScope'
     ]),
+
+    getMapboxLayers (collection) {
+      const vectorDatasets = this.activeDatasetIds.map(datasetId => {
+        return _.get(collection, datasetId)
+      })
+      const mapboxLayers = []
+      vectorDatasets.forEach(dataset => {
+        if (!_.has(dataset, 'layers')) {
+          return
+        }
+        dataset.layers.forEach(layer => {
+          const mapboxLayer = {}
+          Object.entries(layer.properties).forEach(([id, prop]) => {
+            const regex = 'deltares:(.+)'
+            const propId = id.match(regex)
+            if (_.get(propId, '1')) {
+              mapboxLayer[propId[1]] = prop
+            }
+          })
+          mapboxLayer.metadata = dataset.properties
+          mapboxLayers.push(mapboxLayer)
+        })
+      })
+      return mapboxLayers
+    },
+
     zoomToLastDatasetId () {
       const params = _.get(this.$route, 'params.datasetIds')
       if (!params) {
@@ -189,13 +218,11 @@ export default {
       setTimeout(() => {
         const oldScope = this.getGeographicalScope
         const newScope = _.get(this.getDatasets, `${datasetId}.properties.deltares:scope`)
-        console.log(oldScope, newScope)
         // If the new scope is global or the same as the old scope, do nothing
         if (newScope === 'regional' && oldScope !== newScope) {
           // If layer is toggled on and has a bbox, zoom to that layer
           const coords = _.get(this.getDatasets, `${datasetId}.extent.spatial.bbox[0]`)
           const bbox = [[coords[0], coords[1]], [coords[2], coords[3]]]
-          console.log(bbox, coords)
           if (bbox) {
             this.$refs.map.map.fitBounds(bbox)
           }

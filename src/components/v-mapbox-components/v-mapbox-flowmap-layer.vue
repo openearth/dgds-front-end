@@ -1,6 +1,7 @@
 <script>
 // https://github.com/mapbox/webgl-wind
 import * as windGl from '@openearth/windgl'
+import _ from 'lodash'
 
 export default {
   name: 'VMapboxFlowmapLayer',
@@ -45,7 +46,6 @@ export default {
 
       // get the tile source
       const url = _.get(this.options, 'source.tiles[0]')
-      console.log(url)
       // the tile.json contains extra information
       const tileUrl = url.replace('{z}/{x}/{y}.png', 'tile.json')
       const source = windGl.source(tileUrl)

@@ -60,10 +60,7 @@ export const mutations = {
     state.activeRasterLayerId = id
   },
   setVectorData (state, { id, data }) {
-    state.vectorDataCollection[id] = data
-  },
-  addActiveVectorLayer (state, { id, data }) {
-    state.vectorDataCollection[id].layers.push(data)
+    Vue.set(state.vectorDataCollection, id, data)
   },
   setRasterData (state, { data }) {
     state.activeRasterData = data
@@ -102,6 +99,9 @@ export const actions = {
               }
               if (dataset.id === state.activeRasterLayerId) {
                 dispatch('loadActiveRasterData', dataset.id)
+              }
+              if (state.activeDatasetIds.includes(dataset.id)) {
+                dispatch('triggerActiveVector')
               }
             })
         })
@@ -204,13 +204,15 @@ export const actions = {
     })
   },
   loadVectorLayer ({ state, dispatch }, dataset) {
+    if (!dataset) {
+      return
+    }
     if (!_.has(state.vectorDataCollection, dataset.id)) {
-      const links = _.get(dataset, 'links')
+      const links = _.get(dataset, 'links', [])
       const collectionUrl = links.find(child => child.title === `${dataset.id}-mapbox`).href
       dispatch('loadLayerCollection', {
         collectionUrl,
         setCollectionCommit: 'setVectorData',
-        addLayerCommit: 'addActiveVectorLayer',
         datasetId: dataset.id
       })
     }
@@ -221,13 +223,18 @@ export const actions = {
     getCatalog(collectionUrl)
       .then(dataset => {
         dataset.layers = []
-        commit(setCollectionCommit, { id: datasetId, data: dataset })
         const itemLinks = _.get(dataset, 'links')
         const items = itemLinks.filter(child => child.rel === 'item')
-        items.forEach(item => {
+        const layers = []
+        items.forEach((item, index) => {
           getCatalog(item.href)
             .then(layerData => {
-              commit(addLayerCommit, { id: datasetId, data: layerData })
+              // commit(addLayerCommit, { id: datasetId, data: layerData })
+              layers.push(layerData)
+              if (index === items.length - 1) {
+                dataset.layers = layers
+                commit(setCollectionCommit, { id: datasetId, data: dataset })
+              }
             })
         })
       })
@@ -338,36 +345,12 @@ export const getters = {
   getLoadingState (state) {
     return state.loadingRasterLayers
   },
-  // knownLocationIds (state) {
-  //   const getInDatasets = getIn(state.datasets)
-  //   const getLocationId = map(get('properties.locationId'))
-  //   const featuresInDatasets = id => getInDatasets(`${id}.locations.features`)
-  //   const getKnownLocationIds = pipe([
-  //     Object.keys,
-  //     filter(featuresInDatasets),
-  //     map(pipe([featuresInDatasets, getLocationId])),
-  //     flatten,
-  //     uniq
-  //   ])
-
-  //   return getKnownLocationIds(state.datasets)
-  // },
-
-  activeDatasets (state) {
-    return state.activeDatasetIds.map(id => {
-      return _.get(state, `vectorDataCollection.${id}`)
-    })
-  },
-
   activeTimestamp (state, { activeRasterData }) {
     if (state.loadingRasterLayers) {
       return 'Loading...'
     }
     // Retrieve the timestamp from te activeRasterData and combine this into a string
     // using the dateformat given
-    // let links = _.get(activeRasterData, 'links', [])
-    // links = links.filter(link => link.rel === 'item')
-    // const date = _.get(links[links.length - 1], 'date')
     const date = _.get(activeRasterData, 'layer.properties.deltares:date', [])
     const dateFormat = 'YYYY-MM-DD HH:mm:ss'
     if (date) {
@@ -381,80 +364,12 @@ export const getters = {
     return state.activeRasterData
   },
 
-  // activeRasterData ({ datasets, activeRasterLayerId, activeDatasets }) {
-  //   // Return the active raster data tiles (if not defined, return [])
-  //   if (activeRasterLayerId === '' || activeRasterLayerId === null) {
-  //     return []
-  //   }
-  //   return _.get(datasets, `${activeRasterLayerId}.raster`)
-  // },
-
   activeFlowmapData (state) {
     return state.activeFlowmapLayer
   },
-
   activeVectorData (state) {
-    // Retrieve a list with actual mapbox layers from the active vector layers
-    const vectorDatasets = state.activeDatasetIds.map(datasetId => {
-      return _.get(state, `vectorDataCollection.${datasetId}`)
-    })
-
-    const mapboxLayers = []
-    vectorDatasets.forEach(dataset => {
-      if (!_.has(dataset, 'layers')) {
-        return
-      }
-      dataset.layers.forEach(layer => {
-        const mapboxLayer = {}
-        Object.entries(layer.properties).forEach(([id, prop]) => {
-          const regex = 'deltares:(.+)'
-          const propId = id.match(regex)
-          if (_.get(propId, '1')) {
-            mapboxLayer[propId[1]] = prop
-          }
-        })
-        mapboxLayer.metadata = dataset.properties
-        mapboxLayers.push(mapboxLayer)
-      })
-    })
-    return mapboxLayers
-    // return Object.values(state.vectorDataCollection).filter((id, data) => {
-    //   console.log(data, id, state.activeDatasetIds.includes(id))
-    //   return state.activeDatasetIds.includes(id)
-    // })
-
-    // Retrieve for active layers where vector data is available the data
-    // const vectorLayers = activeDatasets.filter(has('vector'))
-    // const mapboxLayers = vectorLayers.map(layer => {
-    //   return get('vector.mapboxLayer', layer)
-    // })
-    // return mapboxLayers.filter(identity)
+    return state.vectorDataCollection
   },
-  // activeDatasetsLocations ({ activeLocationIds }, { activeDatasets }) {
-  //   // Retrieve for the active datasets the locations
-  //   const getActiveProperty = feature =>
-  //     pipe([get('properties.locationId'), includesIn(activeLocationIds), active => ({ active })])(
-  //       feature
-  //     )
-
-  //   const addActiveProperty = feature =>
-  //     pipe([
-  //       get('properties'),
-  //       merge(getActiveProperty(feature)),
-  //       wrapInProperty('properties'),
-  //       merge(feature)
-  //     ])(feature)
-
-  //   const enhanceFeatureWithActiveState = location =>
-  //     pipe([get('features'), map(addActiveProperty), wrapInProperty('features'), merge(location)])(
-  //       location
-  //     )
-
-  //   return activeDatasets
-  //     .map(get('locations'))
-  //     .filter(identity)
-  //     .map(enhanceFeatureWithActiveState)
-  // },
   activePointDataPerDataset (state) {
     const { activeLocationIds, activeDatasetIds, datasets } = state
     const activePointDataPerDataset = {}
