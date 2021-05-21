@@ -68,14 +68,13 @@
                   :value="selectedLayer"
                   :items="dataset.layerOptions"
                   :label="`Select layer`"
-                  @change="updateRasterLayer"
                   return-object
                   flat
                   item-text="name"
                   item-value="band"
                   dense
                 />
-              <div v-if="checkLayerType(dataset.id, 'gee') && activeRasterLayer === dataset.id">
+              <div v-if="activeRasterLayer === dataset.id">
                 <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
               </div>
             </v-expansion-panel-content>
@@ -113,45 +112,35 @@ export default {
     ]),
     themeName () {
       return _.get(this.getActiveTheme, 'name') || 'All datasets'
+    },
+    activePanels () {
+      // map which panel is showing the legend layer or the information layer)
+      const active = _.values(this.datasets).flatMap((dataset, index) => {
+        const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id
+        return activeDataset ? index : []
+      })
+      console.log('setting active paels', this.activeRasterLayer, active)
+      return active
     }
   },
   data () {
     return {
-      activePanels: [],
       hoverId: '',
       activeRasterLayer: '',
       selectedLayer: ''
     }
   },
-  // watch: {
-  //   activeRasterData: {
-  //     handler (data) {
-  //       if (data.length === 0) {
-  //         return
-  //       }
-  //       const datasets = this.getDatasets
-  //       const meta = datasets[this.getActiveRasterLayer].metadata
-  //       const raster = datasets[this.getActiveRasterLayer].raster
-  //       if (meta.layerOptions) {
-  //         this.selectedLayer = raster.band
-  //       }
-  //       this.activeRasterLayer = this.getActiveRasterLayer
-  //     },
-  //     deep: true
-  //   }
-  // },
   mounted () {
     this.activeRasterLayer = this.getActiveRasterLayer
   },
   methods: {
-    ...mapMutations(['setActiveRasterLayerId']),
+    ...mapMutations(['setActiveRasterLayerId', 'setRasterData']),
     ...mapActions(['retrieveRasterLayerByImageId', 'loadActiveRasterData']),
     markedTooltip (text) {
       return marked(text)
     },
     onTooltipClick (id) {
       this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
-      this.setActivePanels()
     },
     toggleLocationDataset (id) {
       let oldParams = _.get(this.$route, 'params.datasetIds')
@@ -202,31 +191,14 @@ export default {
       })
       return typeArray.includes(true)
     },
-    updateRasterLayer (value) {
-      const datasets = this.getDatasets
-      const raster = datasets[this.getActiveRasterLayer]
-      this.retrieveRasterLayerByImageId({
-        imageId: raster.raster.imageId,
-        options: { band: value.band }
-      })
-    },
     setRasterLayer (id) {
       if (this.getActiveRasterLayer === id) {
         id = null
       }
+      this.setRasterData({})
       this.setActiveRasterLayerId(id)
       this.loadActiveRasterData(id)
-      // this.setActiveRasterLayer(id)
-      // this.activeRasterLayer = this.getActiveRasterLayer
-      this.setActivePanels()
-    },
-    setActivePanels () {
-      // map which panel is showing the legend layer or the information layer)
-      const active = _.values(this.datasets).flatMap((dataset, index) => {
-        const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id
-        return activeDataset ? index : []
-      })
-      this.activePanels = active
+      this.activeRasterLayer = this.getActiveRasterLayer
     }
   }
 }
