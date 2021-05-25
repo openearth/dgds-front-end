@@ -116,7 +116,6 @@ export default {
     },
     flowmapLayer () {
       const flowmapLayer = getRasterLayer()
-      // const url = [_.get(this.activeRasterData, 'flowmapLayer.assets.flowmap.href')]
       flowmapLayer.source.tiles = [_.get(this.activeFlowmapData, 'assets.flowmap.href')]
       return flowmapLayer
     },
@@ -263,7 +262,6 @@ export default {
         .then(response => response.json())
         .then(resp => {
           if (resp.value) {
-            // TODO: fix unit
             const dataset = this.getDatasets[this.getActiveRasterLayer]
             const units = _.get(dataset, 'properties.deltares:units')
             this.mapboxMessage = `${resp.value} [${units}]`

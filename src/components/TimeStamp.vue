@@ -66,8 +66,7 @@ export default {
         ]
       }
       const series = _.clone(_.get(this.activeRasterData, 'links') || [])
-      const filteredSeries = series.filter(serie => serie.rel === 'item')
-      return filteredSeries
+      return series.filter(serie => serie.rel === 'item')
     },
     dateIndex () {
       return this.timeseriesItems.findIndex(item => {

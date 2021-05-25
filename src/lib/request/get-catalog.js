@@ -5,8 +5,8 @@ export default async function get (catalogUrl) {
 
   try {
     await result
-  } catch (error) {
-    throw new Error(`Fetch failed: ${error}`)
+  } catch (err) {
+    throw new Error(`Fetch failed: ${err}`)
   }
 
   return result
