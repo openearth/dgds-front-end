@@ -135,7 +135,7 @@ export default {
   },
   methods: {
     ...mapMutations(['setActiveRasterLayerId', 'setRasterData']),
-    ...mapActions(['retrieveRasterLayerByImageId', 'loadActiveRasterData']),
+    ...mapActions(['loadActiveRasterData']),
     markedTooltip (text) {
       return marked(text)
     },

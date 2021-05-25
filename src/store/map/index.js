@@ -2,7 +2,6 @@ import isArray from 'lodash/isArray'
 import flatten from 'lodash/fp/flatten'
 import _ from 'lodash'
 import moment from 'moment'
-import getFromApi from '../../lib/request/get'
 import getCatalog from '@/lib/request/get-catalog'
 import datasets from './datasets.js'
 import themes from './themes.js'
@@ -77,7 +76,7 @@ export const mutations = {
 }
 
 export const actions = {
-  loadDatasets ({ commit, dispatch }) {
+  loadDatasets ({ state, commit, dispatch }) {
     // Retrieve the first 2 layers of the stac collection, the general metadata
     // and the childs including all datasets
     getCatalog(process.env.VUE_APP_CATALOG_URL)
@@ -87,8 +86,8 @@ export const actions = {
         themes.forEach(theme => commit('addTheme', theme))
 
         const childs = datasets.links.filter(ds => ds.rel === 'child')
-        childs.forEach(child => {
-          getCatalog(child.href)
+        return childs.forEach(child => {
+          return getCatalog(child.href)
             .then(dataset => {
               commit('addDataset', dataset)
               // If we start at a subroute with active dataset ids, directly
@@ -96,12 +95,10 @@ export const actions = {
               if (state.activeDatasetIds.includes(dataset.id)) {
                 _.set(state.datasets, `${dataset.id}.visible`, true)
                 dispatch('loadVectorLayer', dataset)
+                dispatch('triggerActiveVector')
               }
               if (dataset.id === state.activeRasterLayerId) {
                 dispatch('loadActiveRasterData', dataset.id)
-              }
-              if (state.activeDatasetIds.includes(dataset.id)) {
-                dispatch('triggerActiveVector')
               }
             })
         })
@@ -121,6 +118,7 @@ export const actions = {
         let links = _.get(dataset, 'links', [])
         links = links.filter(link => link.rel === 'item')
         const rasterLayer = links[links.length - 1]
+        console.log(links, rasterLayer)
         const result = links.map(serie => {
           serie.date = moment(serie.date, 'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY HH:mm')
           return serie
@@ -162,30 +160,6 @@ export const actions = {
       .then(dataset => {
         commit('addActiveRasterLayer', { data: dataset })
       })
-  },
-  retrieveRasterLayerByImageId ({ commit, state, getters }, { imageId, options }) {
-    options = options || {}
-    commit('setLoadingRasterLayers', true)
-    const dataset = getters.getActiveRasterLayer
-    // If band has changed, use band from options. If band is not defined use already set band
-    if (!_.get(options, 'band') && _.get(getters, 'activeRasterData.band')) {
-      options.band = _.get(getters, 'activeRasterData.band')
-    }
-
-    if (!_.get(options, 'min') && _.get(getters, 'activeRasterData.min')) {
-      options.min = _.get(getters, 'activeRasterData.min')
-    }
-
-    if (!_.get(options, 'max') && _.get(getters, 'activeRasterData.max')) {
-      options.max = _.get(getters, 'activeRasterData.max')
-    }
-    const params = new URLSearchParams(options)
-    // Retrieve complete new rasterLayer by imageId and dataset
-    return getFromApi(`datasets/${dataset}/${imageId}?${params}`).then(val => {
-      // If the range is set manually we don't want to update the default raster laayer
-      commit('updateRasterLayer', { dataset, rasterLayer: val.rasterLayer })
-      commit('setLoadingRasterLayers', false)
-    })
   },
 
   storeActiveVectorIds ({ commit, state, getters, dispatch }, _ids) {
@@ -339,7 +313,7 @@ export const getters = {
   getDatasets (state) {
     return state.datasets
   },
-  getActiveRasterLayer (state, id) {
+  getActiveRasterLayer (state) {
     return state.activeRasterLayerId
   },
   getLoadingState (state) {
@@ -363,7 +337,6 @@ export const getters = {
   activeRasterData (state) {
     return state.activeRasterData
   },
-
   activeFlowmapData (state) {
     return state.activeFlowmapLayer
   },

@@ -93,7 +93,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['retrieveRasterLayerByImageId', 'loadActiveRasterLayer']),
+    ...mapActions(['loadActiveRasterLayer']),
     getNewRasterLayer (serie) {
       this.loadActiveRasterLayer(serie)
     }
