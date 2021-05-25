@@ -112,7 +112,7 @@ describe('loadActiveRasterLayer', () => {
         }
       },
       links: [
-        { date: '01-02-2021 09:30', href: 'http://www.url.nl'}
+        { date: '01-02-2021 09:30', href: 'https://www.url.nl'}
       ]
     }
   }
@@ -132,7 +132,7 @@ describe('loadActiveRasterLayer', () => {
 
   test('LoadActiveRasterLayer if  rasterlayer is defined', async () => {
     getCatalog.mockResolvedValueOnce(dataset)
-    const rasterLayer = { date: '01-02-2021 09:30', href: 'http://www.url.nl?min=5&max=6'}
+    const rasterLayer = { date: '01-02-2021 09:30', href: 'https://www.url.nl?min=5&max=6'}
     await actions.loadActiveRasterLayer({ state, getters, commit }, rasterLayer)
     expect(commit.mock.calls[0]).toEqual([
       'addActiveRasterLayer', { data: dataset }
