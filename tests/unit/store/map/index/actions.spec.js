@@ -151,234 +151,84 @@ describe('storeActiveVectorIds', () => {
     ])
   })
 })
-// OLD
-// describe('storeActiveDatasets', () => {
-//   test('loads locations for datasets and stores them', async () => {
-//     const apiResult = {
-//       paging: {
-//         maxPageSize: 4,
-//         minPageSize: 1,
-//         next: 'http://localhost:5000/locations?&page=2&datasetId=wd',
-//         prev: null,
-//         totalObjectCount: 1
-//       },
-//       results: [
-//         {
-//           features: [{ properties: { locationId: 'foo' } }]
-//         }
-//       ]
-//     }
-//     getFromApi.mockResolvedValue(apiResult)
-//     const commit = jest.fn()
-//     const _ids = ['wl']
-//     const state = {
-//       datasets: {
-//         wl: {},
-//         wd: {}
-//       },
-//       activeDatasetIds: [],
-//       activeLocationIds: []
-//     }
-//     const get = {
-//       knownDatasetIds: ['wl']
-//     }
-//     await actions.storeActiveDatasets({ commit, state, getters: get }, _ids)
-//     expect(commit.mock.calls[0][0]).toBe('setActiveDatasetIds')
-//     expect(commit.mock.calls[0][1]).toEqual(['wl'])
-//   })
 
-//   test('returns object of known ids of datasets provided as string', async () => {
-//     const apiResult = {
-//       paging: {
-//         maxPageSize: 4,
-//         minPageSize: 1,
-//         next: 'http://localhost:5000/locations?&page=2&datasetId=wd',
-//         prev: null,
-//         totalObjectCount: 1
-//       },
-//       results: [
-//         {
-//           features: [{ properties: { locationId: 'foo' } }]
-//         }
-//       ]
-//     }
-//     getFromApi.mockResolvedValue(apiResult)
-//     const commit = jest.fn()
-//     const _ids = 'wl'
-//     const state = {
-//       datasets: {
-//         wl: {},
-//         wd: {}
-//       },
-//       activeDatasetIds: [],
-//       activeLocationIds: []
-//     }
-//     const get = {
-//       knownDatasetIds: ['wl']
-//     }
-//     await actions.storeActiveDatasets({ commit, state, getters: get }, _ids)
-//     expect(commit.mock.calls[0][0]).toBe('setActiveDatasetIds')
-//     expect(commit.mock.calls[0][1]).toEqual(['wl'])
-//     // expect(commit.mock.calls[1][0]).toBe('datasets/addDatasetLocations')
-//     // expect(commit.mock.calls[1][1]).toEqual({
-//     //   data: {
-//     //     features: apiResult.results[0].features,
-//     //     type: 'FeatureCollection',
-//     //   },
-//     //   id: 'wl',
-//     // })
-//   })
-// })
+describe('triggerActiveVector', () => {
+  const dispatch = jest.fn()
+  const state = {
+    activeDatasetIds: ['id1', 'id2'],
+    datasets: {
+      id1: 'foo'
+    },
+    vectorDataCollection: {
+      id2: {}
+    }
+  }
 
-// describe('loadPointDataForLocation', () => {
-//   const state = {
-//     datasets: {
-//       par1: {},
-//       par2: {
-//         pointData: {
-//           loc1: {
-//             foo: 'bar'
-//           }
-//         }
-//       },
-//       par3: {
-//         metadata: {
-//           pointData: 'images'
-//         }
-//       }
-//     }
-//   }
-//   test('loads point data for line and scatter plots for the specified location', async () => {
-//     const commit = jest.fn()
-//     const timestamp = moment()
-//     const apiResult = {
-//       results: [
-//         {
-//           events: [
-//             {
-//               timestamp,
-//               value: 1
-//             }
-//           ]
-//         }
-//       ]
-//     }
-//     getFromApi.mockResolvedValue(apiResult)
-//     await actions.loadPointDataForLocation(
-//       { commit, state },
-//       { datasetIds: ['par1', 'par2'], locationId: 'loc1' }
-//     )
-//     expect(getFromApi).toHaveBeenCalledWith('timeseries', {
-//       datasetId: 'par2',
-//       endTime: moment()
-//         .add(5, 'days')
-//         .format('YYYY-MM-DDTHH:mm:ssZ'),
-//       locationId: 'loc1',
-//       startTime: moment()
-//         .subtract(5, 'days')
-//         .format('YYYY-MM-DDTHH:mm:ssZ')
-//     })
-//     expect(commit.mock.calls[0]).toEqual([
-//       'addDatasetPointData',
-//       {
-//         id: 'par1',
-//         data: {
-//           loc1: {
-//             category: [moment(timestamp).format()],
-//             serie: [1]
-//           }
-//         }
-//       }
-//     ])
-//     expect(commit.mock.calls[1]).toEqual([
-//       'addDatasetPointData',
-//       {
-//         data: {
-//           loc1: {
-//             category: [moment(timestamp).format()],
-//             serie: [1]
-//           }
-//         },
-//         id: 'par2'
-//       }
-//     ])
-//   })
+  test('loads vector data if id not yet in vectorDataCollection', () => {
+    actions.triggerActiveVector({ state, dispatch })
+    expect(dispatch.mock.calls[0]).toEqual([
+      'loadVectorLayer', 'foo'
+    ])
+  })
+})
 
-//   test('loads point data for images plots for the specified location', async () => {
-//     const commit = jest.fn()
-//     const apiResult = 'testUrl'
+describe('loadVectorLayer', () => {
+  const dispatch = jest.fn()
+  const state = {
+    activeDatasetIds: ['id1', 'id2'],
+    datasets: {
+      id1: 'foo'
+    },
+    vectorDataCollection: {
+      id2: {}
+    }
+  }
 
-//     getFromApi.mockResolvedValue(apiResult)
-//     await actions.loadPointDataForLocation(
-//       { commit, state },
-//       { datasetIds: ['par3'], locationId: 'loc1' }
-//     )
-//     expect(getFromApi).toHaveBeenCalledWith('timeseries', {
-//       datasetId: 'par3',
-//       endTime: moment()
-//         .add(5, 'days')
-//         .format('YYYY-MM-DDTHH:mm:ssZ'),
-//       locationId: 'loc1',
-//       startTime: moment()
-//         .subtract(5, 'days')
-//         .format('YYYY-MM-DDTHH:mm:ssZ')
-//     })
+  test('returns when no dataset is given', () => {
+    actions.loadVectorLayer({ state, dispatch })
+    expect(dispatch).not.toHaveBeenCalled()
+  })
 
-//     expect(commit.mock.calls[0]).toEqual([
-//       'addDatasetPointData',
-//       {
-//         id: 'par3',
-//         data: {
-//           loc1: {
-//             imageUrl: 'testUrl'
-//           }
-//         }
-//       }
-//     ])
-//   })
+  test('returns when a dataset is given that does nog appear in vectorDataCollection', () => {
+    const dataset = {
+      id: 'id2'
+    }
+    actions.loadVectorLayer({ state, dispatch }, dataset)
+    expect(dispatch).not.toHaveBeenCalled()
+  })
 
-//   test('loads point data for the specified location in string format', async () => {
-//     const commit = jest.fn()
-//     const timestamp = moment()
-//     const apiResult = {
-//       results: [
-//         {
-//           events: [
-//             {
-//               timestamp,
-//               value: 1
-//             }
-//           ]
-//         }
-//       ]
-//     }
-//     getFromApi.mockResolvedValue(apiResult)
-//     await actions.loadPointDataForLocation(
-//       { commit, state },
-//       { datasetIds: ['par2'], locationId: 'loc1' }
-//     )
-//     expect(getFromApi).toHaveBeenCalledWith('timeseries', {
-//       datasetId: 'par2',
-//       endTime: moment()
-//         .add(5, 'days')
-//         .format('YYYY-MM-DDTHH:mm:ssZ'),
-//       locationId: 'loc1',
-//       startTime: moment()
-//         .subtract(5, 'days')
-//         .format('YYYY-MM-DDTHH:mm:ssZ')
-//     })
+  test('loads vector data if id not yet in vectorDataCollection', () => {
+    const dataset = {
+      id: 'id1',
+      links: [
+        { rel: 'child', href: 'child1', title: 'id1-mapbox' }
+      ]
+    }
+    actions.loadVectorLayer({ state, dispatch }, dataset)
+    expect(dispatch.mock.calls[0]).toEqual([
+      'loadLayerCollection', {collectionUrl: 'child1', setCollectionCommit: 'setVectorData', datasetId: 'id1'}
+    ])
+  })
+})
 
-//     expect(commit.mock.calls[0]).toEqual([
-//       'addDatasetPointData',
-//       {
-//         data: {
-//           loc1: {
-//             category: [moment(timestamp).format()],
-//             serie: [1]
-//           }
-//         },
-//         id: 'par2'
-//       }
-//     ])
-//   })
-// })
+describe('loadLayerCollection', () => {
+  test('fetches datasets and stores them', async () => {
+    const commit = jest.fn()
+    const apiResult = {
+      links: [
+        { rel: 'item', href: 'child1', id: 'child1' },
+        { rel: 'item', href: 'child2', id: 'child2' }
+      ]
+    }
+
+    getCatalog.mockResolvedValueOnce(apiResult)
+    getCatalog.mockResolvedValue('bar')
+
+    const childs = await actions.loadLayerCollection({ commit }, { collectionUrl: 'url', setCollectionCommit: 'foo', datasetId: 'par1' })
+    await childs
+    apiResult.layers = ['bar', 'bar']
+    expect(commit.mock.calls[0]).toEqual([
+      'foo', { id: 'par1', data: apiResult }
+    ])
+  })
+})

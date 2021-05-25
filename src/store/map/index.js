@@ -118,7 +118,6 @@ export const actions = {
         let links = _.get(dataset, 'links', [])
         links = links.filter(link => link.rel === 'item')
         const rasterLayer = links[links.length - 1]
-        console.log(links, rasterLayer)
         const result = links.map(serie => {
           serie.date = moment(serie.date, 'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY HH:mm')
           return serie
@@ -162,7 +161,7 @@ export const actions = {
       })
   },
 
-  storeActiveVectorIds ({ commit, state, getters, dispatch }, _ids) {
+  storeActiveVectorIds ({ commit }, _ids) {
     // First set the activeDatasetIds
     const ids = isArray(_ids) ? _ids : _ids.split(',')
     commit('setActiveDatasetIds', ids)
