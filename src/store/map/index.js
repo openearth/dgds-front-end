@@ -65,9 +65,7 @@ export const mutations = {
     state.activeRasterData = data
   },
   setRasterProperty (state, { prop, data }) {
-    console.log(prop, data)
     state.activeRasterData.layer.properties[prop] = data
-    console.log(state.activeRasterData.layer.properties[prop])
   },
   addActiveRasterLayer (state, { data }) {
     Vue.set(state.activeRasterData, 'layer', data)
@@ -157,7 +155,6 @@ export const actions = {
       rasterLayer = state.activeRasterData.links.find(item => item.rel === 'item')
     }
 
-    console.log(rasterLayer, state.activeRasterData.links)
     const properties = _.get(state.activeRasterData, 'layer.properties', {})
     const url = new URL(rasterLayer.href)
 

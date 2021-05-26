@@ -123,13 +123,20 @@ export default {
     },
     hasBands () {
       return _.has(this.activeRasterData, 'summaries.eo:bands')
+    },
+    selectedLayer: {
+      get () {
+        return _.get(this.activeRasterData, 'properties.deltares:band', null)
+      },
+      set (val) {
+        this.setRasterProperty({ prop: 'deltares:band', data: val })
+      }
     }
   },
   data () {
     return {
       hoverId: '',
-      activeRasterLayer: '',
-      selectedLayer: ''
+      activeRasterLayer: ''
     }
   },
   mounted () {
@@ -193,9 +200,7 @@ export default {
       })
       return typeArray.includes(true)
     },
-    updateRasterBand (band) {
-      this.setRasterProperty({ prop: 'deltares:band', data: band })
-      console.log(this.activeRasterData.layer.properties['deltares:band'])
+    updateRasterBand () {
       this.loadActiveRasterLayer()
       this.activeRasterLayer = this.getActiveRasterLayer
     },
