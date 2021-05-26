@@ -138,6 +138,12 @@ const baseOptions = {
     axisLine: {
       onZero: false,
       show: false
+    },
+    splitLine: {
+      show: true
+    },
+    axisLabel: {
+      formatter: '{dd}-{MM}-{yy}'
     }
   },
   yAxis: {
