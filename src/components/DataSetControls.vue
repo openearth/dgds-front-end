@@ -63,16 +63,16 @@
                 </div>
                 <v-select
                   class="pa-2"
-                  v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
+                  v-if="getActiveRasterLayer === dataset.id && hasBands"
                   v-model="selectedLayer"
                   :value="selectedLayer"
-                  :items="dataset.layerOptions"
+                  :items="activeRasterData.summaries['eo:bands']"
                   :label="`Select layer`"
-                  return-object
                   flat
-                  item-text="name"
-                  item-value="band"
+                  item-text="description"
+                  item-value="name"
                   dense
+                  @change="updateRasterBand"
                 />
               <div v-if="activeRasterLayer === dataset.id">
                 <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
@@ -119,8 +119,10 @@ export default {
         const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id
         return activeDataset ? index : []
       })
-      console.log('setting active paels', this.activeRasterLayer, active)
       return active
+    },
+    hasBands () {
+      return _.has(this.activeRasterData, 'summaries.eo:bands')
     }
   },
   data () {
@@ -134,8 +136,8 @@ export default {
     this.activeRasterLayer = this.getActiveRasterLayer
   },
   methods: {
-    ...mapMutations(['setActiveRasterLayerId', 'setRasterData']),
-    ...mapActions(['loadActiveRasterData']),
+    ...mapMutations(['setActiveRasterLayerId', 'setRasterData', 'setRasterProperty']),
+    ...mapActions(['loadActiveRasterData', 'loadActiveRasterLayer']),
     markedTooltip (text) {
       return marked(text)
     },
@@ -190,6 +192,12 @@ export default {
         return layerType === type
       })
       return typeArray.includes(true)
+    },
+    updateRasterBand (band) {
+      this.setRasterProperty({ prop: 'deltares:band', data: band })
+      console.log(this.activeRasterData.layer.properties['deltares:band'])
+      this.loadActiveRasterLayer()
+      this.activeRasterLayer = this.getActiveRasterLayer
     },
     setRasterLayer (id) {
       if (this.getActiveRasterLayer === id) {

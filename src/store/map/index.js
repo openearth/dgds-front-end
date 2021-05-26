@@ -64,6 +64,11 @@ export const mutations = {
   setRasterData (state, { data }) {
     state.activeRasterData = data
   },
+  setRasterProperty (state, { prop, data }) {
+    console.log(prop, data)
+    state.activeRasterData.layer.properties[prop] = data
+    console.log(state.activeRasterData.layer.properties[prop])
+  },
   addActiveRasterLayer (state, { data }) {
     Vue.set(state.activeRasterData, 'layer', data)
   },
@@ -146,8 +151,19 @@ export const actions = {
         return getters.activeTimestamp === item.date
       })
     }
+
+    // If no matching timestamp found by child, use collection of invalid date
+    if (!rasterLayer) {
+      rasterLayer = state.activeRasterData.links.find(item => item.rel === 'item')
+    }
+
+    console.log(rasterLayer, state.activeRasterData.links)
     const properties = _.get(state.activeRasterData, 'layer.properties', {})
     const url = new URL(rasterLayer.href)
+
+    if (_.get(properties, 'deltares:band')) {
+      url.searchParams.set('band', _.get(properties, 'deltares:band'))
+    }
 
     if (_.get(properties, 'deltares:min')) {
       url.searchParams.set('min', _.get(properties, 'deltares:min'))
