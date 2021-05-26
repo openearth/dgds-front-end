@@ -115,6 +115,10 @@ const baseOptions = {
     trigger: 'axis',
     axisPointer: {
       type: 'shadow'
+    },
+    backgroundColor: 'rgba(50,50,50,0.7)',
+    textStyle: {
+      color: '#fff'
     }
   },
   grid: {
