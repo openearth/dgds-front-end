@@ -7,6 +7,7 @@
       <v-expansion-panels
         accordion
         flat
+        tile
         :value="activePanels"
         multiple
         readonly
@@ -61,22 +62,23 @@
                   :anchor-attributes="{ target: '_blank' }"
                   :watches="['source']"
                   />
-                </div>
-                <v-select
-                  class="pa-2"
-                  v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
-                  v-model="selectedLayer"
-                  :value="selectedLayer"
-                  :items="dataset.layerOptions"
-                  :label="`Select layer`"
-                  @change="updateRasterLayer"
-                  return-object
-                  flat
-                  item-text="name"
-                  item-value="band"
-                  dense
-                />
-                <div v-if="checkRaster(dataset.id) && activeRasterLayer === dataset.id">
+              </div>
+              <v-select
+                class="pa-2"
+                v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
+                v-model="selectedLayer"
+                :value="selectedLayer"
+                :items="dataset.layerOptions"
+                :label="`Select layer`"
+                @change="updateRasterLayer"
+                return-object
+                flat
+                item-text="name"
+                item-value="band"
+                dense
+              />
+              <div v-if="checkRaster(dataset.id) && activeRasterLayer === dataset.id">
+                <br>
                 <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
               </div>
             </v-expansion-panel-content>
