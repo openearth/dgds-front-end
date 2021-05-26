@@ -39,6 +39,7 @@
                 <v-col cols="1" class="ma-auto pa-0">
                   <v-radio
                     dense
+                    class="radio"
                     v-if="checkRaster(dataset.id)"
                     :value="dataset.id"
                     @click="setRasterLayer(dataset.id)"
@@ -222,7 +223,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .data-set-controls {
   position: absolute;
   display: flex;
@@ -277,5 +278,9 @@ export default {
 
 .v-expansion-panel {
   border-color: var(--v-background-base);
+}
+
+.v-input--selection-controls__input .v-icon {
+  color: var(--v-primary-darken2);
 }
 </style>
