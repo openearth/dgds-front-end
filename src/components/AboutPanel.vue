@@ -11,7 +11,6 @@
         class="markdown flex-grow-1 py-3 scrollbar"
         :watches="['source']"
         v-html="aboutText"
-        :anchor-attributes="{ target: '_blank' }"
       />
     </v-container>
   </v-navigation-drawer>
