@@ -39,6 +39,7 @@
                 <v-col cols="1" class="ma-auto pa-0">
                   <v-radio
                     dense
+                    class="ma-auto"
                     v-show="checkLayerType(dataset.id, 'gee') && !datasetLoading(dataset.id)"
                     :value="dataset.id"
                     @click="setRasterLayer(dataset.id)"
@@ -46,6 +47,7 @@
                   ></v-radio>
                   <v-progress-circular
                     dense
+                    class="ma-auto"
                     v-show="checkLayerType(dataset.id, 'gee') && datasetLoading(dataset.id)"
                     indeterminate
                     color="formActive"
