@@ -152,15 +152,10 @@ describe('activePointDataPerDataset', () => {
       activeDatasetIds: ['wl'],
       datasets: {
         wl: {
-          metadata: { name: 'Test WL' },
-          locations: {
-            features: [
-              {
-                properties: {
-                  locationId: 'WL-Loc1'
-                }
-              }
-            ]
+          title: 'Test WL',
+          id: 'wl',
+          properties: {
+            'deltares:units': 'm'
           },
           pointData: {
             'WL-Loc1': {
@@ -172,9 +167,6 @@ describe('activePointDataPerDataset', () => {
           }
         },
         wd: {
-          locations: {
-            features: []
-          }
         }
       }
     }
@@ -182,7 +174,9 @@ describe('activePointDataPerDataset', () => {
     expect(result['WL-Loc1']).toEqual([
       {
         datasetName: 'Test WL',
-        data: 'test-wl-loc1'
+        data: 'test-wl-loc1',
+        id: 'wl',
+        units: 'm'
       }
     ])
   })

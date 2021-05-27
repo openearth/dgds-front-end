@@ -124,6 +124,27 @@ describe('setRasterData', () => {
   })
 })
 
+describe('setRasterProperty', () => {
+  test('set state.setRasterProperty.layer.properties.id with data in payload', () => {
+    const state = {
+      activeRasterData: {
+        layer: {
+          properties: {
+          }
+        }
+      }
+    }
+    mutations.setRasterProperty(state, { prop: 'foo', data: 'bar' })
+    expect(state.activeRasterData).toEqual({
+      layer: {
+        properties: {
+          foo: 'bar'
+        }
+      }
+    })
+  })
+})
+
 describe('addActiveRasterLayer', () => {
   test('set state.activeRasterData with id in payload', () => {
     const state = {
