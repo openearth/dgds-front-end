@@ -171,6 +171,7 @@ export const actions = {
     getCatalog(url.href)
       .then(dataset => {
         commit('addActiveRasterLayer', { data: dataset })
+        commit('setLoadingRasterLayers', false)
       })
   },
 
@@ -355,6 +356,9 @@ export const getters = {
   },
   activeVectorData (state) {
     return state.vectorDataCollection
+  },
+  loadingRasterLayers (state) {
+    return state.loadingRasterLayers
   },
   activePointDataPerDataset (state) {
     const { activeLocationIds, activeDatasetIds, datasets } = state
