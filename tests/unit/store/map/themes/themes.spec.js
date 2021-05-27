@@ -1,6 +1,6 @@
 import { state } from '@/store/map/themes'
 
 test('Initial state', () => {
-  const initialState = {}
+  const initialState = []
   expect(state()).toEqual(initialState)
 })

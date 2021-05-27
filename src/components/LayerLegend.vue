@@ -89,18 +89,26 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getDatasets', 'activeRasterData', 'activeRasterLegendData'])
+    ...mapGetters(['getDatasets', 'activeRasterData'])
   },
   mounted () {
     this.dataset = this.getDatasets[this.datasetId]
-    this.unit = _.get(this.dataset, 'metadata.units')
+    this.unit = _.get(this.dataset, 'properties.deltares:units')
     this.updateMinMax()
-    this.linearGradient = _.get(this.dataset, 'raster.linearGradient')
+    this.linearGradient = _.get(this.activeRasterData, 'layer.properties.deltares:linearGradient')
+  },
+  watch: {
+    activeRasterData () {
+      this.updateMinMax()
+      this.linearGradient = {}
+      this.linearGradient = _.get(this.activeRasterData, 'layer.properties.deltares:linearGradient')
+    }
   },
   methods: {
-    ...mapActions(['retrieveRasterLayerByImageId']),
+    ...mapActions(['loadActiveRasterLayer']),
     updateMinMax () {
-      const { min, max } = _.get(this.dataset, 'raster')
+      const min = _.get(this.activeRasterData, 'layer.properties.deltares:min', '')
+      const max = _.get(this.activeRasterData, 'layer.properties.deltares:max', '')
       this.minValue = min.toString()
       this.maxValue = max.toString()
       this.defaultMinValue = min.toString()
@@ -109,7 +117,6 @@ export default {
     cancelEditRange () {
       this.minValue = this.defaultMinValue
       this.maxValue = this.defaultMaxValue
-
       this.editingRange = false
     },
     editRange () {
@@ -117,19 +124,13 @@ export default {
     },
     saveRange () {
       this.editingRange = false
-      this.postUpdatedRange()
+      _.set(this.activeRasterData, 'layer.properties.deltares:min', this.minValue)
+      _.set(this.activeRasterData, 'layer.properties.deltares:max', this.maxValue)
+      this.loadActiveRasterLayer()
     },
     resetRange () {
       this.minValue = this.defaultMinValue
       this.maxValue = this.defaultMaxValue
-    },
-    postUpdatedRange () {
-      const { imageId } = this.dataset.raster
-      const range = {
-        min: this.minValue,
-        max: this.maxValue
-      }
-      this.retrieveRasterLayerByImageId({ imageId, options: { min: range.min, max: range.max } })
     }
   }
 }

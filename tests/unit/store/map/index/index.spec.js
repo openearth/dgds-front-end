@@ -4,9 +4,11 @@ test('Initial state', () => {
   const initialState = {
     activeDatasetIds: [],
     activeLocationIds: [],
-    activeRasterLayerId: '',
-    activeTheme: {},
-    defaultRasterLayerId: '',
+    activeRasterData: {},
+    vectorDataCollection: {},
+    activeRasterLayerId: 'el',
+    activeFlowmapLayer: {},
+    activeTheme: '',
     loadingRasterLayers: false,
     geographicalScope: ''
   }

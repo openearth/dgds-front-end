@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     currentDateObject () {
-      return _.get(this.dates, this.timeIndex)
+      return this.dates[this.timeIndex]
     }
   },
   watch: {

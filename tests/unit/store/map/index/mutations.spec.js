@@ -1,5 +1,21 @@
 import { mutations } from '@/store/map/index.js'
 
+describe('resetMap', () => {
+  test('updates all map related states to null', () => {
+    const state = {
+      activeDatasetIds: ['test'],
+      activeLocationIds: ['ids'],
+      activeTheme: 'theme',
+      loadingRasterLayers: true
+    }
+    mutations.resetMap(state)
+    expect(state.activeDatasetIds).toStrictEqual([])
+    expect(state.activeLocationIds).toStrictEqual([])
+    expect(state.activeTheme).toBe('')
+    expect(state.loadingRasterLayers).toBe(false)
+  })
+})
+
 describe('setActiveDatasetIds', () => {
   test('updates state.activeDatasetIds with ids in payload', () => {
     const state = {
@@ -36,22 +52,13 @@ describe('clearActiveDatasetIds', () => {
 describe('toggleActiveTheme', () => {
   test('updates state.activeTheme with ids in payload', () => {
     const state = {
-      activeTheme: {},
-      themes: {
-        ab: {
-          cd: 'ef',
-          id: 'ab'
-        }
-      }
+      activeTheme: ''
     }
-    const ids = 'ab'
-    mutations.toggleActiveTheme(state, ids)
-    expect(state.activeTheme).toEqual({
-      cd: 'ef',
-      id: 'ab'
-    })
-    mutations.toggleActiveTheme(state, ids)
-    expect(state.activeTheme).toEqual({})
+    const theme = 'ab'
+    mutations.toggleActiveTheme(state, theme)
+    expect(state.activeTheme).toEqual('ab')
+    mutations.toggleActiveTheme(state, theme)
+    expect(state.activeTheme).toEqual('')
   })
 })
 
@@ -76,7 +83,7 @@ describe('setActiveLocationIds', () => {
   })
 })
 
-describe('setActiveLocationIds', () => {
+describe('clearActiveLocationIds', () => {
   test('clears state.activeLocationIds', () => {
     const state = {
       activeLocationIds: ['wl', 'wd']
@@ -87,12 +94,62 @@ describe('setActiveLocationIds', () => {
   })
 })
 
-describe('setActiveRasterLayer', () => {
+describe('setActiveRasterLayerId', () => {
   test('set state.activeRasterLayerId with id in payload', () => {
     const state = {
       activeRasterLayerId: 'wl'
     }
-    mutations.setActiveRasterLayer(state, 'wd')
+    mutations.setActiveRasterLayerId(state, 'wd')
     expect(state.activeRasterLayerId).toEqual('wd')
+  })
+})
+
+describe('setVectorData', () => {
+  test('set state.vectorDataCollection with id in payload', () => {
+    const state = {
+      vectorDataCollection: {}
+    }
+    mutations.setVectorData(state, { id: 'foo', data: ['bar'] })
+    expect(state.vectorDataCollection).toEqual({ foo: ['bar'] })
+  })
+})
+
+describe('setRasterData', () => {
+  test('set state.activeRasterData with id in payload', () => {
+    const state = {
+      activeRasterData: ''
+    }
+    mutations.setRasterData(state, { data: 'foo' })
+    expect(state.activeRasterData).toEqual('foo')
+  })
+})
+
+describe('addActiveRasterLayer', () => {
+  test('set state.activeRasterData with id in payload', () => {
+    const state = {
+      activeRasterData: {}
+    }
+    mutations.addActiveRasterLayer(state, { data: 'bar' })
+    expect(state.activeRasterData).toEqual({ layer: 'bar' })
+  })
+})
+
+describe('addActiveFlowmapLayer', () => {
+  test('set state.activeFlowmapLayer with id in payload', () => {
+    const state = {
+      activeFlowmapLayer: ''
+    }
+    mutations.addActiveFlowmapLayer(state, 'foo')
+    expect(state.activeFlowmapLayer).toEqual('foo')
+  })
+})
+
+describe('setLoadingRasterLayers', () => {
+  test('set state.loadingRasterLayers with id in payload', () => {
+    const state = {
+      loadingRasterLayers: false
+    }
+    mutations.setLoadingRasterLayers(state, true)
+    expect(state.loadingRasterLayers).toEqual(true)
   })
 })
