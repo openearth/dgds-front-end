@@ -7,7 +7,7 @@
       <account-panel v-if="panel === 'account'" @close-account="panel = false"/>
       <data-set-controls :datasets="datasetsInActiveTheme" />
       <map-component />
-      <time-stamp v-show="activeTimestamp !== '' && getActiveRasterLayer"/>
+      <time-stamp v-show="(activeTimestamp !== 'Invalid date' ) && getActiveRasterLayer"/>
       <v-tour :steps="tourSteps" :options="tourConfig" name="introduction"></v-tour>
       <legal-dialog />
     </v-main>

@@ -9,15 +9,20 @@ import { mapActions } from 'vuex'
 
 export default {
   watch: {
-    '$route.params.datasetIds' () {
-      this.storeActiveDatasets(this.$route.params.datasetIds)
+    '$route.params.datasetIds': {
+      handler () {
+        this.storeActiveVectorIds(this.$route.params.datasetIds)
+        this.triggerActiveVector()
+      },
+      deep: true
     }
   },
   mounted () {
-    this.storeActiveDatasets(this.$route.params.datasetIds)
+    this.storeActiveVectorIds(this.$route.params.datasetIds)
+    this.triggerActiveVector()
   },
   methods: {
-    ...mapActions(['storeActiveDatasets'])
+    ...mapActions(['storeActiveVectorIds', 'triggerActiveVector'])
   }
 }
 </script>

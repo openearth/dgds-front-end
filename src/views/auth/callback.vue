@@ -7,7 +7,6 @@ import Oidc from 'oidc-client'
 
 export default {
   mounted () {
-    console.log('mounted')
     const store = new Oidc.WebStorageStateStore({ store: window.localStorage })
 
     new Oidc.UserManager({ userStore: store })

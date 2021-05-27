@@ -98,35 +98,36 @@ export default {
   computed: {
     ...mapState(['activeLocationIds', 'loadingRasterLayers']),
     ...mapGetters([
+      'activeDatasetIds',
       'activeRasterData',
       'activeFlowmapData',
       'activeVectorData',
-      'activeDatasetsLocations',
+      'activeVectorLayers',
       'activeTimestamp',
-      'activeDatasets',
       'getActiveRasterLayer',
       'getDatasets',
-      'getGeographicalScope'
+      'getGeographicalScope',
+      'knownVectorData'
     ]),
     rasterLayer () {
       const rasterLayer = getRasterLayer()
-      rasterLayer.source.tiles = [_.get(this.activeRasterData, 'url')]
+      rasterLayer.source.tiles = [_.get(this.activeRasterData, 'layer.assets.visual.href')]
       return rasterLayer
     },
     flowmapLayer () {
       const flowmapLayer = getRasterLayer()
-      const flowmapData = this.activeFlowmapData
-      const url = _.get(flowmapData, 'url')
-      if (url) {
-        // should this be done using Vue.set?
-        flowmapLayer.source.tiles = [url]
-      }
+      flowmapLayer.source.tiles = [_.get(this.activeFlowmapData, 'assets.flowmap.href')]
       return flowmapLayer
+    },
+    showFlowmapLayer () {
+      return !_.isEmpty(this.activeFlowmapData)
     },
     vectorLayers () {
       // Returns an array with unique mapboxlayers.
       // Get active vectorlayers and flatten, all mapboxlayers into 1 array
-      const vectorLayers = _.flatten(this.activeVectorData)
+      const activeVectorLayers = this.getMapboxLayers(this.activeVectorData)
+
+      const vectorLayers = _.flatten(activeVectorLayers)
       // Get Default vector mapboxlayer
       const defaultVectorLayer = getVectorLayer()
       // get all unique layerIds
@@ -153,18 +154,40 @@ export default {
         return mergedFilter
       })
       return newLayers
-    },
-    showFlowmapLayer () {
-      const layer = this.getActiveRasterLayer
-      return layer === 'cc'
     }
   },
   methods: {
     ...mapMutations([
       'clearActiveDatasetIds',
-      'setActiveRasterLayer',
+      'setActiveRasterLayerId',
       'setGeographicalScope'
     ]),
+
+    getMapboxLayers (collection) {
+      const vectorDatasets = this.activeDatasetIds.map(datasetId => {
+        return _.get(collection, datasetId)
+      })
+      const mapboxLayers = []
+      vectorDatasets.forEach(dataset => {
+        if (!_.has(dataset, 'layers')) {
+          return
+        }
+        dataset.layers.forEach(layer => {
+          const mapboxLayer = {}
+          Object.entries(layer.properties).forEach(([id, prop]) => {
+            const regex = 'deltares:(.+)'
+            const propId = id.match(regex)
+            if (_.get(propId, '1')) {
+              mapboxLayer[propId[1]] = prop
+            }
+          })
+          mapboxLayer.metadata = dataset.properties
+          mapboxLayers.push(mapboxLayer)
+        })
+      })
+      return mapboxLayers
+    },
+
     zoomToLastDatasetId () {
       const params = _.get(this.$route, 'params.datasetIds')
       if (!params) {
@@ -193,12 +216,12 @@ export default {
     zoomToBbox (datasetId) {
       setTimeout(() => {
         const oldScope = this.getGeographicalScope
-        const metadata = _.get(this.getDatasets, `[${datasetId}].metadata`)
-        const newScope = _.get(metadata, 'scope')
+        const newScope = _.get(this.getDatasets, `${datasetId}.properties.deltares:scope`)
         // If the new scope is global or the same as the old scope, do nothing
         if (newScope === 'regional' && oldScope !== newScope) {
           // If layer is toggled on and has a bbox, zoom to that layer
-          const bbox = metadata.bbox
+          const coords = _.get(this.getDatasets, `${datasetId}.extent.spatial.bbox[0]`)
+          const bbox = [[coords[0], coords[1]], [coords[2], coords[3]]]
           if (bbox) {
             this.$refs.map.map.fitBounds(bbox)
           }
@@ -207,18 +230,18 @@ export default {
       }, 1000)
     },
     getFeatureInfo (bbox) {
-      if (!this.getActiveRasterLayer) {
+      if (!this.activeRasterData) {
         this.removeInfoText()
         return
       }
 
       const parameters = {
-        imageId: this.activeRasterData.imageId,
+        imageId: _.get(this.activeRasterData, 'layer.properties.deltares:imageId'),
         bbox
       }
 
-      const band = _.get(this.activeRasterData, 'band')
-      const func = _.get(this.activeRasterData, 'function')
+      const band = _.get(this.activeRasterData, 'layer.properties.deltares:band')
+      const func = _.get(this.activeRasterData, 'layer.properties.deltares:function')
 
       if (band) {
         parameters.band = band
@@ -228,7 +251,7 @@ export default {
         return
       }
 
-      fetch(this.activeRasterData.featureInfoUrl, {
+      fetch(_.get(this.activeRasterData, 'assets.featureinfo.href'), {
         method: 'POST',
         body: JSON.stringify(parameters),
         mode: 'cors',
@@ -239,7 +262,8 @@ export default {
         .then(response => response.json())
         .then(resp => {
           if (resp.value) {
-            const units = _.get(this.getDatasets, `${this.getActiveRasterLayer}.metadata.units`)
+            const dataset = this.getDatasets[this.getActiveRasterLayer]
+            const units = _.get(dataset, 'properties.deltares:units')
             this.mapboxMessage = `${resp.value} [${units}]`
             this.infoTextGeometry = bbox
           } else {
@@ -258,7 +282,7 @@ export default {
       detail.features.forEach(feature => {
         // When a layer has a metadata with locationIdField use this layer and
         // get the locationId usin this field
-        const locId = _.get(feature, 'layer.metadata.locationIdField')
+        const locId = _.get(feature, 'layer.metadata.deltares:locationIdField')
         if (locId) {
           locationIds.push(feature.properties[locId])
         }
@@ -268,7 +292,8 @@ export default {
       this.$router.push({ path: `/${params.datasetIds}/${params.locationId}`, params })
     },
     toggleRasterLayer (event) {
-      this.setActiveRasterLayer(event)
+      this.setActiveRasterLayerId(event)
+      this.loadActiveRasterItem()
       this.removeInfoText()
       this.zoomToBbox(this.getActiveRasterLayer)
     }

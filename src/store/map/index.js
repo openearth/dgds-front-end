@@ -1,29 +1,22 @@
 import isArray from 'lodash/isArray'
-import identity from 'lodash/fp/identity'
-import filter from 'lodash/fp/filter'
-import get from 'lodash/fp/get'
-import has from 'lodash/fp/has'
-import map from 'lodash/fp/map'
-import merge from 'lodash/fp/merge'
-import pipe from 'lodash/fp/pipe'
-import values from 'lodash/fp/values'
 import flatten from 'lodash/fp/flatten'
-import uniq from 'lodash/fp/uniq'
 import _ from 'lodash'
 import moment from 'moment'
-import { includesIn, getIn, wrapInProperty } from '../../lib/utils'
-import getFromApi from '../../lib/request/get'
+import getCatalog from '@/lib/request/get-catalog'
 import datasets from './datasets.js'
 import themes from './themes.js'
+import Vue from 'vue'
 
-const getId = get('id')
+// const getId = get('id')
 
 export const getDefaultState = () => ({
   activeDatasetIds: [],
   activeLocationIds: [],
-  activeRasterLayerId: '',
-  activeTheme: {},
-  defaultRasterLayerId: '',
+  activeRasterData: {},
+  vectorDataCollection: {},
+  activeRasterLayerId: 'el',
+  activeFlowmapLayer: {},
+  activeTheme: '',
   loadingRasterLayers: false,
   geographicalScope: ''
 })
@@ -34,7 +27,7 @@ export const mutations = {
   resetMap (state) {
     state.activeDatasetIds = []
     state.activeLocationIds = []
-    state.activeTheme = {}
+    state.activeTheme = ''
     state.loadingRasterLayers = false
   },
   setActiveDatasetIds (state, ids) {
@@ -47,10 +40,10 @@ export const mutations = {
     state.activeDatasetIds = []
   },
   toggleActiveTheme (state, id) {
-    if (state.activeTheme.id === id) {
-      state.activeTheme = {}
+    if (state.activeTheme === id) {
+      state.activeTheme = ''
     } else {
-      state.activeTheme = state.themes[id]
+      state.activeTheme = id
     }
   },
   clearActiveTheme (state) {
@@ -62,14 +55,20 @@ export const mutations = {
   clearActiveLocationIds (state) {
     state.activeLocationIds = []
   },
-  setActiveRasterLayer (state, id) {
+  setActiveRasterLayerId (state, id) {
     state.activeRasterLayerId = id
   },
-  setDefaultRasterLayer (state, id) {
-    state.defaultRasterLayerId = id
+  setVectorData (state, { id, data }) {
+    Vue.set(state.vectorDataCollection, id, data)
   },
-  updateRasterLayer (state, { dataset, rasterLayer }) {
-    Object.assign(state.datasets[dataset].raster, rasterLayer)
+  setRasterData (state, { data }) {
+    state.activeRasterData = data
+  },
+  addActiveRasterLayer (state, { data }) {
+    Vue.set(state.activeRasterData, 'layer', data)
+  },
+  addActiveFlowmapLayer (state, data) {
+    state.activeFlowmapLayer = data
   },
   setLoadingRasterLayers (state, loading) {
     state.loadingRasterLayers = loading
@@ -77,79 +76,141 @@ export const mutations = {
 }
 
 export const actions = {
-  loadDatasets ({ commit }) {
-    return getFromApi('datasets').then(val => {
-      // Loop over datasets to get a list of available datasets per theme
-      val.themes.map(theme => {
-        theme.datasets = _.compact(
-          val.datasets.map(set => {
-            if (set.themes.includes(theme.id)) {
-              return set.id
-            }
-          })
-        )
-        return theme
+  loadDatasets ({ state, commit, dispatch }) {
+    // Retrieve the first 2 layers of the stac collection, the general metadata
+    // and the childs including all datasets
+    getCatalog(process.env.VUE_APP_CATALOG_URL)
+      .then(datasets => {
+        // Add themes to store.themes
+        const themes = _.get(datasets, 'summaries.keywords')
+        themes.forEach(theme => commit('addTheme', theme))
+
+        const childs = datasets.links.filter(ds => ds.rel === 'child')
+        return childs.forEach(child => {
+          return getCatalog(child.href)
+            .then(dataset => {
+              commit('addDataset', dataset)
+              // If we start at a subroute with active dataset ids, directly
+              // load the vector layers
+              if (state.activeDatasetIds.includes(dataset.id)) {
+                _.set(state.datasets, `${dataset.id}.visible`, true)
+                dispatch('loadVectorLayer', dataset)
+                dispatch('triggerActiveVector')
+              }
+              if (dataset.id === state.activeRasterLayerId) {
+                dispatch('loadActiveRasterData', dataset.id)
+              }
+            })
+        })
       })
+  },
+  loadActiveRasterData ({ state, commit, dispatch }, id) {
+    // Store active raster data, if null leave empty, otherwise retrieve
+    // new data from link
+    if (!id) {
+      commit('setRasterData', {})
+      return
+    }
+    const links = _.get(state.datasets[id], 'links')
+    const collectionUrl = links.find(child => child.title === `${id}-gee`).href
+    getCatalog(collectionUrl)
+      .then(dataset => {
+        let links = _.get(dataset, 'links', [])
+        links = links.filter(link => link.rel === 'item')
+        const rasterLayer = links[links.length - 1]
+        const result = links.map(serie => {
+          serie.date = moment(serie.date, 'YYYY-MM-DD HH:mm:ss').format('DD-MM-YYYY HH:mm')
+          return serie
+        })
+        dataset.links = result
+        commit('setRasterData', { id: id, data: dataset })
 
-      // Add themes to store.themes
-      val.themes.forEach(theme => commit('addTheme', theme))
-
-      val.datasets.forEach(set => {
-        // Add metadata to store.datasets (excluding vectorLayer and rasterLayer)
-        commit('addMetadata', _.omit(set, ['vectorLayer', 'rasterLayer', 'flowmapLayer']))
-
-        // Add vectorlayer to store.datasets if available
-        if (_.has(set, 'vectorLayer')) {
-          commit('addDatasetVector', set)
-        }
-
-        // Flowmap for currents and  wind
-        if (_.has(set, 'flowmapLayer')) {
-          commit('addDatasetFlowmap', set)
-        }
-        // Add rasterLayer to store.datasets if available
-        if (_.has(set, 'rasterLayer') && _.get(set, 'rasterLayer.url') !== null) {
-          commit('addDatasetRaster', set)
-
-          // If key rasterActiveOnLoad is true, turn this layer on on load
-          const rasterActive = _.get(set, 'rasterActiveOnLoad')
-          if (rasterActive) {
-            commit('setActiveRasterLayer', set.id)
-            commit('setDefaultRasterLayer', set.id)
-          }
-        }
+        dispatch('loadActiveRasterLayer', rasterLayer)
       })
-    })
+    const flowUrl = links.find(child => child.title === `${id}-flow`)
+    if (flowUrl) {
+      getCatalog(flowUrl.href)
+        .then(dataset => {
+          commit('addActiveFlowmapLayer', dataset)
+        })
+    } else {
+      commit('addActiveFlowmapLayer', {})
+    }
+  },
+  loadActiveRasterLayer ({ state, getters, commit }, rasterLayer) {
+    // Load the active item (depending on activeTimestamp), this function is also
+    // used to update the raster layer when the min and max has changed (using the
+    // properties of the activeRasterData)
+    if (!rasterLayer) {
+      rasterLayer = state.activeRasterData.links.find(item => {
+        return getters.activeTimestamp === item.date
+      })
+    }
+    const properties = _.get(state.activeRasterData, 'layer.properties', {})
+    const url = new URL(rasterLayer.href)
+
+    if (_.get(properties, 'deltares:min')) {
+      url.searchParams.set('min', _.get(properties, 'deltares:min'))
+    }
+    if (_.get(properties, 'deltares:max')) {
+      url.searchParams.set('max', _.get(properties, 'deltares:max'))
+    }
+    getCatalog(url.href)
+      .then(dataset => {
+        commit('addActiveRasterLayer', { data: dataset })
+      })
   },
 
-  retrieveRasterLayerByImageId ({ commit, state, getters }, { imageId, options }) {
-    options = options || {}
-    commit('setLoadingRasterLayers', true)
-    const dataset = getters.getActiveRasterLayer
-    // If band has changed, use band from options. If band is not defined use already set band
-    if (!_.get(options, 'band') && _.get(getters, 'activeRasterData.band')) {
-      options.band = _.get(getters, 'activeRasterData.band')
-    }
-
-    if (!_.get(options, 'min') && _.get(getters, 'activeRasterData.min')) {
-      options.min = _.get(getters, 'activeRasterData.min')
-    }
-
-    if (!_.get(options, 'max') && _.get(getters, 'activeRasterData.max')) {
-      options.max = _.get(getters, 'activeRasterData.max')
-    }
-    const params = new URLSearchParams(options)
-    // Retrieve complete new rasterLayer by imageId and dataset
-    return getFromApi(`datasets/${dataset}/${imageId}?${params}`).then(val => {
-      // If the range is set manually we don't want to update the default raster laayer
-      commit('updateRasterLayer', { dataset, rasterLayer: val.rasterLayer })
-      commit('setLoadingRasterLayers', false)
-    })
-  },
-
-  storeActiveDatasets ({ commit, state, getters }, _ids) {
+  storeActiveVectorIds ({ commit }, _ids) {
+    // First set the activeDatasetIds
     const ids = isArray(_ids) ? _ids : _ids.split(',')
     commit('setActiveDatasetIds', ids)
+  },
+
+  triggerActiveVector ({ state, dispatch }) {
+    // When changing the active vector layers, check whether a new vectorlayer needs
+    // to be loaded.s
+    state.activeDatasetIds.forEach(datasetId => {
+      if (!_.has(state, `vectorDataCollection.${datasetId}`)) {
+        dispatch('loadVectorLayer', (state.datasets[datasetId]))
+      }
+    })
+  },
+  loadVectorLayer ({ state, dispatch }, dataset) {
+    if (!dataset) {
+      return
+    }
+    if (!_.has(state.vectorDataCollection, dataset.id)) {
+      const links = _.get(dataset, 'links', [])
+      const collectionUrl = links.find(child => child.title === `${dataset.id}-mapbox`).href
+      dispatch('loadLayerCollection', {
+        collectionUrl,
+        setCollectionCommit: 'setVectorData',
+        datasetId: dataset.id
+      })
+    }
+  },
+
+  loadLayerCollection ({ commit }, { collectionUrl, setCollectionCommit, addLayerCommit, datasetId }) {
+    // Retrieve a layer collection and it's underlaying collection
+    getCatalog(collectionUrl)
+      .then(dataset => {
+        dataset.layers = []
+        const itemLinks = _.get(dataset, 'links')
+        const items = itemLinks.filter(child => child.rel === 'item')
+        const layers = []
+        items.forEach((item, index) => {
+          getCatalog(item.href)
+            .then(layerData => {
+              // commit(addLayerCommit, { id: datasetId, data: layerData })
+              layers.push(layerData)
+              if (index === items.length - 1) {
+                dataset.layers = layers
+                commit(setCollectionCommit, { id: datasetId, data: dataset })
+              }
+            })
+        })
+      })
   },
 
   loadPointDataForLocation ({ commit, state, getters }, { datasetIds, locationId }) {
@@ -159,6 +220,7 @@ export const actions = {
         return
       }
 
+      // TODO: this time is still done for the old code. Needs update, use activeTimesatmp?
       // Get the current time of the active raster layer
       const activeRaster = _.get(getters, 'activeRasterData')
       let currentTime = _.get(activeRaster, 'date')
@@ -186,47 +248,60 @@ export const actions = {
         datasetId
       }
 
-      getFromApi('timeseries', parameters).then(response => {
-        const pointDataType = _.get(state, `datasets[${datasetId}].metadata.pointData`)
-
-        // Depending on the pointDataType different responses are expected.
-        // images -> just an url to a svg image
-        // line or scatter -> data to create echarts graph
-        if (pointDataType === 'images') {
-          commit('addDatasetPointData', {
-            id: datasetId,
-            data: {
-              [locationId]: {
-                imageUrl: response
-              }
-            }
-          })
-        } else {
-          let category = []
-          let serie = []
-          const eventResults = response.results.filter(res => _.has(res, 'events'))
-
-          eventResults.forEach(res => {
-            serie = serie.concat(res.events.map(event => event.value))
-            category = category.concat(res.events.map(event => moment(event.timeStamp).format()))
-          })
-
-          commit('addDatasetPointData', {
-            id: datasetId,
-            data: {
-              [locationId]: {
-                category,
-                serie
-              }
-            }
-          })
+      const url = _.get(state, `vectorDataCollection[${datasetId}].assets.graph.href`)
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(parameters),
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
         }
       })
+        .then(response => response.json())
+        .then(response => {
+          const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltaers:pointData`)
+
+          // Depending on the pointDataType different responses are expected.
+          // images -> just an url to a svg image
+          // line or scatter -> data to create echarts graph
+          if (pointDataType === 'images') {
+            commit('addDatasetPointData', {
+              id: datasetId,
+              data: {
+                [locationId]: {
+                  imageUrl: response
+                }
+              }
+            })
+          } else {
+            let category = []
+            let serie = []
+            const eventResults = response.results.filter(res => _.has(res, 'events'))
+
+            eventResults.forEach(res => {
+              serie = serie.concat(res.events.map(event => event.value))
+              category = category.concat(res.events.map(event => moment(event.timeStamp).format()))
+            })
+
+            commit('addDatasetPointData', {
+              id: datasetId,
+              data: {
+                [locationId]: {
+                  category,
+                  serie
+                }
+              }
+            })
+          }
+        })
     })
   }
 }
 
 export const getters = {
+  activeDatasetIds (state) {
+    return state.activeDatasetIds
+  },
   // TODO: check if  all these functions are needed/used
   getActiveTheme (state) {
     return state.activeTheme
@@ -237,114 +312,35 @@ export const getters = {
   getDatasets (state) {
     return state.datasets
   },
-  knownDatasetIds (state) {
-    return Object.keys(state.datasets)
-  },
-  getActiveRasterLayer (state, id) {
+  getActiveRasterLayer (state) {
     return state.activeRasterLayerId
   },
   getLoadingState (state) {
     return state.loadingRasterLayers
   },
-  knownLocationIds (state) {
-    const getInDatasets = getIn(state.datasets)
-    const getLocationId = map(get('properties.locationId'))
-    const featuresInDatasets = id => getInDatasets(`${id}.locations.features`)
-    const getKnownLocationIds = pipe([
-      Object.keys,
-      filter(featuresInDatasets),
-      map(pipe([featuresInDatasets, getLocationId])),
-      flatten,
-      uniq
-    ])
-
-    return getKnownLocationIds(state.datasets)
-  },
-
-  activeDatasets (state) {
-    const { activeDatasetIds, datasets } = state
-    const getInDatasets = getIn(datasets)
-
-    return activeDatasetIds.map(getInDatasets).filter(identity)
-  },
-
   activeTimestamp (state, { activeRasterData }) {
     if (state.loadingRasterLayers) {
       return 'Loading...'
     }
     // Retrieve the timestamp from te activeRasterData and combine this into a string
     // using the dateformat given
-    const date = _.get(activeRasterData, 'date')
-    const dateFormat = _.get(activeRasterData, 'dateFormat')
-
-    if (date && dateFormat) {
+    const date = _.get(activeRasterData, 'layer.properties.deltares:date', [])
+    const dateFormat = 'YYYY-MM-DD HH:mm:ss'
+    if (date) {
       const timeStamp = moment(date, dateFormat).format('DD-MM-YYYY HH:mm')
       return timeStamp
     } else {
       return ''
     }
   },
-
-  activeRasterData ({ datasets, activeRasterLayerId, activeDatasets }) {
-    // Return the active raster data tiles (if not defined, return [])
-    if (activeRasterLayerId === '' || activeRasterLayerId === null) {
-      return []
-    }
-    return _.get(datasets, `${activeRasterLayerId}.raster`)
+  activeRasterData (state) {
+    return state.activeRasterData
   },
-  activeRasterLegendData ({ datasets, activeRasterLayerId }) {
-    // Return the active raster data tiles (if not defined, return [])
-    if (activeRasterLayerId === '' || activeRasterLayerId === null) {
-      return []
-    }
-    const raster = get(`${activeRasterLayerId}.raster`, datasets)
-    return {
-      linearGradient: raster.linearGradient,
-      min: raster.min,
-      max: raster.max
-    }
+  activeFlowmapData (state) {
+    return state.activeFlowmapLayer
   },
-
-  activeFlowmapData ({ datasets, activeRasterLayerId }) {
-    // return the  flowmap data
-    if (activeRasterLayerId === '' || activeRasterLayerId === null) {
-      return []
-    }
-    return _.get(datasets, `${activeRasterLayerId}.flowmap`)
-  },
-
-  activeVectorData ({ activeLocationIds }, { activeDatasets }) {
-    // Retrieve for active layers where vector data is available the data
-    const vectorLayers = activeDatasets.filter(has('vector'))
-    const mapboxLayers = vectorLayers.map(layer => {
-      return get('vector.mapboxLayer', layer)
-    })
-    return mapboxLayers.filter(identity)
-  },
-  activeDatasetsLocations ({ activeLocationIds }, { activeDatasets }) {
-    // Retrieve for the active datasets the locations
-    const getActiveProperty = feature =>
-      pipe([get('properties.locationId'), includesIn(activeLocationIds), active => ({ active })])(
-        feature
-      )
-
-    const addActiveProperty = feature =>
-      pipe([
-        get('properties'),
-        merge(getActiveProperty(feature)),
-        wrapInProperty('properties'),
-        merge(feature)
-      ])(feature)
-
-    const enhanceFeatureWithActiveState = location =>
-      pipe([get('features'), map(addActiveProperty), wrapInProperty('features'), merge(location)])(
-        location
-      )
-
-    return activeDatasets
-      .map(get('locations'))
-      .filter(identity)
-      .map(enhanceFeatureWithActiveState)
+  activeVectorData (state) {
+    return state.vectorDataCollection
   },
   activePointDataPerDataset (state) {
     const { activeLocationIds, activeDatasetIds, datasets } = state
@@ -372,23 +368,18 @@ export const getters = {
     return activePointDataPerDataset
   },
   datasetsInActiveTheme (state) {
-    const ids = state.activeDatasetIds
-    let sets = values(state.datasets)
-
-    if (state.activeTheme.datasets !== undefined) {
-      const themeids = state.activeTheme.datasets
-      sets = values(state.datasets).filter(set => {
-        return themeids.includes(set.metadata.id)
+    const sets = _.values(state.datasets)
+    const activeSets = {}
+    if (state.activeTheme !== '') {
+      sets.forEach(set => {
+        if (set.keywords.includes(state.activeTheme)) {
+          activeSets[set.id] = set
+        }
       })
+      return activeSets
+    } else {
+      return state.datasets
     }
-    const metadataSets = sets.map(set => {
-      return _.get(set, 'metadata')
-    })
-    const visible = metadataSets.map(obj => merge(obj, { visible: getId(obj) }))
-    return visible.map(set => {
-      set.visible = ids.includes(set.id)
-      return set
-    })
   }
 }
 

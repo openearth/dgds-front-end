@@ -24,12 +24,12 @@
                   <custom-icon :name="dataset.id" iconFolder="datasets" />
                 </v-col>
                 <v-col cols="7" class="ma-auto pa-0">
-                  <span class="ml-2 d-sm-none d-md-flex">{{ dataset.name }}</span>
+                  <span class="ml-2 d-sm-none d-md-flex">{{ dataset.title }}</span>
                 </v-col>
                 <v-col cols="2" class="ma-auto pa-0">
                   <v-switch
                     class="my-auto switch"
-                    v-if="checkVector(dataset.id)"
+                    v-if="checkLayerType(dataset.id, 'mapbox')"
                     dense
                     flat
                     v-model="dataset.visible"
@@ -41,7 +41,7 @@
                   <v-radio
                     dense
                     class="radio"
-                    v-if="checkRaster(dataset.id)"
+                    v-if="checkLayerType(dataset.id, 'gee')"
                     :value="dataset.id"
                     @click="setRasterLayer(dataset.id)"
                     color="formActive"
@@ -49,36 +49,34 @@
                 </v-col>
                 <v-col cols="1" class="ma-auto pa-0">
                   <v-btn icon class="my-auto" @click="onTooltipClick(dataset.id)" >
-                    <custom-icon v-if="dataset.toolTip" name="info" />
+                    <custom-icon v-if="dataset.description" name="info" />
                   </v-btn>
                 </v-col>
               </v-row>
             </v-expansion-panel-header>
             <v-expansion-panel-content class="pa-0" color="background">
-              <div v-if="dataset.toolTip && hoverId === dataset.id" class="data-set-controls__tooltip">
+              <div v-if="dataset.description && hoverId === dataset.id" class="data-set-controls__tooltip">
                 <div
-                  v-html="markedTooltip(dataset.toolTip)"
+                  v-html="markedTooltip(dataset.description)"
                   class="data-set-controls__tooltip-text markdown pa-2"
                   :anchor-attributes="{ target: '_blank' }"
                   :watches="['source']"
                   />
-              </div>
-              <v-select
-                class="pa-2"
-                v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
-                v-model="selectedLayer"
-                :value="selectedLayer"
-                :items="dataset.layerOptions"
-                :label="`Select layer`"
-                @change="updateRasterLayer"
-                return-object
-                flat
-                item-text="name"
-                item-value="band"
-                dense
-              />
+                </div>
+                <v-select
+                  class="pa-2"
+                  v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
+                  v-model="selectedLayer"
+                  :value="selectedLayer"
+                  :items="dataset.layerOptions"
+                  :label="`Select layer`"
+                  return-object
+                  flat
+                  item-text="name"
+                  item-value="band"
+                  dense
+                />
               <div v-if="checkRaster(dataset.id) && activeRasterLayer === dataset.id">
-                <br>
                 <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
               </div>
             </v-expansion-panel-content>
@@ -99,8 +97,8 @@ import _ from 'lodash'
 export default {
   props: {
     datasets: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     }
   },
   components: {
@@ -116,45 +114,35 @@ export default {
     ]),
     themeName () {
       return _.get(this.getActiveTheme, 'name') || 'All datasets'
+    },
+    activePanels () {
+      // map which panel is showing the legend layer or the information layer)
+      const active = _.values(this.datasets).flatMap((dataset, index) => {
+        const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id
+        return activeDataset ? index : []
+      })
+      console.log('setting active paels', this.activeRasterLayer, active)
+      return active
     }
   },
   data () {
     return {
-      activePanels: [],
       hoverId: '',
       activeRasterLayer: '',
       selectedLayer: ''
-    }
-  },
-  watch: {
-    activeRasterData: {
-      handler (data) {
-        if (data.length === 0) {
-          return
-        }
-        const datasets = this.getDatasets
-        const meta = datasets[this.getActiveRasterLayer].metadata
-        const raster = datasets[this.getActiveRasterLayer].raster
-        if (meta.layerOptions) {
-          this.selectedLayer = raster.band
-        }
-        this.activeRasterLayer = this.getActiveRasterLayer
-      },
-      deep: true
     }
   },
   mounted () {
     this.activeRasterLayer = this.getActiveRasterLayer
   },
   methods: {
-    ...mapMutations(['setActiveRasterLayer']),
-    ...mapActions(['retrieveRasterLayerByImageId']),
+    ...mapMutations(['setActiveRasterLayerId', 'setRasterData']),
+    ...mapActions(['loadActiveRasterData']),
     markedTooltip (text) {
       return marked(text)
     },
     onTooltipClick (id) {
       this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
-      this.setActivePanels()
     },
     toggleLocationDataset (id) {
       let oldParams = _.get(this.$route, 'params.datasetIds')
@@ -191,35 +179,28 @@ export default {
         this.$router.push('/')
       }
     },
-    checkVector (id) {
-      return _.has(this.getDatasets, `${id}.vector`)
-    },
-    checkRaster (id) {
-      return _.has(this.getDatasets, `${id}.raster`)
-    },
-    updateRasterLayer (value) {
-      const datasets = this.getDatasets
-      const raster = datasets[this.getActiveRasterLayer]
-      this.retrieveRasterLayerByImageId({
-        imageId: raster.raster.imageId,
-        options: { band: value.band }
+    checkLayerType (id, type) {
+      // Check if type is in one of the titles of the children
+      const layers = _.get(this.datasets, `${id}.links`)
+      const typeArray = layers.map(layer => {
+        const title = _.get(layer, 'title')
+        if (!title) {
+          return false
+        }
+        const regex = `${id}-(.+)`
+        const layerType = title.match(regex)[1]
+        return layerType === type
       })
+      return typeArray.includes(true)
     },
     setRasterLayer (id) {
       if (this.getActiveRasterLayer === id) {
         id = null
       }
-      this.setActiveRasterLayer(id)
+      this.setRasterData({})
+      this.setActiveRasterLayerId(id)
+      this.loadActiveRasterData(id)
       this.activeRasterLayer = this.getActiveRasterLayer
-      this.setActivePanels()
-    },
-    setActivePanels () {
-      // map which panel is showing the legend layer or the information layer)
-      const active = this.datasets.flatMap((dataset, index) => {
-        const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id
-        return activeDataset ? index : []
-      })
-      this.activePanels = active
     }
   }
 }

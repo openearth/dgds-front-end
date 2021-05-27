@@ -4,7 +4,7 @@
       Date raster layer
     </v-card-title>
     <time-slider
-      :dates="activeRasterData.imageTimeseries"
+      :dates="timestampItems"
       :set-time-index="dateIndex"
       start-at="end"
       @update-timestep="getNewRasterLayer"
@@ -18,12 +18,12 @@
         <v-combobox
           id="timeslider-dropdown"
           v-model="timestamp"
-          :items="timeseriesItems"
+          :items="timestampItems"
           :disabled="loadingRasterLayers"
           label="Select a timestamp"
           flat
-          item-text="name"
-          item-value="value"
+          item-text="date"
+          item-value="date"
           return-object
           color="formBase"
         />
@@ -44,11 +44,6 @@ import moment from 'moment'
 import TimeSlider from '@/components/time-slider/TimeSlider.vue'
 
 export default {
-  data () {
-    return {
-      dateIndex: 0 // use input dropdown to, change the index of the timeslider accordingly
-    }
-  },
   components: {
     TimeSlider
   },
@@ -60,23 +55,22 @@ export default {
       'getLoadingState',
       'getActiveRasterLayer'
     ]),
-    timeseriesItems () {
+    timestampItems () {
       // The items for the dropdown menu -> a list with the dates in of the
       // active raster layer in a readable format
       if (this.activeTimestamp === 'Loading...') {
         return [
           {
-            name: this.activeTimestamp,
-            value: this.activeTimestamp
+            date: this.activeTimestamp
           }
         ]
       }
-      const series = _.get(this.activeRasterData, 'imageTimeseries') || []
-      return series.map(serie => {
-        return {
-          value: moment(serie.date).format('DD-MM-YYYY HH:mm'),
-          name: moment(serie.date).format('DD-MM-YYYY HH:mm')
-        }
+      const series = _.clone(_.get(this.activeRasterData, 'links') || [])
+      return series.filter(serie => serie.rel === 'item')
+    },
+    dateIndex () {
+      return this.timestampItems.findIndex(item => {
+        return item.date === this.activeTimestamp
       })
     },
     timestamp: {
@@ -88,11 +82,9 @@ export default {
         if (!val) {
           return
         }
-        const series = _.get(this.activeRasterData, 'imageTimeseries')
-        series.find((serie, i) => {
-          if (moment(val.value, 'DD-MM-YYYY HH:mm').isSame(moment(serie.date))) {
-            this.dateIndex = i
-            this.getNewRasterLayer(serie)
+        this.timestampItems.forEach((serie, i) => {
+          if (moment(val.date, 'DD-MM-YYYY HH:mm').isSame(moment(serie.date, 'DD-MM-YYYY HH:mm'))) {
+            this.loadActiveRasterLayer(serie)
             return true
           }
         })
@@ -100,14 +92,9 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['retrieveRasterLayerByImageId']),
+    ...mapActions(['loadActiveRasterLayer']),
     getNewRasterLayer (serie) {
-      if (this.getActiveRasterLayer) {
-        const imageId = _.get(serie, 'imageId')
-        // For each update of the timeslider adjust the raster layer to the new time
-        this.retrieveRasterLayerByImageId({ imageId })
-        this.$emit('update-timestep')
-      }
+      this.loadActiveRasterLayer(serie)
     }
   }
 }
