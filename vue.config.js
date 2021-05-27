@@ -7,7 +7,7 @@ module.exports = {
     workboxPluginMode: 'InjectManifest',
     manifestOptions: {
       icons: [
-        { src: 'favicon.ico', type: 'image/png' }
+        { src: 'favicon.ico', type: 'image/c-icon' }
       ]
     }
   },
