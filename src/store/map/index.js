@@ -272,8 +272,7 @@ export const actions = {
       })
         .then(response => response.json())
         .then(response => {
-          const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltaers:pointData`)
-
+          const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltares:pointData`)
           // Depending on the pointDataType different responses are expected.
           // images -> just an url to a svg image
           // line or scatter -> data to create echarts graph
@@ -282,7 +281,8 @@ export const actions = {
               id: datasetId,
               data: {
                 [locationId]: {
-                  imageUrl: response
+                  imageUrl: response,
+                  type: pointDataType
                 }
               }
             })
@@ -301,7 +301,8 @@ export const actions = {
               data: {
                 [locationId]: {
                   category,
-                  serie
+                  serie,
+                  type: pointDataType
                 }
               }
             })
@@ -371,10 +372,9 @@ export const getters = {
       activePointDataPerDataset[locationId] = activePointData.map(datasetId => {
         const data = _.get(datasets, `${datasetId}`)
         const locData = _.get(data.pointData, [locationId])
-        locData.datasetName = _.get(data, 'metadata.name')
-        locData.units = _.get(data, 'metadata.units')
-        locData.type = _.get(data, 'metadata.pointData')
-        locData.id = _.get(data, 'metadata.id')
+        locData.datasetName = _.get(data, 'title')
+        locData.units = _.get(data, 'properties.deltares:units')
+        locData.id = _.get(data, 'id')
         return locData
       })
     })
