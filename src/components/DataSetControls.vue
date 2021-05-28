@@ -205,7 +205,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .data-set-controls {
   position: absolute;
   display: flex;
