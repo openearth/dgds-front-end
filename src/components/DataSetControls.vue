@@ -40,7 +40,7 @@
                 <v-col cols="1" class="ma-auto pa-0">
                   <v-radio
                     dense
-                    class="ma-auto"
+                    class="ma-auto radio"
                     v-show="checkLayerType(dataset.id, 'gee') && !datasetLoading(dataset.id)"
                     :value="dataset.id"
                     @click="setRasterLayer(dataset.id)"
@@ -294,5 +294,9 @@ export default {
 
 .v-expansion-panel {
   border-color: var(--v-background-base);
+}
+
+.v-input--selection-controls__input .v-icon {
+  color: var(--v-primary-darken2);
 }
 </style>

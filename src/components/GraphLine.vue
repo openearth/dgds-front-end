@@ -115,6 +115,10 @@ const baseOptions = {
     trigger: 'axis',
     axisPointer: {
       type: 'shadow'
+    },
+    backgroundColor: 'rgba(50,50,50,0.7)',
+    textStyle: {
+      color: '#fff'
     }
   },
   grid: {
@@ -138,6 +142,12 @@ const baseOptions = {
     axisLine: {
       onZero: false,
       show: false
+    },
+    splitLine: {
+      show: true
+    },
+    axisLabel: {
+      formatter: '{dd}-{MM}-{yy}'
     }
   },
   yAxis: {

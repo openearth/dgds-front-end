@@ -4,7 +4,7 @@
       Date raster layer
     </v-card-title>
     <time-slider
-      :dates="timeseriesItems"
+      :dates="timestampItems"
       :set-time-index="dateIndex"
       start-at="end"
       @update-timestep="getNewRasterLayer"
@@ -18,7 +18,7 @@
         <v-combobox
           id="timeslider-dropdown"
           v-model="timestamp"
-          :items="timeseriesItems"
+          :items="timestampItems"
           :disabled="loadingRasterLayers"
           label="Select a timestamp"
           flat
@@ -55,7 +55,7 @@ export default {
       'getLoadingState',
       'getActiveRasterLayer'
     ]),
-    timeseriesItems () {
+    timestampItems () {
       // The items for the dropdown menu -> a list with the dates in of the
       // active raster layer in a readable format
       if (this.activeTimestamp === 'Loading...') {
@@ -69,7 +69,7 @@ export default {
       return series.filter(serie => serie.rel === 'item')
     },
     dateIndex () {
-      return this.timeseriesItems.findIndex(item => {
+      return this.timestampItems.findIndex(item => {
         return item.date === this.activeTimestamp
       })
     },
@@ -82,7 +82,7 @@ export default {
         if (!val) {
           return
         }
-        this.timeseriesItems.forEach((serie, i) => {
+        this.timestampItems.forEach((serie, i) => {
           if (moment(val.date, 'DD-MM-YYYY HH:mm').isSame(moment(serie.date, 'DD-MM-YYYY HH:mm'))) {
             this.loadActiveRasterLayer(serie)
             return true
