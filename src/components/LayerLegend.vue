@@ -2,7 +2,7 @@
   <v-container class="ma-0 pa-0">
     <v-row>
       <v-col cols="9" class="ma-0 pa-0 pl-2">
-        <svg viewBox="0 0 100 5">
+        <svg viewBox="0 0 100 3">
           <defs>
             <linearGradient :id="`gradient-${datasetId}`" x1="0" x2="1" y1="0" y2="0">
               <stop
@@ -16,7 +16,7 @@
               />
             </linearGradient>
           </defs>
-          <rect :fill="`url(#gradient-${datasetId})`" width="100" height="10" x="0" y="0" />
+          <rect :fill="`url(#gradient-${datasetId})`" width="100" height="5" x="0" y="0" />
         </svg>
       </v-col>
     </v-row>

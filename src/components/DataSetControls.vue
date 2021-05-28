@@ -7,6 +7,7 @@
       <v-expansion-panels
         accordion
         flat
+        tile
         :value="activePanels"
         multiple
         readonly
@@ -83,6 +84,7 @@
                   @change="updateRasterBand"
                 />
               <div v-if="activeRasterLayer === dataset.id">
+                <br>
                 <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
               </div>
             </v-expansion-panel-content>
