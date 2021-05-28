@@ -62,20 +62,20 @@
                   :anchor-attributes="{ target: '_blank' }"
                   :watches="['source']"
                   />
-                </div>
-                <v-select
-                  class="pa-2"
-                  v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
-                  v-model="selectedLayer"
-                  :value="selectedLayer"
-                  :items="dataset.layerOptions"
-                  :label="`Select layer`"
-                  return-object
-                  flat
-                  item-text="name"
-                  item-value="band"
-                  dense
-                />
+              </div>
+              <v-select
+                class="pa-2"
+                v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
+                v-model="selectedLayer"
+                :value="selectedLayer"
+                :items="dataset.layerOptions"
+                :label="`Select layer`"
+                return-object
+                flat
+                item-text="name"
+                item-value="band"
+                dense
+              />
               <div v-if="activeRasterLayer === dataset.id">
                 <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
               </div>
