@@ -207,6 +207,9 @@ export default {
     checkLayerType (id, type) {
       // Check if type is in one of the titles of the children
       const layers = _.get(this.datasets, `${id}.links`)
+      if (!layers) {
+        return false
+      }
       const typeArray = layers.map(layer => {
         const title = _.get(layer, 'title')
         if (!title) {

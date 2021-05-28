@@ -90,6 +90,7 @@ export const actions = {
 
         const childs = datasets.links.filter(ds => ds.rel === 'child')
         return childs.forEach(child => {
+          commit('addDataset', { id: child.title })
           return getCatalog(child.href)
             .then(dataset => {
               commit('addDataset', dataset)
