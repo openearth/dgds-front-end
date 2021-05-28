@@ -11,7 +11,41 @@
         <div
           id="user-agreements"
           class="markdown"
-          v-html="UserAgreements"
+          v-html="UserAgreements1"
+          :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+        />
+        <div v-for="(dataset, index, count) in getDatasets"
+          :key="dataset.id">
+          2-{{ count }}.
+          <span
+            id="user-agreements"
+            class="markdown"
+            v-html="dataset['license_use']"
+            :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+          />
+          <br><br>
+        </div>
+        <div
+          id="user-agreements"
+          class="markdown"
+          v-html="UserAgreements2"
+          :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+        />
+        <div v-for="(dataset, index, count) in getDatasets"
+          :key="dataset.id">
+          6.2-{{ count }}.
+          <span
+            id="user-agreements"
+            class="markdown"
+            v-html="dataset['license_warranty']"
+            :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+          />
+          <br><br>
+        </div>
+        <div
+          id="user-agreements"
+          class="markdown"
+          v-html="UserAgreements3"
           :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
         />
         <div
@@ -55,8 +89,11 @@
 </template>
 
 <script>
-import UserAgreements from '@/assets/docs/user-agreements.md'
+import UserAgreements1 from '@/assets/docs/user-agreements - part 1.md'
+import UserAgreements2 from '@/assets/docs/user-agreements - part 2.md'
+import UserAgreements3 from '@/assets/docs/user-agreements - part 3.md'
 import CookieAgreement from '@/assets/docs/cookie-agreements.md'
+import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import * as Cookies from 'tiny-cookie'
 
@@ -64,7 +101,9 @@ export default {
   data () {
     return {
       open: true,
-      UserAgreements,
+      UserAgreements1,
+      UserAgreements2,
+      UserAgreements3,
       CookieAgreement,
       agree: false,
       cookie: false
@@ -76,6 +115,9 @@ export default {
     if (this.agree) {
       this.open = false
     }
+  },
+  computed: {
+    ...mapGetters(['getDatasets'])
   },
   validations: {
     cookie: {
