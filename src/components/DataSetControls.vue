@@ -102,6 +102,11 @@ import { mapGetters, mapActions, mapMutations } from 'vuex'
 import marked from 'marked'
 import _ from 'lodash'
 
+const renderer = new marked.Renderer()
+renderer.link = function (href, title, text) {
+  return `<a target="_blank" href="${href}" title="${title}">${text}</a>`
+}
+
 export default {
   props: {
     datasets: {
@@ -157,7 +162,7 @@ export default {
     ...mapMutations(['setActiveRasterLayerId', 'setRasterData', 'setRasterProperty', 'setLoadingRasterLayers']),
     ...mapActions(['loadActiveRasterData', 'loadActiveRasterLayer']),
     markedTooltip (text) {
-      return marked(text)
+      return marked(text, { renderer: renderer })
     },
     datasetLoading (datasetId) {
       if (this.activeRasterLayer === datasetId) {
