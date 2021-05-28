@@ -7,6 +7,7 @@
       <v-expansion-panels
         accordion
         flat
+        tile
         :value="activePanels"
         multiple
         readonly
@@ -39,6 +40,7 @@
                 <v-col cols="1" class="ma-auto pa-0">
                   <v-radio
                     dense
+                    class="radio"
                     v-if="checkLayerType(dataset.id, 'gee')"
                     :value="dataset.id"
                     @click="setRasterLayer(dataset.id)"
@@ -60,20 +62,20 @@
                   :anchor-attributes="{ target: '_blank' }"
                   :watches="['source']"
                   />
-                </div>
-                <v-select
-                  class="pa-2"
-                  v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
-                  v-model="selectedLayer"
-                  :value="selectedLayer"
-                  :items="dataset.layerOptions"
-                  :label="`Select layer`"
-                  return-object
-                  flat
-                  item-text="name"
-                  item-value="band"
-                  dense
-                />
+              </div>
+              <v-select
+                class="pa-2"
+                v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
+                v-model="selectedLayer"
+                :value="selectedLayer"
+                :items="dataset.layerOptions"
+                :label="`Select layer`"
+                return-object
+                flat
+                item-text="name"
+                item-value="band"
+                dense
+              />
               <div v-if="activeRasterLayer === dataset.id">
                 <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
               </div>
@@ -119,7 +121,6 @@ export default {
         const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id
         return activeDataset ? index : []
       })
-      console.log('setting active paels', this.activeRasterLayer, active)
       return active
     }
   },
@@ -259,5 +260,9 @@ export default {
 
 .v-expansion-panel {
   border-color: var(--v-background-base);
+}
+
+.v-input--selection-controls__input .v-icon {
+  color: var(--v-primary-darken2);
 }
 </style>
