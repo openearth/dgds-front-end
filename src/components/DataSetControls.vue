@@ -76,7 +76,7 @@
                   item-value="band"
                   dense
                 />
-              <div v-if="checkRaster(dataset.id) && activeRasterLayer === dataset.id">
+              <div v-if="activeRasterLayer === dataset.id">
                 <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
               </div>
             </v-expansion-panel-content>
@@ -121,7 +121,6 @@ export default {
         const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id
         return activeDataset ? index : []
       })
-      console.log('setting active paels', this.activeRasterLayer, active)
       return active
     }
   },
