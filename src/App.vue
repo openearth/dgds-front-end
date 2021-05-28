@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <side-menu @toggle-account="togglePanel('account')" @toggle-about="togglePanel('about')"  />
+    <side-menu @toggle-tour="$tours.introduction.start()" @toggle-account="togglePanel('account')" @toggle-about="togglePanel('about')"  />
     <v-main>
       <router-view />
       <about-panel v-if="panel === 'about'" @close-about="panel = false" />
@@ -24,6 +24,7 @@ import TimeStamp from '@/components/TimeStamp.vue'
 import auth from '@/components/auth'
 import LegalDialog from '@/components/LegalDialog.vue'
 import { tourConfig, tourSteps } from '@/plugins/vue-tour'
+import * as Cookies from 'tiny-cookie'
 
 import { mapMutations, mapActions, mapGetters } from 'vuex'
 
@@ -44,7 +45,7 @@ export default {
     panel: false
   }),
   mounted () {
-    this.$tours.introduction.start()
+    this.showTour()
     this.loadDatasets()
     this.getUser()
   },
@@ -73,6 +74,12 @@ export default {
         this.panel = false
       } else {
         this.panel = name
+      }
+    },
+    showTour (hideTour = Cookies.get('hideTour')) {
+      if (!hideTour) {
+        this.$tours.introduction.start()
+        Cookies.set('hideTour', false)
       }
     }
   }
