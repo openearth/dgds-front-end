@@ -40,12 +40,19 @@
                 <v-col cols="1" class="ma-auto pa-0">
                   <v-radio
                     dense
-                    class="radio"
-                    v-if="checkLayerType(dataset.id, 'gee')"
+                    class="ma-auto radio"
+                    v-show="checkLayerType(dataset.id, 'gee') && !datasetLoading(dataset.id)"
                     :value="dataset.id"
                     @click="setRasterLayer(dataset.id)"
                     color="formActive"
                   ></v-radio>
+                  <v-progress-circular
+                    dense
+                    class="ma-auto"
+                    v-show="checkLayerType(dataset.id, 'gee') && datasetLoading(dataset.id)"
+                    indeterminate
+                    color="formActive"
+                  ></v-progress-circular>
                 </v-col>
                 <v-col cols="1" class="ma-auto pa-0">
                   <v-btn icon class="my-auto" @click="onTooltipClick(dataset.id)" >
@@ -62,21 +69,22 @@
                   :anchor-attributes="{ target: '_blank' }"
                   :watches="['source']"
                   />
-              </div>
-              <v-select
-                class="pa-2"
-                v-if="getActiveRasterLayer === dataset.id && dataset.layerOptions"
-                v-model="selectedLayer"
-                :value="selectedLayer"
-                :items="dataset.layerOptions"
-                :label="`Select layer`"
-                return-object
-                flat
-                item-text="name"
-                item-value="band"
-                dense
-              />
+                </div>
+                <v-select
+                  class="pa-2"
+                  v-if="getActiveRasterLayer === dataset.id && hasBands"
+                  v-model="selectedLayer"
+                  :value="selectedLayer"
+                  :items="activeRasterData.summaries['eo:bands']"
+                  :label="`Select layer`"
+                  flat
+                  item-text="description"
+                  item-value="name"
+                  dense
+                  @change="updateRasterBand"
+                />
               <div v-if="activeRasterLayer === dataset.id">
+                <br>
                 <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
               </div>
             </v-expansion-panel-content>
@@ -110,7 +118,8 @@ export default {
       'getActiveRasterLayer',
       'getActiveTheme',
       'getDatasets',
-      'activeRasterData'
+      'activeRasterData',
+      'loadingRasterLayers'
     ]),
     themeName () {
       return _.get(this.getActiveTheme, 'name') || 'All datasets'
@@ -122,23 +131,40 @@ export default {
         return activeDataset ? index : []
       })
       return active
+    },
+    hasBands () {
+      return _.has(this.activeRasterData, 'summaries.eo:bands')
+    },
+    selectedLayer: {
+      get () {
+        return _.get(this.activeRasterData, 'properties.deltares:band', null)
+      },
+      set (val) {
+        this.setRasterProperty({ prop: 'deltares:band', data: val })
+      }
     }
   },
   data () {
     return {
       hoverId: '',
-      activeRasterLayer: '',
-      selectedLayer: ''
+      activeRasterLayer: ''
     }
   },
   mounted () {
     this.activeRasterLayer = this.getActiveRasterLayer
   },
   methods: {
-    ...mapMutations(['setActiveRasterLayerId', 'setRasterData']),
-    ...mapActions(['loadActiveRasterData']),
+    ...mapMutations(['setActiveRasterLayerId', 'setRasterData', 'setRasterProperty', 'setLoadingRasterLayers']),
+    ...mapActions(['loadActiveRasterData', 'loadActiveRasterLayer']),
     markedTooltip (text) {
       return marked(text)
+    },
+    datasetLoading (datasetId) {
+      if (this.activeRasterLayer === datasetId) {
+        return this.loadingRasterLayers
+      } else {
+        return false
+      }
     },
     onTooltipClick (id) {
       this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
@@ -181,6 +207,9 @@ export default {
     checkLayerType (id, type) {
       // Check if type is in one of the titles of the children
       const layers = _.get(this.datasets, `${id}.links`)
+      if (!layers) {
+        return false
+      }
       const typeArray = layers.map(layer => {
         const title = _.get(layer, 'title')
         if (!title) {
@@ -192,11 +221,16 @@ export default {
       })
       return typeArray.includes(true)
     },
+    updateRasterBand () {
+      this.loadActiveRasterLayer()
+      this.activeRasterLayer = this.getActiveRasterLayer
+    },
     setRasterLayer (id) {
       if (this.getActiveRasterLayer === id) {
         id = null
       }
       this.setRasterData({})
+      this.setLoadingRasterLayers(true)
       this.setActiveRasterLayerId(id)
       this.loadActiveRasterData(id)
       this.activeRasterLayer = this.getActiveRasterLayer

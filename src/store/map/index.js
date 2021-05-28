@@ -64,6 +64,9 @@ export const mutations = {
   setRasterData (state, { data }) {
     state.activeRasterData = data
   },
+  setRasterProperty (state, { prop, data }) {
+    state.activeRasterData.layer.properties[prop] = data
+  },
   addActiveRasterLayer (state, { data }) {
     Vue.set(state.activeRasterData, 'layer', data)
   },
@@ -87,6 +90,7 @@ export const actions = {
 
         const childs = datasets.links.filter(ds => ds.rel === 'child')
         return childs.forEach(child => {
+          commit('addDataset', { id: child.title })
           return getCatalog(child.href)
             .then(dataset => {
               commit('addDataset', dataset)
@@ -146,8 +150,18 @@ export const actions = {
         return getters.activeTimestamp === item.date
       })
     }
+
+    // If no matching timestamp found by child, use collection of invalid date
+    if (!rasterLayer) {
+      rasterLayer = state.activeRasterData.links.find(item => item.rel === 'item')
+    }
+
     const properties = _.get(state.activeRasterData, 'layer.properties', {})
     const url = new URL(rasterLayer.href)
+
+    if (_.get(properties, 'deltares:band')) {
+      url.searchParams.set('band', _.get(properties, 'deltares:band'))
+    }
 
     if (_.get(properties, 'deltares:min')) {
       url.searchParams.set('min', _.get(properties, 'deltares:min'))
@@ -158,6 +172,7 @@ export const actions = {
     getCatalog(url.href)
       .then(dataset => {
         commit('addActiveRasterLayer', { data: dataset })
+        commit('setLoadingRasterLayers', false)
       })
   },
 
@@ -259,8 +274,7 @@ export const actions = {
       })
         .then(response => response.json())
         .then(response => {
-          const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltaers:pointData`)
-
+          const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltares:pointData`)
           // Depending on the pointDataType different responses are expected.
           // images -> just an url to a svg image
           // line or scatter -> data to create echarts graph
@@ -269,7 +283,8 @@ export const actions = {
               id: datasetId,
               data: {
                 [locationId]: {
-                  imageUrl: response
+                  imageUrl: response,
+                  type: pointDataType
                 }
               }
             })
@@ -288,7 +303,8 @@ export const actions = {
               data: {
                 [locationId]: {
                   category,
-                  serie
+                  serie,
+                  type: pointDataType
                 }
               }
             })
@@ -342,6 +358,9 @@ export const getters = {
   activeVectorData (state) {
     return state.vectorDataCollection
   },
+  loadingRasterLayers (state) {
+    return state.loadingRasterLayers
+  },
   activePointDataPerDataset (state) {
     const { activeLocationIds, activeDatasetIds, datasets } = state
     const activePointDataPerDataset = {}
@@ -358,10 +377,9 @@ export const getters = {
       activePointDataPerDataset[locationId] = activePointData.map(datasetId => {
         const data = _.get(datasets, `${datasetId}`)
         const locData = _.get(data.pointData, [locationId])
-        locData.datasetName = _.get(data, 'metadata.name')
-        locData.units = _.get(data, 'metadata.units')
-        locData.type = _.get(data, 'metadata.pointData')
-        locData.id = _.get(data, 'metadata.id')
+        locData.datasetName = _.get(data, 'title')
+        locData.units = _.get(data, 'properties.deltares:units')
+        locData.id = _.get(data, 'id')
         return locData
       })
     })
