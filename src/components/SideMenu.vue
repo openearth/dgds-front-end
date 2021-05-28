@@ -39,6 +39,14 @@
       <v-spacer />
       <template v-slot:append>
         <v-list dense class="pa-0">
+          <v-list-item @click="$emit('toggle-tour')">
+            <v-list-item-icon class="mr-6">
+              <v-icon>mdi-flag-outline</v-icon>
+            </v-list-item-icon>
+            <v-list-item-content>
+              <v-list-item-title>Tour</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
           <v-list-item-group class="bottom-menu" active-class="active-theme">
             <v-list-item @click="$emit('toggle-about')">
               <v-list-item-icon class="mr-6">
@@ -77,7 +85,6 @@ export default {
   data () {
     return {
       drawer: true,
-      items: [{ title: 'Editor', name: 'editor', icon: 'mdi-circle-edit-outline' }],
       mini: true,
       activeTheme: null
     }
