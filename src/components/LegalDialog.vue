@@ -15,15 +15,13 @@
           :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
         />
         <div v-for="(dataset, index, count) in getDatasets"
-          :key="dataset.id">
-          2-{{ count }}.
+          :key="`license_use-${dataset.id}`">
           <span
             id="user-agreements"
             class="markdown"
-            v-html="dataset['license_use']"
+            v-html="markedText(`- 2.${ count + 2 }.  ${dataset['license_use']}`)"
             :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
           />
-          <br><br>
         </div>
         <div
           id="user-agreements"
@@ -32,15 +30,13 @@
           :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
         />
         <div v-for="(dataset, index, count) in getDatasets"
-          :key="dataset.id">
-          6.2-{{ count }}.
+          :key="`license_warranty-${dataset.id}`">
           <span
             id="user-agreements"
             class="markdown"
-            v-html="dataset['license_warranty']"
+            v-html="markedText(`- 6.${ count + 2 }.  ${dataset['license_warranty']}`)"
             :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
           />
-          <br><br>
         </div>
         <div
           id="user-agreements"
@@ -50,7 +46,7 @@
         />
         <div
           class="markdown"
-          v-html="CookieAgreement"
+          v-html="markedText(CookieAgreement)"
           :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
         />
       </div>
@@ -96,6 +92,9 @@ import CookieAgreement from '@/assets/docs/cookie-agreements.md'
 import { mapGetters } from 'vuex'
 import { required } from 'vuelidate/lib/validators'
 import * as Cookies from 'tiny-cookie'
+import marked from 'marked'
+
+const renderer = new marked.Renderer()
 
 export default {
   data () {
@@ -138,6 +137,9 @@ export default {
         Cookies.set('cookie', this.cookie)
       }
       this.open = false
+    },
+    markedText (text) {
+      return marked(text, { renderer: renderer })
     }
   }
 }
