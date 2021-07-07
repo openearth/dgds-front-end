@@ -12,8 +12,8 @@ describe('loadDatasets', () => {
         keywords: [{ id: 'theme1', name: 'theme1Name' }]
       },
       links: [
-        { rel: 'child', href: 'child1', id: 'child1' },
-        { rel: 'child', href: 'child2', id: 'child2' }
+        { rel: 'child', href: 'child1', id: 'child1', title: 'id1' },
+        { rel: 'child', href: 'child2', id: 'child2', title: 'id2' }
       ]
     }
     const state = {
@@ -34,11 +34,16 @@ describe('loadDatasets', () => {
       'addTheme',
       { id: 'theme1', name: 'theme1Name' }
     ])
-
     expect(commit.mock.calls[1]).toEqual([
-      'addDataset', dataset
+      'addDataset', { id: 'id1' }
     ])
     expect(commit.mock.calls[2]).toEqual([
+      'addDataset', { id: 'id2' }
+    ])
+    expect(commit.mock.calls[3]).toEqual([
+      'addDataset', dataset
+    ])
+    expect(commit.mock.calls[4]).toEqual([
       'addDataset', dataset2
     ])
     expect(dispatch.mock.calls[0]).toEqual([
@@ -112,7 +117,7 @@ describe('loadActiveRasterLayer', () => {
         }
       },
       links: [
-        { date: '01-02-2021 09:30', href: 'https://www.url.nl'}
+        { date: '01-02-2021 09:30', href: 'https://www.url.nl' }
       ]
     }
   }
@@ -132,7 +137,7 @@ describe('loadActiveRasterLayer', () => {
 
   test('LoadActiveRasterLayer if  rasterlayer is defined', async () => {
     getCatalog.mockResolvedValueOnce(dataset)
-    const rasterLayer = { date: '01-02-2021 09:30', href: 'https://www.url.nl?min=5&max=6'}
+    const rasterLayer = { date: '01-02-2021 09:30', href: 'https://www.url.nl?min=5&max=6' }
     await actions.loadActiveRasterLayer({ state, getters, commit }, rasterLayer)
     expect(commit.mock.calls[0]).toEqual([
       'addActiveRasterLayer', { data: dataset }
@@ -206,7 +211,7 @@ describe('loadVectorLayer', () => {
     }
     actions.loadVectorLayer({ state, dispatch }, dataset)
     expect(dispatch.mock.calls[0]).toEqual([
-      'loadLayerCollection', {collectionUrl: 'child1', setCollectionCommit: 'setVectorData', datasetId: 'id1'}
+      'loadLayerCollection', { collectionUrl: 'child1', setCollectionCommit: 'setVectorData', datasetId: 'id1' }
     ])
   })
 })

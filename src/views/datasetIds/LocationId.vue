@@ -102,7 +102,7 @@ export default {
     }
   },
   mounted () {
-    this.updateLocationPanel()
+    setTimeout(this.updateLocationPanel, 3000)
     this.expandedDatasets = [...Array(this.datasets.length).keys()]
   },
   destroyed () {

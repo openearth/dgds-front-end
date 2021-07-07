@@ -197,7 +197,11 @@ export const actions = {
     }
     if (!_.has(state.vectorDataCollection, dataset.id)) {
       const links = _.get(dataset, 'links', [])
-      const collectionUrl = links.find(child => child.title === `${dataset.id}-mapbox`).href
+      const item = links.find(child => child.title === `${dataset.id}-mapbox`)
+      const collectionUrl = _.get(item, 'href')
+      if (!collectionUrl) {
+        return
+      }
       dispatch('loadLayerCollection', {
         collectionUrl,
         setCollectionCommit: 'setVectorData',
@@ -264,6 +268,9 @@ export const actions = {
       }
 
       const url = _.get(state, `vectorDataCollection[${datasetId}].assets.graph.href`)
+      if (!url) {
+        return
+      }
       fetch(url, {
         method: 'POST',
         body: JSON.stringify(parameters),

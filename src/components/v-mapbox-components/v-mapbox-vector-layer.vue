@@ -30,6 +30,22 @@ export default {
     if (this.map) {
       this.updateMap()
     }
+    const location = this.$route.params.locationId
+    setTimeout(() => {
+      if (location) {
+        // If a location is chosen beforehand, find the features on the map and zoom to that location
+        const features = this.map.queryRenderedFeatures()
+        const feature = features.find(feat => feat.properties.locationId === location)
+        this.map.panTo({
+          lng: feature.geometry.coordinates[0],
+          lat: feature.geometry.coordinates[1]
+        })
+        this.$emit('select-locations', {
+          features: [feature],
+          geometry: feature.geometry
+        })
+      }
+    }, 1500)
   },
   beforeDestroy () {
     const layer = this.layer
