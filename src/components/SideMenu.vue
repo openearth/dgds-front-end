@@ -46,7 +46,7 @@
                 <v-list-item-title>Tour</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item-group class="bottom-menu" active-class="active-theme">
+            <v-list-item-group active-class="active-theme">
               <v-list-item @click="$emit('toggle-about')">
                 <v-list-item-icon class="mr-6">
                   <custom-icon name="info" />
@@ -110,11 +110,6 @@ export default {
 </script>
 
 <style>
-.bottom-menu {
-  position: absolute;
-  bottom: 0;
-}
-
 .active-theme {
   color: var(--v-blue100-base) !important;
 }
