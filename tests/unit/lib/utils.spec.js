@@ -19,14 +19,14 @@ describe('includesIn', () => {
 
 describe('momentFormat', () => {
   test('formats a timestamp with momentjs', () => {
-    const result = utils.momentFormat('MM-DD-YYYY \n HH:mm', '2019-03-27T00:00:00Z')
-    expect(result).toBe('03-27-2019  01:00')
+    const result = utils.momentFormat('MM-DD-YYYY \n HH:mm', '2019-03-27 00:00')
+    expect(result).toBe('03-27-2019  00:00')
   })
 
   test('can be called curried', () => {
     const formatAsMMDDYYY = utils.momentFormat('MM-DD-YYYY \n HH:mm')
 
-    expect(formatAsMMDDYYY('2019-03-27T00:00:00Z')).toBe('03-27-2019  01:00')
+    expect(formatAsMMDDYYY('2019-03-27 00:00')).toBe('03-27-2019  00:00')
   })
 })
 
