@@ -127,7 +127,7 @@ export default {
       'loadingRasterLayers'
     ]),
     themeName () {
-      return _.get(this.getActiveTheme, 'name') || 'All datasets'
+      return this.getActiveTheme || 'All datasets'
     },
     activePanels () {
       // map which panel is showing the legend layer or the information layer)

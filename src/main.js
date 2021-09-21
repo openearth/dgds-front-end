@@ -7,6 +7,7 @@ import vuetify from './plugins/vuetify'
 import './plugins/vue2mapbox-gl'
 import './plugins/vue-tour'
 import './plugins/vuelidate'
+import './plugins/vue-gtag'
 
 import '@/css/main.css'
 import '@/css/typography.css'

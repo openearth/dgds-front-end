@@ -8,7 +8,6 @@ renderer.link = function (href, title, text) {
 module.exports = {
   pwa: {
     name: 'BlueEarth Data services',
-    workboxPluginMode: 'InjectManifest',
     manifestOptions: {
       icons: [
         { src: 'favicon.ico', type: 'image/c-icon' }
