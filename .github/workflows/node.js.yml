@@ -34,6 +34,16 @@ jobs:
       run: npm run test:unit
     - name: Build
       run: npm run build && zip -r dgds-frontend.zip dist
+      env: 
+        VUE_APP_MAPBOX_TOKEN: ${{ secrets.VUE_APP_MAPBOX_TOKEN }}
+        VUE_APP_SERVER_URL: ${{ secrets.VUE_APP_SERVER_URL }}
+        VUE_APP_CATALOG_URL: ${{ secrets.VUE_APP_CATALOG_URL }}
+
+        VUE_APP_AUTH_AUTHORITY: ${{ secrets.VUE_APP_AUTH_AUTHORITY }}
+        VUE_APP_AUTH_ID: ${{ secrets.VUE_APP_AUTH_ID }}
+        VUE_APP_AUTH_TYPE: ${{ secrets.VUE_APP_AUTH_TYPE }}
+        VUE_APP_AUTH_SCOPE: ${{ secrets.VUE_APP_AUTH_SCOPE }}
+
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
