@@ -199,14 +199,14 @@ export default {
         }
       }
       params.datasetIds = newParams
-      let path = `/${params.datasetIds}`
+      let path = `/data/${params.datasetIds}`
       if (_.has(params, 'locationId')) {
-        path = `${path}/${params.locationId}`
+        path = `${path}/data/${params.locationId}`
       }
       if (newParams) {
         this.$router.push({ path, params })
       } else {
-        this.$router.push('/')
+        this.$router.push('/data')
       }
     },
     checkLayerType (id, type) {
