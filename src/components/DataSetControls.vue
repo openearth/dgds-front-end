@@ -201,7 +201,7 @@ export default {
       params.datasetIds = newParams
       let path = `/data/${params.datasetIds}`
       if (_.has(params, 'locationId')) {
-        path = `${path}/data/${params.locationId}`
+        path = `/data/${params.datasetIds}/${params.locationId}`
       }
       if (newParams) {
         this.$router.push({ path, params })
