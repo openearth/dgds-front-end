@@ -25,7 +25,8 @@ export const light = {
   success: '#028200',
   turqoise: '#28cc9b',
   warning: '#f79502',
-  white100: '#ffffff'
+  white100: '#ffffff',
+  blueDeltares: '#0a28a3'
 }
 
 export const dark = {
@@ -52,7 +53,8 @@ export const dark = {
   success: '#028200',
   turqoise: '#33ffc2',
   warning: '#f79502',
-  white100: '#ffffff'
+  white100: '#ffffff',
+  blueDeltares: '#0a28a3'
 }
 
 const context = {
@@ -131,6 +133,10 @@ const context = {
   formActive: {
     light: light.blue100,
     dark: dark.blue80
+  },
+  stepperActive: {
+    light: light.blueDeltares,
+    dark: dark.blueDeltares
   }
 }
 
