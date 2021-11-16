@@ -119,7 +119,7 @@ export default {
     },
     close () {
       this.$router.push({
-        path: `/${this.$route.params.datasetIds}`,
+        path: `/data/${this.$route.params.datasetIds}`,
         params: { datasetIds: this.$route.params.datasetIds }
       })
     }

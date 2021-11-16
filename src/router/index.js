@@ -3,15 +3,17 @@ import VueRouter from 'vue-router'
 import Silent from '../views/auth/silent'
 import Callback from '../views/auth/callback'
 import Logout from '../views/auth/logout'
-import DatasetIds from '../views/DatasetIds'
-import LocationId from '../views/datasetIds/LocationId'
-
+import DatasetIds from '../views/data/DatasetIds'
+import LocationId from '../views/data/datasetIds/LocationId'
+import Stories from '../views/Stories'
+import DataLayers from '../views/DataLayers'
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'home'
+    name: 'home',
+    redirect: '/data'
   },
   {
     path: '/auth/silent',
@@ -23,12 +25,19 @@ const routes = [
     path: '/auth/logout',
     component: Logout
   }, {
-    path: '/:datasetIds',
-    component: DatasetIds,
+    path: '/data',
+    component: DataLayers,
     children: [{
-      path: ':locationId',
-      component: LocationId
+      path: ':datasetIds',
+      component: DatasetIds,
+      children: [{
+        path: ':locationId',
+        component: LocationId
+      }]
     }]
+  }, {
+    path: '/stories',
+    component: Stories
   }
 ]
 
