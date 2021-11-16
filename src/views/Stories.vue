@@ -9,6 +9,8 @@
           <v-card
             color="rgba(0, 0, 0, 0)"
             rounded
+            outlined
+            class="stories-card"
           >
           <v-card-title>
             Theme
@@ -82,5 +84,9 @@ export default {
   position: absolute;
   bottom: var(--spacing-default);
   right: var(--spacing-default);
+}
+
+.stories-card {
+  border-color: white !important;
 }
 </style>
