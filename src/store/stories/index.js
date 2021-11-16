@@ -7,6 +7,7 @@ export const state = getDefaultState()
 
 export const mutations = {
   setStories (state, stories) {
+    console.log(stories)
     state.stories = stories
   },
   setNews (state, news) {
@@ -17,15 +18,15 @@ export const mutations = {
 export const actions = {
   loadNews ({ dispatch }) {
     const url = `${process.env.VUE_APP_NEWS_CONFIGURATION_URL}`
-    dispatch('loadConfiguration', url, 'setNews')
+    dispatch('loadConfiguration', { url: url, responseAction: 'setNews' })
   },
 
   loadStories ({ dispatch }) {
     const url = `${process.env.VUE_APP_STORIES_CONFIGURATION_URL}`
-    dispatch('loadConfiguration', url, 'setStories')
+    dispatch('loadConfiguration', { url: url, responseAction: 'setStories' })
   },
 
-  loadConfiguration ({ commit }, url, responseAction) {
+  loadConfiguration ({ commit }, { url, responseAction }) {
     fetch(url)
       .then(res => res.json())
       .then(response => {
