@@ -10,30 +10,32 @@
       <v-spacer />
         <v-stepper
           class="stepper pa-0"
-          height="57px"
-          width="500px"
+          height="50px"
+          width="650px"
           flat
           non-linear
         >
-          <v-stepper-header class="stepper-header pa-0">
+          <v-stepper-header class="stepper-header">
             <v-stepper-step
-              color="stepperActive"
+              :color="storiesStepColor"
               complete
               editable
               edit-icon="mdi-account-details"
               step="1"
               class="stepper-icon py-0"
+              @click="goToStories"
             >
               Stories
             </v-stepper-step>
-            <v-divider />
+            <v-divider/>
             <v-stepper-step
               class="py-0"
-              color="quite"
+              :color="dataStepColor"
               complete
               editable
               edit-icon="mdi-database"
               step="2"
+              @click="goToData"
             >
               Data layers
             </v-stepper-step>
@@ -41,7 +43,7 @@
         </v-stepper>
         <v-spacer />
       </v-app-bar>
-      <side-menu v-if="page===2" @toggle-tour="$tours.introduction.start()" @toggle-account="togglePanel('account')" @toggle-about="togglePanel('about')"  />
+      <side-menu @toggle-tour="$tours.introduction.start()" @toggle-account="togglePanel('account')" @toggle-about="togglePanel('about')"  />
       <v-main app>
         <router-view />
         <about-panel v-if="panel === 'about'" @close-about="panel = false" />
@@ -58,7 +60,7 @@ import AccountPanel from '@/components/AccountPanel.vue'
 import auth from '@/components/auth'
 import LegalDialog from '@/components/LegalDialog.vue'
 
-import { mapMutations } from 'vuex'
+import { mapMutations, mapActions } from 'vuex'
 
 export default {
   name: 'App',
@@ -74,8 +76,20 @@ export default {
   }),
   mounted () {
     this.getUser()
+    this.loadDatasets()
+  },
+  computed: {
+    storiesStepColor () {
+      const { path } = this.$route
+      return path.includes('stories') ? 'stepperActive' : 'quite'
+    },
+    dataStepColor () {
+      const { path } = this.$route
+      return path.includes('data') ? 'stepperActive' : 'quite'
+    }
   },
   methods: {
+    ...mapActions({ loadDatasets: 'loadDatasets' }),
     ...mapMutations(['setUser']),
     getUser () {
       auth
@@ -97,6 +111,12 @@ export default {
       } else {
         this.panel = name
       }
+    },
+    goToStories () {
+      this.$router.push({ name: 'stories' })
+    },
+    goToData () {
+      this.$router.push({ name: 'data' })
     }
   }
 }
@@ -104,9 +124,11 @@ export default {
 <style lang="css" scoped>
 .stepper {
   width: 400px;
+  height: 57px;
 }
 
 .stepper-header {
   background-color: var(--v-background-base);
+   padding: 0px 0px 16px 2px;
 }
 </style>
