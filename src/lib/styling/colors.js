@@ -25,8 +25,7 @@ export const light = {
   success: '#028200',
   turqoise: '#28cc9b',
   warning: '#f79502',
-  white100: '#ffffff',
-  blueDeltares: '#0a28a3'
+  white100: '#ffffff'
 }
 
 export const dark = {
