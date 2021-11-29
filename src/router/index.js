@@ -25,6 +25,7 @@ const routes = [
     path: '/auth/logout',
     component: Logout
   }, {
+    name: 'data',
     path: '/data',
     component: DataLayers,
     children: [{
@@ -36,6 +37,7 @@ const routes = [
       }]
     }]
   }, {
+    name: 'stories',
     path: '/stories',
     component: Stories
   }

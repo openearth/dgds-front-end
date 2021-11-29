@@ -18,7 +18,7 @@
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
-        <v-list-item-group color="primary" active-class="active-theme">
+        <v-list-item-group color="primary" active-class="active-theme" v-if="dataRoute">
           <v-list-item
             v-for="item in getThemes"
             :key="item"
@@ -80,7 +80,11 @@ export default {
     CustomIcon
   },
   computed: {
-    ...mapGetters(['getThemes', 'getActiveTheme'])
+    ...mapGetters(['getThemes', 'getActiveTheme']),
+    dataRoute () {
+      const { path } = this.$route
+      return !!path.includes('data')
+    }
   },
   data () {
     return {

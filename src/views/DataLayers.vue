@@ -15,7 +15,7 @@ import TimeStamp from '@/components/TimeStamp.vue'
 import { tourConfig, tourSteps } from '@/plugins/vue-tour'
 import * as Cookies from 'tiny-cookie'
 
-import { mapActions, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'DataLayers',
@@ -30,7 +30,6 @@ export default {
   }),
   mounted () {
     this.showTour()
-    this.loadDatasets()
   },
   computed: {
     ...mapGetters(['datasetsInActiveTheme', 'getActiveRasterLayer', 'activeTimestamp']),
@@ -39,7 +38,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions({ loadDatasets: 'loadDatasets' }),
     showTour (hideTour = Cookies.get('hideTour')) {
       if (!hideTour) {
         this.$tours.introduction.start()
