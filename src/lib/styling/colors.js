@@ -133,10 +133,6 @@ const context = {
   formActive: {
     light: light.blue100,
     dark: dark.blue80
-  },
-  stepperActive: {
-    light: light.blueDeltares,
-    dark: dark.blueDeltares
   }
 }
 

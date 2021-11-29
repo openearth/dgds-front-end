@@ -10,8 +10,6 @@
       <v-spacer />
         <v-stepper
           class="stepper pa-0"
-          height="50px"
-          width="650px"
           flat
           non-linear
         >
@@ -81,11 +79,11 @@ export default {
   computed: {
     storiesStepColor () {
       const { path } = this.$route
-      return path.includes('stories') ? 'stepperActive' : 'quite'
+      return path.includes('stories') ? 'blueDeltares' : 'transparent'
     },
     dataStepColor () {
       const { path } = this.$route
-      return path.includes('data') ? 'stepperActive' : 'quite'
+      return path.includes('data') ? 'blueDeltares' : 'transparent'
     }
   },
   methods: {
@@ -129,6 +127,6 @@ export default {
 
 .stepper-header {
   background-color: var(--v-background-base);
-   padding: 0px 0px 16px 2px;
+  padding: 0px 0px 16px 2px;
 }
 </style>
