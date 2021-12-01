@@ -6,42 +6,18 @@
           <h2 class="h2">
             Stories
           </h2>
-          <v-card
-            color="rgba(0, 0, 0, 0)"
-            rounded
-            outlined
-            class="stories-card"
-          >
-          <v-card-title>
-            Theme
-          </v-card-title>
-          <v-list
-            color="rgba(0, 0, 0, 0)"
-            >
-            <v-list-item
-              v-for="story in stories"
-              :key="story.ID"
-            >
-              <v-list-item-avatar>
-                <v-img :src="story.icon"></v-img>
-              </v-list-item-avatar>
-
-              <v-list-item-content>
-                <v-list-item-title v-text="story.title"></v-list-item-title>
-              </v-list-item-content>
-
-              <v-list-item-action>
-                <v-btn icon :href="story.URL" target="_blank">
-                  <v-icon color="grey lighten-1">mdi-link</v-icon>
-                </v-btn>
-              </v-list-item-action>
-            </v-list-item>
-          </v-list>
-          </v-card>
+          <div v-for="theme in stories" :key="theme.id">
+             <stories-layout :theme="theme.theme" :stories="theme.stories"/>
+          </div>
         </v-container>
       </v-col>
       <v-col cols="4" class="pa-4">
-        news
+         <v-container>
+          <h2 class="h2">
+            News
+          </h2>
+          <news-layout :feeds="news"/>
+        </v-container>
       </v-col>
     </v-row>
     <v-img
@@ -55,9 +31,15 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import StoriesLayout from '@/components/StoriesLayout.vue'
+import NewsLayout from '@/components/NewsLayout.vue'
 
 export default {
   name: 'Stories',
+  components: {
+    StoriesLayout,
+    NewsLayout
+  },
   mounted () {
     this.loadNews()
     this.loadStories()
@@ -86,7 +68,4 @@ export default {
   right: var(--spacing-default);
 }
 
-.stories-card {
-  border-color: white !important;
-}
 </style>

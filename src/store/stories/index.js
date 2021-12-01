@@ -7,7 +7,6 @@ export const state = getDefaultState()
 
 export const mutations = {
   setStories (state, stories) {
-    console.log(stories)
     state.stories = stories
   },
   setNews (state, news) {
