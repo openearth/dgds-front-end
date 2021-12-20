@@ -10,6 +10,7 @@
     "lint:fix": "lint -- --fix"
   },
   "dependencies": {
+    "@braintree/sanitize-url": "^5.0.2",
     "@openearth/windgl": "^0.1.2",
     "@turf/distance": "^6.3.0",
     "@turf/turf": "^6.3.0",

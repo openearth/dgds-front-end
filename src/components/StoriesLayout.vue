@@ -25,7 +25,7 @@
           </v-list-item-content>
 
           <v-list-item-action>
-            <v-btn icon :href="story.URL" target="_blank"  rel="noopener">
+            <v-btn icon :href="story.URL" target="_blank" rel="noopener">
               <v-icon color="grey lighten-1">mdi-link</v-icon>
             </v-btn>
           </v-list-item-action>
