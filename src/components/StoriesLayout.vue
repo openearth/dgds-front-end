@@ -57,5 +57,7 @@ export default {
 .stories-card {
   border-color: white !important;
   margin-bottom: 10px;
+  border-width: thick !important;
 }
+
 </style>

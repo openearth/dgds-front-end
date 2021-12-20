@@ -29,7 +29,6 @@ export const actions = {
     fetch(url)
       .then(res => res.json())
       .then(response => {
-        console.log(response)
         commit(responseAction, response)
       })
   }
