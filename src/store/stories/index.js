@@ -1,5 +1,3 @@
-const sanitizeUrl = require('@braintree/sanitize-url').sanitizeUrl
-
 export const getDefaultState = () => ({
   stories: [],
   news: []
@@ -37,38 +35,10 @@ export const actions = {
 }
 export const getters = {
   stories (state) {
-    const updatedStories = state.stories.map((themeItem) => {
-      const { id, theme, stories } = themeItem
-      const storiesWithSanitizedUrl = stories.map((storyItem) => {
-        const { ID, title, URL, icon } = storyItem
-        return {
-          ID,
-          title,
-          URL: sanitizeUrl(URL),
-          icon
-        }
-      })
-      return {
-        id,
-        theme,
-        stories: storiesWithSanitizedUrl
-      }
-    })
-
-    return updatedStories
+    return state.stories
   },
   news (state) {
-    const updatedNews = state.news.map((newsItem) => {
-      const { ID, title, URL, date, source } = newsItem
-      return {
-        ID,
-        title,
-        URL: sanitizeUrl(URL),
-        date,
-        source
-      }
-    })
-    return updatedNews
+    return state.news
   }
 }
 
