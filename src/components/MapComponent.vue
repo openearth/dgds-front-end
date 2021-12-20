@@ -289,7 +289,7 @@ export default {
       })
       const params = this.$route.params
       params.locationId = _.head(locationIds)
-      this.$router.push({ path: `/${params.datasetIds}/${params.locationId}`, params })
+      this.$router.push({ path: `/data/${params.datasetIds}/${params.locationId}`, params })
     },
     toggleRasterLayer (event) {
       this.setActiveRasterLayerId(event)
