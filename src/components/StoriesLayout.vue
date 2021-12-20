@@ -16,7 +16,7 @@
           v-for="story in stories"
           :key="story.ID"
         >
-          <v-list-item-avatar>
+          <v-list-item-avatar size="80">
             <v-img :src="story.icon"></v-img>
           </v-list-item-avatar>
 
@@ -25,7 +25,7 @@
           </v-list-item-content>
 
           <v-list-item-action>
-            <v-btn icon :href="story.URL" target="_blank">
+            <v-btn icon :href="story.URL" target="_blank"  rel="noopener">
               <v-icon color="grey lighten-1">mdi-link</v-icon>
             </v-btn>
           </v-list-item-action>
