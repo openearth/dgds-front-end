@@ -12,8 +12,9 @@
           class="stepper pa-0"
           flat
           non-linear
+          elevation="0"
         >
-          <v-stepper-header class="stepper-header">
+          <v-stepper-header class="stepper-header" flat>
             <v-stepper-step
               :color="storiesStepColor"
               complete
@@ -123,6 +124,7 @@ export default {
 .stepper {
   width: 400px;
   height: 57px;
+  box-shadow: 0px 0px 0px;
 }
 
 .stepper-header {
