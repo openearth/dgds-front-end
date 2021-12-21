@@ -7,7 +7,7 @@
       >
       <v-card-title>
         <custom-icon :name="theme" iconFolder="themes" class="ma-2"/>
-        <span><b>{{ theme }}</b></span>
+        <span><strong>{{ theme }}</strong></span>
       </v-card-title>
       <v-list
         color="rgba(0, 0, 0, 0)"
