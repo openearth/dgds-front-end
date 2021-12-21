@@ -21,7 +21,7 @@
           <v-list-item-action>
             <v-list-item-action-text v-text="feed.date"/>
             <v-btn icon :href="feed.URL" target="_blank"  rel="noopener">
-              <v-icon color="grey lighten-1">mdi-link</v-icon>
+              <v-icon color="grey lighten-1">mdi-exit-to-app</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
