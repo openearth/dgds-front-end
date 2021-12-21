@@ -7,7 +7,7 @@
       >
       <v-card-title>
         <custom-icon :name="theme" iconFolder="themes" class="ma-2"/>
-        <span>{{ theme }}</span>
+        <span><strong>{{ theme }}</strong></span>
       </v-card-title>
       <v-list
         color="rgba(0, 0, 0, 0)"
@@ -16,7 +16,7 @@
           v-for="story in stories"
           :key="story.ID"
         >
-          <v-list-item-avatar size="80">
+          <v-list-item-avatar size="130" >
             <v-img :src="story.icon"></v-img>
           </v-list-item-avatar>
 
@@ -26,7 +26,7 @@
 
           <v-list-item-action>
             <v-btn icon :href="story.URL" target="_blank" rel="noopener">
-              <v-icon color="grey lighten-1">mdi-link</v-icon>
+              <v-icon color="grey lighten-1">mdi-exit-to-app</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
@@ -57,7 +57,7 @@ export default {
 .stories-card {
   border-color: white !important;
   margin-bottom: 10px;
-  border-width: thick !important;
+  border-width: medium !important;
 }
 
 </style>
