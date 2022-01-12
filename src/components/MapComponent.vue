@@ -32,6 +32,8 @@
 
 <script>
 import { mapMutations, mapGetters, mapState } from 'vuex'
+import MapboxDraw from '@mapbox/mapbox-gl-draw'
+import DrawRectangle from 'mapbox-gl-draw-rectangle-mode'
 import _ from 'lodash'
 
 import getVectorLayer from '@/lib/mapbox/layers/get-vector-layer'
@@ -46,6 +48,17 @@ export default {
   mounted () {
     this.map = this.$refs.map.map
     this.zoomToLastDatasetId()
+    this.modes = MapboxDraw.modes
+    this.modes.draw_polygon = DrawRectangle
+    this.draw = new MapboxDraw({
+      controls: {
+        polygon: true,
+        trash: true
+      },
+      modes: this.modes,
+      displayControlsDefault: false
+    })
+    this.addDrawingTools()
   },
   components: {
     VMapboxVectorLayer,
@@ -81,6 +94,7 @@ export default {
   data () {
     return {
       mapboxAccessToken: process.env.VUE_APP_MAPBOX_TOKEN,
+      draw: {},
       locationsLayers: [],
       activeLocation: null,
       mapLoaded: false,
@@ -96,7 +110,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['activeLocationIds', 'loadingRasterLayers']),
+    ...mapState(['activeLocationIds', 'loadingRasterLayers', 'selectedBbox']),
     ...mapGetters([
       'activeDatasetIds',
       'activeRasterData',
@@ -109,6 +123,15 @@ export default {
       'getGeographicalScope',
       'knownVectorData'
     ]),
+    bbox: {
+      get () {
+        return this.selectedBbox.properties
+      },
+      set (val) {
+        const props = _.merge(this.$store.state.selectedBbox.properties, val)
+        this.setBboxProperties(props)
+      }
+    },
     rasterLayer () {
       const rasterLayer = getRasterLayer()
       rasterLayer.source.tiles = [_.get(this.activeRasterData, 'layer.assets.visual.href')]
@@ -160,7 +183,8 @@ export default {
     ...mapMutations([
       'clearActiveDatasetIds',
       'setActiveRasterLayerId',
-      'setGeographicalScope'
+      'setGeographicalScope',
+      'setBboxProperties'
     ]),
 
     getMapboxLayers (collection) {
@@ -187,7 +211,54 @@ export default {
       })
       return mapboxLayers
     },
+    addDrawingTools () {
+      this.map.addControl(this.draw, 'top-right')
+      this.map.on('draw.create', this.drawFunction)
 
+      this.map.on('draw.delete', () => {
+        this.bbox = {
+          latitude_min: { value: null },
+          latitude_max: { value: null },
+          longitude_min: { value: null },
+          longitude_max: { value: null }
+        }
+      })
+    },
+    drawFunction (e) {
+      // First delete all previous elements in the draw component, so we always have 1 bbox selected
+      // Store a new bbox and send the coordinates to the store
+      this.draw.deleteAll()
+      this.draw.add(e.features[0])
+      const N = Math.min(...e.features[0].geometry.coordinates[0][3])
+      const W = Math.max(...e.features[0].geometry.coordinates[0][3])
+      const S = Math.max(...e.features[0].geometry.coordinates[0][1])
+      const E = Math.min(...e.features[0].geometry.coordinates[0][1])
+      const NW = this.map.project([N, W])
+      const SE = this.map.project([S, E])
+      const features = this.map.queryRenderedFeatures([NW, SE], {
+        layers: this.circleLayers
+      })
+      this.profileIds = features.map(feat => {
+        return feat.properties.cdi_id
+      })
+      this.bbox = {
+        latitude_min: { value: E },
+        latitude_max: { value: W },
+        longitude_min: { value: N },
+        longitude_max: { value: S }
+      }
+    },
+    removeDrawingTools () {
+      // When done on the editor page remove the drawing tools from the map
+      this.map.removeControl(this.draw)
+      this.map.off('draw.create', this.drawFunction)
+      this.bbox = {
+        latitude_min: { value: null },
+        latitude_max: { value: null },
+        longitude_min: { value: null },
+        longitude_max: { value: null }
+      }
+    },
     zoomToLastDatasetId () {
       const params = _.get(this.$route, 'params.datasetIds')
       if (!params) {

@@ -14,6 +14,7 @@ import '@/css/typography.css'
 import '@/css/markdown.css'
 import '@/css/helpers.css'
 import '@/css/tour.css'
+import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css'
 
 Vue.config.productionTip = false
 

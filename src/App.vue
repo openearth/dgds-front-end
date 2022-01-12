@@ -36,7 +36,19 @@
               step="2"
               @click="goToData"
             >
-              Data layers
+              Datasets
+            </v-stepper-step>
+            <v-divider/>
+            <v-stepper-step
+              class="py-0"
+              :color="editorStepColor"
+              complete
+              editable
+              edit-icon="mdi-circle-edit-outline"
+              step="2"
+              @click="goToEditor"
+            >
+              Workflows
             </v-stepper-step>
           </v-stepper-header>
         </v-stepper>
@@ -85,6 +97,10 @@ export default {
     dataStepColor () {
       const { path } = this.$route
       return path.includes('data') ? 'blueDeltares' : 'transparent'
+    },
+    editorStepColor () {
+      const { path } = this.$route
+      return path.includes('editor') ? 'blueDeltares' : 'transparent'
     }
   },
   methods: {
@@ -116,13 +132,16 @@ export default {
     },
     goToData () {
       this.$router.push({ name: 'data' })
+    },
+    goToEditor () {
+      this.$router.push({ name: 'editor' })
     }
   }
 }
 </script>
 <style lang="css" scoped>
 .stepper {
-  width: 400px;
+  width: 500px;
   height: 57px;
   box-shadow: 0px 0px 0px;
 }

@@ -10,6 +10,8 @@
     "lint:fix": "lint -- --fix"
   },
   "dependencies": {
+    "@apidevtools/swagger-parser": "^10.0.0",
+    "@mapbox/mapbox-gl-draw": "^1.1.2",
     "@openearth/windgl": "^0.1.2",
     "@turf/distance": "^6.3.0",
     "@turf/turf": "^6.3.0",
@@ -18,10 +20,12 @@
     "echarts": "^5.1.0",
     "file-saver": "^2.0.5",
     "mapbox-gl": "^2.2.0",
+    "mapbox-gl-draw-rectangle-mode": "^1.0.4",
     "marked": "^2.0.3",
     "moment": "^2.29.1",
     "oidc-client": "^1.11.5",
     "register-service-worker": "^1.7.1",
+    "swagger-parser": "^10.0.0",
     "tiny-cookie": "^2.3.2",
     "vue": "^2.6.11",
     "vue-echarts": "^6.0.0-rc.4",

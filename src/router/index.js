@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Silent from '../views/auth/silent'
+import Editor from '../views/Editor.vue'
 import Callback from '../views/auth/callback'
 import Logout from '../views/auth/logout'
 import DatasetIds from '../views/data/DatasetIds'
@@ -40,6 +41,11 @@ const routes = [
     name: 'stories',
     path: '/stories',
     component: Stories
+  },
+  {
+    name: 'editor',
+    path: '/editor/:jobId',
+    component: Editor
   }
 ]
 

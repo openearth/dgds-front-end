@@ -8,6 +8,6 @@ describe('getThemes', () => {
       }]
     }
     const result = getters.getThemes(state.themes)
-    expect(result).toEqual([{ theme1:  'foo' }])
+    expect(result).toEqual([{ theme1: 'foo' }])
   })
 })
