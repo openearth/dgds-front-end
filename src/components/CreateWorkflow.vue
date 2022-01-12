@@ -1,8 +1,8 @@
 <template>
   <div class="create-workflow">
     <v-form v-if="createForm === 'create'">
-      <h4 class="mb-3">
-        {{ selectedBbox.title }}
+      <h4 class="mb-7">
+        Bounding box
       </h4>
       <!-- Set bounding box -->
       <v-row>
@@ -19,8 +19,8 @@
       </v-row>
       <v-divider class="pb-3" />
 
-      <h4 class="mb-3">
-        {{ editorTemplate.title }}
+      <h4 class="mb-7">
+        Workflow input
       </h4>
       <v-row
         v-for="parameter in editorTemplate.properties"
