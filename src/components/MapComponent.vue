@@ -289,6 +289,7 @@ export default {
       })
       const params = this.$route.params
       params.locationId = _.head(locationIds)
+      /* TODO: if there is a url in the detail.properties, then we go there... */
       this.$router.push({ path: `/data/${params.datasetIds}/${params.locationId}`, params })
     },
     toggleRasterLayer (event) {
