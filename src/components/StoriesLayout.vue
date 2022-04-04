@@ -52,12 +52,12 @@ export default {
   }
 }
 </script>
-<style>
+<style scoped>
 
 .stories-card {
-  border-color: white !important;
+  border-color: rgba(256, 256, 256, 0.5) !important;
   margin-bottom: 10px;
-  border-width: medium !important;
+  border-width: thin;
 }
 
 </style>

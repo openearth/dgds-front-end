@@ -43,7 +43,8 @@ export default {
 <style>
 
 .stories-card {
-  border-color: white !important;
+  border-color: rgba(256, 256, 256, 0.5) !important;
   margin-bottom: 10px;
+  border-width: thin;
 }
 </style>
