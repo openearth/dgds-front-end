@@ -279,6 +279,7 @@ export default {
       // route accordingly
       this.geometry = detail.geometry
       const locationIds = []
+      console.log(detail)
       detail.features.forEach(feature => {
         // When a layer has a metadata with locationIdField use this layer and
         // get the locationId usin this field

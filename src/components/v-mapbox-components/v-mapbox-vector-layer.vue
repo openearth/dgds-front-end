@@ -67,7 +67,11 @@ export default {
       const layer = this.layer
       this.map.addLayer(layer)
       this.map.on('click', layer.id, event => {
-        this[layer.onClick.method](layer, event)
+        console.log(layer.id, layer)
+        const method = _.get(layer, 'onClick.method')
+        if (method) {
+          this[method](layer, event)
+        }
       })
 
       this.map.on('mouseenter', layer.id, () => {

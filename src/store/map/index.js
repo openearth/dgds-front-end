@@ -6,6 +6,7 @@ import getCatalog from '@/lib/request/get-catalog'
 import datasets from './datasets.js'
 import themes from './themes.js'
 import Vue from 'vue'
+import { openArray } from 'zarr'
 
 // const getId = get('id')
 
@@ -266,57 +267,80 @@ export const actions = {
           .format('YYYY-MM-DDTHH:mm:ssZ'),
         datasetId
       }
+      const data = _.get(state, `vectorDataCollection[${datasetId}].assets.data`)
+      const roles = _.get(data, 'roles', [])
+      console.log('loadpointdata', data, roles)
 
-      const url = _.get(state, `vectorDataCollection[${datasetId}].assets.graph.href`)
-      if (!url) {
-        return
-      }
-      fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(parameters),
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
+      if (roles.includes('zarr-root')) {
+        console.log('zarr-root')
+        // let url = _.get(data, 'href')
+        const zarrData = openArray({
+          store: 'https://storage.googleapis.com/hydro-engine-public/coclico/CoastAlRisk_Europe_ESL_Historical.zarr',
+          path: 'rp',
+          mode: 'r'
+        })
+          .then(res => {
+            console.log(res)
+          })
+        // url = 'https://storage.googleapis.com/dgds-data-public/data/Population_exposed.zarr'
+        // const zarrData = openArray({
+        //   store: url,
+        //   path: 'Pop_exposed',
+        //   mode: 'r'
+        // })
+        console.log(zarrData)
+      } else {
+        const url = _.get(state, `vectorDataCollection[${datasetId}].assets.graph.href`)
+        if (!url) {
+          return
         }
-      })
-        .then(response => response.json())
-        .then(response => {
-          const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltares:pointData`)
-          // Depending on the pointDataType different responses are expected.
-          // images -> just an url to a svg image
-          // line or scatter -> data to create echarts graph
-          if (pointDataType === 'images') {
-            commit('addDatasetPointData', {
-              id: datasetId,
-              data: {
-                [locationId]: {
-                  imageUrl: response,
-                  type: pointDataType
-                }
-              }
-            })
-          } else {
-            let category = []
-            let serie = []
-            const eventResults = response.results.filter(res => _.has(res, 'events'))
-
-            eventResults.forEach(res => {
-              serie = serie.concat(res.events.map(event => event.value))
-              category = category.concat(res.events.map(event => moment(event.timeStamp).format()))
-            })
-
-            commit('addDatasetPointData', {
-              id: datasetId,
-              data: {
-                [locationId]: {
-                  category,
-                  serie,
-                  type: pointDataType
-                }
-              }
-            })
+        fetch(url, {
+          method: 'POST',
+          body: JSON.stringify(parameters),
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json'
           }
         })
+          .then(response => response.json())
+          .then(response => {
+            const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltares:pointData`)
+            // Depending on the pointDataType different responses are expected.
+            // images -> just an url to a svg image
+            // line or scatter -> data to create echarts graph
+            if (pointDataType === 'images') {
+              commit('addDatasetPointData', {
+                id: datasetId,
+                data: {
+                  [locationId]: {
+                    imageUrl: response,
+                    type: pointDataType
+                  }
+                }
+              })
+            } else {
+              let category = []
+              let serie = []
+              const eventResults = response.results.filter(res => _.has(res, 'events'))
+
+              eventResults.forEach(res => {
+                serie = serie.concat(res.events.map(event => event.value))
+                category = category.concat(res.events.map(event => moment(event.timeStamp).format()))
+              })
+
+              commit('addDatasetPointData', {
+                id: datasetId,
+                data: {
+                  [locationId]: {
+                    category,
+                    serie,
+                    type: pointDataType
+                  }
+                }
+              })
+            }
+          })
+      }
     })
   }
 }
