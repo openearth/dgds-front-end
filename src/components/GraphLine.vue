@@ -4,7 +4,7 @@
     <v-container class="pa-0">
       <v-col cols="12" class="graph-line pa-0">
         <v-chart
-          v-if="isLine || isScatter"
+          v-if="isLine || isScatter || isMultiple"
           :ref="title"
           :option="graphData"
           :autoresize="true"
@@ -14,7 +14,7 @@
       </v-col>
       <v-col cols="12">
         <v-btn
-          v-if="user && (isLine || isScatter)"
+          v-if="user && (isLine || isScatter || isMultiple)"
           @click="downloadJson"
           outlined
           block>
@@ -199,7 +199,7 @@ export default {
       default: 'line',
       validator (value) {
         // The value must match one of these strings
-        return ['line', 'scatter', 'images'].includes(value)
+        return ['line', 'scatter', 'images', 'multiple'].includes(value)
       }
     },
     parameterId: {
@@ -227,59 +227,47 @@ export default {
     isScatter () {
       return this.type === 'scatter'
     },
+    isMultiple () {
+      return this.type === 'multiple'
+    },
     graphData () {
       let series = []
-      let markPointCoord = []
-      series = this.series.map(serie => {
-        let data = serie.map((col, i) => [this.category[i], col])
-        // Make sure that all data is in chronological order to plot it correctly
-        data = data.sort((colA, colB) => {
-          return moment(colA[0]) - moment(colB[0])
+      if (this.type === 'multiple') {
+        series.push(this.addLineToGraph(this.series[0][1]))
+        series.push(this.addAreaToGraph(this.series[0][2], 'lower', '#a3a3a3'))
+        series.push(this.addAreaToGraph(this.series[0][0], 'upper'))
+      } else {
+        series = this.series.map(serie => {
+          return this.addLineToGraph(serie)
         })
+        const markPointCoord = this.getMarkPointCoord(this.series[0])
 
-        // Create a markpoint if there is a value on the exact timestamp selected
-        markPointCoord = data.find(val => {
-          const same = moment(val[0]).isSame(moment(this.timeStep))
-          return same
-        })
-
-        return {
-          type: this.type,
-          showAllSymbol: true,
-          data,
-          itemStyle: {
-            normal: {
-              borderWidth: 1
+        if (this.timeStep !== '') {
+          series.push({
+            type: this.type,
+            markPoint: {
+              data: [
+                {
+                  coord: markPointCoord,
+                  symbolSize: 30
+                }
+              ]
             }
-          }
+          })
         }
-      })
-
-      if (this.timeStep !== '') {
         series.push({
-          type: this.type,
-          markPoint: {
+          type: 'line',
+          markLine: {
+            silent: true,
             data: [
               {
-                coord: markPointCoord,
-                symbolSize: 30
+                xAxis: moment().format()
               }
-            ]
+            ],
+            lineStyle: { color: 'white' }
           }
         })
       }
-      series.push({
-        type: 'line',
-        markLine: {
-          silent: true,
-          data: [
-            {
-              xAxis: moment().format()
-            }
-          ],
-          lineStyle: { color: 'white' }
-        }
-      })
       const dataOptions = {
         series,
         yAxis: {
@@ -292,6 +280,72 @@ export default {
     }
   },
   methods: {
+    getMarkPointCoord (serie) {
+      let data = serie.map((col, i) => [this.category[i], col])
+      // Make sure that all data is in chronological order to plot it correctly
+      data = data.sort((colA, colB) => {
+        return moment(colA[0]) - moment(colB[0])
+      })
+
+      // Create a markpoint if there is a value on the exact timestamp selected
+      const markPointCoord = data.find(val => {
+        const same = moment(val[0]).isSame(moment(this.timeStep))
+        return same
+      })
+      return markPointCoord
+    },
+    addLineToGraph (graphSerie) {
+      console.log(graphSerie)
+      let data = graphSerie.map((col, i) => [this.category[i], col])
+      // Make sure that all data is in chronological order to plot it correctly
+      data = data.sort((colA, colB) => {
+        return moment(colA[0]) - moment(colB[0])
+      })
+
+      return {
+        type: 'line',
+        showAllSymbol: true,
+        data,
+        itemStyle: {
+          normal: {
+            borderWidth: 1
+          }
+        }
+      }
+    },
+    addAreaToGraph (serie, label, color = null, legend = false) {
+      let data = serie.map((col, i) => [this.category[i], col])
+      // Make sure that all data is in chronological order to plot it correctly
+      data = data.sort((colA, colB) => {
+        return moment(colA[0]) - moment(colB[0])
+      })
+
+      const series = {
+        name: label,
+        data: data,
+        type: 'line',
+        symbol: 'none',
+        lineStyle: {
+          opacity: 0
+        },
+        z: -1,
+        color: color
+      }
+      if (color) {
+        series.areaStyle = {
+          color: color,
+          origin: 'start',
+          opacity: 0.3
+        }
+      } else {
+        series.areaStyle = {
+          color: '#202020', // TODO: get from custom style
+          opacity: 1,
+          origin: 'start'
+        }
+      }
+      return series
+    },
     downloadJson () {
       const fileName = `${this.title}.json`
       const data = {
