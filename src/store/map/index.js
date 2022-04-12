@@ -267,28 +267,63 @@ export const actions = {
           .format('YYYY-MM-DDTHH:mm:ssZ'),
         datasetId
       }
-      const data = _.get(state, `vectorDataCollection[${datasetId}].assets.data`)
-      const roles = _.get(data, 'roles', [])
+      const data = _.get(state, `vectorDataCollection[${datasetId}]`)
+      const roles = _.get(data, 'assets.data.roles', [])
       console.log('loadpointdata', data, roles)
 
       if (roles.includes('zarr-root')) {
-        console.log('zarr-root')
         // let url = _.get(data, 'href')
-        const zarrData = openArray({
-          store: 'https://storage.googleapis.com/hydro-engine-public/coclico/CoastAlRisk_Europe_ESL_Historical.zarr',
-          path: 'rp',
+        // TODO: we need a state for clicked dataset (preferrably within the router)
+
+        const url = 'https://storage.googleapis.com/dgds-data-public/data/Population_exposed.zarr'
+
+        // const path = Object.keys(data['cube:variables'])[0]
+        const path = 'Pop_exposed'
+        // const dimensions = _.get(data, 'cube:dimensions')
+
+        // const dimNames = Object.keys(dimensions)
+        // const varDims = _.get(data, `cube:variables[${path}].dimensions`)
+
+        // Object.entries(dimensions).map(dimArray => {
+        //   varDims.forEach(dim => {
+        //     return dimArray[0].toLowerCase().includes(dim.toLowerCase())
+        //   })
+        //   dimensions[dimName]
+        // })
+
+        // varDims.forEach(dim => {
+        //   // const dimInd = dimNames.indexOf(dim) TODO: what it's supposed to be...
+        //   // And this is the hacky solution for now....
+        //   const dimObj = Object.entries(dimensions).find(dimArray => {
+        //     return dimArray[0].toLowerCase().includes(dim.toLowerCase())
+        //   })
+        //   console.log(dimObj)
+        // })
+
+        openArray({
+          store: url,
+          path: path,
           mode: 'r'
         })
           .then(res => {
             console.log(res)
+            res.get([0, 0, 0, null, null]).then(data => {
+              const series = [0, 1, 2].map(p => {
+                return data.data.map(d => d[p])
+              })
+              console.log(series)
+              commit('addDatasetPointData', {
+                id: datasetId,
+                data: {
+                  [locationId]: {
+                    type: 'multiple',
+                    serie: series,
+                    category: Array.from(Array(data.data.length).keys())
+                  }
+                }
+              })
+            })
           })
-        // url = 'https://storage.googleapis.com/dgds-data-public/data/Population_exposed.zarr'
-        // const zarrData = openArray({
-        //   store: url,
-        //   path: 'Pop_exposed',
-        //   mode: 'r'
-        // })
-        console.log(zarrData)
       } else {
         const url = _.get(state, `vectorDataCollection[${datasetId}].assets.graph.href`)
         if (!url) {
@@ -326,6 +361,16 @@ export const actions = {
               eventResults.forEach(res => {
                 serie = serie.concat(res.events.map(event => event.value))
                 category = category.concat(res.events.map(event => moment(event.timeStamp).format()))
+              })
+              console.log({
+                id: datasetId,
+                data: {
+                  [locationId]: {
+                    category,
+                    serie,
+                    type: pointDataType
+                  }
+                }
               })
 
               commit('addDatasetPointData', {
