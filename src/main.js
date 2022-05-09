@@ -8,6 +8,7 @@ import './plugins/vue2mapbox-gl'
 import './plugins/vue-tour'
 import './plugins/vuelidate'
 import './plugins/vue-gtag'
+// import './plugins/vue-plugin-load-script'
 
 import '@/css/main.css'
 import '@/css/typography.css'

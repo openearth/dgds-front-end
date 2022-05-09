@@ -60,6 +60,7 @@ import auth from '@/components/auth'
 import LegalDialog from '@/components/LegalDialog.vue'
 
 import { mapMutations, mapActions } from 'vuex'
+import Vue from 'vue'
 
 export default {
   name: 'App',
@@ -71,11 +72,13 @@ export default {
   },
   data: () => ({
     panel: false,
-    page: 2
+    page: 2,
+    pyodideLoaded: false
   }),
-  mounted () {
+  mounted: async function () {
     this.getUser()
     this.loadDatasets()
+    await this.initializePyodide()
   },
   computed: {
     storiesStepColor () {
@@ -90,6 +93,15 @@ export default {
   methods: {
     ...mapActions({ loadDatasets: 'loadDatasets' }),
     ...mapMutations(['setUser']),
+    initializePyodide: async function () {
+      // wait for pyodide ready
+      Vue.pyodide = await window.loadPyodide()
+
+      // await window.languagePluginLoader
+      // load pandas lib
+      await Vue.pyodide.loadPackage(['micropip', 'zarr'])
+      this.pyodideLoaded = true
+    },
     getUser () {
       auth
         .getUser()

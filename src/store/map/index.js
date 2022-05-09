@@ -8,7 +8,8 @@ import themes from './themes.js'
 import Vue from 'vue'
 import { openArray } from 'zarr'
 
-// const getId = get('id')
+// eslint-disable-next-line import/no-webpack-loader-syntax
+import openZarr from 'raw-loader!@/assets/python/open_zarr.py'
 
 export const getDefaultState = () => ({
   activeDatasetIds: [],
@@ -275,6 +276,7 @@ export const actions = {
         // let url = _.get(data, 'href')
         // TODO: we need a state for clicked dataset (preferrably within the router)
 
+        // const url = 'gs://dgds-data-public/data/Population_exposed.zarr'
         const url = 'https://storage.googleapis.com/dgds-data-public/data/Population_exposed.zarr'
 
         // const path = Object.keys(data['cube:variables'])[0]
@@ -299,6 +301,10 @@ export const actions = {
         //   })
         //   console.log(dimObj)
         // })
+        console.log(Vue.pyodide)
+        const pythonInput = Vue.pyodide.toPy({ url })
+        Vue.pyodide.runPythonAsync(openZarr, { globals: pythonInput })
+        console.log(pythonInput.get('a'))
 
         openArray({
           store: url,
