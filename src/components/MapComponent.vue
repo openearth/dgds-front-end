@@ -160,7 +160,8 @@ export default {
     ...mapMutations([
       'clearActiveDatasetIds',
       'setActiveRasterLayerId',
-      'setGeographicalScope'
+      'setGeographicalScope',
+      'setActiveLocationIndex'
     ]),
 
     getMapboxLayers (collection) {
@@ -279,13 +280,17 @@ export default {
       // route accordingly
       this.geometry = detail.geometry
       const locationIds = []
-      console.log(detail)
+      // detail.feature.properties contains attributes from Mapbox points
       detail.features.forEach(feature => {
         // When a layer has a metadata with locationIdField use this layer and
         // get the locationId usin this field
         const locId = _.get(feature, 'layer.metadata.deltares:locationIdField')
         if (locId) {
           locationIds.push(feature.properties[locId])
+        }
+        // write location index for zarr file to state
+        if (feature.properties.zarrIndex) {
+          this.setActiveLocationIndex(feature.properties.zarrIndex)
         }
       })
       const params = this.$route.params

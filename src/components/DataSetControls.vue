@@ -62,6 +62,27 @@
               </v-row>
             </v-expansion-panel-header>
             <v-expansion-panel-content class="pa-0" color="background">
+              <div v-if="dataset.summaries">
+                <br>
+                <v-row>
+                  <v-col
+                    cols="6"
+                    class="ma-auto pa-0"
+                    v-for="summary in dataset.summaries"
+                    :key="summary.id"
+                  >
+                    <v-select
+                      class="pa-2"
+                      v-model="summary.chosenValue"
+                      :items="summary.allowedValues"
+                      :label="summary.id"
+                      flat
+                      dense
+                      @change="toggleLocationDataset(dataset)"
+                    />
+                  </v-col>
+                </v-row>
+              </div>
               <div v-if="dataset.description && hoverId === dataset.id" class="data-set-controls__tooltip">
                 <div
                   v-html="markedTooltip(dataset.description)"

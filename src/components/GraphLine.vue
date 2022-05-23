@@ -4,7 +4,7 @@
     <v-container class="pa-0">
       <v-col cols="12" class="graph-line pa-0">
         <v-chart
-          v-if="isLine || isScatter || isMultiple"
+          v-if="isLine || isScatter || isMultiple || isEnsemble"
           :ref="title"
           :option="graphData"
           :autoresize="true"
@@ -14,7 +14,7 @@
       </v-col>
       <v-col cols="12">
         <v-btn
-          v-if="user && (isLine || isScatter || isMultiple)"
+          v-if="user && (isLine || isScatter || isMultiple || isEnsemble)"
           @click="downloadJson"
           outlined
           block>
@@ -199,10 +199,18 @@ export default {
       default: 'line',
       validator (value) {
         // The value must match one of these strings
-        return ['line', 'scatter', 'images', 'multiple'].includes(value)
+        return ['line', 'scatter', 'images', 'multiple', 'ensemble'].includes(value)
       }
     },
     parameterId: {
+      type: String,
+      default: ''
+    },
+    timeSpanType: {
+      type: String,
+      default: ''
+    },
+    timeFormatType: {
       type: String,
       default: ''
     },
@@ -230,12 +238,19 @@ export default {
     isMultiple () {
       return this.type === 'multiple'
     },
+    isEnsemble () {
+      return this.type === 'ensemble'
+    },
     graphData () {
       let series = []
       if (this.type === 'multiple') {
         series.push(this.addLineToGraph(this.series[0][1]))
         series.push(this.addAreaToGraph(this.series[0][2], 'lower', '#a3a3a3'))
         series.push(this.addAreaToGraph(this.series[0][0], 'upper'))
+      } else if (this.type === 'ensemble') {
+        series.push(this.addLineToGraph(this.series[0][1].data))
+        series.push(this.addAreaToGraph(this.series[0][2].data, 'lower', '#a3a3a3'))
+        series.push(this.addAreaToGraph(this.series[0][0].data, 'upper'))
       } else {
         series = this.series.map(serie => {
           return this.addLineToGraph(serie)
@@ -255,27 +270,39 @@ export default {
             }
           })
         }
-        series.push({
-          type: 'line',
-          markLine: {
-            silent: true,
-            data: [
-              {
-                xAxis: moment().format()
-              }
-            ],
-            lineStyle: { color: 'white' }
-          }
-        })
+        // T0 marker line, only add for Live data
+        if (this.timeSpanType === 'Live') {
+          series.push({
+            type: 'line',
+            markLine: {
+              silent: true,
+              data: [
+                {
+                  xAxis: moment().format()
+                }
+              ],
+              lineStyle: { color: 'white' }
+            }
+          })
+        }
       }
+
       const dataOptions = {
         series,
         yAxis: {
           name: `${this.title} [${this.units}]`
+        },
+        // TODO: Make this conditional to availability of formatType
+        xAxis: {
+          axisLabel: {
+            formatter: `{${this.timeFormatType}}`
+          }
         }
       }
+
       const theme = getStyle(this.colors)
-      const result = merge(dataOptions, baseOptions, theme)
+      // Merge eChart plot settings, low to high prio
+      const result = merge(baseOptions, dataOptions, theme)
       return result
     }
   },
@@ -295,7 +322,6 @@ export default {
       return markPointCoord
     },
     addLineToGraph (graphSerie) {
-      console.log(graphSerie)
       let data = graphSerie.map((col, i) => [this.category[i], col])
       // Make sure that all data is in chronological order to plot it correctly
       data = data.sort((colA, colB) => {

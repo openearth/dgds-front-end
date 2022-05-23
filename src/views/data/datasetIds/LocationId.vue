@@ -25,6 +25,8 @@
                 :collapsible="true"
                 :units="data.units"
                 :type="data.type"
+                :timeFormatType="data.timeFormat"
+                :timeSpanType="data.timeSpan"
                 :parameter-id="data.id"
                 :title="data.datasetName"
                 :set-mark-point="data.id === getActiveRasterLayer"
@@ -115,6 +117,7 @@ export default {
       const { datasetIds, locationId } = this.$route.params
       this.location = locationId
       this.setActiveLocationIds([locationId])
+      // loadPointDataForLocation reads timeseries data
       this.loadPointDataForLocation({ datasetIds, locationId })
     },
     close () {

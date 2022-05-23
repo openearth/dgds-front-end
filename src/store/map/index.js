@@ -28,6 +28,7 @@ export const mutations = {
   resetMap (state) {
     state.activeDatasetIds = []
     state.activeLocationIds = []
+    state.activeLocationIndex = []
     state.activeTheme = ''
     state.loadingRasterLayers = false
   },
@@ -53,8 +54,14 @@ export const mutations = {
   setActiveLocationIds (state, ids) {
     state.activeLocationIds = flatten(ids.map(id => id.split(',')))
   },
+  setActiveLocationIndex (state, index) {
+    state.activeLocationIndex = index
+  },
   clearActiveLocationIds (state) {
     state.activeLocationIds = []
+  },
+  clearActiveLocationIndex (state) {
+    state.activeLocationIndex = []
   },
   setActiveRasterLayerId (state, id) {
     state.activeRasterLayerId = id
@@ -101,6 +108,18 @@ export const actions = {
                 _.set(state.datasets, `${dataset.id}.visible`, true)
                 dispatch('loadVectorLayer', dataset)
                 dispatch('triggerActiveVector')
+
+                // Read summary info to populate dropdown boxes
+                const summaries = _.get(dataset, 'summaries')
+                const mappedSummaries = Object.keys(summaries).map(id => {
+                  const summary = _.get(summaries, id)
+                  return {
+                    id: id,
+                    allowedValues: summary,
+                    chosenValue: summary[0]
+                  }
+                })
+                _.set(dataset, 'summaries', mappedSummaries)
               }
               if (dataset.id === state.activeRasterLayerId) {
                 dispatch('loadActiveRasterData', dataset.id)
@@ -269,36 +288,42 @@ export const actions = {
       }
       const data = _.get(state, `vectorDataCollection[${datasetId}]`)
       const roles = _.get(data, 'assets.data.roles', [])
-      console.log('loadpointdata', data, roles)
+      const timeSpanType = _.get(state, `datasets[${datasetId}].properties.deltares:timeSpan`)
+      const timeFormatType = _.get(data, 'properties.deltares:timeFormat')
 
       if (roles.includes('zarr-root')) {
         // let url = _.get(data, 'href')
         // TODO: we need a state for clicked dataset (preferrably within the router)
 
-        const url = 'https://storage.googleapis.com/dgds-data-public/data/Population_exposed.zarr'
+        const dataset = data
+        const url = _.get(dataset, 'assets.data.href')
+        const zarrLocationIndex = _.get(state, 'activeLocationIndex')
 
-        // const path = Object.keys(data['cube:variables'])[0]
-        const path = 'Pop_exposed'
-        // const dimensions = _.get(data, 'cube:dimensions')
+        const path = Object.keys(_.get(dataset, 'cube:variables'))[0]
+        const dimensions = Object.entries(_.get(dataset, `["cube:variables"].${path}.dimensions`))
+        // const variableUnit = Object.entries(_.get(dataset, `["cube:variables"].${path}.unit`))
 
-        // const dimNames = Object.keys(dimensions)
-        // const varDims = _.get(data, `cube:variables[${path}].dimensions`)
+        // const id = _.get(dataset, 'id')
+        const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltares:pointData`)
 
-        // Object.entries(dimensions).map(dimArray => {
-        //   varDims.forEach(dim => {
-        //     return dimArray[0].toLowerCase().includes(dim.toLowerCase())
-        //   })
-        //   dimensions[dimName]
-        // })
-
-        // varDims.forEach(dim => {
-        //   // const dimInd = dimNames.indexOf(dim) TODO: what it's supposed to be...
-        //   // And this is the hacky solution for now....
-        //   const dimObj = Object.entries(dimensions).find(dimArray => {
-        //     return dimArray[0].toLowerCase().includes(dim.toLowerCase())
-        //   })
-        //   console.log(dimObj)
-        // })
+        // Define slice for data
+        // TODO: allow for other ways to slice through data, based on user selection
+        const slice = dimensions.map(dim => {
+          // TODO: make sure that the stations always correspond to the mapbox layers and that the
+          // other layers are the temporal layers used in the graphs..
+          // Generalize to also take other options than Region
+          // Determine these things based on user selection
+          if (dim[1] === 'Region') {
+            return _.get(zarrLocationIndex, 'properties.locationId', zarrLocationIndex)
+          } else if (dim[1] === 'Population') {
+            return _.get(0, 'properties.locationId', 0)
+          } else if (dim[1] === 'Scenario') {
+            return _.get(0, 'properties.locationId', 0)
+          } else {
+            return null
+          }
+        })
+        console.log('slice: ', slice)
 
         openArray({
           store: url,
@@ -306,22 +331,65 @@ export const actions = {
           mode: 'r'
         })
           .then(res => {
-            console.log(res)
-            res.get([0, 0, 0, null, null]).then(data => {
-              const series = [0, 1, 2].map(p => {
-                return data.data.map(d => d[p])
+            // Note: "time" dimension should be last, otherwise things go wrong.
+            res.get(slice).then(data => {
+              var serie = data.data.map(serie => {
+                return {
+                  type: 'line',
+                  data: Array.from(serie)
+                }
               })
-              console.log(series)
+              const cubeDimensions = _.get(dataset, 'cube:dimensions')
+
+              // TODO: extend to other type of temporal dimensions
+              // for (const [key, value] of Object.entries(cubeDimensions)) {
+              //   if (value.type === 'temporal') {
+              //     // Category defines x-axis
+              //     // let category = _.range(value.extent[0], value.extent[1])
+              //     const category = _.range(value.extent[0], value.extent[1])
+              //     console.log('category: ', category)
+              //   }
+              // }
+              // TODO: below is hack, fix properly in above
+              // const category = _.range(2020, 2150)
+              // TODO: generalize, use temporal dimension for x-axis
+              // const xAxis = Object.keys(cubeDimensions)[4]
+              const dates = _.range(2020, 2151)
+              const dateFormat = 'YYYY'
+              var category = []
+              for (const date of dates) {
+                category.push(moment(date, dateFormat).format('YYYY-MM-DDTHH:mm:ssZ'))
+              }
+
+              // var dateArray = new Array();
+              // var currentDate = 2020;
+              // while (currentDate <= 2150) {
+              //  dateArray.push(new Date (currentDate));
+              //  currentDate = currentDate.addDays(1);
+              // }
+              // TODO: generalize, rather than referring to Percentile hardcodes
+              for (var i = 0; i < cubeDimensions.Percentile.values.length; i++) {
+                serie[i].name = cubeDimensions.Percentile.values[i]
+              }
+              // serie = serie[0].data
+
+              // TODO: add axis labels, etc
+              // To add attributes: should be added to graph-line in locationId.vue as well
               commit('addDatasetPointData', {
                 id: datasetId,
                 data: {
                   [locationId]: {
-                    type: 'multiple',
-                    serie: series,
-                    category: Array.from(Array(data.data.length).keys())
+                    category,
+                    serie,
+                    type: pointDataType,
+                    timeSpan: timeSpanType,
+                    timeFormat: timeFormatType
                   }
                 }
               })
+              // NEXT: Add new plot type and fix layout of eChart plot
+              // Add index to Mapbox layer for location selection (now hardcoded in slice)
+              // Add option for user to make different selections
             })
           })
       } else {
@@ -349,7 +417,9 @@ export const actions = {
                 data: {
                   [locationId]: {
                     imageUrl: response,
-                    type: pointDataType
+                    type: pointDataType,
+                    timeSpan: timeSpanType,
+                    timeFormat: timeFormatType
                   }
                 }
               })
@@ -368,7 +438,9 @@ export const actions = {
                   [locationId]: {
                     category,
                     serie,
-                    type: pointDataType
+                    type: pointDataType,
+                    timeSpan: timeSpanType,
+                    timeFormat: timeFormatType
                   }
                 }
               })
@@ -379,7 +451,9 @@ export const actions = {
                   [locationId]: {
                     category,
                     serie,
-                    type: pointDataType
+                    type: pointDataType,
+                    timeSpan: timeSpanType,
+                    timeFormat: timeFormatType
                   }
                 }
               })
