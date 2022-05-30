@@ -35,7 +35,11 @@ export default {
       if (location) {
         // If a location is chosen beforehand, find the features on the map and zoom to that location
         const features = this.map.queryRenderedFeatures()
-        const feature = features.find(feat => feat.properties.locationId === location)
+        const feature = features.find(feat => {
+          // TODO: This is a slight hack to make it work for the SLR data, that mapbox
+          // layer should be changed to have a locationId as agred upon!
+          return feat.properties.locationId === location || feat.properties.Name === location
+        })
         this.map.panTo({
           lng: feature.geometry.coordinates[0],
           lat: feature.geometry.coordinates[1]
@@ -67,7 +71,6 @@ export default {
       const layer = this.layer
       this.map.addLayer(layer)
       this.map.on('click', layer.id, event => {
-        console.log(layer.id, layer)
         const method = _.get(layer, 'onClick.method')
         if (method) {
           this[method](layer, event)

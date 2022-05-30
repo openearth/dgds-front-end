@@ -10,7 +10,7 @@
     @mb-load="mapLoaded = true"
   >
     <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" data-v-step="5"/>
-    <v-mapbox-selected-point-layer v-if="mapLoaded" :geometry="geometry" />
+    <v-mapbox-selected-layer v-if="mapLoaded" :geometry="geometry" />
     <v-mapbox-info-text-layer
       v-if="mapLoaded"
       :geometry="infoTextGeometry"
@@ -39,7 +39,7 @@ import getRasterLayer from '@/lib/mapbox/layers/get-raster-layer'
 import VMapboxVectorLayer from '@/components/v-mapbox-components/v-mapbox-vector-layer'
 import VMapboxRasterLayer from '@/components/v-mapbox-components/v-mapbox-raster-layer'
 import VMapboxFlowmapLayer from '@/components/v-mapbox-components/v-mapbox-flowmap-layer'
-import VMapboxSelectedPointLayer from '@/components/v-mapbox-components/v-mapbox-selected-point-layer'
+import VMapboxSelectedLayer from '@/components/v-mapbox-components/v-mapbox-selected-layer'
 import VMapboxInfoTextLayer from '@/components/v-mapbox-components/v-mapbox-info-text-layer'
 
 export default {
@@ -51,7 +51,7 @@ export default {
     VMapboxVectorLayer,
     VMapboxRasterLayer,
     VMapboxFlowmapLayer,
-    VMapboxSelectedPointLayer,
+    VMapboxSelectedLayer,
     VMapboxInfoTextLayer
   },
   watch: {
@@ -276,6 +276,7 @@ export default {
         })
     },
     selectLocations (detail) {
+      console.log(detail)
       // On the selection (by mouse event on map) of a location update the
       // route accordingly
       this.geometry = detail.geometry
