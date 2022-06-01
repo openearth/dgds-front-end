@@ -308,6 +308,7 @@ export const actions = {
 
         // Define slice for data
         // TODO: allow for other ways to slice through data, based on user selection
+        // console.log('DATASET', dataset)
         const slice = dimensions.map(dim => {
           // TODO: make sure that the stations always correspond to the mapbox layers and that the
           // other layers are the temporal layers used in the graphs..
@@ -341,32 +342,19 @@ export const actions = {
               })
               const cubeDimensions = _.get(dataset, 'cube:dimensions')
 
-              // TODO: extend to other type of temporal dimensions
-              // for (const [key, value] of Object.entries(cubeDimensions)) {
-              //   if (value.type === 'temporal') {
-              //     // Category defines x-axis
-              //     // let category = _.range(value.extent[0], value.extent[1])
-              //     const category = _.range(value.extent[0], value.extent[1])
-              //     console.log('category: ', category)
-              //   }
-              // }
-              // TODO: below is hack, fix properly in above
-              // const category = _.range(2020, 2150)
-              // TODO: generalize, use temporal dimension for x-axis
-              // const xAxis = Object.keys(cubeDimensions)[4]
-              const dates = _.range(2020, 2151)
+              let dates = []
+              Object.entries(cubeDimensions).forEach(value => {
+                if (value[1].type === 'temporal') {
+                  dates = _.range(value[1].extent[0], value[1].extent[1])
+                }
+              })
+
+              const category = []
               const dateFormat = 'YYYY'
-              var category = []
               for (const date of dates) {
                 category.push(moment(date, dateFormat).format('YYYY-MM-DDTHH:mm:ssZ'))
               }
 
-              // var dateArray = new Array();
-              // var currentDate = 2020;
-              // while (currentDate <= 2150) {
-              //  dateArray.push(new Date (currentDate));
-              //  currentDate = currentDate.addDays(1);
-              // }
               // TODO: generalize, rather than referring to Percentile hardcodes
               for (var i = 0; i < cubeDimensions.Percentile.values.length; i++) {
                 serie[i].name = cubeDimensions.Percentile.values[i]

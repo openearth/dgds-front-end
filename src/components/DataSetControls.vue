@@ -62,7 +62,10 @@
               </v-row>
             </v-expansion-panel-header>
             <v-expansion-panel-content class="pa-0" color="background">
-              <div v-if="dataset.summaries">
+              <div>
+                <static-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
+              </div>
+              <div>
                 <br>
                 <v-row>
                   <v-col
@@ -78,7 +81,7 @@
                       :label="summary.id"
                       flat
                       dense
-                      @change="toggleLocationDataset(dataset)"
+                      @change="toggleLocationDataset(dataset, summary)"
                     />
                   </v-col>
                 </v-row>
@@ -119,6 +122,7 @@
 <script>
 import CustomIcon from '@/components/CustomIcon'
 import LayerLegend from '@/components/LayerLegend'
+import StaticLegend from '@/components/StaticLegend'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import marked from 'marked'
 import _ from 'lodash'
@@ -137,7 +141,8 @@ export default {
   },
   components: {
     CustomIcon,
-    LayerLegend
+    LayerLegend,
+    StaticLegend
   },
   computed: {
     ...mapGetters([
@@ -152,6 +157,8 @@ export default {
     },
     activePanels () {
       // map which panel is showing the legend layer or the information layer)
+      // hier checken of switch actief is en summaries heeft, dan kan if statement elders weg
+      console.log('ACTIVEPANELS', this.datasets)
       const active = _.values(this.datasets).flatMap((dataset, index) => {
         const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id
         return activeDataset ? index : []
@@ -195,10 +202,12 @@ export default {
     onTooltipClick (id) {
       this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
     },
-    toggleLocationDataset (id) {
+    toggleLocationDataset (id, summary) {
       let oldParams = _.get(this.$route, 'params.datasetIds')
       const params = this.$route.params
       let newParams
+      console.log('SUMMARY', summary)
+      console.log('ID', id)
 
       if (!oldParams) {
         // If oldParams is undefined, set newParams by id
