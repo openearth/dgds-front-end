@@ -287,6 +287,9 @@ export default {
         }
       }
 
+      // TODO:
+      // - add x-label to population exposure graph
+      // - avoid that y-label crosses values y-axis
       const dataOptions = {
         series,
         yAxis: {

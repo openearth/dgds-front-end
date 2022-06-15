@@ -34,7 +34,7 @@
                     flat
                     v-model="dataset.visible"
                     color="formActive"
-                    @change="toggleLocationDataset(dataset.id)"
+                    @change="toggleLocationDataset(dataset)"
                   ></v-switch>
                 </v-col>
                 <v-col cols="1" class="ma-auto pa-0">
@@ -62,7 +62,7 @@
               </v-row>
             </v-expansion-panel-header>
             <v-expansion-panel-content class="pa-0" color="background">
-              <div>
+              <div v-if="getActiveVectorDataIds === dataset.id">
                 <static-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
               </div>
               <div>
@@ -81,7 +81,7 @@
                       :label="summary.id"
                       flat
                       dense
-                      @change="toggleLocationDataset(dataset, summary)"
+                      @change="toggleLocationDatasetSummary(dataset, summary)"
                     />
                   </v-col>
                 </v-row>
@@ -150,17 +150,17 @@ export default {
       'getActiveTheme',
       'getDatasets',
       'activeRasterData',
-      'loadingRasterLayers'
+      'loadingRasterLayers',
+      'activeVectorData',
+      'getDatasets',
+      'getActiveVectorDataIds'
     ]),
     themeName () {
       return this.getActiveTheme || 'All datasets'
     },
     activePanels () {
-      // map which panel is showing the legend layer or the information layer)
-      // hier checken of switch actief is en summaries heeft, dan kan if statement elders weg
-      console.log('ACTIVEPANELS', this.datasets)
       const active = _.values(this.datasets).flatMap((dataset, index) => {
-        const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id
+        const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id || (this.getActiveVectorDataIds === dataset.id && _.get(this.activeVectorData, `${dataset.id}.properties.deltares:legendFile`) === 'legenda')
         return activeDataset ? index : []
       })
       return active
@@ -187,7 +187,7 @@ export default {
     this.activeRasterLayer = this.getActiveRasterLayer
   },
   methods: {
-    ...mapMutations(['setActiveRasterLayerId', 'setRasterData', 'setRasterProperty', 'setLoadingRasterLayers']),
+    ...mapMutations(['setActiveRasterLayerId', 'setRasterData', 'setRasterProperty', 'setLoadingRasterLayers', 'setActiveVectorDataIds', 'setActiveSummary']),
     ...mapActions(['loadActiveRasterData', 'loadActiveRasterLayer']),
     markedTooltip (text) {
       return marked(text, { renderer: renderer })
@@ -202,22 +202,22 @@ export default {
     onTooltipClick (id) {
       this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
     },
-    toggleLocationDataset (id, summary) {
+    toggleLocationDataset (dataset) {
       let oldParams = _.get(this.$route, 'params.datasetIds')
       const params = this.$route.params
       let newParams
-      console.log('SUMMARY', summary)
-      console.log('ID', id)
 
       if (!oldParams) {
         // If oldParams is undefined, set newParams by id
-        newParams = id
+        newParams = dataset.id
       } else {
         // Else check if new id should be removed or added to new route
         oldParams = oldParams.split(',')
-        if (oldParams.includes(id)) {
+        if (oldParams.includes(dataset.id)) {
           // if oldparams already includes id, remove from route
-          newParams = oldParams.filter(param => param !== id)
+          // this way, it is removed from the route is switch is disabled
+          newParams = oldParams.filter(param => param !== dataset.id)
+          // newParams = oldParams
           if (newParams.length === 0) {
             newParams = undefined
           } else {
@@ -225,7 +225,7 @@ export default {
           }
         } else {
           // else add id to route and zoomtobbox
-          newParams = `${oldParams},${id}`
+          newParams = `${oldParams},${dataset.id}`
         }
       }
       params.datasetIds = newParams
@@ -238,6 +238,12 @@ export default {
       } else {
         this.$router.push('/data')
       }
+      // Store which vector layers are active
+      this.setActiveVectorDataIds(params.datasetIds)
+    },
+    toggleLocationDatasetSummary (dataset, summary) {
+      // Store which summary is active
+      this.setActiveSummary(summary)
     },
     checkLayerType (id, type) {
       // Check if type is in one of the titles of the children

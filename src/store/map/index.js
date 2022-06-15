@@ -19,7 +19,8 @@ export const getDefaultState = () => ({
   activeFlowmapLayer: {},
   activeTheme: '',
   loadingRasterLayers: false,
-  geographicalScope: ''
+  geographicalScope: '',
+  activeVectorDataIds: ''
 })
 
 export const state = getDefaultState()
@@ -65,6 +66,13 @@ export const mutations = {
   },
   setActiveRasterLayerId (state, id) {
     state.activeRasterLayerId = id
+  },
+  setActiveVectorDataIds (state, id) {
+    state.activeVectorDataIds = id
+  },
+  setActiveSummary (state, summary) {
+    console.log('setActiveSummary', summary)
+    state.activeSummary = summary
   },
   setVectorData (state, { id, data }) {
     Vue.set(state.vectorDataCollection, id, data)
@@ -292,28 +300,25 @@ export const actions = {
       const timeFormatType = _.get(data, 'properties.deltares:timeFormat')
 
       if (roles.includes('zarr-root')) {
-        // let url = _.get(data, 'href')
-        // TODO: we need a state for clicked dataset (preferrably within the router)
-
         const dataset = data
         const url = _.get(dataset, 'assets.data.href')
         const zarrLocationIndex = _.get(state, 'activeLocationIndex')
 
         const path = Object.keys(_.get(dataset, 'cube:variables'))[0]
         const dimensions = Object.entries(_.get(dataset, `["cube:variables"].${path}.dimensions`))
-        // const variableUnit = Object.entries(_.get(dataset, `["cube:variables"].${path}.unit`))
 
-        // const id = _.get(dataset, 'id')
         const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltares:pointData`)
 
         // Define slice for data
-        // TODO: allow for other ways to slice through data, based on user selection
-        // console.log('DATASET', dataset)
         const slice = dimensions.map(dim => {
-          // TODO: make sure that the stations always correspond to the mapbox layers and that the
+          // Note: make sure that the stations always correspond to the mapbox layers and that the
           // other layers are the temporal layers used in the graphs..
-          // Generalize to also take other options than Region
-          // Determine these things based on user selection
+          // TODO 1:
+          // - Determine indices for Population and Scenario slicing based on user selection in dropdown boxes in DataSetControls.vue,
+          //   based on the values set in toggleLocationDatasetSummary function
+          // - Example: for Population, if chosenValue is Present, index is 0. If chosenValue is SSP1, index is 1
+          // - Example: for Scenario, is chosenValue is RCP26, index is 0, etc.
+          // TODO 2: avoid hardcoding if dimension names in here
           if (dim[1] === 'Region') {
             return _.get(zarrLocationIndex, 'properties.locationId', zarrLocationIndex)
           } else if (dim[1] === 'Population') {
@@ -355,14 +360,12 @@ export const actions = {
                 category.push(moment(date, dateFormat).format('YYYY-MM-DDTHH:mm:ssZ'))
               }
 
-              // TODO: generalize, rather than referring to Percentile hardcodes
+              // TODO: generalize, get relevant dimension from STAC catalog, rather than hardcoding here
               for (var i = 0; i < cubeDimensions.Percentile.values.length; i++) {
                 serie[i].name = cubeDimensions.Percentile.values[i]
               }
-              // serie = serie[0].data
 
-              // TODO: add axis labels, etc
-              // To add attributes: should be added to graph-line in locationId.vue as well
+              // TODO: add axis labels based on configured values in STAC catalog
               commit('addDatasetPointData', {
                 id: datasetId,
                 data: {
@@ -375,9 +378,6 @@ export const actions = {
                   }
                 }
               })
-              // NEXT: Add new plot type and fix layout of eChart plot
-              // Add index to Mapbox layer for location selection (now hardcoded in slice)
-              // Add option for user to make different selections
             })
           })
       } else {
@@ -468,6 +468,12 @@ export const getters = {
   },
   getActiveRasterLayer (state) {
     return state.activeRasterLayerId
+  },
+  getActiveVectorDataIds (state) {
+    return state.activeVectorDataIds
+  },
+  getActiveSummary (state, summary) {
+    return state.activeSummary
   },
   getLoadingState (state) {
     return state.loadingRasterLayers

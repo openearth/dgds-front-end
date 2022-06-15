@@ -25,11 +25,9 @@ export default {
     ...mapGetters(['getDatasets']),
     legend () {
       try {
-        // const subFolder = this.iconFolder ? `${this.iconFolder}/` : ''
-        console.log('IAMLEGEND', require('../assets/icons/legend/legenda.svg'))
+        // TODO: read name of legend file from STAC catalog
         return require('../assets/icons/legend/legenda.svg')
       } catch {
-        console.log('IAMNOTLEGEND')
         return require('../assets/icons/icon-placeholder.svg')
       }
     }
@@ -44,7 +42,7 @@ export default {
 .legend {
   display: inline-block;
   width: 320px;
-  height: 100px;
+  height: 130px;
 }
 
 .legend--large {
@@ -60,8 +58,7 @@ export default {
 
 .legend svg {
   display: block;
-  width: 100%;
-  width: 100%;
+  width: 110%;
   height: 100%;
   fill: currentColor;
 }
