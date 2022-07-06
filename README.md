@@ -31,3 +31,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ### Environment
 Before deploy please adapt the .env file or generate corresponding environment variables as in the .env.example file.
+
+This is a test
