@@ -110,13 +110,7 @@ export const actions = {
           return getCatalog(child.href)
             .then(dataset => {
               commit('addDataset', dataset)
-              // If we start at a subroute with active dataset ids, directly
-              // load the vector layers
-              if (state.activeDatasetIds.includes(dataset.id)) {
-                _.set(state.datasets, `${dataset.id}.visible`, true)
-                dispatch('loadVectorLayer', dataset)
-                dispatch('triggerActiveVector')
-
+              if (dataset.summaries !== undefined) {
                 // Read summary info to populate dropdown boxes
                 const summaries = _.get(dataset, 'summaries')
                 const mappedSummaries = Object.keys(summaries).map(id => {
@@ -128,6 +122,13 @@ export const actions = {
                   }
                 })
                 _.set(dataset, 'summaries', mappedSummaries)
+              }
+              // If we start at a subroute with active dataset ids, directly
+              // load the vector layers
+              if (state.activeDatasetIds.includes(dataset.id)) {
+                _.set(state.datasets, `${dataset.id}.visible`, true)
+                dispatch('loadVectorLayer', dataset)
+                dispatch('triggerActiveVector')
               }
               if (dataset.id === state.activeRasterLayerId) {
                 dispatch('loadActiveRasterData', dataset.id)
