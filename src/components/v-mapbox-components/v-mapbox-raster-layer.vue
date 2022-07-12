@@ -36,8 +36,6 @@ export default {
           const source = this.map.getSource(this.id)
           const layer = this.map.getLayer(this.id)
 
-          console.log('LAYER!!', layer)
-
           // if the newOptions has tiles check if raster layer already active on map return
           if (get('tiles[0]', source) === get('source.tiles[0]', newOptions)) {
             return
@@ -70,8 +68,6 @@ export default {
   mounted () {
     this.map = this.getMap()
     this.id = this.options.id
-    console.log('POLYGON 4', this.map)
-    console.log('POLYGON 4', this.id)
     if (this.options.source.tiles) {
       this.map.addLayer(this.options, 'water-border')
     }

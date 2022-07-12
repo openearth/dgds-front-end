@@ -65,7 +65,7 @@
               <div v-if="getActiveVectorDataIds === dataset.id">
                 <static-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
               </div>
-              <div>
+              <div v-if="getActiveVectorDataIds === dataset.id">
                 <br>
                 <v-row>
                   <v-col
@@ -152,9 +152,10 @@ export default {
       'activeRasterData',
       'loadingRasterLayers',
       'activeVectorData',
-      'getDatasets',
-      'getActiveVectorDataIds'
+      'getActiveVectorDataIds',
+      'getActiveSummary'
     ]),
+    ...mapMutations('setActiveVectorDataIds'),
     themeName () {
       return this.getActiveTheme || 'All datasets'
     },
@@ -163,6 +164,20 @@ export default {
         const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id || (this.getActiveVectorDataIds === dataset.id && _.get(this.activeVectorData, `${dataset.id}.properties.deltares:legendFile`) === 'legenda')
         return activeDataset ? index : []
       })
+
+      // Take care that setActiveVectorDataIds is set when entering site with vector layer enabled
+      const params = this.$route.params
+      const initialDataset = _.get(this.datasets, `${params.datasetIds}`)
+
+      if (this.getActiveVectorDataIds === '' && params.datasetIds !== '') {
+        if (typeof initialDataset !== 'undefined' && typeof initialDataset.summaries !== 'undefined') {
+          this.toggleLocationDataset(initialDataset)
+        }
+
+        // this.toggleLocationDataset(params.datasetIds)
+        // this.toggleLocationDatasetSummary(params.datasetIds, summary)
+      }
+
       return active
     },
     hasBands () {
@@ -188,7 +203,8 @@ export default {
   },
   methods: {
     ...mapMutations(['setActiveRasterLayerId', 'setRasterData', 'setRasterProperty', 'setLoadingRasterLayers', 'setActiveVectorDataIds', 'setActiveSummary']),
-    ...mapActions(['loadActiveRasterData', 'loadActiveRasterLayer']),
+    ...mapActions(['loadActiveRasterData', 'loadActiveRasterLayer', 'loadPointDataForLocation']),
+    ...mapGetters('activeVectorData'),
     markedTooltip (text) {
       return marked(text, { renderer: renderer })
     },
@@ -206,11 +222,13 @@ export default {
       let oldParams = _.get(this.$route, 'params.datasetIds')
       const params = this.$route.params
       let newParams
-
       if (!oldParams) {
         // If oldParams is undefined, set newParams by id
         newParams = dataset.id
-      } else {
+      } else if (oldParams && this.getActiveVectorDataIds === '') {
+        // When entering site with vector layer enabled, leave param in route as is
+        newParams = oldParams
+      } else if (oldParams && typeof dataset.id !== 'undefined') {
         // Else check if new id should be removed or added to new route
         oldParams = oldParams.split(',')
         if (oldParams.includes(dataset.id)) {
@@ -238,12 +256,41 @@ export default {
       } else {
         this.$router.push('/data')
       }
+
       // Store which vector layers are active
       this.setActiveVectorDataIds(params.datasetIds)
+
+      // create new activeSummary list (only if summary exists for dataset)
+      if (dataset.summaries !== undefined) {
+        this.summaryList = []
+        // dataset.summaries not always provided as array. Odd...
+        try {
+          dataset.summaries.forEach(summary => {
+            this.summaryList.push({ id: summary.id, value: summary.chosenValue, index: 0 })
+          })
+        } catch {
+          for (var props in dataset.summaries) {
+            const prop = _.get(dataset.summaries, props)
+            this.summaryList.push({ id: props, value: prop[0], index: 0 })
+          }
+        }
+        this.setActiveSummary(this.summaryList)
+      }
     },
     toggleLocationDatasetSummary (dataset, summary) {
       // Store which summary is active
-      this.setActiveSummary(summary)
+
+      // Find index of chosenValue in summary, to use for slicing
+      const summaryIndex = summary.allowedValues.findIndex(object => {
+        return object === summary.chosenValue
+      })
+
+      const i = this.summaryList.findIndex(object => object.id === summary.id)
+
+      // replace with selected values
+      this.summaryList[i] = { id: summary.id, value: summary.chosenValue, index: summaryIndex }
+
+      this.setActiveSummary(this.summaryList)
     },
     checkLayerType (id, type) {
       // Check if type is in one of the titles of the children

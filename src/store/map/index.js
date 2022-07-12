@@ -71,7 +71,6 @@ export const mutations = {
     state.activeVectorDataIds = id
   },
   setActiveSummary (state, summary) {
-    console.log('setActiveSummary', summary)
     state.activeSummary = summary
   },
   setVectorData (state, { id, data }) {
@@ -309,6 +308,8 @@ export const actions = {
 
         const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltares:pointData`)
 
+        const summaryList = _.get(state, 'activeSummary')
+
         // Define slice for data
         const slice = dimensions.map(dim => {
           // Note: make sure that the stations always correspond to the mapbox layers and that the
@@ -322,9 +323,9 @@ export const actions = {
           if (dim[1] === 'Region') {
             return _.get(zarrLocationIndex, 'properties.locationId', zarrLocationIndex)
           } else if (dim[1] === 'Population') {
-            return _.get(0, 'properties.locationId', 0)
+            return summaryList[summaryList.findIndex(object => object.id === 'population')].index
           } else if (dim[1] === 'Scenario') {
-            return _.get(0, 'properties.locationId', 0)
+            return summaryList[summaryList.findIndex(object => object.id === 'scenario')].index
           } else {
             return null
           }

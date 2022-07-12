@@ -8,6 +8,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import _ from 'lodash'
 
 export default {
   props: {
@@ -22,11 +23,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getDatasets']),
+    ...mapGetters(['getDatasets', 'activeVectorData']),
     legend () {
       try {
-        // TODO: read name of legend file from STAC catalog
-        return require('../assets/icons/legend/legenda.svg')
+        const properties = this.activeVectorData[this.datasetId].properties
+        const legendFile = _.get(properties, 'deltares:legendFile')
+        return require('../assets/icons/legend/' + legendFile + '.svg')
       } catch {
         return require('../assets/icons/icon-placeholder.svg')
       }

@@ -295,7 +295,13 @@ export default {
       })
       const params = this.$route.params
       params.locationId = _.head(locationIds)
-      this.$router.push({ path: `/data/${params.datasetIds}/${params.locationId}`, params })
+
+      // Check if route is different, and only change if this is the case (to avoid route errors with SLR data)
+      if (this.$router.currentRoute.path !== `/data/${params.datasetIds}/${params.locationId}`) {
+        this.$router.push({ path: `/data/${params.datasetIds}/${params.locationId}`, params })
+      }
+
+      // this.$router.push({ path: `/data/${params.datasetIds}/${params.locationId}`, params })
     },
     toggleRasterLayer (event) {
       this.setActiveRasterLayerId(event)

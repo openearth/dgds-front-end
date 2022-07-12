@@ -64,7 +64,8 @@ export default {
     ...mapGetters([
       'activePointDataPerDataset',
       'getActiveRasterLayer',
-      'activeRasterData'
+      'activeRasterData',
+      'getActiveSummary'
     ]),
     datasets () {
       const activePointData = this.activePointDataPerDataset
@@ -90,6 +91,9 @@ export default {
       } else {
         return ''
       }
+    },
+    activeSummary () {
+      return this.$store.getters.getActiveSummary
     }
   },
   watch: {
@@ -101,6 +105,12 @@ export default {
     },
     activePointDataPerDataset () {
       this.expandedDatasets = [...Array(this.datasets.length).keys()]
+    },
+    activeSummary: {
+      handler () {
+        this.updateLocationPanel()
+      },
+      deep: true
     }
   },
   mounted () {

@@ -67,7 +67,6 @@ export default {
       const layer = this.layer
       this.map.addLayer(layer)
       this.map.on('click', layer.id, event => {
-        console.log(layer.id, layer)
         const method = _.get(layer, 'onClick.method')
         if (method) {
           this[method](layer, event)

@@ -243,15 +243,21 @@ export default {
     },
     graphData () {
       let series = []
+      let yMaxValue = []
+      // Don't understand why this is required, but it is required to reset series included in baseOptions to empty
+      baseOptions.series = []
       if (this.type === 'multiple') {
+        yMaxValue = Math.max.apply(null, this.series[0][0].data)
         series.push(this.addLineToGraph(this.series[0][1]))
         series.push(this.addAreaToGraph(this.series[0][2], 'lower', '#a3a3a3'))
         series.push(this.addAreaToGraph(this.series[0][0], 'upper'))
       } else if (this.type === 'ensemble') {
+        yMaxValue = Math.max.apply(null, this.series[0][0].data)
         series.push(this.addLineToGraph(this.series[0][1].data))
         series.push(this.addAreaToGraph(this.series[0][2].data, 'lower', '#a3a3a3'))
         series.push(this.addAreaToGraph(this.series[0][0].data, 'upper'))
       } else {
+        yMaxValue = Math.max.apply(null, this.series[0])
         series = this.series.map(serie => {
           return this.addLineToGraph(serie)
         })
@@ -287,25 +293,49 @@ export default {
         }
       }
 
-      // TODO:
-      // - add x-label to population exposure graph
-      // - avoid that y-label crosses values y-axis
-      const dataOptions = {
+      // Set nameGap for y-axis based on max value (otherwise label crosses values, or gap is too big)
+      let yNameGap = []
+      if (yMaxValue <= 100) {
+        yNameGap = 35
+      } else if (yMaxValue <= 1000 && yMaxValue >= 100) {
+        yNameGap = 43
+      } else if (yMaxValue <= 10000 && yMaxValue >= 1000) {
+        yNameGap = 55
+      } else if (yMaxValue <= 100000 && yMaxValue >= 10000) {
+        yNameGap = 60
+      } else if (yMaxValue <= 1000000 && yMaxValue >= 100000) {
+        yNameGap = 68
+      } else if (yMaxValue >= 1000000) {
+        yNameGap = 77
+      }
+
+      // if no formatting for x-axis time labels defined in STAC catalog, use default
+      let time = this.timeFormatType
+      if (this.timeFormatType === '') {
+        time = '{MM}-{dd}'
+      }
+
+      let dataOptions = {}
+      let result = {}
+      dataOptions = {
         series,
         yAxis: {
-          name: `${this.title} [${this.units}]`
+          name: `${this.title} [${this.units}]`,
+          nameGap: yNameGap
         },
-        // TODO: Make this conditional to availability of formatType
         xAxis: {
+          name: 'Time',
+          nameLocation: 'center',
+          nameGap: 25,
           axisLabel: {
-            formatter: `{${this.timeFormatType}}`
+            formatter: `${time}`
           }
         }
       }
 
       const theme = getStyle(this.colors)
       // Merge eChart plot settings, low to high prio
-      const result = merge(baseOptions, dataOptions, theme)
+      result = merge(baseOptions, dataOptions, theme)
       return result
     }
   },
