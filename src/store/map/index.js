@@ -20,7 +20,8 @@ export const getDefaultState = () => ({
   activeTheme: '',
   loadingRasterLayers: false,
   geographicalScope: '',
-  activeVectorDataIds: ''
+  activeVectorDataIds: '',
+  activeSummary: []
 })
 
 export const state = getDefaultState()
@@ -71,7 +72,7 @@ export const mutations = {
     state.activeVectorDataIds = id
   },
   setActiveSummary (state, summary) {
-    state.activeSummary = summary
+    Vue.set(state, 'activeSummary', summary)
   },
   setVectorData (state, { id, data }) {
     Vue.set(state.vectorDataCollection, id, data)
@@ -473,7 +474,8 @@ export const getters = {
   getActiveVectorDataIds (state) {
     return state.activeVectorDataIds
   },
-  getActiveSummary (state, summary) {
+  activeSummary (state) {
+    console.log(state.activeSummary)
     return state.activeSummary
   },
   getLoadingState (state) {

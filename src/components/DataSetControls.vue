@@ -81,7 +81,7 @@
                       :label="summary.id"
                       flat
                       dense
-                      @change="toggleLocationDatasetSummary(dataset, summary)"
+                      @change="toggleLocationDatasetSummary(dataset)"
                     />
                   </v-col>
                 </v-row>
@@ -152,8 +152,7 @@ export default {
       'activeRasterData',
       'loadingRasterLayers',
       'activeVectorData',
-      'getActiveVectorDataIds',
-      'getActiveSummary'
+      'getActiveVectorDataIds'
     ]),
     ...mapMutations('setActiveVectorDataIds'),
     themeName () {
@@ -173,9 +172,6 @@ export default {
         if (typeof initialDataset !== 'undefined' && typeof initialDataset.summaries !== 'undefined') {
           this.toggleLocationDataset(initialDataset)
         }
-
-        // this.toggleLocationDataset(params.datasetIds)
-        // this.toggleLocationDatasetSummary(params.datasetIds, summary)
       }
 
       return active
@@ -277,20 +273,9 @@ export default {
         this.setActiveSummary(this.summaryList)
       }
     },
-    toggleLocationDatasetSummary (dataset, summary) {
+    toggleLocationDatasetSummary (dataset) {
       // Store which summary is active
-
-      // Find index of chosenValue in summary, to use for slicing
-      const summaryIndex = summary.allowedValues.findIndex(object => {
-        return object === summary.chosenValue
-      })
-
-      const i = this.summaryList.findIndex(object => object.id === summary.id)
-
-      // replace with selected values
-      this.summaryList[i] = { id: summary.id, value: summary.chosenValue, index: summaryIndex }
-
-      this.setActiveSummary(this.summaryList)
+      this.setActiveSummary(dataset.summaries)
     },
     checkLayerType (id, type) {
       // Check if type is in one of the titles of the children

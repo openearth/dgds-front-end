@@ -11,7 +11,8 @@ test('Initial state', () => {
     activeTheme: '',
     loadingRasterLayers: false,
     geographicalScope: '',
-    activeVectorDataIds: ''
+    activeVectorDataIds: '',
+    activeSummary: []
   }
   expect(state).toEqual(initialState)
 })

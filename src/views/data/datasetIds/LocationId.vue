@@ -65,7 +65,7 @@ export default {
       'activePointDataPerDataset',
       'getActiveRasterLayer',
       'activeRasterData',
-      'getActiveSummary'
+      'activeSummary'
     ]),
     datasets () {
       const activePointData = this.activePointDataPerDataset
@@ -91,9 +91,6 @@ export default {
       } else {
         return ''
       }
-    },
-    activeSummary () {
-      return this.$store.getters.getActiveSummary
     }
   },
   watch: {
@@ -108,6 +105,7 @@ export default {
     },
     activeSummary: {
       handler () {
+        console.log('hoi :)')
         this.updateLocationPanel()
       },
       deep: true
