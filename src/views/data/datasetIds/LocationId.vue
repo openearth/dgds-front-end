@@ -11,7 +11,7 @@
         <v-expansion-panels v-if="hasSerieData" flat accordion multiple v-model="expandedDatasets" color="background">
           <v-expansion-panel
             v-for="data in datasets"
-            :key="`${locations}-${data.id}`"
+            :key="`${locations}-${data.id}-${activeSummaryId}`"
           >
             <v-expansion-panel-header class="h4" color="background" dark>
               {{ data.datasetName }}
@@ -91,6 +91,15 @@ export default {
       } else {
         return ''
       }
+    },
+    activeSummaryId () {
+      let summary = ''
+      if (this.activeSummary.length === 2) {
+        summary = this.activeSummary[0].chosenValue + '_' + this.activeSummary[1].chosenValue
+      } else {
+        summary = this.activeSummary.length
+      }
+      return summary
     }
   },
   watch: {
