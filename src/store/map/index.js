@@ -315,18 +315,16 @@ export const actions = {
         const slice = dimensions.map(dim => {
           // Note: make sure that the stations always correspond to the mapbox layers and that the
           // other layers are the temporal layers used in the graphs..
-          // TODO 1:
-          // - Determine indices for Population and Scenario slicing based on user selection in dropdown boxes in DataSetControls.vue,
-          //   based on the values set in toggleLocationDatasetSummary function
-          // - Example: for Population, if chosenValue is Present, index is 0. If chosenValue is SSP1, index is 1
-          // - Example: for Scenario, is chosenValue is RCP26, index is 0, etc.
-          // TODO 2: avoid hardcoding if dimension names in here
           if (dim[1] === 'Region') {
             return _.get(zarrLocationIndex, 'properties.locationId', zarrLocationIndex)
           } else if (dim[1] === 'Population') {
-            return summaryList[summaryList.findIndex(object => object.id === 'population')].index
+            return summaryList[summaryList.findIndex(object => object.id === 'population')].allowedValues.findIndex(object => {
+              return object === summaryList[summaryList.findIndex(object => object.id === 'population')].chosenValue
+            })
           } else if (dim[1] === 'Scenario') {
-            return summaryList[summaryList.findIndex(object => object.id === 'scenario')].index
+            return summaryList[summaryList.findIndex(object => object.id === 'scenario')].allowedValues.findIndex(object => {
+              return object === summaryList[summaryList.findIndex(object => object.id === 'scenario')].chosenValue
+            })
           } else {
             return null
           }
@@ -366,6 +364,7 @@ export const actions = {
               for (var i = 0; i < cubeDimensions.Percentile.values.length; i++) {
                 serie[i].name = cubeDimensions.Percentile.values[i]
               }
+              console.log('SERIES', serie[0].data)
 
               // TODO: add axis labels based on configured values in STAC catalog
               commit('addDatasetPointData', {

@@ -258,19 +258,7 @@ export default {
 
       // create new activeSummary list (only if summary exists for dataset)
       if (dataset.summaries !== undefined) {
-        this.summaryList = []
-        // dataset.summaries not always provided as array. Odd...
-        try {
-          dataset.summaries.forEach(summary => {
-            this.summaryList.push({ id: summary.id, value: summary.chosenValue, index: 0 })
-          })
-        } catch {
-          for (var props in dataset.summaries) {
-            const prop = _.get(dataset.summaries, props)
-            this.summaryList.push({ id: props, value: prop[0], index: 0 })
-          }
-        }
-        this.setActiveSummary(this.summaryList)
+        this.setActiveSummary(dataset.summaries)
       }
     },
     toggleLocationDatasetSummary (dataset) {
