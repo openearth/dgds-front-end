@@ -114,7 +114,6 @@ export default {
     },
     activeSummary: {
       handler () {
-        console.log('hoi :)')
         this.updateLocationPanel()
       },
       deep: true

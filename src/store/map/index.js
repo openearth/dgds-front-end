@@ -365,9 +365,7 @@ export const actions = {
               for (var i = 0; i < cubeDimensions.Percentile.values.length; i++) {
                 serie[i].name = cubeDimensions.Percentile.values[i]
               }
-              console.log('SERIES', serie[0].data)
 
-              // TODO: add axis labels based on configured values in STAC catalog
               commit('addDatasetPointData', {
                 id: datasetId,
                 data: {
@@ -475,7 +473,6 @@ export const getters = {
     return state.activeVectorDataIds
   },
   activeSummary (state) {
-    console.log(state.activeSummary)
     return state.activeSummary
   },
   getLoadingState (state) {

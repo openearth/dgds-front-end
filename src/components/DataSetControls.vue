@@ -247,9 +247,9 @@ export default {
       if (_.has(params, 'locationId')) {
         path = `/data/${params.datasetIds}/${params.locationId}`
       }
-      if (newParams) {
+      if (newParams && newParams !== oldParams) {
         this.$router.push({ path, params })
-      } else {
+      } else if (newParams === undefined) {
         this.$router.push('/data')
       }
 
