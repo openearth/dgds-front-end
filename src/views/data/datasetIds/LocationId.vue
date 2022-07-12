@@ -11,7 +11,7 @@
         <v-expansion-panels v-if="hasSerieData" flat accordion multiple v-model="expandedDatasets" color="background">
           <v-expansion-panel
             v-for="data in datasets"
-            :key="data.id"
+            :key="`${locations}-${data.id}`"
           >
             <v-expansion-panel-header class="h4" color="background" dark>
               {{ data.datasetName }}
