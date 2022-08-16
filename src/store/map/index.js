@@ -322,9 +322,9 @@ export const actions = {
             return summaryList[summaryList.findIndex(object => object.id === 'population')].allowedValues.findIndex(object => {
               return object === summaryList[summaryList.findIndex(object => object.id === 'population')].chosenValue
             })
-          } else if (dim[1] === 'Scenario') {
-            return summaryList[summaryList.findIndex(object => object.id === 'scenario')].allowedValues.findIndex(object => {
-              return object === summaryList[summaryList.findIndex(object => object.id === 'scenario')].chosenValue
+          } else if (dim[1] === 'Projection') {
+            return summaryList[summaryList.findIndex(object => object.id === 'projection')].allowedValues.findIndex(object => {
+              return object === summaryList[summaryList.findIndex(object => object.id === 'projection')].chosenValue
             })
           } else {
             return null
