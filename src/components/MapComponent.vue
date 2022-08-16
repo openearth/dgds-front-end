@@ -104,6 +104,7 @@ export default {
       'activeVectorData',
       'activeVectorLayers',
       'activeTimestamp',
+      'activeSummary',
       'getActiveRasterLayer',
       'getDatasets',
       'getGeographicalScope',
@@ -174,6 +175,19 @@ export default {
           return
         }
         dataset.layers.forEach(layer => {
+          if (_.has(dataset, 'summaries')) {
+            // If extra selection is needed and described in the summaries.
+            const layerSelected = this.activeSummary.every(summary => {
+              if (layer.id.includes(summary.id)) {
+                const substring = layer.id.split(`${summary.id}-`)[1]
+                return substring.indexOf(summary.chosenValue) === 0
+              } else {
+                return true
+              }
+            })
+            if (!layerSelected) { return }
+            console.log(layer.id)
+          }
           const mapboxLayer = {}
           Object.entries(layer.properties).forEach(([id, prop]) => {
             const regex = 'deltares:(.+)'

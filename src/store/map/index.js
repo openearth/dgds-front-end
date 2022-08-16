@@ -330,7 +330,6 @@ export const actions = {
             return null
           }
         })
-        console.log('slice: ', slice)
 
         openArray({
           store: url,
