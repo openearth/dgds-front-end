@@ -35,7 +35,12 @@ export default {
       if (location) {
         // If a location is chosen beforehand, find the features on the map and zoom to that location
         const features = this.map.queryRenderedFeatures()
-        const feature = features.find(feat => feat.properties.locationId === location)
+        let feature = ''
+        feature = features.find(feat => feat.properties.locationId === location)
+        // if feature does not include locationId, check for name
+        if (feature === undefined) {
+          feature = features.find(feat => feat.properties.Name === location)
+        }
         this.map.panTo({
           lng: feature.geometry.coordinates[0],
           lat: feature.geometry.coordinates[1]
@@ -67,7 +72,10 @@ export default {
       const layer = this.layer
       this.map.addLayer(layer)
       this.map.on('click', layer.id, event => {
-        this[layer.onClick.method](layer, event)
+        const method = _.get(layer, 'onClick.method')
+        if (method) {
+          this[method](layer, event)
+        }
       })
 
       this.map.on('mouseenter', layer.id, () => {

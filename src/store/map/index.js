@@ -6,6 +6,7 @@ import getCatalog from '@/lib/request/get-catalog'
 import datasets from './datasets.js'
 import themes from './themes.js'
 import Vue from 'vue'
+import { openArray } from 'zarr'
 
 // const getId = get('id')
 
@@ -18,7 +19,9 @@ export const getDefaultState = () => ({
   activeFlowmapLayer: {},
   activeTheme: '',
   loadingRasterLayers: false,
-  geographicalScope: ''
+  geographicalScope: '',
+  activeVectorDataIds: '',
+  activeSummary: []
 })
 
 export const state = getDefaultState()
@@ -27,6 +30,7 @@ export const mutations = {
   resetMap (state) {
     state.activeDatasetIds = []
     state.activeLocationIds = []
+    state.activeLocationIndex = []
     state.activeTheme = ''
     state.loadingRasterLayers = false
   },
@@ -52,11 +56,23 @@ export const mutations = {
   setActiveLocationIds (state, ids) {
     state.activeLocationIds = flatten(ids.map(id => id.split(',')))
   },
+  setActiveLocationIndex (state, index) {
+    state.activeLocationIndex = index
+  },
   clearActiveLocationIds (state) {
     state.activeLocationIds = []
   },
+  clearActiveLocationIndex (state) {
+    state.activeLocationIndex = []
+  },
   setActiveRasterLayerId (state, id) {
     state.activeRasterLayerId = id
+  },
+  setActiveVectorDataIds (state, id) {
+    state.activeVectorDataIds = id
+  },
+  setActiveSummary (state, summary) {
+    Vue.set(state, 'activeSummary', summary)
   },
   setVectorData (state, { id, data }) {
     Vue.set(state.vectorDataCollection, id, data)
@@ -94,6 +110,19 @@ export const actions = {
           return getCatalog(child.href)
             .then(dataset => {
               commit('addDataset', dataset)
+              if (dataset.summaries !== undefined) {
+                // Read summary info to populate dropdown boxes
+                const summaries = _.get(dataset, 'summaries')
+                const mappedSummaries = Object.keys(summaries).map(id => {
+                  const summary = _.get(summaries, id)
+                  return {
+                    id: id,
+                    allowedValues: summary,
+                    chosenValue: summary[0]
+                  }
+                })
+                _.set(dataset, 'summaries', mappedSummaries)
+              }
               // If we start at a subroute with active dataset ids, directly
               // load the vector layers
               if (state.activeDatasetIds.includes(dataset.id)) {
@@ -266,57 +295,158 @@ export const actions = {
           .format('YYYY-MM-DDTHH:mm:ssZ'),
         datasetId
       }
+      const data = _.get(state, `vectorDataCollection[${datasetId}]`)
+      const roles = _.get(data, 'assets.data.roles', [])
+      const timeSpanType = _.get(state, `datasets[${datasetId}].properties.deltares:timeSpan`)
+      const timeFormatType = _.get(data, 'properties.deltares:timeFormat')
 
-      const url = _.get(state, `vectorDataCollection[${datasetId}].assets.graph.href`)
-      if (!url) {
-        return
-      }
-      fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(parameters),
-        mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => response.json())
-        .then(response => {
-          const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltares:pointData`)
-          // Depending on the pointDataType different responses are expected.
-          // images -> just an url to a svg image
-          // line or scatter -> data to create echarts graph
-          if (pointDataType === 'images') {
-            commit('addDatasetPointData', {
-              id: datasetId,
-              data: {
-                [locationId]: {
-                  imageUrl: response,
-                  type: pointDataType
-                }
-              }
+      if (roles.includes('zarr-root')) {
+        const dataset = data
+        const url = _.get(dataset, 'assets.data.href')
+        const zarrLocationIndex = _.get(state, 'activeLocationIndex')
+
+        const path = Object.keys(_.get(dataset, 'cube:variables'))[0]
+        const dimensions = Object.entries(_.get(dataset, `["cube:variables"].${path}.dimensions`))
+
+        const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltares:pointData`)
+
+        const summaryList = _.get(state, 'activeSummary')
+
+        // Define slice for data
+        const slice = dimensions.map(dim => {
+          // Note: make sure that the stations always correspond to the mapbox layers and that the
+          // other layers are the temporal layers used in the graphs..
+          if (dim[1] === 'Region') {
+            return _.get(zarrLocationIndex, 'properties.locationId', zarrLocationIndex)
+          } else if (dim[1] === 'Population') {
+            return summaryList[summaryList.findIndex(object => object.id === 'population')].allowedValues.findIndex(object => {
+              return object === summaryList[summaryList.findIndex(object => object.id === 'population')].chosenValue
+            })
+          } else if (dim[1] === 'Projection') {
+            return summaryList[summaryList.findIndex(object => object.id === 'projection')].allowedValues.findIndex(object => {
+              return object === summaryList[summaryList.findIndex(object => object.id === 'projection')].chosenValue
             })
           } else {
-            let category = []
-            let serie = []
-            const eventResults = response.results.filter(res => _.has(res, 'events'))
-
-            eventResults.forEach(res => {
-              serie = serie.concat(res.events.map(event => event.value))
-              category = category.concat(res.events.map(event => moment(event.timeStamp).format()))
-            })
-
-            commit('addDatasetPointData', {
-              id: datasetId,
-              data: {
-                [locationId]: {
-                  category,
-                  serie,
-                  type: pointDataType
-                }
-              }
-            })
+            return null
           }
         })
+
+        openArray({
+          store: url,
+          path: path,
+          mode: 'r'
+        })
+          .then(res => {
+            // Note: "time" dimension should be last, otherwise things go wrong.
+            res.get(slice).then(data => {
+              var serie = data.data.map(serie => {
+                return {
+                  type: 'line',
+                  data: Array.from(serie)
+                }
+              })
+              const cubeDimensions = _.get(dataset, 'cube:dimensions')
+
+              let dates = []
+              Object.entries(cubeDimensions).forEach(value => {
+                if (value[1].type === 'temporal') {
+                  dates = _.range(value[1].extent[0], value[1].extent[1])
+                }
+              })
+
+              const category = []
+              const dateFormat = 'YYYY'
+              for (const date of dates) {
+                category.push(moment(date, dateFormat).format('YYYY-MM-DDTHH:mm:ssZ'))
+              }
+
+              // TODO: generalize, get relevant dimension from STAC catalog, rather than hardcoding here
+              for (var i = 0; i < cubeDimensions.Percentile.values.length; i++) {
+                serie[i].name = cubeDimensions.Percentile.values[i]
+              }
+
+              commit('addDatasetPointData', {
+                id: datasetId,
+                data: {
+                  [locationId]: {
+                    category,
+                    serie,
+                    type: pointDataType,
+                    timeSpan: timeSpanType,
+                    timeFormat: timeFormatType
+                  }
+                }
+              })
+            })
+          })
+      } else {
+        const url = _.get(state, `vectorDataCollection[${datasetId}].assets.graph.href`)
+        if (!url) {
+          return
+        }
+        fetch(url, {
+          method: 'POST',
+          body: JSON.stringify(parameters),
+          mode: 'cors',
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+          .then(response => response.json())
+          .then(response => {
+            const pointDataType = _.get(state, `vectorDataCollection[${datasetId}].properties.deltares:pointData`)
+            // Depending on the pointDataType different responses are expected.
+            // images -> just an url to a svg image
+            // line or scatter -> data to create echarts graph
+            if (pointDataType === 'images') {
+              commit('addDatasetPointData', {
+                id: datasetId,
+                data: {
+                  [locationId]: {
+                    imageUrl: response,
+                    type: pointDataType,
+                    timeSpan: timeSpanType,
+                    timeFormat: timeFormatType
+                  }
+                }
+              })
+            } else {
+              let category = []
+              let serie = []
+              const eventResults = response.results.filter(res => _.has(res, 'events'))
+
+              eventResults.forEach(res => {
+                serie = serie.concat(res.events.map(event => event.value))
+                category = category.concat(res.events.map(event => moment(event.timeStamp).format()))
+              })
+              console.log({
+                id: datasetId,
+                data: {
+                  [locationId]: {
+                    category,
+                    serie,
+                    type: pointDataType,
+                    timeSpan: timeSpanType,
+                    timeFormat: timeFormatType
+                  }
+                }
+              })
+
+              commit('addDatasetPointData', {
+                id: datasetId,
+                data: {
+                  [locationId]: {
+                    category,
+                    serie,
+                    type: pointDataType,
+                    timeSpan: timeSpanType,
+                    timeFormat: timeFormatType
+                  }
+                }
+              })
+            }
+          })
+      }
     })
   }
 }
@@ -337,6 +467,12 @@ export const getters = {
   },
   getActiveRasterLayer (state) {
     return state.activeRasterLayerId
+  },
+  getActiveVectorDataIds (state) {
+    return state.activeVectorDataIds
+  },
+  activeSummary (state) {
+    return state.activeSummary
   },
   getLoadingState (state) {
     return state.loadingRasterLayers

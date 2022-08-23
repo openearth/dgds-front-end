@@ -10,7 +10,9 @@ test('Initial state', () => {
     activeFlowmapLayer: {},
     activeTheme: '',
     loadingRasterLayers: false,
-    geographicalScope: ''
+    geographicalScope: '',
+    activeVectorDataIds: '',
+    activeSummary: []
   }
   expect(state).toEqual(initialState)
 })

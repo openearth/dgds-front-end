@@ -11,7 +11,7 @@
         <v-expansion-panels v-if="hasSerieData" flat accordion multiple v-model="expandedDatasets" color="background">
           <v-expansion-panel
             v-for="data in datasets"
-            :key="data.id"
+            :key="`${locations}-${data.id}-${activeSummaryId}`"
           >
             <v-expansion-panel-header class="h4" color="background" dark>
               {{ data.datasetName }}
@@ -25,6 +25,8 @@
                 :collapsible="true"
                 :units="data.units"
                 :type="data.type"
+                :timeFormatType="data.timeFormat"
+                :timeSpanType="data.timeSpan"
                 :parameter-id="data.id"
                 :title="data.datasetName"
                 :set-mark-point="data.id === getActiveRasterLayer"
@@ -62,7 +64,8 @@ export default {
     ...mapGetters([
       'activePointDataPerDataset',
       'getActiveRasterLayer',
-      'activeRasterData'
+      'activeRasterData',
+      'activeSummary'
     ]),
     datasets () {
       const activePointData = this.activePointDataPerDataset
@@ -88,6 +91,15 @@ export default {
       } else {
         return ''
       }
+    },
+    activeSummaryId () {
+      let summary = ''
+      if (this.activeSummary.length === 2) {
+        summary = this.activeSummary[0].chosenValue + '_' + this.activeSummary[1].chosenValue
+      } else {
+        summary = this.activeSummary.length
+      }
+      return summary
     }
   },
   watch: {
@@ -99,6 +111,12 @@ export default {
     },
     activePointDataPerDataset () {
       this.expandedDatasets = [...Array(this.datasets.length).keys()]
+    },
+    activeSummary: {
+      handler () {
+        this.updateLocationPanel()
+      },
+      deep: true
     }
   },
   mounted () {
@@ -115,6 +133,7 @@ export default {
       const { datasetIds, locationId } = this.$route.params
       this.location = locationId
       this.setActiveLocationIds([locationId])
+      // loadPointDataForLocation reads timeseries data
       this.loadPointDataForLocation({ datasetIds, locationId })
     },
     close () {

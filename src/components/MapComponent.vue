@@ -104,6 +104,7 @@ export default {
       'activeVectorData',
       'activeVectorLayers',
       'activeTimestamp',
+      'activeSummary',
       'getActiveRasterLayer',
       'getDatasets',
       'getGeographicalScope',
@@ -160,7 +161,8 @@ export default {
     ...mapMutations([
       'clearActiveDatasetIds',
       'setActiveRasterLayerId',
-      'setGeographicalScope'
+      'setGeographicalScope',
+      'setActiveLocationIndex'
     ]),
 
     getMapboxLayers (collection) {
@@ -173,6 +175,19 @@ export default {
           return
         }
         dataset.layers.forEach(layer => {
+          if (_.has(dataset, 'summaries')) {
+            // If extra selection is needed and described in the summaries.
+            const layerSelected = this.activeSummary.every(summary => {
+              if (layer.id.includes(summary.id)) {
+                const substring = layer.id.split(`${summary.id}-`)[1]
+                return substring.indexOf(summary.chosenValue) === 0
+              } else {
+                return true
+              }
+            })
+            if (!layerSelected) { return }
+            console.log(layer.id)
+          }
           const mapboxLayer = {}
           Object.entries(layer.properties).forEach(([id, prop]) => {
             const regex = 'deltares:(.+)'
@@ -279,6 +294,7 @@ export default {
       // route accordingly
       this.geometry = detail.geometry
       const locationIds = []
+      // detail.feature.properties contains attributes from Mapbox points
       detail.features.forEach(feature => {
         // When a layer has a metadata with locationIdField use this layer and
         // get the locationId usin this field
@@ -286,10 +302,20 @@ export default {
         if (locId) {
           locationIds.push(feature.properties[locId])
         }
+        // write location index for zarr file to state
+        if (feature.properties.zarrIndex) {
+          this.setActiveLocationIndex(feature.properties.zarrIndex)
+        }
       })
       const params = this.$route.params
       params.locationId = _.head(locationIds)
-      this.$router.push({ path: `/data/${params.datasetIds}/${params.locationId}`, params })
+
+      // Check if route is different, and only change if this is the case (to avoid route errors with SLR data)
+      if (this.$router.currentRoute.path !== `/data/${params.datasetIds}/${params.locationId}`) {
+        this.$router.push({ path: `/data/${params.datasetIds}/${params.locationId}`, params })
+      }
+
+      // this.$router.push({ path: `/data/${params.datasetIds}/${params.locationId}`, params })
     },
     toggleRasterLayer (event) {
       this.setActiveRasterLayerId(event)

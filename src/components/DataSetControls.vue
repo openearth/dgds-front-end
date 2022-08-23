@@ -34,7 +34,7 @@
                     flat
                     v-model="dataset.visible"
                     color="formActive"
-                    @change="toggleLocationDataset(dataset.id)"
+                    @change="toggleLocationDataset(dataset)"
                   ></v-switch>
                 </v-col>
                 <v-col cols="1" class="ma-auto pa-0">
@@ -62,6 +62,30 @@
               </v-row>
             </v-expansion-panel-header>
             <v-expansion-panel-content class="pa-0" color="background">
+              <div v-if="getActiveVectorDataIds === dataset.id">
+                <static-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
+              </div>
+              <div v-if="getActiveVectorDataIds === dataset.id">
+                <br>
+                <v-row>
+                  <v-col
+                    cols="6"
+                    class="ma-auto pa-0"
+                    v-for="summary in dataset.summaries"
+                    :key="summary.id"
+                  >
+                    <v-select
+                      class="pa-2"
+                      v-model="summary.chosenValue"
+                      :items="summary.allowedValues"
+                      :label="summary.id"
+                      flat
+                      dense
+                      @change="toggleLocationDatasetSummary(dataset)"
+                    />
+                  </v-col>
+                </v-row>
+              </div>
               <div v-if="dataset.description && hoverId === dataset.id" class="data-set-controls__tooltip">
                 <div
                   v-html="markedTooltip(dataset.description)"
@@ -98,6 +122,7 @@
 <script>
 import CustomIcon from '@/components/CustomIcon'
 import LayerLegend from '@/components/LayerLegend'
+import StaticLegend from '@/components/StaticLegend'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 import marked from 'marked'
 import _ from 'lodash'
@@ -116,7 +141,8 @@ export default {
   },
   components: {
     CustomIcon,
-    LayerLegend
+    LayerLegend,
+    StaticLegend
   },
   computed: {
     ...mapGetters([
@@ -124,17 +150,30 @@ export default {
       'getActiveTheme',
       'getDatasets',
       'activeRasterData',
-      'loadingRasterLayers'
+      'loadingRasterLayers',
+      'activeVectorData',
+      'getActiveVectorDataIds'
     ]),
+    ...mapMutations('setActiveVectorDataIds'),
     themeName () {
       return this.getActiveTheme || 'All datasets'
     },
     activePanels () {
-      // map which panel is showing the legend layer or the information layer)
       const active = _.values(this.datasets).flatMap((dataset, index) => {
-        const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id
+        const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id || (this.getActiveVectorDataIds === dataset.id && _.get(this.activeVectorData, `${dataset.id}.properties.deltares:legendFile`) === 'legenda')
         return activeDataset ? index : []
       })
+
+      // Take care that setActiveVectorDataIds is set when entering site with vector layer enabled
+      const params = this.$route.params
+      const initialDataset = _.get(this.datasets, `${params.datasetIds}`)
+
+      if (this.getActiveVectorDataIds === '' && params.datasetIds !== '') {
+        if (typeof initialDataset !== 'undefined' && typeof initialDataset.summaries !== 'undefined') {
+          this.toggleLocationDataset(initialDataset)
+        }
+      }
+
       return active
     },
     hasBands () {
@@ -159,8 +198,9 @@ export default {
     this.activeRasterLayer = this.getActiveRasterLayer
   },
   methods: {
-    ...mapMutations(['setActiveRasterLayerId', 'setRasterData', 'setRasterProperty', 'setLoadingRasterLayers']),
-    ...mapActions(['loadActiveRasterData', 'loadActiveRasterLayer']),
+    ...mapMutations(['setActiveRasterLayerId', 'setRasterData', 'setRasterProperty', 'setLoadingRasterLayers', 'setActiveVectorDataIds', 'setActiveSummary']),
+    ...mapActions(['loadActiveRasterData', 'loadActiveRasterLayer', 'loadPointDataForLocation']),
+    ...mapGetters('activeVectorData'),
     markedTooltip (text) {
       return marked(text, { renderer: renderer })
     },
@@ -174,20 +214,24 @@ export default {
     onTooltipClick (id) {
       this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
     },
-    toggleLocationDataset (id) {
+    toggleLocationDataset (dataset) {
       let oldParams = _.get(this.$route, 'params.datasetIds')
       const params = this.$route.params
       let newParams
-
       if (!oldParams) {
         // If oldParams is undefined, set newParams by id
-        newParams = id
-      } else {
+        newParams = dataset.id
+      } else if (oldParams && this.getActiveVectorDataIds === '') {
+        // When entering site with vector layer enabled, leave param in route as is
+        newParams = oldParams
+      } else if (oldParams && typeof dataset.id !== 'undefined') {
         // Else check if new id should be removed or added to new route
         oldParams = oldParams.split(',')
-        if (oldParams.includes(id)) {
+        if (oldParams.includes(dataset.id)) {
           // if oldparams already includes id, remove from route
-          newParams = oldParams.filter(param => param !== id)
+          // this way, it is removed from the route is switch is disabled
+          newParams = oldParams.filter(param => param !== dataset.id)
+          // newParams = oldParams
           if (newParams.length === 0) {
             newParams = undefined
           } else {
@@ -195,7 +239,7 @@ export default {
           }
         } else {
           // else add id to route and zoomtobbox
-          newParams = `${oldParams},${id}`
+          newParams = `${oldParams},${dataset.id}`
         }
       }
       params.datasetIds = newParams
@@ -203,11 +247,23 @@ export default {
       if (_.has(params, 'locationId')) {
         path = `/data/${params.datasetIds}/${params.locationId}`
       }
-      if (newParams) {
+      if (newParams && newParams !== oldParams) {
         this.$router.push({ path, params })
-      } else {
+      } else if (newParams === undefined) {
         this.$router.push('/data')
       }
+
+      // Store which vector layers are active
+      this.setActiveVectorDataIds(params.datasetIds)
+
+      // create new activeSummary list (only if summary exists for dataset)
+      if (dataset.summaries !== undefined) {
+        this.setActiveSummary(dataset.summaries)
+      }
+    },
+    toggleLocationDatasetSummary (dataset) {
+      // Store which summary is active
+      this.setActiveSummary(dataset.summaries)
     },
     checkLayerType (id, type) {
       // Check if type is in one of the titles of the children

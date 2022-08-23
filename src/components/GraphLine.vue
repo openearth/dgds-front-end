@@ -4,7 +4,7 @@
     <v-container class="pa-0">
       <v-col cols="12" class="graph-line pa-0">
         <v-chart
-          v-if="isLine || isScatter"
+          v-if="isLine || isScatter || isMultiple || isEnsemble"
           :ref="title"
           :option="graphData"
           :autoresize="true"
@@ -14,7 +14,7 @@
       </v-col>
       <v-col cols="12">
         <v-btn
-          v-if="user && (isLine || isScatter)"
+          v-if="user && (isLine || isScatter || isMultiple || isEnsemble)"
           @click="downloadJson"
           outlined
           block>
@@ -199,10 +199,18 @@ export default {
       default: 'line',
       validator (value) {
         // The value must match one of these strings
-        return ['line', 'scatter', 'images'].includes(value)
+        return ['line', 'scatter', 'images', 'multiple', 'ensemble'].includes(value)
       }
     },
     parameterId: {
+      type: String,
+      default: ''
+    },
+    timeSpanType: {
+      type: String,
+      default: ''
+    },
+    timeFormatType: {
       type: String,
       default: ''
     },
@@ -227,71 +235,176 @@ export default {
     isScatter () {
       return this.type === 'scatter'
     },
+    isMultiple () {
+      return this.type === 'multiple'
+    },
+    isEnsemble () {
+      return this.type === 'ensemble'
+    },
     graphData () {
       let series = []
-      let markPointCoord = []
-      series = this.series.map(serie => {
-        let data = serie.map((col, i) => [this.category[i], col])
-        // Make sure that all data is in chronological order to plot it correctly
-        data = data.sort((colA, colB) => {
-          return moment(colA[0]) - moment(colB[0])
+      let yMaxValue = []
+      // Don't understand why this is required, but it is required to reset series included in baseOptions to empty
+      baseOptions.series = []
+      if (this.type === 'multiple') {
+        yMaxValue = Math.max.apply(null, this.series[0][0].data)
+        series.push(this.addLineToGraph(this.series[0][1]))
+        series.push(this.addAreaToGraph(this.series[0][2], 'lower', '#a3a3a3'))
+        series.push(this.addAreaToGraph(this.series[0][0], 'upper'))
+      } else if (this.type === 'ensemble') {
+        yMaxValue = Math.max.apply(null, this.series[0][0].data)
+        series.push(this.addLineToGraph(this.series[0][1].data))
+        series.push(this.addAreaToGraph(this.series[0][2].data, 'lower', '#a3a3a3'))
+        series.push(this.addAreaToGraph(this.series[0][0].data, 'upper'))
+      } else {
+        yMaxValue = Math.max.apply(null, this.series[0])
+        series = this.series.map(serie => {
+          return this.addLineToGraph(serie)
         })
+        const markPointCoord = this.getMarkPointCoord(this.series[0])
 
-        // Create a markpoint if there is a value on the exact timestamp selected
-        markPointCoord = data.find(val => {
-          const same = moment(val[0]).isSame(moment(this.timeStep))
-          return same
-        })
-
-        return {
-          type: this.type,
-          showAllSymbol: true,
-          data,
-          itemStyle: {
-            normal: {
-              borderWidth: 1
+        if (this.timeStep !== '') {
+          series.push({
+            type: this.type,
+            markPoint: {
+              data: [
+                {
+                  coord: markPointCoord,
+                  symbolSize: 30
+                }
+              ]
             }
-          }
+          })
         }
-      })
-
-      if (this.timeStep !== '') {
-        series.push({
-          type: this.type,
-          markPoint: {
-            data: [
-              {
-                coord: markPointCoord,
-                symbolSize: 30
-              }
-            ]
-          }
-        })
+        // T0 marker line, only add for Live data
+        if (this.timeSpanType === 'Live') {
+          series.push({
+            type: 'line',
+            markLine: {
+              silent: true,
+              data: [
+                {
+                  xAxis: moment().format()
+                }
+              ],
+              lineStyle: { color: 'white' }
+            }
+          })
+        }
       }
-      series.push({
-        type: 'line',
-        markLine: {
-          silent: true,
-          data: [
-            {
-              xAxis: moment().format()
-            }
-          ],
-          lineStyle: { color: 'white' }
-        }
-      })
-      const dataOptions = {
+
+      // Set nameGap for y-axis based on max value (otherwise label crosses values, or gap is too big)
+      let yNameGap = []
+      if (yMaxValue <= 100) {
+        yNameGap = 35
+      } else if (yMaxValue <= 1000 && yMaxValue >= 100) {
+        yNameGap = 43
+      } else if (yMaxValue <= 10000 && yMaxValue >= 1000) {
+        yNameGap = 55
+      } else if (yMaxValue <= 100000 && yMaxValue >= 10000) {
+        yNameGap = 60
+      } else if (yMaxValue <= 1000000 && yMaxValue >= 100000) {
+        yNameGap = 68
+      } else if (yMaxValue >= 1000000) {
+        yNameGap = 77
+      }
+
+      // if no formatting for x-axis time labels defined in STAC catalog, use default
+      let time = this.timeFormatType
+      if (this.timeFormatType === '') {
+        time = '{MM}-{dd}'
+      }
+
+      let dataOptions = {}
+      let result = {}
+      dataOptions = {
         series,
         yAxis: {
-          name: `${this.title} [${this.units}]`
+          name: `${this.title} [${this.units}]`,
+          nameGap: yNameGap
+        },
+        xAxis: {
+          name: 'Time',
+          nameLocation: 'center',
+          nameGap: 25,
+          axisLabel: {
+            formatter: `${time}`
+          }
         }
       }
+
       const theme = getStyle(this.colors)
-      const result = merge(dataOptions, baseOptions, theme)
+      // Merge eChart plot settings, low to high prio
+      result = merge(baseOptions, dataOptions, theme)
       return result
     }
   },
   methods: {
+    getMarkPointCoord (serie) {
+      let data = serie.map((col, i) => [this.category[i], col])
+      // Make sure that all data is in chronological order to plot it correctly
+      data = data.sort((colA, colB) => {
+        return moment(colA[0]) - moment(colB[0])
+      })
+
+      // Create a markpoint if there is a value on the exact timestamp selected
+      const markPointCoord = data.find(val => {
+        const same = moment(val[0]).isSame(moment(this.timeStep))
+        return same
+      })
+      return markPointCoord
+    },
+    addLineToGraph (graphSerie) {
+      let data = graphSerie.map((col, i) => [this.category[i], col])
+      // Make sure that all data is in chronological order to plot it correctly
+      data = data.sort((colA, colB) => {
+        return moment(colA[0]) - moment(colB[0])
+      })
+
+      return {
+        type: 'line',
+        showAllSymbol: true,
+        data,
+        itemStyle: {
+          normal: {
+            borderWidth: 1
+          }
+        }
+      }
+    },
+    addAreaToGraph (serie, label, color = null, legend = false) {
+      let data = serie.map((col, i) => [this.category[i], col])
+      // Make sure that all data is in chronological order to plot it correctly
+      data = data.sort((colA, colB) => {
+        return moment(colA[0]) - moment(colB[0])
+      })
+
+      const series = {
+        name: label,
+        data: data,
+        type: 'line',
+        symbol: 'none',
+        lineStyle: {
+          opacity: 0
+        },
+        z: -1,
+        color: color
+      }
+      if (color) {
+        series.areaStyle = {
+          color: color,
+          origin: 'start',
+          opacity: 0.3
+        }
+      } else {
+        series.areaStyle = {
+          color: '#202020', // TODO: get from custom style
+          opacity: 1,
+          origin: 'start'
+        }
+      }
+      return series
+    },
     downloadJson () {
       const fileName = `${this.title}.json`
       const data = {
