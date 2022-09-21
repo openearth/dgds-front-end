@@ -31,7 +31,7 @@
     "vue-tour": "^2.0.0",
     "vue2mapbox-gl": "^0.13.0",
     "vuelidate": "^0.7.6",
-    "vuetify": "^2.4.0",
+    "vuetify": "^2.6.10",
     "vuex": "^3.4.0",
     "zarr": "^0.5.1",
     "zarr-js": "^2.2.1"
