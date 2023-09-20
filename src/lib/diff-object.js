@@ -1,8 +1,10 @@
-export function diffArray (_alice, _bob) {
+export function diffArray(_alice, _bob) {
   const alice = [..._alice]
   const bob = [..._bob]
   const [mostItems, leastItems] =
-    alice.length > bob.length ? [alice.length, bob.length] : [bob.length, alice.length]
+    alice.length > bob.length
+      ? [alice.length, bob.length]
+      : [bob.length, alice.length]
   const longest = alice.length > bob.length ? alice : bob
   let returnValue = []
   for (let i = 0; i < leastItems; i++) {
@@ -18,7 +20,7 @@ export function diffArray (_alice, _bob) {
   return hasValues ? returnValue : undefined
 }
 
-export function diffObject (_alice, _bob) {
+export function diffObject(_alice, _bob) {
   const alice = { ..._alice }
   const bob = { ..._bob }
 
@@ -50,7 +52,7 @@ export function diffObject (_alice, _bob) {
   return Object.keys(result).length ? result : undefined
 }
 
-export default function diff (_alice, _bob) {
+export default function diff(_alice, _bob) {
   const typeAlice = Object.prototype.toString.call(_alice)
   const typeBob = Object.prototype.toString.call(_bob)
 

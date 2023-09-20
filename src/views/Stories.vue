@@ -7,16 +7,16 @@
             Stories
           </h2>
           <div v-for="theme in stories" :key="theme.id">
-             <stories-layout :theme="theme.theme" :stories="theme.stories"/>
+            <stories-layout :theme="theme.theme" :stories="theme.stories" />
           </div>
         </v-container>
       </v-col>
       <v-col cols="4" class="pa-4">
-         <v-container>
+        <v-container>
           <h2 class="h2">
             News
           </h2>
-          <news-layout :feeds="news"/>
+          <news-layout :feeds="news" />
         </v-container>
       </v-col>
     </v-row>
@@ -40,7 +40,7 @@ export default {
     StoriesLayout,
     NewsLayout
   },
-  mounted () {
+  mounted() {
     this.loadNews()
     this.loadStories()
   },
@@ -57,7 +57,7 @@ export default {
 .stories {
   width: 100%;
   height: 100%;
-  background-image: url("../assets/images/BlueEarthData_Background.png");
+  background-image: url('../assets/images/BlueEarthData_Background.png');
   background-size: cover;
   background-color: black;
 }
@@ -67,5 +67,4 @@ export default {
   bottom: var(--spacing-default);
   right: var(--spacing-default);
 }
-
 </style>

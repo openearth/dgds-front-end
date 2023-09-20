@@ -135,7 +135,7 @@ const context = {
   }
 }
 
-export default function getColors (theme) {
+export default function getColors(theme) {
   const baseColors = theme === 'dark' ? dark : light
   const contextColors = entries(context)
     .map(([key, value]) => ({ [key]: value[theme] }))

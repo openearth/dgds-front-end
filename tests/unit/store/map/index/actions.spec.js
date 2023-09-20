@@ -34,27 +34,13 @@ describe('loadDatasets', () => {
       'addTheme',
       { id: 'theme1', name: 'theme1Name' }
     ])
-    expect(commit.mock.calls[1]).toEqual([
-      'addDataset', { id: 'id1' }
-    ])
-    expect(commit.mock.calls[2]).toEqual([
-      'addDataset', { id: 'id2' }
-    ])
-    expect(commit.mock.calls[3]).toEqual([
-      'addDataset', dataset
-    ])
-    expect(commit.mock.calls[4]).toEqual([
-      'addDataset', dataset2
-    ])
-    expect(dispatch.mock.calls[0]).toEqual([
-      'loadActiveRasterData', dataset.id
-    ])
-    expect(dispatch.mock.calls[1]).toEqual([
-      'loadVectorLayer', dataset2
-    ])
-    expect(dispatch.mock.calls[2]).toEqual([
-      'triggerActiveVector'
-    ])
+    expect(commit.mock.calls[1]).toEqual(['addDataset', { id: 'id1' }])
+    expect(commit.mock.calls[2]).toEqual(['addDataset', { id: 'id2' }])
+    expect(commit.mock.calls[3]).toEqual(['addDataset', dataset])
+    expect(commit.mock.calls[4]).toEqual(['addDataset', dataset2])
+    expect(dispatch.mock.calls[0]).toEqual(['loadActiveRasterData', dataset.id])
+    expect(dispatch.mock.calls[1]).toEqual(['loadVectorLayer', dataset2])
+    expect(dispatch.mock.calls[2]).toEqual(['triggerActiveVector'])
   })
 })
 
@@ -73,20 +59,19 @@ describe('loadActiveRasterData', () => {
   const dispatch = jest.fn()
   test('if null leave empty', () => {
     actions.loadActiveRasterData({ state, commit, dispatch })
-    expect(commit.mock.calls[0]).toEqual([
-      'setRasterData',
-      {}
-    ])
+    expect(commit.mock.calls[0]).toEqual(['setRasterData', {}])
   })
 
   test('store active raster data (gee) and retrieve new data from link ', async () => {
     const dataset = {
       foo: 'bar',
       id: 'child1',
-      links: [{
-        rel: 'item',
-        date: '2021-02-01 08:09:10'
-      }]
+      links: [
+        {
+          rel: 'item',
+          date: '2021-02-01 08:09:10'
+        }
+      ]
     }
     getCatalog.mockResolvedValue(dataset)
     await actions.loadActiveRasterData({ state, commit, dispatch }, 'set1')
@@ -96,14 +81,13 @@ describe('loadActiveRasterData', () => {
       { id: 'set1', data: dataset }
     ])
     expect(dispatch.mock.calls[0]).toEqual([
-      'loadActiveRasterLayer', {
+      'loadActiveRasterLayer',
+      {
         rel: 'item',
         date: '01-02-2021 08:09'
       }
     ])
-    expect(commit.mock.calls[2]).toEqual([
-      'addActiveFlowmapLayer', dataset
-    ])
+    expect(commit.mock.calls[2]).toEqual(['addActiveFlowmapLayer', dataset])
   })
 })
 
@@ -116,9 +100,7 @@ describe('loadActiveRasterLayer', () => {
           'deltares:max': 1
         }
       },
-      links: [
-        { date: '01-02-2021 09:30', href: 'https://www.url.nl' }
-      ]
+      links: [{ date: '01-02-2021 09:30', href: 'https://www.url.nl' }]
     }
   }
   const commit = jest.fn()
@@ -131,16 +113,21 @@ describe('loadActiveRasterLayer', () => {
     getCatalog.mockResolvedValueOnce(dataset)
     await actions.loadActiveRasterLayer({ state, getters, commit })
     expect(commit.mock.calls[0]).toEqual([
-      'addActiveRasterLayer', { data: dataset }
+      'addActiveRasterLayer',
+      { data: dataset }
     ])
   })
 
   test('LoadActiveRasterLayer if  rasterlayer is defined', async () => {
     getCatalog.mockResolvedValueOnce(dataset)
-    const rasterLayer = { date: '01-02-2021 09:30', href: 'https://www.url.nl?min=5&max=6' }
+    const rasterLayer = {
+      date: '01-02-2021 09:30',
+      href: 'https://www.url.nl?min=5&max=6'
+    }
     await actions.loadActiveRasterLayer({ state, getters, commit }, rasterLayer)
     expect(commit.mock.calls[0]).toEqual([
-      'addActiveRasterLayer', { data: dataset }
+      'addActiveRasterLayer',
+      { data: dataset }
     ])
   })
 })
@@ -152,7 +139,8 @@ describe('storeActiveVectorIds', () => {
   test('Set setActiveDatasetIds from array of ids', () => {
     actions.storeActiveVectorIds({ commit }, _ids)
     expect(commit.mock.calls[0]).toEqual([
-      'setActiveDatasetIds', ['id1', 'id2']
+      'setActiveDatasetIds',
+      ['id1', 'id2']
     ])
   })
 })
@@ -171,9 +159,7 @@ describe('triggerActiveVector', () => {
 
   test('loads vector data if id not yet in vectorDataCollection', () => {
     actions.triggerActiveVector({ state, dispatch })
-    expect(dispatch.mock.calls[0]).toEqual([
-      'loadVectorLayer', 'foo'
-    ])
+    expect(dispatch.mock.calls[0]).toEqual(['loadVectorLayer', 'foo'])
   })
 })
 
@@ -205,13 +191,16 @@ describe('loadVectorLayer', () => {
   test('loads vector data if id not yet in vectorDataCollection', () => {
     const dataset = {
       id: 'id1',
-      links: [
-        { rel: 'child', href: 'child1', title: 'id1-mapbox' }
-      ]
+      links: [{ rel: 'child', href: 'child1', title: 'id1-mapbox' }]
     }
     actions.loadVectorLayer({ state, dispatch }, dataset)
     expect(dispatch.mock.calls[0]).toEqual([
-      'loadLayerCollection', { collectionUrl: 'child1', setCollectionCommit: 'setVectorData', datasetId: 'id1' }
+      'loadLayerCollection',
+      {
+        collectionUrl: 'child1',
+        setCollectionCommit: 'setVectorData',
+        datasetId: 'id1'
+      }
     ])
   })
 })
@@ -229,11 +218,15 @@ describe('loadLayerCollection', () => {
     getCatalog.mockResolvedValueOnce(apiResult)
     getCatalog.mockResolvedValue('bar')
 
-    const childs = await actions.loadLayerCollection({ commit }, { collectionUrl: 'url', setCollectionCommit: 'foo', datasetId: 'par1' })
+    const childs = await actions.loadLayerCollection(
+      { commit },
+      { collectionUrl: 'url', setCollectionCommit: 'foo', datasetId: 'par1' }
+    )
     await childs
     apiResult.layers = ['bar', 'bar']
     expect(commit.mock.calls[0]).toEqual([
-      'foo', { id: 'par1', data: apiResult }
+      'foo',
+      { id: 'par1', data: apiResult }
     ])
   })
 })

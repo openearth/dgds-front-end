@@ -7,14 +7,16 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
-    "lint:fix": "lint -- --fix"
+    "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
     "@mapbox/mapbox-gl-geocoder": "^5.0.1",
     "@openearth/windgl": "^0.1.2",
+    "@rushstack/eslint-patch": "^1.4.0",
     "@turf/distance": "^6.3.0",
     "@turf/turf": "^6.3.0",
     "@vue/composition-api": "^1.0.0-rc.7",
+    "@vue/eslint-config-prettier": "^6.0.0",
     "core-js": "^3.6.5",
     "echarts": "^5.1.0",
     "file-saver": "^2.0.5",

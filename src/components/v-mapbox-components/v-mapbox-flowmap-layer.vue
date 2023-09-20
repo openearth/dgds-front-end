@@ -13,19 +13,19 @@ export default {
       type: Object
     }
   },
-  data () {
+  data() {
     return {
       layer: null
     }
   },
-  mounted () {
+  mounted() {
     const map = this.getMap()
     if (!map) {
       return
     }
     this.createLayer(map)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     // cleanup layer
     const layer = this.layer
     const map = this.getMap()
@@ -36,7 +36,7 @@ export default {
     }
   },
   methods: {
-    createLayer (map) {
+    createLayer(map) {
       // check if already created
       const oldLayer = map.getLayer('particle')
       if (oldLayer) {
@@ -55,7 +55,15 @@ export default {
         after: 'waterway-label',
         properties: {
           // Make particles go faster as we reach zoom level 8
-          'particle-speed': ['interpolate', ['linear'], ['zoom'], 0, 1.5, 8, 30],
+          'particle-speed': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            0,
+            1.5,
+            8,
+            30
+          ],
           // Make particles greenish (triad wrt purple) and vary lightness a bit
           'particle-color': [
             'interpolate',
@@ -95,7 +103,7 @@ export default {
       this.layer = layer
     }
   },
-  render () {
+  render() {
     return null
   },
   inject: ['getMap']

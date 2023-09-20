@@ -1,6 +1,6 @@
 import merge from 'lodash/merge'
 
-export default function layerFactory (sourceType, layer) {
+export default function layerFactory(sourceType, layer) {
   switch (sourceType) {
     case 'geojson':
       return layer
@@ -9,7 +9,7 @@ export default function layerFactory (sourceType, layer) {
   }
 }
 
-function buildRasterLayer (layer) {
+function buildRasterLayer(layer) {
   const source = {
     type: 'raster',
     tileSize: 256,

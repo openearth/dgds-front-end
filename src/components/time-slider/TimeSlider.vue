@@ -8,7 +8,11 @@
         <slot name="label" />
       </v-col>
       <v-col cols="2" class="my-auto">
-        <slot v-if="timeIndex !== dates.length - 1" :forward="forward" name="forwardButton" />
+        <slot
+          v-if="timeIndex !== dates.length - 1"
+          :forward="forward"
+          name="forwardButton"
+        />
       </v-col>
     </v-row>
   </div>
@@ -26,7 +30,7 @@ export default {
     startAt: {
       // Where to start in the dates array, begin end or at random index
       default: () => 'start',
-      validator (value) {
+      validator(value) {
         if (Number.isInteger(value)) {
           return true
         } else if (['start', 'end'].includes(value)) {
@@ -41,18 +45,18 @@ export default {
       default: () => 0
     }
   },
-  data () {
+  data() {
     return {
       timeIndex: 0
     }
   },
   computed: {
-    currentDateObject () {
+    currentDateObject() {
       return this.dates[this.timeIndex]
     }
   },
   watch: {
-    dates (newVal, oldVal) {
+    dates(newVal, oldVal) {
       // When the dates have changed, change timeIndex
       const newObj = _.get(newVal, this.timeIndex)
       const oldObj = _.get(oldVal, this.timeIndex)
@@ -62,15 +66,15 @@ export default {
         this.timeIndex = this.setTimeIndex
       }
     },
-    setTimeIndex (val) {
+    setTimeIndex(val) {
       this.timeIndex = val
     }
   },
-  mounted () {
+  mounted() {
     this.setInitialTimeIndex()
   },
   methods: {
-    setInitialTimeIndex () {
+    setInitialTimeIndex() {
       // Set the timeIndex when timeslider is mounted or dates have changed
       if (!this.dates) {
         return
@@ -83,12 +87,12 @@ export default {
         this.timeIndex = 0
       }
     },
-    forward () {
+    forward() {
       // Go one step forward in time
       this.timeIndex += 1
       this.$emit('update-timestep', this.currentDateObject)
     },
-    back () {
+    back() {
       // Go one step back in time
       this.timeIndex -= 1
       this.$emit('update-timestep', this.currentDateObject)

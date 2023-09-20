@@ -11,7 +11,7 @@ const base = process.env.VUE_APP_SERVER_URL
  * @param {String} endpoint Path to the endpoint without api version
  * @param {Object} parameters Optional object to be converted to query params
  */
-export default async function get (endpoint, parameters, baseUrl) {
+export default async function get(endpoint, parameters, baseUrl) {
   if (!baseUrl) {
     baseUrl = base
   }

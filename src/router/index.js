@@ -18,25 +18,33 @@ const routes = [
   {
     path: '/auth/silent',
     component: Silent
-  }, {
+  },
+  {
     path: '/auth/callback',
     component: Callback
-  }, {
+  },
+  {
     path: '/auth/logout',
     component: Logout
-  }, {
+  },
+  {
     name: 'data',
     path: '/data',
     component: DataLayers,
-    children: [{
-      path: ':datasetIds',
-      component: DatasetIds,
-      children: [{
-        path: ':locationId',
-        component: LocationId
-      }]
-    }]
-  }, {
+    children: [
+      {
+        path: ':datasetIds',
+        component: DatasetIds,
+        children: [
+          {
+            path: ':locationId',
+            component: LocationId
+          }
+        ]
+      }
+    ]
+  },
+  {
     name: 'stories',
     path: '/stories',
     component: Stories

@@ -1,6 +1,6 @@
 import error from './error'
 
-export default async function get (catalogUrl) {
+export default async function get(catalogUrl) {
   const result = fetch(catalogUrl)
 
   try {

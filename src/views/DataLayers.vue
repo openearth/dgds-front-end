@@ -1,9 +1,13 @@
 <template>
-  <div class='data-layers'>
+  <div class="data-layers">
     <data-set-controls :datasets="datasetsInActiveTheme" />
     <map-component />
-    <time-stamp v-show="validTimestamp && getActiveRasterLayer"/>
-    <v-tour :steps="tourSteps" :options="tourConfig" name="introduction"></v-tour>
+    <time-stamp v-show="validTimestamp && getActiveRasterLayer" />
+    <v-tour
+      :steps="tourSteps"
+      :options="tourConfig"
+      name="introduction"
+    ></v-tour>
     <router-view />
   </div>
 </template>
@@ -28,17 +32,21 @@ export default {
     tourConfig,
     tourSteps
   }),
-  mounted () {
+  mounted() {
     this.showTour()
   },
   computed: {
-    ...mapGetters(['datasetsInActiveTheme', 'getActiveRasterLayer', 'activeTimestamp']),
-    validTimestamp () {
+    ...mapGetters([
+      'datasetsInActiveTheme',
+      'getActiveRasterLayer',
+      'activeTimestamp'
+    ]),
+    validTimestamp() {
       return ![null, '', 'Invalid date'].includes(this.activeTimestamp)
     }
   },
   methods: {
-    showTour (hideTour = Cookies.get('hideTour')) {
+    showTour(hideTour = Cookies.get('hideTour')) {
       if (!hideTour) {
         this.$tours.introduction.start()
         Cookies.set('hideTour', false)

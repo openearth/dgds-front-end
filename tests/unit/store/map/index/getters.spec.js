@@ -166,8 +166,7 @@ describe('activePointDataPerDataset', () => {
             }
           }
         },
-        wd: {
-        }
+        wd: {}
       }
     }
     const result = getters.activePointDataPerDataset(state)

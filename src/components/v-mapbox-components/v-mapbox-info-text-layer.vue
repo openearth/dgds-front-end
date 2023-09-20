@@ -17,7 +17,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       map: null,
       selectedLayers: [
@@ -57,7 +57,7 @@ export default {
     }
   },
   watch: {
-    geometry (newValue) {
+    geometry(newValue) {
       this.selectedLayers.forEach(selectedLayer => {
         const layerId = selectedLayer.id
         const layer = this.map.getSource(layerId)
@@ -72,7 +72,7 @@ export default {
       })
     }
   },
-  mounted () {
+  mounted() {
     this.map = this.getMap()
     this.selectedLayers.forEach(selectedLayer => {
       selectedLayer.source.data = this.geometry
@@ -81,7 +81,7 @@ export default {
     })
   },
   inject: ['getMap'],
-  render () {
+  render() {
     return null
   }
 }

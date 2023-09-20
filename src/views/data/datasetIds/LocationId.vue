@@ -1,5 +1,11 @@
 <template>
-  <v-navigation-drawer class="pl-16" permanent absolute width="40vw" color="background">
+  <v-navigation-drawer
+    class="pl-16"
+    permanent
+    absolute
+    width="40vw"
+    color="background"
+  >
     <v-container class="account d-flex flex-column">
       <h2 class="h2">
         {{ locations }}
@@ -8,7 +14,14 @@
         <v-icon>mdi-close</v-icon>
       </v-btn>
       <div class="flex-grow-1 py-3 scrollbar" align-space-between>
-        <v-expansion-panels v-if="hasSerieData" flat accordion multiple v-model="expandedDatasets" color="background">
+        <v-expansion-panels
+          v-if="hasSerieData"
+          flat
+          accordion
+          multiple
+          v-model="expandedDatasets"
+          color="background"
+        >
           <v-expansion-panel
             v-for="data in datasets"
             :key="`${locations}-${data.id}-${activeSummaryId}`"
@@ -40,8 +53,8 @@
         </template>
       </div>
       <div class="flex-shrink-1 bodytext-xs disclaimer">
-        Global datasets are generated with great care but may locally contain inaccuracies. See the
-        dataset descriptions for more information.
+        Global datasets are generated with great care but may locally contain
+        inaccuracies. See the dataset descriptions for more information.
       </div>
     </v-container>
   </v-navigation-drawer>
@@ -55,7 +68,7 @@ import GraphLine from '@/components/GraphLine'
 
 export default {
   components: { GraphLine },
-  data () {
+  data() {
     return {
       expandedDatasets: []
     }
@@ -67,24 +80,27 @@ export default {
       'activeRasterData',
       'activeSummary'
     ]),
-    datasets () {
+    datasets() {
       const activePointData = this.activePointDataPerDataset
       const result = Object.keys(activePointData).map(pointId =>
         _.get(activePointData, [pointId][0])
       )
       return flatten(result)
     },
-    hasSerieData () {
+    hasSerieData() {
       if (_.get(this.datasets, '[0].type') === 'images') {
         return _.get(this.datasets, '[0].imageUrl')
       } else {
-        return _.get(this.datasets, '[0].serie') && _.get(this.datasets, '[0].serie').length > 0
+        return (
+          _.get(this.datasets, '[0].serie') &&
+          _.get(this.datasets, '[0].serie').length > 0
+        )
       }
     },
-    locations () {
+    locations() {
       return this.$route.params.locationId
     },
-    getTimeStep () {
+    getTimeStep() {
       const date = _.get(this.activeRasterData, 'date')
       if (date) {
         return date
@@ -92,10 +108,13 @@ export default {
         return ''
       }
     },
-    activeSummaryId () {
+    activeSummaryId() {
       let summary = ''
       if (this.activeSummary.length === 2) {
-        summary = this.activeSummary[0].chosenValue + '_' + this.activeSummary[1].chosenValue
+        summary =
+          this.activeSummary[0].chosenValue +
+          '_' +
+          this.activeSummary[1].chosenValue
       } else {
         summary = this.activeSummary.length
       }
@@ -103,40 +122,40 @@ export default {
     }
   },
   watch: {
-    '$route.params.locationId' () {
+    '$route.params.locationId'() {
       this.updateLocationPanel()
     },
-    '$route.params.datasetIds' () {
+    '$route.params.datasetIds'() {
       this.updateLocationPanel()
     },
-    activePointDataPerDataset () {
+    activePointDataPerDataset() {
       this.expandedDatasets = [...Array(this.datasets.length).keys()]
     },
     activeSummary: {
-      handler () {
+      handler() {
         this.updateLocationPanel()
       },
       deep: true
     }
   },
-  mounted () {
+  mounted() {
     setTimeout(this.updateLocationPanel, 3000)
     this.expandedDatasets = [...Array(this.datasets.length).keys()]
   },
-  destroyed () {
+  destroyed() {
     this.clearActiveLocationIds()
   },
   methods: {
     ...mapActions(['loadPointDataForLocation']),
     ...mapMutations(['clearActiveLocationIds', 'setActiveLocationIds']),
-    updateLocationPanel () {
+    updateLocationPanel() {
       const { datasetIds, locationId } = this.$route.params
       this.location = locationId
       this.setActiveLocationIds([locationId])
       // loadPointDataForLocation reads timeseries data
       this.loadPointDataForLocation({ datasetIds, locationId })
     },
-    close () {
+    close() {
       this.$router.push({
         path: `/data/${this.$route.params.datasetIds}`,
         params: { datasetIds: this.$route.params.datasetIds }

@@ -4,19 +4,31 @@
       <v-col cols="9" class="ma-0 pa-0 pl-2">
         <svg viewBox="0 0 100 3">
           <defs>
-            <linearGradient :id="`gradient-${datasetId}`" x1="0" x2="1" y1="0" y2="0">
+            <linearGradient
+              :id="`gradient-${datasetId}`"
+              x1="0"
+              x2="1"
+              y1="0"
+              y2="0"
+            >
               <stop
                 v-for="(stop, index) in linearGradient"
                 :key="index"
                 :offset="stop.offset"
                 :style="{
                   'stop-color': stop.color,
-                  'stop-opacity': stop.opacity,
+                  'stop-opacity': stop.opacity
                 }"
               />
             </linearGradient>
           </defs>
-          <rect :fill="`url(#gradient-${datasetId})`" width="100" height="5" x="0" y="0" />
+          <rect
+            :fill="`url(#gradient-${datasetId})`"
+            width="100"
+            height="5"
+            x="0"
+            y="0"
+          />
         </svg>
       </v-col>
     </v-row>
@@ -76,7 +88,7 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       editingRange: false,
       defaultMinValue: '',
@@ -91,44 +103,66 @@ export default {
   computed: {
     ...mapGetters(['getDatasets', 'activeRasterData'])
   },
-  mounted () {
+  mounted() {
     this.dataset = this.getDatasets[this.datasetId]
     this.unit = _.get(this.dataset, 'properties.deltares:units')
     this.updateMinMax()
-    this.linearGradient = _.get(this.activeRasterData, 'layer.properties.deltares:linearGradient')
+    this.linearGradient = _.get(
+      this.activeRasterData,
+      'layer.properties.deltares:linearGradient'
+    )
   },
   watch: {
-    activeRasterData () {
+    activeRasterData() {
       this.updateMinMax()
       this.linearGradient = {}
-      this.linearGradient = _.get(this.activeRasterData, 'layer.properties.deltares:linearGradient')
+      this.linearGradient = _.get(
+        this.activeRasterData,
+        'layer.properties.deltares:linearGradient'
+      )
     }
   },
   methods: {
     ...mapActions(['loadActiveRasterLayer']),
-    updateMinMax () {
-      const min = _.get(this.activeRasterData, 'layer.properties.deltares:min', '')
-      const max = _.get(this.activeRasterData, 'layer.properties.deltares:max', '')
+    updateMinMax() {
+      const min = _.get(
+        this.activeRasterData,
+        'layer.properties.deltares:min',
+        ''
+      )
+      const max = _.get(
+        this.activeRasterData,
+        'layer.properties.deltares:max',
+        ''
+      )
       this.minValue = min.toString()
       this.maxValue = max.toString()
       this.defaultMinValue = min.toString()
       this.defaultMaxValue = max.toString()
     },
-    cancelEditRange () {
+    cancelEditRange() {
       this.minValue = this.defaultMinValue
       this.maxValue = this.defaultMaxValue
       this.editingRange = false
     },
-    editRange () {
+    editRange() {
       this.editingRange = true
     },
-    saveRange () {
+    saveRange() {
       this.editingRange = false
-      _.set(this.activeRasterData, 'layer.properties.deltares:min', this.minValue)
-      _.set(this.activeRasterData, 'layer.properties.deltares:max', this.maxValue)
+      _.set(
+        this.activeRasterData,
+        'layer.properties.deltares:min',
+        this.minValue
+      )
+      _.set(
+        this.activeRasterData,
+        'layer.properties.deltares:max',
+        this.maxValue
+      )
       this.loadActiveRasterLayer()
     },
-    resetRange () {
+    resetRange() {
       this.minValue = this.defaultMinValue
       this.maxValue = this.defaultMaxValue
     }

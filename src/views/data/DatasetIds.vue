@@ -10,14 +10,14 @@ import { mapActions } from 'vuex'
 export default {
   watch: {
     '$route.params.datasetIds': {
-      handler () {
+      handler() {
         this.storeActiveVectorIds(this.$route.params.datasetIds)
         this.triggerActiveVector()
       },
       deep: true
     }
   },
-  mounted () {
+  mounted() {
     this.storeActiveVectorIds(this.$route.params.datasetIds)
     this.triggerActiveVector()
   },
