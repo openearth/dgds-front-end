@@ -464,18 +464,6 @@ export const actions = {
                   res.events.map(event => moment(event.timeStamp).format())
                 )
               })
-              console.log({
-                id: datasetId,
-                data: {
-                  [locationId]: {
-                    category,
-                    serie,
-                    type: pointDataType,
-                    timeSpan: timeSpanType,
-                    timeFormat: timeFormatType
-                  }
-                }
-              })
 
               commit('addDatasetPointData', {
                 id: datasetId,
