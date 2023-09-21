@@ -185,7 +185,6 @@ export default {
       'activeVectorData',
       'getActiveVectorDataIds'
     ]),
-    ...mapMutations('setActiveVectorDataIds'),
     themeName() {
       return this.getActiveTheme || 'All datasets'
     },
@@ -252,7 +251,6 @@ export default {
       'loadActiveRasterLayer',
       'loadPointDataForLocation'
     ]),
-    ...mapGetters('activeVectorData'),
     markedTooltip(text) {
       return marked(text, { renderer: renderer })
     },
