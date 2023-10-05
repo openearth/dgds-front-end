@@ -4,7 +4,7 @@
     ref="map"
     :access-token="mapboxAccessToken"
     :preserve-drawing-buffer="true"
-    map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
+    :map-style="mapboxStyle"
     :logoPosition="'bottom-right'"
     :trackResize="'false'"
     @mb-load="mapLoaded = true"
@@ -91,7 +91,8 @@ export default {
   },
   data() {
     return {
-      mapboxAccessToken: process.env.VUE_APP_MAPBOX_TOKEN,
+      mapboxAccessToken: process.env.VUE_APP_MAPBOX_TOKEN || '',
+      mapboxStyle: process.env.VUE_APP_MAPBOX_STYLE || '',
       locationsLayers: [],
       activeLocation: null,
       mapLoaded: false,

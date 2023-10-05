@@ -3,6 +3,7 @@ import flatten from 'lodash/fp/flatten'
 import _ from 'lodash'
 import moment from 'moment'
 import getCatalog from '@/lib/request/get-catalog'
+import { decorateLayerStyling } from '@/lib/mapbox/styling'
 import datasets from './datasets.js'
 import themes from './themes.js'
 import Vue from 'vue'
@@ -249,14 +250,15 @@ export const actions = {
       const items = itemLinks.filter(child => child.rel === 'item')
       const layers = []
       items.forEach((item, index) => {
-        getCatalog(item.href).then(layerData => {
-          // commit(addLayerCommit, { id: datasetId, data: layerData })
-          layers.push(layerData)
-          if (index === items.length - 1) {
-            dataset.layers = layers
-            commit(setCollectionCommit, { id: datasetId, data: dataset })
-          }
-        })
+        getCatalog(item.href)
+          .then(decorateLayerStyling)
+          .then(layerData => {
+            layers.push(layerData)
+            if (index === items.length - 1) {
+              dataset.layers = layers
+              commit(setCollectionCommit, { id: datasetId, data: dataset })
+            }
+          })
       })
     })
   },
