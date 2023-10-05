@@ -1,7 +1,7 @@
 <template>
   <v-card color="rgba(0, 0, 0, 0)" rounded outlined class="stories-card">
     <v-list color="rgba(0, 0, 0, 0)">
-      <v-list-item v-for="feed in feeds" :key="feed.ID">
+      <v-list-item v-for="(feed, index) in feeds" :key="index">
         <v-list-item-content>
           <v-list-item-title v-text="feed.title" />
           <v-list-item-subtitle class="text-subtitle-1" v-text="feed.source" />

@@ -7,7 +7,7 @@
       >
     </v-card-title>
     <v-list color="rgba(0, 0, 0, 0)">
-      <v-list-item v-for="story in stories" :key="story.ID">
+      <v-list-item v-for="(story, index) in stories" :key="index">
         <v-list-item-avatar size="130">
           <v-img :src="story.icon"></v-img>
         </v-list-item-avatar>
