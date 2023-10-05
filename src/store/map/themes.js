@@ -1,13 +1,13 @@
-export const state = () => ([])
+export const state = () => []
 
 export const mutations = {
-  addTheme (state, theme) {
+  addTheme(state, theme) {
     state.push(theme)
   }
 }
 
 export const getters = {
-  getThemes (state) {
+  getThemes(state) {
     return state
   }
 }

@@ -9,8 +9,12 @@
       color="background"
     >
       <v-list dense class="pa-0">
-        <v-list-item class="px-2" @click="$router.push({ name: 'home' })" data-v-step="1">
-          <v-list-item-avatar >
+        <v-list-item
+          class="px-2"
+          @click="$router.push({ name: 'home' })"
+          data-v-step="1"
+        >
+          <v-list-item-avatar>
             <custom-icon name="deltares" />
           </v-list-item-avatar>
           <v-list-item-content>
@@ -18,7 +22,11 @@
           </v-list-item-content>
         </v-list-item>
         <v-divider></v-divider>
-        <v-list-item-group color="primary" active-class="active-theme" v-if="dataRoute">
+        <v-list-item-group
+          color="primary"
+          active-class="active-theme"
+          v-if="dataRoute"
+        >
           <v-list-item
             v-for="item in getThemes"
             :key="item"
@@ -27,7 +35,7 @@
             :data-v-step="item === 'Flooding' ? '2' : false"
           >
             <v-list-item-icon class="mr-6">
-              <custom-icon :name="item" iconFolder="themes"/>
+              <custom-icon :name="item" iconFolder="themes" />
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>{{ item }}</v-list-item-title>
@@ -81,12 +89,12 @@ export default {
   },
   computed: {
     ...mapGetters(['getThemes', 'getActiveTheme']),
-    dataRoute () {
+    dataRoute() {
       const { path } = this.$route
       return !!path.includes('data')
     }
   },
-  data () {
+  data() {
     return {
       drawer: true,
       mini: true,
@@ -95,10 +103,10 @@ export default {
   },
   methods: {
     ...mapMutations(['toggleActiveTheme']),
-    isActive (id) {
+    isActive(id) {
       return this.activeTheme === id
     },
-    toggleTheme (id) {
+    toggleTheme(id) {
       this.toggleActiveTheme(id)
 
       if (this.activeTheme === id) {

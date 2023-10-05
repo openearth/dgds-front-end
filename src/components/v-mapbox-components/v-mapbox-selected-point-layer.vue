@@ -20,7 +20,7 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       map: null,
       selectedLayer: {
@@ -40,13 +40,13 @@ export default {
     }
   },
   watch: {
-    geometry (newValue) {
+    geometry(newValue) {
       const selectedLayer = this.map.getSource(this.selectedLayer.id)
       selectedLayer.setData(newValue)
       this.map.moveLayer(this.selectedLayer.id)
     }
   },
-  mounted () {
+  mounted() {
     this.map = this.getMap()
     this.selectedLayer.source.data = this.geometry
     this.map.addLayer(this.selectedLayer)

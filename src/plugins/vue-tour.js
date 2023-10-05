@@ -37,7 +37,8 @@ export const tourSteps = [
   },
   {
     target: '[data-v-step="5"]',
-    content: 'Click on a <strong>data point</strong> on the map to see more details.',
+    content:
+      'Click on a <strong>data point</strong> on the map to see more details.',
     params: {
       placement: 'bottom'
     }

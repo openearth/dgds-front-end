@@ -3,7 +3,7 @@ import identity from 'lodash/identity'
 import toLower from 'lodash/toLower'
 import getColors from '../lib/styling/colors'
 
-export function generateCustomProperties (theme) {
+export function generateCustomProperties(theme) {
   const colors = getColors(theme)
   return entries(colors).map(([_key, value]) => {
     const [, ...parts] = /([a-z]+)([A-Za-z]+)?(\d+)?/.exec(_key)
@@ -15,7 +15,7 @@ export function generateCustomProperties (theme) {
   })
 }
 
-export default function customProperties ({ store }, inject) {
+export default function customProperties({ store }, inject) {
   const setCustomProperties = theme => {
     generateCustomProperties(theme).forEach(([key, value]) => {
       document.documentElement.style.setProperty(key, value)

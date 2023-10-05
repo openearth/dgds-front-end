@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <v-container class="pa-0">
@@ -17,14 +16,11 @@
           v-if="user && (isLine || isScatter || isMultiple || isEnsemble)"
           @click="downloadJson"
           outlined
-          block>
+          block
+        >
           Download data
         </v-btn>
-        <v-btn
-          v-if="user && isImage"
-          @click="downloadImage"
-          outlined
-          block>
+        <v-btn v-if="user && isImage" @click="downloadImage" outlined block>
           Download image
         </v-btn>
         <div v-if="!user">
@@ -45,16 +41,9 @@ import { saveAs } from 'file-saver'
 import CustomIcon from '@/components/CustomIcon'
 
 // import ECharts modules manually to reduce bundle size
-import {
-  SVGRenderer,
-  CanvasRenderer
-} from 'echarts/renderers'
+import { SVGRenderer, CanvasRenderer } from 'echarts/renderers'
 
-import {
-  LineChart,
-  ScatterChart,
-  LinesChart
-} from 'echarts/charts'
+import { LineChart, ScatterChart, LinesChart } from 'echarts/charts'
 
 import {
   GridComponent,
@@ -197,9 +186,11 @@ export default {
     type: {
       type: String,
       default: 'line',
-      validator (value) {
+      validator(value) {
         // The value must match one of these strings
-        return ['line', 'scatter', 'images', 'multiple', 'ensemble'].includes(value)
+        return ['line', 'scatter', 'images', 'multiple', 'ensemble'].includes(
+          value
+        )
       }
     },
     parameterId: {
@@ -226,22 +217,22 @@ export default {
   computed: {
     ...mapGetters(['colors', 'user']),
     ...mapGetters(['activeTimestamp']),
-    isLine () {
+    isLine() {
       return this.type === 'line'
     },
-    isImage () {
+    isImage() {
       return this.type === 'images'
     },
-    isScatter () {
+    isScatter() {
       return this.type === 'scatter'
     },
-    isMultiple () {
+    isMultiple() {
       return this.type === 'multiple'
     },
-    isEnsemble () {
+    isEnsemble() {
       return this.type === 'ensemble'
     },
-    graphData () {
+    graphData() {
       let series = []
       let yMaxValue = []
       // Don't understand why this is required, but it is required to reset series included in baseOptions to empty
@@ -254,7 +245,9 @@ export default {
       } else if (this.type === 'ensemble') {
         yMaxValue = Math.max.apply(null, this.series[0][0].data)
         series.push(this.addLineToGraph(this.series[0][1].data))
-        series.push(this.addAreaToGraph(this.series[0][2].data, 'lower', '#a3a3a3'))
+        series.push(
+          this.addAreaToGraph(this.series[0][2].data, 'lower', '#a3a3a3')
+        )
         series.push(this.addAreaToGraph(this.series[0][0].data, 'upper'))
       } else {
         yMaxValue = Math.max.apply(null, this.series[0])
@@ -340,7 +333,7 @@ export default {
     }
   },
   methods: {
-    getMarkPointCoord (serie) {
+    getMarkPointCoord(serie) {
       let data = serie.map((col, i) => [this.category[i], col])
       // Make sure that all data is in chronological order to plot it correctly
       data = data.sort((colA, colB) => {
@@ -354,7 +347,7 @@ export default {
       })
       return markPointCoord
     },
-    addLineToGraph (graphSerie) {
+    addLineToGraph(graphSerie) {
       let data = graphSerie.map((col, i) => [this.category[i], col])
       // Make sure that all data is in chronological order to plot it correctly
       data = data.sort((colA, colB) => {
@@ -372,7 +365,7 @@ export default {
         }
       }
     },
-    addAreaToGraph (serie, label, color = null, legend = false) {
+    addAreaToGraph(serie, label, color = null, legend = false) {
       let data = serie.map((col, i) => [this.category[i], col])
       // Make sure that all data is in chronological order to plot it correctly
       data = data.sort((colA, colB) => {
@@ -405,7 +398,7 @@ export default {
       }
       return series
     },
-    downloadJson () {
+    downloadJson() {
       const fileName = `${this.title}.json`
       const data = {
         title: this.title,
@@ -422,7 +415,7 @@ export default {
       // Save the file
       saveAs(fileToSave, fileName)
     },
-    downloadImage () {
+    downloadImage() {
       const fileName = `${this.title}.svg`
 
       fetch(this.imageUrl)
@@ -481,5 +474,4 @@ export default {
   width: 100%;
   height: 85%;
 }
-
 </style>

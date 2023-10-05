@@ -15,12 +15,12 @@ const getPointData = pipe([get('pointData'), getOrEmptyPointData])
 export const state = () => ({})
 
 export const mutations = {
-  addDatasetPointData (state, { id, data }) {
+  addDatasetPointData(state, { id, data }) {
     if (!state[id]) Vue.set(state, id, {})
     const pointData = getPointData(state[id])
     Vue.set(state[id], 'pointData', merge(pointData, data))
   },
-  addDataset (state, dataset) {
+  addDataset(state, dataset) {
     Vue.set(state, dataset.id, dataset)
   }
 }

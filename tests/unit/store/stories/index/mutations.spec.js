@@ -14,9 +14,7 @@ describe('setStories', () => {
       {
         id: 'storyId2',
         theme: 'theme2',
-        stories: [
-
-        ]
+        stories: []
       }
     ]
     mutations.setStories(state, stories)

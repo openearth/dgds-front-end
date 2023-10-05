@@ -12,20 +12,20 @@ export default {
       type: Object
     }
   },
-  data () {
+  data() {
     return {
       map: null
     }
   },
   watch: {
     layer: {
-      handler (newValue) {
+      handler(newValue) {
         this.updateMap()
       },
       deep: true
     }
   },
-  mounted () {
+  mounted() {
     this.map = this.getMap()
     if (this.map) {
       this.updateMap()
@@ -52,7 +52,7 @@ export default {
       }
     }, 1500)
   },
-  beforeDestroy () {
+  beforeDestroy() {
     const layer = this.layer
     if (layer.id && this.map.getLayer(layer.id)) {
       this.map.off('click', layer.id)
@@ -61,14 +61,14 @@ export default {
     }
   },
   methods: {
-    updateMap () {
+    updateMap() {
       if (this.map.getLayer(this.layer.id)) {
         this.map.setFilter(this.layer.id, this.layer.filter)
       } else {
         this.addToMap()
       }
     },
-    addToMap () {
+    addToMap() {
       const layer = this.layer
       this.map.addLayer(layer)
       this.map.on('click', layer.id, event => {
@@ -87,7 +87,7 @@ export default {
       })
     },
 
-    showGraph (layer, event) {
+    showGraph(layer, event) {
       this.mapPanTo(event, 500)
 
       const features = this.map.queryRenderedFeatures(event.point)
@@ -96,19 +96,21 @@ export default {
         geometry: features[0].geometry
       })
     },
-    mapPanTo (event, duration) {
+    mapPanTo(event, duration) {
       const { clientWidth } = this.map.getCanvas()
 
       // the timeseries panel is max 600px wide otherwise the half of the screen
       const visibleMapWidth =
-          clientWidth > 1200 ? (clientWidth - 600) * 0.25 : (clientWidth / 2) * 0.5
+        clientWidth > 1200
+          ? (clientWidth - 600) * 0.25
+          : (clientWidth / 2) * 0.5
       const targetLocation = this.map.unproject({
         x: event.point.x - visibleMapWidth,
         y: event.point.y
       })
       this.map.panTo(targetLocation, { duration })
     },
-    zoomTo (layer, event) {
+    zoomTo(layer, event) {
       // Use zoomto and the click event to zoom in on the map and display the
       // features of the layertozoomto
       const zoomLevel = _.get(layer, 'onClick.zoomTo')
@@ -127,7 +129,9 @@ export default {
 
         // filter out the features belonging to the layertozoomto
         const feats = features.filter(feat => {
-          return _.get(feat, 'layer.id') === _.get(layer, 'onClick.layerToZoomTo')
+          return (
+            _.get(feat, 'layer.id') === _.get(layer, 'onClick.layerToZoomTo')
+          )
         })
 
         // calculate all distances from new center point to these features
@@ -146,7 +150,7 @@ export default {
       }, duration * 9)
     },
 
-    getBBox (lngLat) {
+    getBBox(lngLat) {
       const bound = 0.1
       // Get bounding box of the current view
       const N = lngLat.lat + bound
@@ -167,7 +171,7 @@ export default {
       }
     }
   },
-  render () {
+  render() {
     return null
   },
   inject: ['getMap']

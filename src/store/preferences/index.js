@@ -9,22 +9,22 @@ export const getDefaultState = () => ({
 export const state = getDefaultState()
 
 export const mutations = {
-  resetPreferences (state) {
+  resetPreferences(state) {
     Object.assign(state, getDefaultState())
   },
-  setSidebarAnimating (state, { animating }) {
+  setSidebarAnimating(state, { animating }) {
     state.sidebarAnimating = animating
   },
-  setSidebarExpanded (state, { expanded }) {
+  setSidebarExpanded(state, { expanded }) {
     state.sidebarExpanded = expanded
   },
-  setUser (state, { user }) {
+  setUser(state, { user }) {
     state.user = user
   }
 }
 
 export const getters = {
-  user (state) {
+  user(state) {
     return state.user
   }
 }

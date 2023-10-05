@@ -1,5 +1,11 @@
 <template>
-  <v-navigation-drawer class="pl-16" permanent absolute width="40vw" color="background">
+  <v-navigation-drawer
+    class="pl-16"
+    permanent
+    absolute
+    width="40vw"
+    color="background"
+  >
     <v-container class="account d-flex flex-column">
       <h2 class="h2">
         About
@@ -20,7 +26,7 @@
 import aboutText from '@/assets/docs/about-text.md'
 
 export default {
-  data () {
+  data() {
     return {
       aboutText
     }
@@ -28,5 +34,4 @@ export default {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>
