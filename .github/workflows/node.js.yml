@@ -30,11 +30,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Test
-        run: npm run test:unit
+        run: npm run test
       - name: Build
         run: npm run build && zip -r dgds-frontend.zip dist
         env:
           VUE_APP_MAPBOX_TOKEN: ${{ secrets.VUE_APP_MAPBOX_TOKEN }}
+          VUE_APP_MAPBOX_STYLE: ${{ secrets.VUE_APP_MAPBOX_STYLE }}
+          VUE_APP_MAPBOX_LAYERS_STYLE: ${{ secrets.VUE_APP_MAPBOX_LAYERS_STYLE }}
           VUE_APP_SERVER_URL: ${{ secrets.VUE_APP_SERVER_URL }}
           VUE_APP_CATALOG_URL: ${{ secrets.VUE_APP_CATALOG_URL }}
 
