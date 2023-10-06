@@ -6,7 +6,7 @@
 import Oidc from 'oidc-client'
 
 export default {
-  mounted () {
+  mounted() {
     new Oidc.UserManager()
       .signoutRedirectCallback()
       .then(user => (window.location = '/'))

@@ -20,7 +20,9 @@ export const includesIn = curry(includes, 2)
  * @example
  * momentFormat('MM-DD-YYYY \n HH:mm', '2019-03-27T00:00:00Z') // '03-27-2019  01:00'
  */
-export const momentFormat = curry((format, value) => moment(value).format(format))
+export const momentFormat = curry((format, value) =>
+  moment(value).format(format)
+)
 
 /**
  * Gets a properties value from an object
@@ -106,7 +108,9 @@ export const mapAsync = curry((fn, items) => Promise.all(items.map(fn)))
  * ]
  * filterBy({ 'a': 4 }, collection) // { 'a': 4, 'b': 5, 'c': 6 }
  */
-export const filterBy = curry((source, collection) => filter(collection, matches(source)))
+export const filterBy = curry((source, collection) =>
+  filter(collection, matches(source))
+)
 
 /**
  * Clones an object and return it frozen

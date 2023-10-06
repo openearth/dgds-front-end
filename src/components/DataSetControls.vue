@@ -1,9 +1,15 @@
 <template>
-  <v-card dark raised max-height="80vh" class="pa-0 data-set-controls" data-v-step="3">
+  <v-card
+    dark
+    raised
+    max-height="80vh"
+    class="pa-0 data-set-controls"
+    data-v-step="3"
+  >
     <v-card-title class="h3">
       {{ themeName }}
     </v-card-title>
-    <v-card-text class='scrollbar data-set-controls__text px-0 pb-0'>
+    <v-card-text class="scrollbar data-set-controls__text px-0 pb-0">
       <v-expansion-panels
         accordion
         flat
@@ -11,8 +17,12 @@
         :value="activePanels"
         multiple
         readonly
-        color="background">
-        <v-radio-group v-model="activeRasterLayer" class='data-set-controls__group ma-0'>
+        color="background"
+      >
+        <v-radio-group
+          v-model="activeRasterLayer"
+          class="data-set-controls__group ma-0"
+        >
           <v-expansion-panel
             v-for="(dataset, index) in datasets"
             :key="dataset.id"
@@ -24,7 +34,9 @@
                   <custom-icon :name="dataset.id" iconFolder="datasets" />
                 </v-col>
                 <v-col cols="7" class="ma-auto pa-0">
-                  <span class="ml-2 d-sm-none d-md-flex">{{ dataset.title }}</span>
+                  <span class="ml-2 d-sm-none d-md-flex">{{
+                    dataset.title
+                  }}</span>
                 </v-col>
                 <v-col cols="2" class="ma-auto pa-0">
                   <v-switch
@@ -41,7 +53,10 @@
                   <v-radio
                     dense
                     class="ma-auto radio"
-                    v-show="checkLayerType(dataset.id, 'gee') && !datasetLoading(dataset.id)"
+                    v-show="
+                      checkLayerType(dataset.id, 'gee') &&
+                        !datasetLoading(dataset.id)
+                    "
                     :value="dataset.id"
                     @click="setRasterLayer(dataset.id)"
                     color="formActive"
@@ -49,13 +64,20 @@
                   <v-progress-circular
                     dense
                     class="ma-auto"
-                    v-show="checkLayerType(dataset.id, 'gee') && datasetLoading(dataset.id)"
+                    v-show="
+                      checkLayerType(dataset.id, 'gee') &&
+                        datasetLoading(dataset.id)
+                    "
                     indeterminate
                     color="formActive"
                   ></v-progress-circular>
                 </v-col>
                 <v-col cols="1" class="ma-auto pa-0">
-                  <v-btn icon class="my-auto" @click="onTooltipClick(dataset.id)" >
+                  <v-btn
+                    icon
+                    class="my-auto"
+                    @click="onTooltipClick(dataset.id)"
+                  >
                     <custom-icon v-if="dataset.description" name="info" />
                   </v-btn>
                 </v-col>
@@ -63,10 +85,13 @@
             </v-expansion-panel-header>
             <v-expansion-panel-content class="pa-0" color="background">
               <div v-if="getActiveVectorDataIds === dataset.id">
-                <static-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
+                <static-legend
+                  :dataset-id="dataset.id"
+                  class="data-set-controls__legend-bar"
+                />
               </div>
               <div v-if="getActiveVectorDataIds === dataset.id">
-                <br>
+                <br />
                 <v-row>
                   <v-col
                     cols="6"
@@ -86,30 +111,36 @@
                   </v-col>
                 </v-row>
               </div>
-              <div v-if="dataset.description && hoverId === dataset.id" class="data-set-controls__tooltip">
+              <div
+                v-if="dataset.description && hoverId === dataset.id"
+                class="data-set-controls__tooltip"
+              >
                 <div
                   v-html="markedTooltip(dataset.description)"
                   class="data-set-controls__tooltip-text markdown pa-2"
                   :anchor-attributes="{ target: '_blank' }"
                   :watches="['source']"
-                  />
-                </div>
-                <v-select
-                  class="pa-2"
-                  v-if="getActiveRasterLayer === dataset.id && hasBands"
-                  v-model="selectedLayer"
-                  :value="selectedLayer"
-                  :items="activeRasterData.summaries['eo:bands']"
-                  :label="`Select layer`"
-                  flat
-                  item-text="description"
-                  item-value="name"
-                  dense
-                  @change="updateRasterBand"
                 />
+              </div>
+              <v-select
+                class="pa-2"
+                v-if="getActiveRasterLayer === dataset.id && hasBands"
+                v-model="selectedLayer"
+                :value="selectedLayer"
+                :items="activeRasterData.summaries['eo:bands']"
+                :label="`Select layer`"
+                flat
+                item-text="description"
+                item-value="name"
+                dense
+                @change="updateRasterBand"
+              />
               <div v-if="activeRasterLayer === dataset.id">
-                <br>
-                <layer-legend :dataset-id="dataset.id" class="data-set-controls__legend-bar" />
+                <br />
+                <layer-legend
+                  :dataset-id="dataset.id"
+                  class="data-set-controls__legend-bar"
+                />
               </div>
             </v-expansion-panel-content>
           </v-expansion-panel>
@@ -128,7 +159,7 @@ import marked from 'marked'
 import _ from 'lodash'
 
 const renderer = new marked.Renderer()
-renderer.link = function (href, title, text) {
+renderer.link = function(href, title, text) {
   return `<a target="_blank" href="${href}" title="${title}">${text}</a>`
 }
 
@@ -154,13 +185,19 @@ export default {
       'activeVectorData',
       'getActiveVectorDataIds'
     ]),
-    ...mapMutations('setActiveVectorDataIds'),
-    themeName () {
+    themeName() {
       return this.getActiveTheme || 'All datasets'
     },
-    activePanels () {
+    activePanels() {
       const active = _.values(this.datasets).flatMap((dataset, index) => {
-        const activeDataset = this.hoverId === dataset.id || this.activeRasterLayer === dataset.id || (this.getActiveVectorDataIds === dataset.id && _.get(this.activeVectorData, `${dataset.id}.properties.deltares:legendFile`) === 'legenda')
+        const activeDataset =
+          this.hoverId === dataset.id ||
+          this.activeRasterLayer === dataset.id ||
+          (this.getActiveVectorDataIds === dataset.id &&
+            _.get(
+              this.activeVectorData,
+              `${dataset.id}.properties.deltares:legendFile`
+            ) === 'legenda')
         return activeDataset ? index : []
       })
 
@@ -169,52 +206,65 @@ export default {
       const initialDataset = _.get(this.datasets, `${params.datasetIds}`)
 
       if (this.getActiveVectorDataIds === '' && params.datasetIds !== '') {
-        if (typeof initialDataset !== 'undefined' && typeof initialDataset.summaries !== 'undefined') {
+        if (
+          typeof initialDataset !== 'undefined' &&
+          typeof initialDataset.summaries !== 'undefined'
+        ) {
           this.toggleLocationDataset(initialDataset)
         }
       }
 
       return active
     },
-    hasBands () {
+    hasBands() {
       return _.has(this.activeRasterData, 'summaries.eo:bands')
     },
     selectedLayer: {
-      get () {
+      get() {
         return _.get(this.activeRasterData, 'properties.deltares:band', null)
       },
-      set (val) {
+      set(val) {
         this.setRasterProperty({ prop: 'deltares:band', data: val })
       }
     }
   },
-  data () {
+  data() {
     return {
       hoverId: '',
       activeRasterLayer: ''
     }
   },
-  mounted () {
+  mounted() {
     this.activeRasterLayer = this.getActiveRasterLayer
   },
   methods: {
-    ...mapMutations(['setActiveRasterLayerId', 'setRasterData', 'setRasterProperty', 'setLoadingRasterLayers', 'setActiveVectorDataIds', 'setActiveSummary']),
-    ...mapActions(['loadActiveRasterData', 'loadActiveRasterLayer', 'loadPointDataForLocation']),
-    ...mapGetters('activeVectorData'),
-    markedTooltip (text) {
+    ...mapMutations([
+      'setActiveRasterLayerId',
+      'setRasterData',
+      'setRasterProperty',
+      'setLoadingRasterLayers',
+      'setActiveVectorDataIds',
+      'setActiveSummary'
+    ]),
+    ...mapActions([
+      'loadActiveRasterData',
+      'loadActiveRasterLayer',
+      'loadPointDataForLocation'
+    ]),
+    markedTooltip(text) {
       return marked(text, { renderer: renderer })
     },
-    datasetLoading (datasetId) {
+    datasetLoading(datasetId) {
       if (this.activeRasterLayer === datasetId) {
         return this.loadingRasterLayers
       } else {
         return false
       }
     },
-    onTooltipClick (id) {
+    onTooltipClick(id) {
       this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
     },
-    toggleLocationDataset (dataset) {
+    toggleLocationDataset(dataset) {
       let oldParams = _.get(this.$route, 'params.datasetIds')
       const params = this.$route.params
       let newParams
@@ -261,11 +311,11 @@ export default {
         this.setActiveSummary(dataset.summaries)
       }
     },
-    toggleLocationDatasetSummary (dataset) {
+    toggleLocationDatasetSummary(dataset) {
       // Store which summary is active
       this.setActiveSummary(dataset.summaries)
     },
-    checkLayerType (id, type) {
+    checkLayerType(id, type) {
       // Check if type is in one of the titles of the children
       const layers = _.get(this.datasets, `${id}.links`)
       if (!layers) {
@@ -282,11 +332,11 @@ export default {
       })
       return typeArray.includes(true)
     },
-    updateRasterBand () {
+    updateRasterBand() {
       this.loadActiveRasterLayer()
       this.activeRasterLayer = this.getActiveRasterLayer
     },
-    setRasterLayer (id) {
+    setRasterLayer(id) {
       if (this.getActiveRasterLayer === id) {
         id = null
       }
@@ -322,7 +372,8 @@ export default {
   width: 100%;
 }
 
-.data-set-controls__tooltip, .data-set-controls__tooltip {
+.data-set-controls__tooltip,
+.data-set-controls__tooltip {
   position: relative;
   width: 100%;
   height: 100%;

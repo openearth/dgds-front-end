@@ -129,8 +129,7 @@ describe('setRasterProperty', () => {
     const state = {
       activeRasterData: {
         layer: {
-          properties: {
-          }
+          properties: {}
         }
       }
     }

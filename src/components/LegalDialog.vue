@@ -6,7 +6,10 @@
     :fullscreen="$vuetify.breakpoint.xsOnly"
     :max-width="640"
   >
-    <v-card class="d-flex flex-column pa-3" style="max-height: 100%;overflow:hidden">
+    <v-card
+      class="d-flex flex-column pa-3"
+      style="max-height: 100%;overflow:hidden"
+    >
       <div class="scrollbar">
         <div
           id="user-agreements"
@@ -14,12 +17,14 @@
           v-html="UserAgreements1"
           :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
         />
-        <div v-for="(dataset, index, count) in getDatasets"
-          :key="`license_use-${dataset.id}`">
+        <div
+          v-for="(dataset, index, count) in getDatasets"
+          :key="`license_use-${dataset.id}`"
+        >
           <span
             id="user-agreements"
             class="markdown"
-            v-html="markedText(`- 2.${ count + 2 }.  ${dataset['license_use']}`)"
+            v-html="markedText(`- 2.${count + 2}.  ${dataset['license_use']}`)"
             :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
           />
         </div>
@@ -29,12 +34,16 @@
           v-html="UserAgreements2"
           :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
         />
-        <div v-for="(dataset, index, count) in getDatasets"
-          :key="`license_warranty-${dataset.id}`">
+        <div
+          v-for="(dataset, index, count) in getDatasets"
+          :key="`license_warranty-${dataset.id}`"
+        >
           <span
             id="user-agreements"
             class="markdown"
-            v-html="markedText(`- 6.${ count + 2 }.  ${dataset['license_warranty']}`)"
+            v-html="
+              markedText(`- 6.${count + 2}.  ${dataset['license_warranty']}`)
+            "
             :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
           />
         </div>
@@ -97,7 +106,7 @@ import marked from 'marked'
 const renderer = new marked.Renderer()
 
 export default {
-  data () {
+  data() {
     return {
       open: true,
       UserAgreements1,
@@ -108,7 +117,7 @@ export default {
       cookie: false
     }
   },
-  created () {
+  created() {
     this.cookie = Cookies.get('cookie') === 'true'
     this.agree = Cookies.get('agree') === 'true'
     if (this.agree) {
@@ -127,18 +136,18 @@ export default {
     }
   },
   methods: {
-    setTarget (evt, target) {
+    setTarget(evt, target) {
       this[target] = evt
       this.$v[target].$touch()
     },
-    submit (evt) {
+    submit(evt) {
       if (this.cookie) {
         Cookies.set('agree', this.agree)
         Cookies.set('cookie', this.cookie)
       }
       this.open = false
     },
-    markedText (text) {
+    markedText(text) {
       return marked(text, { renderer: renderer })
     }
   }

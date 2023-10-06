@@ -1,3 +1,5 @@
+require('@rushstack/eslint-patch/modern-module-resolution')
+
 module.exports = {
   root: true,
   env: {
@@ -5,7 +7,8 @@ module.exports = {
   },
   extends: [
     'plugin:vue/essential',
-    '@vue/standard'
+    '@vue/standard',
+    '@vue/eslint-config-prettier'
   ],
   parserOptions: {
     parser: 'babel-eslint'

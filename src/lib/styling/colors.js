@@ -89,10 +89,6 @@ const context = {
     light: light.blue60,
     dark: dark.blue40
   },
-  quiet: {
-    light: 'transparent',
-    dark: 'transparent'
-  },
   quietHover: {
     light: light.blue20,
     dark: dark.grey80
@@ -135,7 +131,7 @@ const context = {
   }
 }
 
-export default function getColors (theme) {
+export default function getColors(theme) {
   const baseColors = theme === 'dark' ? dark : light
   const contextColors = entries(context)
     .map(([key, value]) => ({ [key]: value[theme] }))

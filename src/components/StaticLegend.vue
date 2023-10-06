@@ -17,14 +17,14 @@ export default {
       required: true
     }
   },
-  data () {
+  data() {
     return {
       dataset: {}
     }
   },
   computed: {
     ...mapGetters(['getDatasets', 'activeVectorData']),
-    legend () {
+    legend() {
       try {
         const properties = this.activeVectorData[this.datasetId].properties
         const legendFile = _.get(properties, 'deltares:legendFile')
@@ -34,7 +34,7 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.dataset = this.getDatasets[this.datasetId]
   }
 }

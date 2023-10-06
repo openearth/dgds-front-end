@@ -55,7 +55,7 @@ export default {
       'getLoadingState',
       'getActiveRasterLayer'
     ]),
-    timestampItems () {
+    timestampItems() {
       // The items for the dropdown menu -> a list with the dates in of the
       // active raster layer in a readable format
       if (this.activeTimestamp === 'Loading...') {
@@ -68,22 +68,26 @@ export default {
       const series = _.clone(_.get(this.activeRasterData, 'links') || [])
       return series.filter(serie => serie.rel === 'item')
     },
-    dateIndex () {
+    dateIndex() {
       return this.timestampItems.findIndex(item => {
         return item.date === this.activeTimestamp
       })
     },
     timestamp: {
       // This is the input for the v-model of the select of the dropdown menu
-      get () {
+      get() {
         return this.activeTimestamp
       },
-      set (val) {
+      set(val) {
         if (!val) {
           return
         }
         this.timestampItems.forEach((serie, i) => {
-          if (moment(val.date, 'DD-MM-YYYY HH:mm').isSame(moment(serie.date, 'DD-MM-YYYY HH:mm'))) {
+          if (
+            moment(val.date, 'DD-MM-YYYY HH:mm').isSame(
+              moment(serie.date, 'DD-MM-YYYY HH:mm')
+            )
+          ) {
             this.loadActiveRasterLayer(serie)
             return true
           }
@@ -93,7 +97,7 @@ export default {
   },
   methods: {
     ...mapActions(['loadActiveRasterLayer']),
-    getNewRasterLayer (serie) {
+    getNewRasterLayer(serie) {
       this.loadActiveRasterLayer(serie)
     }
   }

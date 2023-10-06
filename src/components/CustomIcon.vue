@@ -25,7 +25,7 @@ export default {
     }
   },
   computed: {
-    icon () {
+    icon() {
       try {
         const subFolder = this.iconFolder ? `${this.iconFolder}/` : ''
         return require(`../assets/icons/${subFolder}icon-${this.name}.svg`)

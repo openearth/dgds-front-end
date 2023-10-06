@@ -4,12 +4,16 @@
     ref="map"
     :access-token="mapboxAccessToken"
     :preserve-drawing-buffer="true"
-    map-style="mapbox://styles/global-data-viewer/cjtss3jfb05w71fmra13u4qqm"
+    :map-style="mapboxStyle"
     :logoPosition="'bottom-right'"
     :trackResize="'false'"
     @mb-load="mapLoaded = true"
   >
-    <v-mapbox-navigation-control :options="{ visualizePitch: true }" position="bottom-right" data-v-step="5"/>
+    <v-mapbox-navigation-control
+      :options="{ visualizePitch: true }"
+      position="bottom-right"
+      data-v-step="5"
+    />
     <v-mapbox-selected-point-layer v-if="mapLoaded" :geometry="geometry" />
     <v-mapbox-info-text-layer
       v-if="mapLoaded"
@@ -25,8 +29,15 @@
         @select-locations="selectLocations"
       />
     </template>
-    <v-mapbox-raster-layer v-if="mapLoaded" :options="rasterLayer" @click="getFeatureInfo" />
-    <v-mapbox-flowmap-layer v-if="mapLoaded && showFlowmapLayer" :options="flowmapLayer" />
+    <v-mapbox-raster-layer
+      v-if="mapLoaded"
+      :options="rasterLayer"
+      @click="getFeatureInfo"
+    />
+    <v-mapbox-flowmap-layer
+      v-if="mapLoaded && showFlowmapLayer"
+      :options="flowmapLayer"
+    />
   </v-mapbox>
 </template>
 
@@ -43,7 +54,7 @@ import VMapboxSelectedPointLayer from '@/components/v-mapbox-components/v-mapbox
 import VMapboxInfoTextLayer from '@/components/v-mapbox-components/v-mapbox-info-text-layer'
 
 export default {
-  mounted () {
+  mounted() {
     this.map = this.$refs.map.map
     this.zoomToLastDatasetId()
   },
@@ -55,7 +66,7 @@ export default {
     VMapboxInfoTextLayer
   },
   watch: {
-    '$route.params.datasetIds' (val) {
+    '$route.params.datasetIds'(val) {
       if (!val) {
         this.clearActiveDatasetIds()
         this.setGeographicalScope('global')
@@ -63,7 +74,7 @@ export default {
         this.zoomToLastDatasetId()
       }
     },
-    '$route.params.locationId' (val) {
+    '$route.params.locationId'(val) {
       if (!val) {
         this.geometry = {
           type: 'Point',
@@ -74,13 +85,14 @@ export default {
         // the map whenever you come in via different route
       }
     },
-    rasterLayer (val) {
+    rasterLayer(val) {
       this.removeInfoText()
     }
   },
-  data () {
+  data() {
     return {
-      mapboxAccessToken: process.env.VUE_APP_MAPBOX_TOKEN,
+      mapboxAccessToken: process.env.VUE_APP_MAPBOX_TOKEN || '',
+      mapboxStyle: process.env.VUE_APP_MAPBOX_STYLE || '',
       locationsLayers: [],
       activeLocation: null,
       mapLoaded: false,
@@ -110,20 +122,24 @@ export default {
       'getGeographicalScope',
       'knownVectorData'
     ]),
-    rasterLayer () {
+    rasterLayer() {
       const rasterLayer = getRasterLayer()
-      rasterLayer.source.tiles = [_.get(this.activeRasterData, 'layer.assets.visual.href')]
+      rasterLayer.source.tiles = [
+        _.get(this.activeRasterData, 'layer.assets.visual.href')
+      ]
       return rasterLayer
     },
-    flowmapLayer () {
+    flowmapLayer() {
       const flowmapLayer = getRasterLayer()
-      flowmapLayer.source.tiles = [_.get(this.activeFlowmapData, 'assets.flowmap.href')]
+      flowmapLayer.source.tiles = [
+        _.get(this.activeFlowmapData, 'assets.flowmap.href')
+      ]
       return flowmapLayer
     },
-    showFlowmapLayer () {
+    showFlowmapLayer() {
       return !_.isEmpty(this.activeFlowmapData)
     },
-    vectorLayers () {
+    vectorLayers() {
       // Returns an array with unique mapboxlayers.
       // Get active vectorlayers and flatten, all mapboxlayers into 1 array
       const activeVectorLayers = this.getMapboxLayers(this.activeVectorData)
@@ -141,7 +157,9 @@ export default {
         const layer = _(flattenedLayers)
           .groupBy('id')
           .map(g =>
-            _.mergeWith({}, ...g, (obj, src) => (_.isArray(obj) ? obj.concat(src) : undefined))
+            _.mergeWith({}, ...g, (obj, src) =>
+              _.isArray(obj) ? obj.concat(src) : undefined
+            )
           )
           .value()
 
@@ -165,7 +183,7 @@ export default {
       'setActiveLocationIndex'
     ]),
 
-    getMapboxLayers (collection) {
+    getMapboxLayers(collection) {
       const vectorDatasets = this.activeDatasetIds.map(datasetId => {
         return _.get(collection, datasetId)
       })
@@ -185,7 +203,9 @@ export default {
                 return true
               }
             })
-            if (!layerSelected) { return }
+            if (!layerSelected) {
+              return
+            }
             console.log(layer.id)
           }
           const mapboxLayer = {}
@@ -203,7 +223,7 @@ export default {
       return mapboxLayers
     },
 
-    zoomToLastDatasetId () {
+    zoomToLastDatasetId() {
       const params = _.get(this.$route, 'params.datasetIds')
       if (!params) {
         return
@@ -211,13 +231,13 @@ export default {
       const ids = params.split(',')
       this.zoomToBbox(ids[ids.length - 1])
     },
-    removeInfoText () {
+    removeInfoText() {
       this.infoTextGeometry = {
         type: 'Point',
         coordinates: []
       }
     },
-    updateFilter (layer) {
+    updateFilter(layer) {
       // if there is a filterIds, concatenate the values into filter
       if (_.get(layer, 'filterIds')) {
         const filter = ['any']
@@ -228,15 +248,24 @@ export default {
       }
       return layer
     },
-    zoomToBbox (datasetId) {
+    zoomToBbox(datasetId) {
       setTimeout(() => {
         const oldScope = this.getGeographicalScope
-        const newScope = _.get(this.getDatasets, `${datasetId}.properties.deltares:scope`)
+        const newScope = _.get(
+          this.getDatasets,
+          `${datasetId}.properties.deltares:scope`
+        )
         // If the new scope is global or the same as the old scope, do nothing
         if (newScope === 'regional' && oldScope !== newScope) {
           // If layer is toggled on and has a bbox, zoom to that layer
-          const coords = _.get(this.getDatasets, `${datasetId}.extent.spatial.bbox[0]`)
-          const bbox = [[coords[0], coords[1]], [coords[2], coords[3]]]
+          const coords = _.get(
+            this.getDatasets,
+            `${datasetId}.extent.spatial.bbox[0]`
+          )
+          const bbox = [
+            [coords[0], coords[1]],
+            [coords[2], coords[3]]
+          ]
           if (bbox) {
             this.$refs.map.map.fitBounds(bbox)
           }
@@ -244,19 +273,28 @@ export default {
         this.setGeographicalScope(newScope)
       }, 1000)
     },
-    getFeatureInfo (bbox) {
+    getFeatureInfo(bbox) {
       if (!this.activeRasterData) {
         this.removeInfoText()
         return
       }
 
       const parameters = {
-        imageId: _.get(this.activeRasterData, 'layer.properties.deltares:imageId'),
+        imageId: _.get(
+          this.activeRasterData,
+          'layer.properties.deltares:imageId'
+        ),
         bbox
       }
 
-      const band = _.get(this.activeRasterData, 'layer.properties.deltares:band')
-      const func = _.get(this.activeRasterData, 'layer.properties.deltares:function')
+      const band = _.get(
+        this.activeRasterData,
+        'layer.properties.deltares:band'
+      )
+      const func = _.get(
+        this.activeRasterData,
+        'layer.properties.deltares:function'
+      )
 
       if (band) {
         parameters.band = band
@@ -289,7 +327,7 @@ export default {
           this.removeInfoText()
         })
     },
-    selectLocations (detail) {
+    selectLocations(detail) {
       // On the selection (by mouse event on map) of a location update the
       // route accordingly
       this.geometry = detail.geometry
@@ -311,20 +349,25 @@ export default {
       params.locationId = _.head(locationIds)
 
       // Check if route is different, and only change if this is the case (to avoid route errors with SLR data)
-      if (this.$router.currentRoute.path !== `/data/${params.datasetIds}/${params.locationId}`) {
-        this.$router.push({ path: `/data/${params.datasetIds}/${params.locationId}`, params })
+      if (
+        this.$router.currentRoute.path !==
+        `/data/${params.datasetIds}/${params.locationId}`
+      ) {
+        this.$router.push({
+          path: `/data/${params.datasetIds}/${params.locationId}`,
+          params
+        })
       }
 
       // this.$router.push({ path: `/data/${params.datasetIds}/${params.locationId}`, params })
     },
-    toggleRasterLayer (event) {
+    toggleRasterLayer(event) {
       this.setActiveRasterLayerId(event)
       this.loadActiveRasterItem()
       this.removeInfoText()
       this.zoomToBbox(this.getActiveRasterLayer)
     }
   }
-
 }
 </script>
 
