@@ -28,7 +28,7 @@ export function decorateLayerStyling(layerData) {
           return layerData
         })
     }
-
-    return Promise.resolve(layerData)
   }
+
+  return Promise.resolve(layerData)
 }
