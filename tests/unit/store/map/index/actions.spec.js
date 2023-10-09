@@ -2,6 +2,11 @@ import { actions } from '@/store/map/index.js'
 import getCatalog from '@/lib/request/get-catalog'
 
 jest.mock('@/lib/request/get-catalog')
+jest.mock('@/lib/mapbox/styling/index.js', () => ({
+  decorateLayerStyling: jest
+    .fn()
+    .mockImplementation(input => Promise.resolve(input))
+}))
 
 describe('loadDatasets', () => {
   test('fetches datasets and stores them', async () => {
@@ -218,12 +223,16 @@ describe('loadLayerCollection', () => {
     getCatalog.mockResolvedValueOnce(apiResult)
     getCatalog.mockResolvedValue('bar')
 
-    const childs = await actions.loadLayerCollection(
+    // Call the async function and await its resolution
+    await actions.loadLayerCollection(
       { commit },
       { collectionUrl: 'url', setCollectionCommit: 'foo', datasetId: 'par1' }
     )
-    await childs
+
+    // Modify apiResult after the async operation is done
     apiResult.layers = ['bar', 'bar']
+
+    // Expect commit to be called with the modified data
     expect(commit.mock.calls[0]).toEqual([
       'foo',
       { id: 'par1', data: apiResult }
