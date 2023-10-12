@@ -239,27 +239,33 @@ export const actions = {
     }
   },
 
-  loadLayerCollection(
+  async loadLayerCollection(
     { commit },
     { collectionUrl, setCollectionCommit, addLayerCommit, datasetId }
   ) {
-    // Retrieve a layer collection and it's underlaying collection
-    getCatalog(collectionUrl).then(dataset => {
-      dataset.layers = []
+    // Retrieve a layer collection and it's underlaying collectiongit
+    await getCatalog(collectionUrl).then(async dataset => {
       const itemLinks = _.get(dataset, 'links')
       const items = itemLinks.filter(child => child.rel === 'item')
       const layers = []
-      items.forEach((item, index) => {
-        getCatalog(item.href)
-          .then(decorateLayerStyling)
-          .then(layerData => {
-            layers.push(layerData)
-            if (index === items.length - 1) {
-              dataset.layers = layers
-              commit(setCollectionCommit, { id: datasetId, data: dataset })
-            }
-          })
-      })
+
+      await Promise.all(
+        items.map(async item =>
+          getCatalog(item.href)
+            .then(decorateLayerStyling)
+            .then(layerData => {
+              layers.push(layerData)
+            })
+        )
+      )
+
+      if (layers.length > 0) {
+        dataset.layers = layers
+        commit(setCollectionCommit, {
+          id: datasetId,
+          data: dataset
+        })
+      }
     })
   },
 

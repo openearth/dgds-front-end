@@ -206,7 +206,6 @@ export default {
             if (!layerSelected) {
               return
             }
-            console.log(layer.id)
           }
           const mapboxLayer = {}
           Object.entries(layer.properties).forEach(([id, prop]) => {

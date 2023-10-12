@@ -1,8 +1,5 @@
 export function decorateLayerStyling(layerData) {
-  if (
-    layerData.properties['deltares:source-layer'] &&
-    layerData.properties['deltares:type'] === 'circle'
-  ) {
+  if (layerData.properties['deltares:source-layer']) {
     const style = process.env.VUE_APP_MAPBOX_LAYERS_STYLE || ''
     const token = process.env.VUE_APP_MAPBOX_TOKEN || ''
     const target = layerData.properties['deltares:source-layer'] || ''
