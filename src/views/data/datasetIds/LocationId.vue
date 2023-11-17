@@ -8,20 +8,13 @@
   >
     <v-container class="account d-flex flex-column">
       <h2 class="h2">
-        {{ locations }}
+        Metocean
       </h2>
       <v-btn icon class="close-button" @click="close">
         <v-icon>mdi-close</v-icon>
       </v-btn>
       <div class="flex-grow-1 py-3 scrollbar" align-space-between>
-        <v-expansion-panels
-          v-if="hasSerieData"
-          flat
-          accordion
-          multiple
-          v-model="expandedDatasets"
-          color="background"
-        >
+        <v-expansion-panels flat accordion multiple color="background">
           <v-expansion-panel
             v-for="data in datasets"
             :key="`${locations}-${data.id}-${activeSummaryId}`"
@@ -47,10 +40,39 @@
               />
             </v-expansion-panel-content>
           </v-expansion-panel>
+          <v-expansion-panel>
+            <v-expansion-panel-header class="h4" color="background" dark>
+              Time series
+            </v-expansion-panel-header>
+            <v-expansion-panel-content color="background">
+              <time-series />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          <v-expansion-panel>
+            <v-expansion-panel-header class="h4" color="background" dark>
+              Rose plot
+            </v-expansion-panel-header>
+            <v-expansion-panel-content color="background">
+              <rose-plot />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          <v-expansion-panel>
+            <v-expansion-panel-header class="h4" color="background" dark>
+              Extreme values
+            </v-expansion-panel-header>
+            <v-expansion-panel-content color="background">
+              <extreme-values />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
+          <v-expansion-panel>
+            <v-expansion-panel-header class="h4" color="background" dark>
+              Weather window
+            </v-expansion-panel-header>
+            <v-expansion-panel-content color="background">
+              <weather-window />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
         </v-expansion-panels>
-        <template v-else>
-          <p>No data available.</p>
-        </template>
       </div>
       <div class="flex-shrink-1 bodytext-xs disclaimer">
         Global datasets are generated with great care but may locally contain
@@ -61,17 +83,67 @@
 </template>
 
 <script>
+import { ref } from '@vue/composition-api'
 import _ from 'lodash'
 import flatten from 'lodash/flatten'
 import { mapMutations, mapGetters, mapActions } from 'vuex'
 import GraphLine from '@/components/GraphLine'
 
+import {
+  TimeSeries,
+  RosePlot,
+  ExtremeValues,
+  WeatherWindow
+} from '@/components/metocean'
+
 export default {
-  components: { GraphLine },
+  components: { GraphLine, TimeSeries, RosePlot, ExtremeValues, WeatherWindow },
   data() {
     return {
       expandedDatasets: []
     }
+  },
+  setup() {
+    const option = ref({
+      title: {
+        text: 'Traffic Sources',
+        left: 'center'
+      },
+      tooltip: {
+        trigger: 'item',
+        formatter: '{a} <br/>{b} : {c} ({d}%)'
+      },
+      legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: ['Direct', 'Email', 'Ad Networks', 'Video Ads', 'Search Engines']
+      },
+      series: [
+        {
+          name: 'Traffic Sources',
+          type: 'pie',
+          radius: '55%',
+          center: ['50%', '60%'],
+          data: [
+            { value: 335, name: 'Direct' },
+            { value: 310, name: 'Email' },
+            { value: 234, name: 'Ad Networks' },
+            { value: 135, name: 'Video Ads' },
+            { value: 1548, name: 'Search Engines' }
+          ],
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+          }
+        }
+      ],
+      backgroundColor: 'transparent'
+    })
+
+    return { option }
   },
   computed: {
     ...mapGetters([
@@ -129,7 +201,7 @@ export default {
       this.updateLocationPanel()
     },
     activePointDataPerDataset() {
-      this.expandedDatasets = [...Array(this.datasets.length).keys()]
+      this.expandedDatasets = []
     },
     activeSummary: {
       handler() {
@@ -152,7 +224,6 @@ export default {
       const { datasetIds, locationId } = this.$route.params
       this.location = locationId
       this.setActiveLocationIds([locationId])
-      // loadPointDataForLocation reads timeseries data
       this.loadPointDataForLocation({ datasetIds, locationId })
     },
     close() {
@@ -168,5 +239,8 @@ export default {
 <style lang="css" scoped>
 .disclaimer {
   text-align: center;
+}
+.chart {
+  height: 500px;
 }
 </style>
