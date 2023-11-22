@@ -252,7 +252,7 @@ export default {
       } else {
         yMaxValue = Math.max.apply(null, this.series[0])
         series = this.series.map(serie => {
-          return this.addLineToGraph(serie)
+          return this.addLineToGraph(serie[0].data)
         })
         const markPointCoord = this.getMarkPointCoord(this.series[0])
 
@@ -349,6 +349,7 @@ export default {
     },
     addLineToGraph(graphSerie) {
       let data = graphSerie.map((col, i) => [this.category[i], col])
+
       // Make sure that all data is in chronological order to plot it correctly
       data = data.sort((colA, colB) => {
         return moment(colA[0]) - moment(colB[0])

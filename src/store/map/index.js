@@ -316,56 +316,57 @@ export const actions = {
       if (roles.includes('zarr-root')) {
         const dataset = data
         const url = _.get(dataset, 'assets.data.href')
-        const zarrLocationIndex = _.get(state, 'activeLocationIndex')
+        // const zarrLocationIndex = _.get(state, 'activeLocationIndex')
 
         const path = Object.keys(_.get(dataset, 'cube:variables'))[0]
-        const dimensions = Object.entries(
-          _.get(dataset, `["cube:variables"].${path}.dimensions`)
-        )
+        // const dimensions = Object.entries(
+        //   _.get(dataset, `["cube:variables"].${path}.dimensions`)
+        // )
 
         const pointDataType = _.get(
           state,
           `vectorDataCollection[${datasetId}].properties.deltares:pointData`
         )
 
-        const summaryList = _.get(state, 'activeSummary')
+        // const summaryList = _.get(state, 'activeSummary')
 
         // Define slice for data
-        const slice = dimensions.map(dim => {
-          // Note: make sure that the stations always correspond to the mapbox layers and that the
-          // other layers are the temporal layers used in the graphs..
-          if (dim[1] === 'Region') {
-            return _.get(
-              zarrLocationIndex,
-              'properties.locationId',
-              zarrLocationIndex
-            )
-          } else if (dim[1] === 'Population') {
-            return summaryList[
-              summaryList.findIndex(object => object.id === 'population')
-            ].allowedValues.findIndex(object => {
-              return (
-                object ===
-                summaryList[
-                  summaryList.findIndex(object => object.id === 'population')
-                ].chosenValue
-              )
-            })
-          } else if (dim[1] === 'Projection') {
-            return summaryList[
-              summaryList.findIndex(object => object.id === 'projection')
-            ].allowedValues.findIndex(object => {
-              return (
-                object ===
-                summaryList[
-                  summaryList.findIndex(object => object.id === 'projection')
-                ].chosenValue
-              )
-            })
-          } else {
-            return null
-          }
-        })
+        // const slice = dimensions.map(dim => {
+        //   // Note: make sure that the stations always correspond to the mapbox layers and that the
+        //   // other layers are the temporal layers used in the graphs..
+        //   if (dim[1] === 'Region') {
+        //     return _.get(
+        //       zarrLocationIndex,
+        //       'properties.locationId',
+        //       zarrLocationIndex
+        //     )
+        //   } else if (dim[1] === 'Population') {
+        //     return summaryList[
+        //       summaryList.findIndex(object => object.id === 'population')
+        //     ].allowedValues.findIndex(object => {
+        //       return (
+        //         object ===
+        //         summaryList[
+        //           summaryList.findIndex(object => object.id === 'population')
+        //         ].chosenValue
+        //       )
+        //     })
+        //   } else if (dim[1] === 'Projection') {
+        //     return summaryList[
+        //       summaryList.findIndex(object => object.id === 'projection')
+        //     ].allowedValues.findIndex(object => {
+        //       return (
+        //         object ===
+        //         summaryList[
+        //           summaryList.findIndex(object => object.id === 'projection')
+        //         ].chosenValue
+        //       )
+        //     })
+        //   } else {
+        //     return null
+        //   }
+        // })
+        const slice = [null, 0]
 
         openArray({
           store: url,
@@ -374,33 +375,52 @@ export const actions = {
         }).then(res => {
           // Note: "time" dimension should be last, otherwise things go wrong.
           res.get(slice).then(data => {
-            var serie = data.data.map(serie => {
-              return {
+            // var serie = data.data.map(serie => {
+            //   console.log(serie)
+            //   return {
+            //     type: 'line',
+            //     data: Array.from(serie)
+            //   }
+            // })
+
+            var serie = [
+              {
                 type: 'line',
-                data: Array.from(serie)
+                name: 'test',
+                data: Array.from(data.data)
               }
-            })
-            const cubeDimensions = _.get(dataset, 'cube:dimensions')
+            ]
+            // const cubeDimensions = _.get(dataset, 'cube:dimensions')
 
             let dates = []
-            Object.entries(cubeDimensions).forEach(value => {
-              if (value[1].type === 'temporal') {
-                dates = _.range(value[1].extent[0], value[1].extent[1])
-              }
-            })
+            // Object.entries(cubeDimensions).forEach(value => {
+            //   if (value[1].type === 'temporal') {
+            //     dates = _.range(value[1].extent[0], value[1].extent[1])
+            //   }
+            // })
 
+            dates = _.range(2019, 2025)
+            console.log(dates)
+            // Define the start and end dates
+            const startDate = moment('2019-12-30')
+
+            // Calculate the total number of dates you want (4416)
+            const totalDates = 4416
+
+            // Create an empty array to store the dates
             const category = []
-            const dateFormat = 'YYYY'
-            for (const date of dates) {
-              category.push(
-                moment(date, dateFormat).format('YYYY-MM-DDTHH:mm:ssZ')
-              )
+
+            // Generate dates at the specified interval
+            for (let i = 0; i < totalDates; i++) {
+              category.push(startDate.format('YYYY-MM-DDTHH:mm:ssZ'))
+              startDate.add(1, 'hours')
             }
 
             // TODO: generalize, get relevant dimension from STAC catalog, rather than hardcoding here
-            for (var i = 0; i < cubeDimensions.Percentile.values.length; i++) {
-              serie[i].name = cubeDimensions.Percentile.values[i]
-            }
+            // for (var i = 0; i < cubeDimensions.Percentile.values.length; i++) {
+            //   serie[i].name = cubeDimensions.Percentile.values[i]
+            // }
+            // serie.name = "Test"
 
             commit('addDatasetPointData', {
               id: datasetId,
