@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <v-btn-toggle v-model="selectedParameter" mandatory>
       <v-btn
@@ -11,6 +11,75 @@
         {{ parameter }}
       </v-btn>
     </v-btn-toggle>
+    <div style="width: 100%; height: 400px; margin: 32px 0px">
+      <v-chart class="chart" :option="roseOption" autoresize group="rosePlot" />
+    </div>
+  </div>
+</template> -->
+<template>
+  <div>
+    <v-select
+      v-model="selectedtestParameter"
+      :items="testParameters"
+      label="Parameter"
+    ></v-select>
+    <v-select
+      v-model="selectedDirectionalParameter"
+      :items="directionalParameters"
+      label="Directional Parameter"
+    ></v-select>
+    <!-- Start Date Picker -->
+    <v-menu offset-y>
+      <template v-slot:activator="{ on }">
+        Start Date
+        <v-btn text v-on="on">
+          {{ selectedStartDate }}
+          <v-icon right>mdi-calendar</v-icon>
+        </v-btn>
+      </template>
+      <v-date-picker v-model="selectedStartDate" scrollable>
+        <v-spacer></v-spacer>
+        <v-btn text @click="closeStartDatePicker">Cancel</v-btn>
+        <v-btn text @click="applyStartDatePicker">Apply</v-btn>
+      </v-date-picker>
+    </v-menu>
+
+    <!-- End Date Picker -->
+    <v-menu offset-y>
+      <template v-slot:activator="{ on }">
+        End Date
+        <v-btn text v-on="on">
+          {{ selectedEndDate }}
+          <v-icon right>mdi-calendar</v-icon>
+        </v-btn>
+      </template>
+      <v-date-picker v-model="selectedEndDate" scrollable>
+        <v-spacer></v-spacer>
+        <v-btn text @click="closeEndDatePicker">Cancel</v-btn>
+        <v-btn text @click="applyEndDatePicker">Apply</v-btn>
+      </v-date-picker>
+    </v-menu>
+    <div class="multiselect-dropdown">
+      <div class="dropdown-header">
+        <span class="header-text">Months of interest</span>
+        <br />
+        <button @click="toggleDropdown" class="dropdown-toggle">
+          {{
+            selectedItems.length > 0 ? selectedItems.join(', ') : 'Select Items'
+          }}
+        </button>
+      </div>
+      <div>
+        <ul v-show="isOpen" class="dropdown-menu">
+          <li v-for="(item, index) in items" :key="index">
+            <label class="checkbox-button">
+              <input type="checkbox" v-model="selectedItems" :value="item" />
+              <span class="checkmark"></span> {{ item }}
+            </label>
+          </li>
+        </ul>
+      </div>
+    </div>
     <div style="width: 100%; height: 400px; margin: 32px 0px">
       <v-chart class="chart" :option="roseOption" autoresize group="rosePlot" />
     </div>
@@ -29,8 +98,73 @@ export default {
   },
   data() {
     return {
-      parameters: ['U10', 'U120'],
+      parameters: [
+        'Horizontal 10-minute averaged wind speed at 10 m height U10 (m/s)',
+        'Horizontal 10-minute averaged wind speed at 120 m height U120 (m/s)',
+        'Total significant wave height Hs,tot (m)',
+        'Total spectral peak wave period Tp,tot (s)',
+        'U10',
+        'U120'
+      ],
       selectedParameter: 'U10',
+      testParameters: [
+        'Horizontal 10-minute averaged wind speed at 10 m height U10 (m/s)',
+        'Horizontal 10-minute averaged wind speed at 120 m height U120 (m/s)',
+        'Total significant wave height Hs,tot (m)',
+        'Total spectral peak wave period Tp,tot (s)'
+      ],
+      selectedTestParameter:
+        'Horizontal 10-minute averaged wind speed at 10 m height U10 (m/s)',
+      directionalParameters: [
+        'Mean Wave Direction MWD (°N)',
+        'Peak Wave Direction PWD (°N)'
+      ], // Dummy parameters for the dropdown
+      selectedDirectionalParameter: 'Mean Wave Direction MWD (°N)', // Store the selected directional parameter
+      MonthsofInterestParameters: [
+        { parameter: 'Jan', selected: true },
+        { parameter: 'Feb', selected: true },
+        { parameter: 'Mar', selected: true },
+        { parameter: 'Apr', selected: true },
+        { parameter: 'May', selected: true },
+        { parameter: 'Jun', selected: true },
+        { parameter: 'Jul', selected: true },
+        { parameter: 'Aug', selected: true },
+        { parameter: 'Sep', selected: true },
+        { parameter: 'Oct', selected: true },
+        { parameter: 'Nov', selected: true },
+        { parameter: 'Dec', selected: true }
+      ],
+      isOpen: false,
+      selectedItems: [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
+      ],
+      items: [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
+      ],
+      selectedStartDate: '2014-01-01',
+      selectedEndDate: '2015-12-31',
       classes: [
         '<3.25',
         '3.25 - 6.5',
@@ -1009,6 +1143,9 @@ export default {
     }
   },
   methods: {
+    toggleDropdown() {
+      this.isOpen = !this.isOpen
+    },
     createSeriesData() {
       return this.classes.map(c => {
         const seriesData = this.dataset
@@ -1130,4 +1267,68 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.selected-options {
+  margin-top: 10px;
+}
+
+.multiselect-dropdown {
+  border-bottom: 1px solid #ccc; /* Add a bottom border to the whole component */
+}
+
+.dropdown-header {
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border-bottom: 1px solid lightgray; /* Add a bottom border to the header */
+}
+
+.header-text {
+  color: lightgray;
+  font-size: 12px;
+}
+
+.dropdown-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  text-decoration: underline; /* Underline the button text */
+}
+
+.checkbox-button {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px;
+}
+.checkmark {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox-button input[type='checkbox'] {
+  opacity: 0;
+  position: absolute;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkbox-button input[type='checkbox']:checked + .checkmark::before {
+  content: '\2713'; /* Checkmark symbol */
+  font-size: 16px;
+  color: #007bff; /* Color for checked items */
+}
+
+ol,
+ul {
+  list-style: none;
+}
+</style>

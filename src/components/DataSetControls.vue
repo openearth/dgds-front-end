@@ -186,7 +186,7 @@ export default {
       'getActiveVectorDataIds'
     ]),
     themeName() {
-      return this.getActiveTheme || 'All datasets'
+      return this.getActiveTheme || 'Map layers'
     },
     activePanels() {
       const active = _.values(this.datasets).flatMap((dataset, index) => {

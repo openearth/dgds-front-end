@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div>
     <v-btn-toggle v-model="selectedParameters" multiple>
       <v-btn
@@ -11,6 +11,63 @@
         {{ parameter }}
       </v-btn>
     </v-btn-toggle>
+    <div style="width: 100%; height: 500px; margin: 8px 0px">
+      <v-chart :option="timeseriesOption" autoresize group="timeseriesv2" />
+    </div>
+  </div>
+</template> -->
+<template>
+  <div>
+    <v-menu offset-y>
+      <template v-slot:activator="{ on }">
+        <v-btn text v-on="on">
+          {{ selectedParameters[0] }}
+          <!-- Display the selected option -->
+          <v-icon right>mdi-chevron-down</v-icon>
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item
+          v-for="(parameter, i) in parameters"
+          :key="`${parameter}-${i}`"
+          @click="filterLegend(parameter)"
+        >
+          <v-list-item-title>{{ parameter }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+
+    <!-- Start Date Picker -->
+    <v-menu offset-y>
+      <template v-slot:activator="{ on }">
+        Start Date
+        <v-btn text v-on="on">
+          {{ selectedStartDate }}
+          <v-icon right>mdi-calendar</v-icon>
+        </v-btn>
+      </template>
+      <v-date-picker v-model="selectedStartDate" scrollable>
+        <v-spacer></v-spacer>
+        <v-btn text @click="closeStartDatePicker">Cancel</v-btn>
+        <v-btn text @click="applyStartDatePicker">Apply</v-btn>
+      </v-date-picker>
+    </v-menu>
+
+    <!-- End Date Picker -->
+    <v-menu offset-y>
+      <template v-slot:activator="{ on }">
+        End Date
+        <v-btn text v-on="on">
+          {{ selectedEndDate }}
+          <v-icon right>mdi-calendar</v-icon>
+        </v-btn>
+      </template>
+      <v-date-picker v-model="selectedEndDate" scrollable>
+        <v-spacer></v-spacer>
+        <v-btn text @click="closeEndDatePicker">Cancel</v-btn>
+        <v-btn text @click="applyEndDatePicker">Apply</v-btn>
+      </v-date-picker>
+    </v-menu>
     <div style="width: 100%; height: 500px; margin: 8px 0px">
       <v-chart :option="timeseriesOption" autoresize group="timeseriesv2" />
     </div>
@@ -30,8 +87,26 @@ export default {
   },
   data() {
     return {
-      parameters: ['T0', 'T1', 'T2', 'T3', 'T4'],
-      selectedParameters: ['T0', 'T1', 'T2', 'T3', 'T4'],
+      parameters: [
+        'Horizontal 10-minute averaged wind speed at 10 m height U10 (m/s)',
+        'Horizontal 10-minute averaged wind speed at 120 m height U120 (m/s)',
+        'Total significant wave height Hs,tot (m)',
+        'Total spectral peak wave period Tp,tot (s)',
+        'Depth averaged total current velocity V,total (m/s)',
+        'Depth averaged tidal current velocity V,tidal (m/s)',
+        'Depth averaged residual current velocity V,res (m/s)'
+      ],
+      selectedParameters: [
+        'Horizontal 10-minute averaged wind speed at 10 m height U10 (m/s)',
+        'Horizontal 10-minute averaged wind speed at 120 m height U120 (m/s)',
+        'Total significant wave height Hs,tot (m)',
+        'Total spectral peak wave period Tp,tot (s)',
+        'Depth averaged total current velocity V,total (m/s)',
+        'Depth averaged tidal current velocity V,tidal (m/s)',
+        'Depth averaged residual current velocity V,res (m/s)'
+      ],
+      selectedStartDate: '1984-01-01',
+      selectedEndDate: '2015-12-31',
       timeseriesOption: {
         tooltip: {
           trigger: 'item',
@@ -86,7 +161,7 @@ export default {
         color: ['#FA8D0B'],
         legend: {
           orient: 'vertical',
-          show: true,
+          show: false,
           right: true,
           data: this.parameters
         },
