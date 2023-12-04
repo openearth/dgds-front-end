@@ -103,6 +103,23 @@ export default {
     }
   },
   methods: {
+    setDefaultThresholds() {
+      const defaultValues = {
+        Hs: '< 1.25 m',
+        U10: '< 10.0 m/s'
+      }
+
+      Object.keys(this.thresholds).forEach(key => {
+        if (
+          defaultValues[key] &&
+          this.thresholds[key].includes(defaultValues[key])
+        ) {
+          this.selectedThresholds[key] = defaultValues[key]
+        } else {
+          this.selectedThresholds[key] = this.thresholds[key][0]
+        }
+      })
+    },
     fetchData() {
       fetch('/static/data/PersistencyHsU10.json').then(response => {
         if (response) {
@@ -115,11 +132,9 @@ export default {
             )
             this.selectedExceedance = newExceedances[0]
             this.exceedances = newExceedances
-            const newThresholds = this.getUniqueThresholdKeys(json)
-            this.thresholds = newThresholds
-            Object.keys(this.thresholds).forEach(key => {
-              this.selectedThresholds[key] = this.thresholds[key][0]
-            })
+            this.thresholds = this.getUniqueThresholdKeys(json)
+
+            this.setDefaultThresholds()
             this.updateData()
           })
         }
