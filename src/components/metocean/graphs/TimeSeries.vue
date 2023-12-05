@@ -19,6 +19,38 @@
         </v-list-item>
       </v-list>
     </v-menu>
+    <v-spacer></v-spacer>
+    <!-- Start Date Picker -->
+    <v-menu offset-y>
+      <template v-slot:activator="{ on }">
+        Start Date
+        <v-btn text v-on="on">
+          {{ selectedStartDate }}
+          <v-icon right>mdi-calendar</v-icon>
+        </v-btn>
+      </template>
+      <v-date-picker v-model="selectedStartDate" scrollable>
+        <v-spacer></v-spacer>
+        <v-btn text @click="closeStartDatePicker">Cancel</v-btn>
+        <v-btn text @click="applyStartDatePicker">Apply</v-btn>
+      </v-date-picker>
+    </v-menu>
+    <v-spacer></v-spacer>
+    <!-- End Date Picker -->
+    <v-menu offset-y>
+      <template v-slot:activator="{ on }">
+        End Date
+        <v-btn text v-on="on">
+          {{ selectedEndDate }}
+          <v-icon right>mdi-calendar</v-icon>
+        </v-btn>
+      </template>
+      <v-date-picker v-model="selectedEndDate" scrollable>
+        <v-spacer></v-spacer>
+        <v-btn text @click="closeEndDatePicker">Cancel</v-btn>
+        <v-btn text @click="applyEndDatePicker">Apply</v-btn>
+      </v-date-picker>
+    </v-menu>
     <div style="width: 100%; height: 400px; margin: 8px 0px">
       <v-chart
         :option="timeseriesOption"
@@ -66,7 +98,11 @@ export default {
           type: 'category',
           nameGap: 30,
           axisLabel: {
-            formatter: '{dd}-{MM}-{yyyy}'
+            formatter: function(value) {
+              console.log(value)
+              // Assuming value is a timestamp
+              return moment(Number(value)).format('DD-MM-YYYY')
+            }
           }
         },
         yAxis: {
@@ -108,6 +144,8 @@ export default {
       },
       parameters: [],
       selectedParameter: { label: '', value: '' },
+      selectedStartDate: '1984-01-01',
+      selectedEndDate: '2015-12-31',
       data: []
     }
   },
