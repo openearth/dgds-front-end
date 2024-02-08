@@ -1,4 +1,4 @@
-## Blue Earth Data (beta) User Agreement Deltares
+## Blue Earth Data User Agreement Deltares
 
 This legal agreement (hereinafter “User Agreement”) governs the conditions of use of this Deltares Open Data website and the data products (hereinafter “Data Products”) to be found, accessed and downloaded through our website.
 

@@ -16,12 +16,12 @@ export const getDefaultState = () => ({
   activeLocationIds: [],
   activeRasterData: {},
   vectorDataCollection: {},
-  activeRasterLayerId: 'el',
+  activeRasterLayerId: '',
   activeFlowmapLayer: {},
   activeTheme: '',
   loadingRasterLayers: false,
   geographicalScope: '',
-  activeVectorDataIds: '',
+  activeVectorDataIds: 'mo',
   activeSummary: []
 })
 
