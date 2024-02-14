@@ -1,0 +1,24 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Login to Harbor Registry
+      run: docker login -u ${{ secrets.HARBOR_USERNAME }} -p ${{ secrets.HARBOR_PASSWORD }} containers.deltares.nl
+
+    - name: Build Docker image
+      run: docker build . -f Dockerfile -t containers.deltares.nl/blue_earth_data/dgds-frontend
+
+    - name: Push Docker image
+      run: docker push docker containers.deltares.nl/blue_earth_data/dgds-frontend
