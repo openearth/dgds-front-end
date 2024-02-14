@@ -21,4 +21,4 @@ jobs:
       run: docker build . -f Dockerfile -t containers.deltares.nl/blue_earth_data/dgds-frontend
 
     - name: Push Docker image
-      run: docker push docker containers.deltares.nl/blue_earth_data/dgds-frontend
+      run: docker push containers.deltares.nl/blue_earth_data/dgds-frontend
