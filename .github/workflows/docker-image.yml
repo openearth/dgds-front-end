@@ -85,10 +85,10 @@ jobs:
         file_name: .env
 
     - name: Build Docker image
-      run: docker build . -f Dockerfile -t containers.deltares.nl/blue_earth_data/dgds-frontend
+      run: docker build . -f Dockerfile -t containers.deltares.nl/${{ secrets.CONTAINER_REPOSITORY }}/dgds-frontend
 
     - name: Push Docker image
-      run: docker push containers.deltares.nl/blue_earth_data/dgds-frontend
+      run: docker push containers.deltares.nl/${{ secrets.CONTAINER_REPOSITORY }}/dgds-frontend
 
   deploy:
     # Add 'id-token' with the intended permissions for workload identity federation
