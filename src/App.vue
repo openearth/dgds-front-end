@@ -1,9 +1,23 @@
 <template>
   <v-app>
-    <v-app-bar app height="57px" clipped-left color="background" flat>
+    <v-app-bar
+      app
+      height="57px"
+      clipped-left
+      color="background"
+      flat
+    >
       <v-spacer />
-      <v-stepper class="stepper pa-0" flat non-linear elevation="0">
-        <v-stepper-header class="stepper-header" flat>
+      <v-stepper
+        class="stepper pa-0"
+        flat
+        non-linear
+        elevation="0"
+      >
+        <v-stepper-header
+          class="stepper-header"
+          flat
+        >
           <v-stepper-step
             :color="storiesStepColor"
             complete
@@ -38,7 +52,10 @@
     />
     <v-main app>
       <router-view />
-      <about-panel v-if="panel === 'about'" @close-about="panel = false" />
+      <about-panel
+        v-if="panel === 'about'"
+        @close-about="panel = false"
+      />
       <account-panel
         v-if="panel === 'account'"
         @close-account="panel = false"
@@ -69,10 +86,6 @@ export default {
     panel: false,
     page: 2
   }),
-  mounted() {
-    this.getUser()
-    this.loadDatasets()
-  },
   computed: {
     storiesStepColor() {
       const { path } = this.$route
@@ -82,6 +95,10 @@ export default {
       const { path } = this.$route
       return path.includes('data') ? 'blueDeltares' : 'transparent'
     }
+  },
+  mounted() {
+    this.getUser()
+    this.loadDatasets()
   },
   methods: {
     ...mapActions({ loadDatasets: 'loadDatasets' }),

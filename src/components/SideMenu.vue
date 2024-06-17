@@ -8,34 +8,42 @@
       expand-on-hover
       color="background"
     >
-      <v-list dense class="pa-0">
+      <v-list
+        dense
+        class="pa-0"
+      >
         <v-list-item
           class="px-2"
-          @click="$router.push({ name: 'home' })"
           data-v-step="1"
+          @click="$router.push({ name: 'home' })"
         >
           <v-list-item-avatar>
             <custom-icon name="deltares" />
           </v-list-item-avatar>
           <v-list-item-content>
-            <v-list-item-title color="primary">Deltares</v-list-item-title>
+            <v-list-item-title color="primary">
+              Deltares
+            </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
-        <v-divider></v-divider>
+        <v-divider />
         <v-list-item-group
+          v-if="dataRoute"
           color="primary"
           active-class="active-theme"
-          v-if="dataRoute"
         >
           <v-list-item
             v-for="item in getThemes"
             :key="item"
-            @click="toggleTheme(item)"
             :active="isActive(item)"
             :data-v-step="item === 'Flooding' ? '2' : false"
+            @click="toggleTheme(item)"
           >
             <v-list-item-icon class="mr-6">
-              <custom-icon :name="item" iconFolder="themes" />
+              <custom-icon
+                :name="item"
+                icon-folder="themes"
+              />
             </v-list-item-icon>
             <v-list-item-content>
               <v-list-item-title>{{ item }}</v-list-item-title>
@@ -43,9 +51,12 @@
           </v-list-item>
         </v-list-item-group>
       </v-list>
-      <template v-slot:append>
+      <template #append>
         <div>
-          <v-list dense class="pa-0">
+          <v-list
+            dense
+            class="pa-0"
+          >
             <v-list-item @click="$emit('toggle-tour')">
               <v-list-item-icon class="mr-6">
                 <v-icon>mdi-flag-outline</v-icon>
@@ -68,7 +79,9 @@
                   <custom-icon name="account" />
                 </v-list-item-icon>
                 <v-list-item-content>
-                  <v-list-item-title data-v-step="6">Account</v-list-item-title>
+                  <v-list-item-title data-v-step="6">
+                    Account
+                  </v-list-item-title>
                 </v-list-item-content>
               </v-list-item>
             </v-list-item-group>

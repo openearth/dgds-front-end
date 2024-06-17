@@ -10,16 +10,32 @@
       <h2 class="h2">
         Metocean
       </h2>
-      <v-btn icon class="close-button" @click="close">
+      <v-btn
+        icon
+        class="close-button"
+        @click="close"
+      >
         <v-icon>mdi-close</v-icon>
       </v-btn>
-      <div class="flex-grow-1 py-3 scrollbar" align-space-between>
-        <v-expansion-panels flat accordion multiple color="background">
+      <div
+        class="flex-grow-1 py-3 scrollbar"
+        align-space-between
+      >
+        <v-expansion-panels
+          flat
+          accordion
+          multiple
+          color="background"
+        >
           <v-expansion-panel
             v-for="data in datasets"
             :key="`${locations}-${data.id}-${activeSummaryId}`"
           >
-            <v-expansion-panel-header class="h4" color="background" dark>
+            <v-expansion-panel-header
+              class="h4"
+              color="background"
+              dark
+            >
               {{ data.datasetName }}
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
@@ -31,8 +47,8 @@
                 :collapsible="true"
                 :units="data.units"
                 :type="data.type"
-                :timeFormatType="data.timeFormat"
-                :timeSpanType="data.timeSpan"
+                :time-format-type="data.timeFormat"
+                :time-span-type="data.timeSpan"
                 :parameter-id="data.id"
                 :title="data.datasetName"
                 :set-mark-point="data.id === getActiveRasterLayer"
@@ -41,7 +57,11 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
-            <v-expansion-panel-header class="h4" color="background" dark>
+            <v-expansion-panel-header
+              class="h4"
+              color="background"
+              dark
+            >
               Time series
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
@@ -49,7 +69,11 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
-            <v-expansion-panel-header class="h4" color="background" dark>
+            <v-expansion-panel-header
+              class="h4"
+              color="background"
+              dark
+            >
               Rose plot
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
@@ -57,7 +81,11 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
-            <v-expansion-panel-header class="h4" color="background" dark>
+            <v-expansion-panel-header
+              class="h4"
+              color="background"
+              dark
+            >
               Extreme values
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
@@ -65,7 +93,11 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
-            <v-expansion-panel-header class="h4" color="background" dark>
+            <v-expansion-panel-header
+              class="h4"
+              color="background"
+              dark
+            >
               Weather window
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
@@ -83,7 +115,7 @@
 </template>
 
 <script>
-import { ref } from '@vue/composition-api'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import _ from 'lodash'
 import flatten from 'lodash/flatten'
 import { mapMutations, mapGetters, mapActions } from 'vuex'
@@ -98,12 +130,7 @@ import {
 
 export default {
   components: { GraphLine, TimeSeries, RosePlot, ExtremeValues, WeatherWindow },
-  data() {
-    return {
-      expandedDatasets: []
-    }
-  },
-  setup() {
+  setup(props, { root }) {
     const option = ref({
       title: {
         text: 'Traffic Sources',
@@ -143,94 +170,107 @@ export default {
       backgroundColor: 'transparent'
     })
 
-    return { option }
-  },
-  computed: {
-    ...mapGetters([
-      'activePointDataPerDataset',
-      'getActiveRasterLayer',
-      'activeRasterData',
-      'activeSummary'
-    ]),
-    datasets() {
-      const activePointData = this.activePointDataPerDataset
+    const expandedDatasets = ref([])
+    const activePointDataPerDataset = computed(() => root.$store.getters.activePointDataPerDataset)
+    const getActiveRasterLayer = computed(() => root.$store.getters.getActiveRasterLayer)
+    const activeRasterData = computed(() => root.$store.getters.activeRasterData)
+    const activeSummary = computed(() => root.$store.getters.activeSummary)
+
+    const datasets = computed(() => {
+      const activePointData = activePointDataPerDataset.value
       const result = Object.keys(activePointData).map(pointId =>
         _.get(activePointData, [pointId][0])
       )
       return flatten(result)
-    },
-    hasSerieData() {
-      if (_.get(this.datasets, '[0].type') === 'images') {
-        return _.get(this.datasets, '[0].imageUrl')
+    })
+
+    const hasSerieData = computed(() => {
+      if (_.get(datasets.value, '[0].type') === 'images') {
+        return _.get(datasets.value, '[0].imageUrl')
       } else {
         return (
-          _.get(this.datasets, '[0].serie') &&
-          _.get(this.datasets, '[0].serie').length > 0
+          _.get(datasets.value, '[0].serie') &&
+          _.get(datasets.value, '[0].serie').length > 0
         )
       }
-    },
-    locations() {
-      return this.$route.params.locationId
-    },
-    getTimeStep() {
-      const date = _.get(this.activeRasterData, 'date')
+    })
+
+    const locations = computed(() => root.$route.params.locationId)
+    const getTimeStep = computed(() => {
+      const date = _.get(activeRasterData.value, 'date')
       if (date) {
         return date
       } else {
         return ''
       }
-    },
-    activeSummaryId() {
+    })
+
+    const activeSummaryId = computed(() => {
       let summary = ''
-      if (this.activeSummary.length === 2) {
+      if (activeSummary.value.length === 2) {
         summary =
-          this.activeSummary[0].chosenValue +
+          activeSummary.value[0].chosenValue +
           '_' +
-          this.activeSummary[1].chosenValue
+          activeSummary.value[1].chosenValue
       } else {
-        summary = this.activeSummary.length
+        summary = activeSummary.value.length
       }
       return summary
-    }
-  },
-  watch: {
-    '$route.params.locationId'() {
-      this.updateLocationPanel()
-    },
-    '$route.params.datasetIds'() {
-      this.updateLocationPanel()
-    },
-    activePointDataPerDataset() {
-      this.expandedDatasets = []
-    },
-    activeSummary: {
+    })
+
+    watch(() => root.$route.params.locationId, () => {
+      updateLocationPanel()
+    })
+
+    watch(() => root.$route.params.datasetIds, () => {
+      updateLocationPanel()
+    })
+
+    watch(activePointDataPerDataset, () => {
+      expandedDatasets.value = []
+    })
+
+    watch(activeSummary, {
       handler() {
-        this.updateLocationPanel()
+        updateLocationPanel()
       },
       deep: true
+    })
+
+    onMounted(() => {
+      setTimeout(updateLocationPanel, 3000)
+      expandedDatasets.value = [...Array(datasets.value.length).keys()]
+    })
+
+    onUnmounted(() => {
+      clearActiveLocationIds()
+    })
+
+    const { loadPointDataForLocation, clearActiveLocationIds, setActiveLocationIds } = mapMutations(['clearActiveLocationIds', 'setActiveLocationIds'])
+
+    const updateLocationPanel = () => {
+      const { datasetIds, locationId } = root.$route.params
+      setActiveLocationIds([locationId])
+      loadPointDataForLocation({ datasetIds, locationId })
     }
-  },
-  mounted() {
-    setTimeout(this.updateLocationPanel, 3000)
-    this.expandedDatasets = [...Array(this.datasets.length).keys()]
-  },
-  destroyed() {
-    this.clearActiveLocationIds()
-  },
-  methods: {
-    ...mapActions(['loadPointDataForLocation']),
-    ...mapMutations(['clearActiveLocationIds', 'setActiveLocationIds']),
-    updateLocationPanel() {
-      const { datasetIds, locationId } = this.$route.params
-      this.location = locationId
-      this.setActiveLocationIds([locationId])
-      this.loadPointDataForLocation({ datasetIds, locationId })
-    },
-    close() {
-      this.$router.push({
-        path: `/data/${this.$route.params.datasetIds}`,
-        params: { datasetIds: this.$route.params.datasetIds }
+
+    const close = () => {
+      root.$router.push({
+        path: `/data/${root.$route.params.datasetIds}`,
+        params: { datasetIds: root.$route.params.datasetIds }
       })
+    }
+
+    return {
+      option,
+      expandedDatasets,
+      datasets,
+      hasSerieData,
+      locations,
+      getTimeStep,
+      activeSummaryId,
+      updateLocationPanel,
+      close
     }
   }
 }

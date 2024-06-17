@@ -7,7 +7,7 @@
       :steps="tourSteps"
       :options="tourConfig"
       name="introduction"
-    ></v-tour>
+    />
     <router-view />
   </div>
 </template>

@@ -22,66 +22,120 @@
       v-model="selectedtestParameter"
       :items="testParameters"
       label="Parameter"
-    ></v-select>
+    />
     <v-select
       v-model="selectedDirectionalParameter"
       :items="directionalParameters"
       label="Directional Parameter"
-    ></v-select>
+    />
     <!-- Start Date Picker -->
     <v-menu offset-y>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         Start Date
-        <v-btn text v-on="on">
+        <v-btn
+          text
+          v-on="on"
+        >
           {{ selectedStartDate }}
-          <v-icon right>mdi-calendar</v-icon>
+          <v-icon right>
+            mdi-calendar
+          </v-icon>
         </v-btn>
       </template>
-      <v-date-picker v-model="selectedStartDate" scrollable>
-        <v-spacer></v-spacer>
-        <v-btn text @click="closeStartDatePicker">Cancel</v-btn>
-        <v-btn text @click="applyStartDatePicker">Apply</v-btn>
+      <v-date-picker
+        v-model="selectedStartDate"
+        scrollable
+      >
+        <v-spacer />
+        <v-btn
+          text
+          @click="closeStartDatePicker"
+        >
+          Cancel
+        </v-btn>
+        <v-btn
+          text
+          @click="applyStartDatePicker"
+        >
+          Apply
+        </v-btn>
       </v-date-picker>
     </v-menu>
 
     <!-- End Date Picker -->
     <v-menu offset-y>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         End Date
-        <v-btn text v-on="on">
+        <v-btn
+          text
+          v-on="on"
+        >
           {{ selectedEndDate }}
-          <v-icon right>mdi-calendar</v-icon>
+          <v-icon right>
+            mdi-calendar
+          </v-icon>
         </v-btn>
       </template>
-      <v-date-picker v-model="selectedEndDate" scrollable>
-        <v-spacer></v-spacer>
-        <v-btn text @click="closeEndDatePicker">Cancel</v-btn>
-        <v-btn text @click="applyEndDatePicker">Apply</v-btn>
+      <v-date-picker
+        v-model="selectedEndDate"
+        scrollable
+      >
+        <v-spacer />
+        <v-btn
+          text
+          @click="closeEndDatePicker"
+        >
+          Cancel
+        </v-btn>
+        <v-btn
+          text
+          @click="applyEndDatePicker"
+        >
+          Apply
+        </v-btn>
       </v-date-picker>
     </v-menu>
     <div class="multiselect-dropdown">
       <div class="dropdown-header">
         <span class="header-text">Months of interest</span>
-        <br />
-        <button @click="toggleDropdown" class="dropdown-toggle">
+        <br>
+        <button
+          class="dropdown-toggle"
+          @click="toggleDropdown"
+        >
           {{
             selectedItems.length > 0 ? selectedItems.join(', ') : 'Select Items'
           }}
         </button>
       </div>
       <div>
-        <ul v-show="isOpen" class="dropdown-menu">
-          <li v-for="(item, index) in items" :key="index">
+        <ul
+          v-show="isOpen"
+          class="dropdown-menu"
+        >
+          <li
+            v-for="(item, index) in items"
+            :key="index"
+          >
             <label class="checkbox-button">
-              <input type="checkbox" v-model="selectedItems" :value="item" />
-              <span class="checkmark"></span> {{ item }}
+              <input
+                v-model="selectedItems"
+                type="checkbox"
+                :value="item"
+              >
+              <span class="checkmark" /> {{ item }}
             </label>
           </li>
         </ul>
       </div>
     </div>
     <div style="width: 100%; height: 400px; margin: 32px 0px">
-      <v-chart class="chart" :option="roseOption" autoresize group="rosePlot" />
+      <v-chart
+        class="chart"
+        :option="roseOption"
+        autoresize
+        group="rosePlot"
+      />
     </div>
   </div>
 </template>
@@ -1142,6 +1196,9 @@ export default {
       roseOption: null
     }
   },
+  mounted() {
+    this.updateData()
+  },
   methods: {
     toggleDropdown() {
       this.isOpen = !this.isOpen
@@ -1260,9 +1317,6 @@ export default {
       this.selectedParameter = value
       this.updateData()
     }
-  },
-  mounted() {
-    this.updateData()
   }
 }
 </script>

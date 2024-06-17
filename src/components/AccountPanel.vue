@@ -10,31 +10,55 @@
       <h2 class="h2">
         Account
       </h2>
-      <v-btn icon class="close-button" @click="$emit('close-account')">
+      <v-btn
+        icon
+        class="close-button"
+        @click="$emit('close-account')"
+      >
         <v-icon>mdi-close</v-icon>
       </v-btn>
       <div class="account-details flex-grow-1 py-3">
         <h3 class="h4 mb-3">
           Account Details
         </h3>
-        <dl v-if="user" class="account-details__list">
+        <dl
+          v-if="user"
+          class="account-details__list"
+        >
           <dt><h4>Name</h4></dt>
-          <dd class="mb-2">{{ name }}</dd>
+          <dd class="mb-2">
+            {{ name }}
+          </dd>
           <dt><h4>Email address</h4></dt>
-          <dd class="mb-2">{{ email }}</dd>
+          <dd class="mb-2">
+            {{ email }}
+          </dd>
           <dt><h4>Phone number</h4></dt>
           <dd>{{ phone }}</dd>
         </dl>
-        <div v-else class="account-details__placeholder">
+        <div
+          v-else
+          class="account-details__placeholder"
+        >
           <p>Please login to view your account details</p>
         </div>
       </div>
 
       <div class="flex-shrink-0">
-        <v-btn v-if="!user" @click="login" outlined block>
+        <v-btn
+          v-if="!user"
+          outlined
+          block
+          @click="login"
+        >
           Login
         </v-btn>
-        <v-btn v-else @click="logout" outlined block>
+        <v-btn
+          v-else
+          outlined
+          block
+          @click="logout"
+        >
           Logout
         </v-btn>
       </div>

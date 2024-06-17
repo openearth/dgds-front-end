@@ -4,9 +4,13 @@
       v-model="selectedDirectionalParameter"
       :items="directionalParameters"
       label="Parameter"
-    ></v-select>
+    />
     <div style="width: 100%; height: 400px; margin: 8px 0px">
-      <v-chart :option="lineOption" autoresize group="extremeValues" />
+      <v-chart
+        :option="lineOption"
+        autoresize
+        group="extremeValues"
+      />
     </div>
   </div>
 </template>

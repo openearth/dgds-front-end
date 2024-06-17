@@ -1,31 +1,40 @@
 <template>
   <v-simple-table fixed-header>
-    <template v-slot:default>
+    <template #default>
       <thead>
         <tr>
           <th
-            class="text-left data-table-th"
             v-for="header in tableHeaders"
             :key="header"
+            class="text-left data-table-th"
           >
             {{ header }}
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in tableItems" :key="item.name">
+        <tr
+          v-for="item in tableItems"
+          :key="item.name"
+        >
           <td>{{ item.name }}</td>
           <td v-if="typeof item.value === 'object'">
             <v-list>
-              <v-list-item v-for="(val, name) in item.value" :key="name">
+              <v-list-item
+                v-for="(val, name) in item.value"
+                :key="name"
+              >
                 <v-list-item-content>
-                  <v-list-item-title v-text="`${name}: ${val}`">
-                  </v-list-item-title>
+                  <div v-text="`${name}: ${val}`" />
+                  <v-list-item-title>{{ content }}</v-list-item-title>
+                  <!-- <v-list-item-title v-text="`${name}: ${val}`" /> -->
                 </v-list-item-content>
               </v-list-item>
             </v-list>
           </td>
-          <td v-else>{{ item.value }}</td>
+          <td v-else>
+            {{ item.value }}
+          </td>
         </tr>
       </tbody>
     </template>

@@ -5,6 +5,7 @@ import _ from 'lodash'
 
 export default {
   name: 'VMapboxFlowmapLayer',
+  inject: ['getMap'],
   props: {
     options: {
       default: () => {
@@ -105,7 +106,6 @@ export default {
   },
   render() {
     return null
-  },
-  inject: ['getMap']
+  }
 }
 </script>

@@ -1,10 +1,15 @@
 <template>
   <div v-if="data.length > 0 && parameters.length > 0">
     <v-menu offset-y>
-      <template v-slot:activator="{ on }">
-        <v-btn text v-on="on">
+      <template #activator="{ on }">
+        <v-btn
+          text
+          v-on="on"
+        >
           {{ selectedParameter.label }}
-          <v-icon right>mdi-chevron-down</v-icon>
+          <v-icon right>
+            mdi-chevron-down
+          </v-icon>
         </v-btn>
       </template>
       <v-list>
@@ -19,36 +24,72 @@
         </v-list-item>
       </v-list>
     </v-menu>
-    <v-spacer></v-spacer>
+    <v-spacer />
     <!-- Start Date Picker -->
     <v-menu offset-y>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         Start Date
-        <v-btn text v-on="on">
+        <v-btn
+          text
+          v-on="on"
+        >
           {{ selectedStartDate }}
-          <v-icon right>mdi-calendar</v-icon>
+          <v-icon right>
+            mdi-calendar
+          </v-icon>
         </v-btn>
       </template>
-      <v-date-picker v-model="selectedStartDate" scrollable>
-        <v-spacer></v-spacer>
-        <v-btn text @click="closeStartDatePicker">Cancel</v-btn>
-        <v-btn text @click="applyStartDatePicker">Apply</v-btn>
+      <v-date-picker
+        v-model="selectedStartDate"
+        scrollable
+      >
+        <v-spacer />
+        <v-btn
+          text
+          @click="closeStartDatePicker"
+        >
+          Cancel
+        </v-btn>
+        <v-btn
+          text
+          @click="applyStartDatePicker"
+        >
+          Apply
+        </v-btn>
       </v-date-picker>
     </v-menu>
-    <v-spacer></v-spacer>
+    <v-spacer />
     <!-- End Date Picker -->
     <v-menu offset-y>
-      <template v-slot:activator="{ on }">
+      <template #activator="{ on }">
         End Date
-        <v-btn text v-on="on">
+        <v-btn
+          text
+          v-on="on"
+        >
           {{ selectedEndDate }}
-          <v-icon right>mdi-calendar</v-icon>
+          <v-icon right>
+            mdi-calendar
+          </v-icon>
         </v-btn>
       </template>
-      <v-date-picker v-model="selectedEndDate" scrollable>
-        <v-spacer></v-spacer>
-        <v-btn text @click="closeEndDatePicker">Cancel</v-btn>
-        <v-btn text @click="applyEndDatePicker">Apply</v-btn>
+      <v-date-picker
+        v-model="selectedEndDate"
+        scrollable
+      >
+        <v-spacer />
+        <v-btn
+          text
+          @click="closeEndDatePicker"
+        >
+          Cancel
+        </v-btn>
+        <v-btn
+          text
+          @click="applyEndDatePicker"
+        >
+          Apply
+        </v-btn>
       </v-date-picker>
     </v-menu>
     <div style="width: 100%; height: 400px; margin: 8px 0px">
@@ -149,6 +190,9 @@ export default {
       data: []
     }
   },
+  mounted() {
+    this.fetchData()
+  },
   methods: {
     fetchData() {
       fetch(`/static/data/Timeseries.json`)
@@ -246,9 +290,6 @@ export default {
       this.selectedParameter = parameter
       this.updateChart()
     }
-  },
-  mounted() {
-    this.fetchData()
   }
 }
 </script>

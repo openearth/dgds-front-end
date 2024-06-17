@@ -1,7 +1,10 @@
 <template>
   <v-container class="ma-0 pa-0">
     <v-row>
-      <v-col cols="9" class="ma-0 pa-0 pl-2">
+      <v-col
+        cols="9"
+        class="ma-0 pa-0 pl-2"
+      >
         <svg viewBox="0 0 100 3">
           <defs>
             <linearGradient
@@ -33,45 +36,94 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-if="!editingRange" cols="1" class="ma-0 pa-0">
-        <v-btn small plain icon @click="editRange">
+      <v-col
+        v-if="!editingRange"
+        cols="1"
+        class="ma-0 pa-0"
+      >
+        <v-btn
+          small
+          plain
+          icon
+          @click="editRange"
+        >
           {{ minValue }}
         </v-btn>
       </v-col>
-      <v-col v-else cols="4" class="ma-0">
+      <v-col
+        v-else
+        cols="4"
+        class="ma-0"
+      >
         <v-text-field
           id="range-min"
           v-model="minValue"
           :label="`Min (${unit})`"
           placeholder="Min value"
-        ></v-text-field>
+        />
       </v-col>
-      <v-col v-if="!editingRange" cols="1" offset="7" class="pa-0">
-        <v-btn @click="editRange" small plain icon>
+      <v-col
+        v-if="!editingRange"
+        cols="1"
+        offset="7"
+        class="pa-0"
+      >
+        <v-btn
+          small
+          plain
+          icon
+          @click="editRange"
+        >
           {{ maxValue }}
         </v-btn>
       </v-col>
-      <v-col v-else cols="4" offset="1" class="ma-0">
+      <v-col
+        v-else
+        cols="4"
+        offset="1"
+        class="ma-0"
+      >
         <v-text-field
           id="range-max"
           v-model="maxValue"
           :label="`Max (${unit})`"
           placeholder="Max value"
-        ></v-text-field>
+        />
       </v-col>
-      <v-col cols="3" class="my-auto pa-0 unit-text bodytext-s">
+      <v-col
+        cols="3"
+        class="my-auto pa-0 unit-text bodytext-s"
+      >
         [{{ unit }}]
       </v-col>
     </v-row>
-    <v-row v-if="editingRange" justify="space-between">
+    <v-row
+      v-if="editingRange"
+      justify="space-between"
+    >
       <v-col>
-        <v-btn dense @click="cancelEditRange">Cancel</v-btn>
+        <v-btn
+          dense
+          @click="cancelEditRange"
+        >
+          Cancel
+        </v-btn>
       </v-col>
       <v-col>
-        <v-btn dense @click="resetRange">Reset</v-btn>
+        <v-btn
+          dense
+          @click="resetRange"
+        >
+          Reset
+        </v-btn>
       </v-col>
       <v-col>
-        <v-btn dense @click="saveRange">Save</v-btn>
+        <v-btn
+          dense
+          @click="saveRange"
+        >
+          Save
+        </v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -103,15 +155,6 @@ export default {
   computed: {
     ...mapGetters(['getDatasets', 'activeRasterData'])
   },
-  mounted() {
-    this.dataset = this.getDatasets[this.datasetId]
-    this.unit = _.get(this.dataset, 'properties.deltares:units')
-    this.updateMinMax()
-    this.linearGradient = _.get(
-      this.activeRasterData,
-      'layer.properties.deltares:linearGradient'
-    )
-  },
   watch: {
     activeRasterData() {
       this.updateMinMax()
@@ -121,6 +164,15 @@ export default {
         'layer.properties.deltares:linearGradient'
       )
     }
+  },
+  mounted() {
+    this.dataset = this.getDatasets[this.datasetId]
+    this.unit = _.get(this.dataset, 'properties.deltares:units')
+    this.updateMinMax()
+    this.linearGradient = _.get(
+      this.activeRasterData,
+      'layer.properties.deltares:linearGradient'
+    )
   },
   methods: {
     ...mapActions(['loadActiveRasterLayer']),

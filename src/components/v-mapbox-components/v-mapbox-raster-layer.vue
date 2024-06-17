@@ -6,6 +6,7 @@
 import get from 'lodash/fp/get'
 export default {
   name: 'VMapboxRasterLayer',
+  inject: ['getMap'],
   props: {
     options: {
       default: () => {
@@ -78,7 +79,6 @@ export default {
       }
       this.$emit('click', bbox)
     })
-  },
-  inject: ['getMap']
+  }
 }
 </script>

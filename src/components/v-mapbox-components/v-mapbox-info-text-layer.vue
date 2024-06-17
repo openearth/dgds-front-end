@@ -1,6 +1,7 @@
 <script>
 export default {
   name: 'VMapboxSelectedPointLayer',
+  inject: ['getMap'],
   props: {
     geometry: {
       type: Object,
@@ -80,7 +81,6 @@ export default {
       this.map.moveLayer(selectedLayer.id)
     })
   },
-  inject: ['getMap'],
   render() {
     return null
   }

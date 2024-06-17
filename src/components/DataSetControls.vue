@@ -28,62 +28,90 @@
             :key="dataset.id"
             :data-v-step="index === 1 ? '4' : false"
           >
-            <v-expansion-panel-header hide-actions color="background" dark>
+            <v-expansion-panel-header
+              hide-actions
+              color="background"
+              dark
+            >
               <v-row>
-                <v-col cols="1" class="ma-auto pa-0">
-                  <custom-icon :name="dataset.id" iconFolder="datasets" />
+                <v-col
+                  cols="1"
+                  class="ma-auto pa-0"
+                >
+                  <custom-icon
+                    :name="dataset.id"
+                    icon-folder="datasets"
+                  />
                 </v-col>
-                <v-col cols="7" class="ma-auto pa-0">
+                <v-col
+                  cols="7"
+                  class="ma-auto pa-0"
+                >
                   <span class="ml-2 d-sm-none d-md-flex">{{
                     dataset.title
                   }}</span>
                 </v-col>
-                <v-col cols="2" class="ma-auto pa-0">
+                <v-col
+                  cols="2"
+                  class="ma-auto pa-0"
+                >
                   <v-switch
-                    class="my-auto switch"
                     v-if="checkLayerType(dataset.id, 'mapbox')"
+                    v-model="dataset.visible"
+                    class="my-auto switch"
                     dense
                     flat
-                    v-model="dataset.visible"
                     color="formActive"
                     @change="toggleLocationDataset(dataset)"
-                  ></v-switch>
+                  />
                 </v-col>
-                <v-col cols="1" class="ma-auto pa-0">
+                <v-col
+                  cols="1"
+                  class="ma-auto pa-0"
+                >
                   <v-radio
-                    dense
-                    class="ma-auto radio"
                     v-show="
                       checkLayerType(dataset.id, 'gee') &&
                         !datasetLoading(dataset.id)
                     "
-                    :value="dataset.id"
-                    @click="setRasterLayer(dataset.id)"
-                    color="formActive"
-                  ></v-radio>
-                  <v-progress-circular
                     dense
-                    class="ma-auto"
+                    class="ma-auto radio"
+                    :value="dataset.id"
+                    color="formActive"
+                    @click="setRasterLayer(dataset.id)"
+                  />
+                  <v-progress-circular
                     v-show="
                       checkLayerType(dataset.id, 'gee') &&
                         datasetLoading(dataset.id)
                     "
+                    dense
+                    class="ma-auto"
                     indeterminate
                     color="formActive"
-                  ></v-progress-circular>
+                  />
                 </v-col>
-                <v-col cols="1" class="ma-auto pa-0">
+                <v-col
+                  cols="1"
+                  class="ma-auto pa-0"
+                >
                   <v-btn
                     icon
                     class="my-auto"
                     @click="onTooltipClick(dataset.id)"
                   >
-                    <custom-icon v-if="dataset.description" name="info" />
+                    <custom-icon
+                      v-if="dataset.description"
+                      name="info"
+                    />
                   </v-btn>
                 </v-col>
               </v-row>
             </v-expansion-panel-header>
-            <v-expansion-panel-content class="pa-0" color="background">
+            <v-expansion-panel-content
+              class="pa-0"
+              color="background"
+            >
               <div v-if="getActiveVectorDataIds === dataset.id">
                 <static-legend
                   :dataset-id="dataset.id"
@@ -91,17 +119,17 @@
                 />
               </div>
               <div v-if="getActiveVectorDataIds === dataset.id">
-                <br />
+                <br>
                 <v-row>
                   <v-col
-                    cols="6"
-                    class="ma-auto pa-0"
                     v-for="summary in dataset.summaries"
                     :key="summary.id"
+                    cols="6"
+                    class="ma-auto pa-0"
                   >
                     <v-select
-                      class="pa-2"
                       v-model="summary.chosenValue"
+                      class="pa-2"
                       :items="summary.allowedValues"
                       :label="summary.id"
                       flat
@@ -116,16 +144,16 @@
                 class="data-set-controls__tooltip"
               >
                 <div
-                  v-html="markedTooltip(dataset.description)"
                   class="data-set-controls__tooltip-text markdown pa-2"
                   :anchor-attributes="{ target: '_blank' }"
                   :watches="['source']"
+                  v-html="markedTooltip(dataset.description)"
                 />
               </div>
               <v-select
-                class="pa-2"
                 v-if="getActiveRasterLayer === dataset.id && hasBands"
                 v-model="selectedLayer"
+                class="pa-2"
                 :value="selectedLayer"
                 :items="activeRasterData.summaries['eo:bands']"
                 :label="`Select layer`"
@@ -136,7 +164,7 @@
                 @change="updateRasterBand"
               />
               <div v-if="activeRasterLayer === dataset.id">
-                <br />
+                <br>
                 <layer-legend
                   :dataset-id="dataset.id"
                   class="data-set-controls__legend-bar"
@@ -164,16 +192,16 @@ renderer.link = function(href, title, text) {
 }
 
 export default {
+  components: {
+    CustomIcon,
+    LayerLegend,
+    StaticLegend
+  },
   props: {
     datasets: {
       type: Object,
       default: () => {}
     }
-  },
-  components: {
-    CustomIcon,
-    LayerLegend,
-    StaticLegend
   },
   computed: {
     ...mapGetters([

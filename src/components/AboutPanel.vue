@@ -10,7 +10,11 @@
       <h2 class="h2">
         About
       </h2>
-      <v-btn icon class="close-button" @click="$emit('close-about')">
+      <v-btn
+        icon
+        class="close-button"
+        @click="$emit('close-about')"
+      >
         <v-icon>mdi-close</v-icon>
       </v-btn>
       <div

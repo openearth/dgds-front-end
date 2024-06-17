@@ -5,8 +5,8 @@
     :access-token="mapboxAccessToken"
     :preserve-drawing-buffer="true"
     :map-style="mapboxStyle"
-    :logoPosition="'bottom-right'"
-    :trackResize="'false'"
+    :logo-position="'bottom-right'"
+    :track-resize="'false'"
     @mb-load="mapLoaded = true"
   >
     <v-mapbox-navigation-control
@@ -14,7 +14,10 @@
       position="bottom-right"
       data-v-step="5"
     />
-    <v-mapbox-selected-point-layer v-if="mapLoaded" :geometry="geometry" />
+    <v-mapbox-selected-point-layer
+      v-if="mapLoaded"
+      :geometry="geometry"
+    />
     <v-mapbox-info-text-layer
       v-if="mapLoaded"
       :geometry="infoTextGeometry"
@@ -54,16 +57,30 @@ import VMapboxSelectedPointLayer from '@/components/v-mapbox-components/v-mapbox
 import VMapboxInfoTextLayer from '@/components/v-mapbox-components/v-mapbox-info-text-layer'
 
 export default {
-  mounted() {
-    this.map = this.$refs.map.map
-    this.zoomToLastDatasetId()
-  },
   components: {
     VMapboxVectorLayer,
     VMapboxRasterLayer,
     VMapboxFlowmapLayer,
     VMapboxSelectedPointLayer,
     VMapboxInfoTextLayer
+  },
+  data() {
+    return {
+      mapboxAccessToken: process.env.VUE_APP_MAPBOX_TOKEN || '',
+      mapboxStyle: process.env.VUE_APP_MAPBOX_STYLE || '',
+      locationsLayers: [],
+      activeLocation: null,
+      mapLoaded: false,
+      geometry: {
+        type: 'Point',
+        coordinates: []
+      },
+      infoTextGeometry: {
+        type: 'Point',
+        coordinates: []
+      },
+      mapboxMessage: ''
+    }
   },
   watch: {
     '$route.params.datasetIds'(val) {
@@ -89,23 +106,9 @@ export default {
       this.removeInfoText()
     }
   },
-  data() {
-    return {
-      mapboxAccessToken: process.env.VUE_APP_MAPBOX_TOKEN || '',
-      mapboxStyle: process.env.VUE_APP_MAPBOX_STYLE || '',
-      locationsLayers: [],
-      activeLocation: null,
-      mapLoaded: false,
-      geometry: {
-        type: 'Point',
-        coordinates: []
-      },
-      infoTextGeometry: {
-        type: 'Point',
-        coordinates: []
-      },
-      mapboxMessage: ''
-    }
+  mounted() {
+    this.map = this.$refs.map.map
+    this.zoomToLastDatasetId()
   },
   computed: {
     ...mapState(['activeLocationIds', 'loadingRasterLayers']),

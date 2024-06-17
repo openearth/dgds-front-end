@@ -1,12 +1,15 @@
 <template>
   <div>
-    <v-btn-toggle v-model="selectedExceedance" mandatory>
+    <v-btn-toggle
+      v-model="selectedExceedance"
+      mandatory
+    >
       <v-btn
         v-for="(exceedance, i) in exceedances"
         :key="`${exceedance}-${i}`"
         :value="exceedance"
-        @click="selectExceedance(exceedance)"
         depressed
+        @click="selectExceedance(exceedance)"
       >
         {{ exceedance }}
       </v-btn>
@@ -23,17 +26,21 @@
           <b>{{ key }}</b>
         </p>
         <v-select
-          :items="thresholds[key]"
           v-model="selectedThresholds[key]"
-          @change="selectThreshold(key, $event)"
+          :items="thresholds[key]"
           :label="`Select ${key}`"
           single-line
           dense
-        ></v-select>
+          @change="selectThreshold(key, $event)"
+        />
       </div>
     </div>
     <div style="width: 100%; height: 400px; margin: 8px 0px">
-      <v-chart :option="lineOption" autoresize group="weatherWindow" />
+      <v-chart
+        :option="lineOption"
+        autoresize
+        group="weatherWindow"
+      />
     </div>
     <div style="margin-bottom: 8px">
       <v-data-table
@@ -101,6 +108,9 @@ export default {
         return item
       })
     }
+  },
+  mounted() {
+    this.fetchData()
   },
   methods: {
     setDefaultThresholds() {
@@ -231,9 +241,6 @@ export default {
 
       return thresholdKeys
     }
-  },
-  mounted() {
-    this.fetchData()
   }
 }
 </script>

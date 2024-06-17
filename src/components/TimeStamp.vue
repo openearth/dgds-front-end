@@ -9,12 +9,16 @@
       start-at="end"
       @update-timestep="getNewRasterLayer"
     >
-      <template v-slot:backButton="{ back }">
-        <v-btn icon :disabled="getLoadingState" @click="back">
+      <template #backButton="{ back }">
+        <v-btn
+          icon
+          :disabled="getLoadingState"
+          @click="back"
+        >
           <v-icon>mdi-chevron-left</v-icon>
         </v-btn>
       </template>
-      <template v-slot:label>
+      <template #label>
         <v-combobox
           id="timeslider-dropdown"
           v-model="timestamp"
@@ -28,8 +32,12 @@
           color="formBase"
         />
       </template>
-      <template v-slot:forwardButton="{ forward }">
-        <v-btn icon :disabled="getLoadingState" @click="forward">
+      <template #forwardButton="{ forward }">
+        <v-btn
+          icon
+          :disabled="getLoadingState"
+          @click="forward"
+        >
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </template>

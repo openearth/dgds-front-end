@@ -6,6 +6,7 @@
 import Oidc from 'oidc-client'
 
 export default {
+  name: 'LogoutItem',
   mounted() {
     new Oidc.UserManager()
       .signoutRedirectCallback()

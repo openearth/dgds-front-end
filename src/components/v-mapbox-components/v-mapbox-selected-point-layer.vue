@@ -9,6 +9,7 @@ const color = getColors('dark')
 
 export default {
   name: 'VMapboxSelectedPointLayer',
+  inject: ['getMap'],
   props: {
     geometry: {
       type: Object,
@@ -51,7 +52,6 @@ export default {
     this.selectedLayer.source.data = this.geometry
     this.map.addLayer(this.selectedLayer)
     this.map.moveLayer(this.selectedLayer.id)
-  },
-  inject: ['getMap']
+  }
 }
 </script>

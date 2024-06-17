@@ -1,6 +1,9 @@
 <template>
   <v-container class="ma-0 pa-0">
-    <span class="legend" role="presentation">
+    <span
+      class="legend"
+      role="presentation"
+    >
       <span v-html="legend" />
     </span>
   </v-container>

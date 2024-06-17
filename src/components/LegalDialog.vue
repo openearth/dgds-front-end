@@ -1,8 +1,8 @@
 <template>
   <v-dialog
+    v-model="open"
     scrollable
     persistent
-    v-model="open"
     :fullscreen="$vuetify.breakpoint.xsOnly"
     :max-width="640"
   >
@@ -14,8 +14,8 @@
         <div
           id="user-agreements"
           class="markdown"
-          v-html="UserAgreements1"
           :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+          v-html="UserAgreements1"
         />
         <div
           v-for="(dataset, index, count) in getDatasets"
@@ -24,15 +24,15 @@
           <span
             id="user-agreements"
             class="markdown"
-            v-html="markedText(`- 2.${count + 2}.  ${dataset['license_use']}`)"
             :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+            v-html="markedText(`- 2.${count + 2}.  ${dataset['license_use']}`)"
           />
         </div>
         <div
           id="user-agreements"
           class="markdown"
-          v-html="UserAgreements2"
           :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+          v-html="UserAgreements2"
         />
         <div
           v-for="(dataset, index, count) in getDatasets"
@@ -41,44 +41,50 @@
           <span
             id="user-agreements"
             class="markdown"
+            :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
             v-html="
               markedText(`- 6.${count + 2}.  ${dataset['license_warranty']}`)
             "
-            :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
           />
         </div>
         <div
           id="user-agreements"
           class="markdown"
-          v-html="UserAgreements3"
           :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+          v-html="UserAgreements3"
         />
         <div
           class="markdown"
-          v-html="markedText(CookieAgreement)"
           :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+          v-html="markedText(CookieAgreement)"
         />
       </div>
       <v-card-actions>
-        <div class="pa-2" style="width:100%">
-          <form action="" submit.prevent>
+        <div
+          class="pa-2"
+          style="width:100%"
+        >
+          <form
+            action=""
+            submit.prevent
+          >
             <v-checkbox
               label="I agree with the Conditions of Use"
               class="ma-0"
               :value="agree"
-              @change="setTarget($event, 'agree')"
               hide-details
+              @change="setTarget($event, 'agree')"
             />
             <v-checkbox
               label="I consent with the use of cookies"
               class="ma-0"
               :value="cookie"
-              @change="setTarget($event, 'cookie')"
               hide-details
+              @change="setTarget($event, 'cookie')"
             />
           </form>
           <div class="mt-2 d-flex">
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-btn
               color="formBase"
               :disabled="!$v.agree.$model || !$v.cookie.$model"

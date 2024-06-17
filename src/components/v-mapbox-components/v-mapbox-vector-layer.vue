@@ -4,6 +4,7 @@ import distance from '@turf/distance'
 import { point } from '@turf/turf'
 
 export default {
+  inject: ['getMap'],
   props: {
     layer: {
       default: () => {
@@ -173,7 +174,6 @@ export default {
   },
   render() {
     return null
-  },
-  inject: ['getMap']
+  }
 }
 </script>

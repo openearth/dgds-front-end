@@ -1,13 +1,23 @@
 <template>
   <div class="time-slider">
     <v-row>
-      <v-col cols="2" class="my-auto">
-        <slot v-if="timeIndex !== 0" :back="back" name="backButton" />
+      <v-col
+        cols="2"
+        class="my-auto"
+      >
+        <slot
+          v-if="timeIndex !== 0"
+          :back="back"
+          name="backButton"
+        />
       </v-col>
       <v-col cols="8">
         <slot name="label" />
       </v-col>
-      <v-col cols="2" class="my-auto">
+      <v-col
+        cols="2"
+        class="my-auto"
+      >
         <slot
           v-if="timeIndex !== dates.length - 1"
           :forward="forward"
