@@ -23,7 +23,6 @@
         </v-list-item-avatar>
 
         <v-list-item-content>
-          <!-- <v-list-item-title v-text="story.title"></v-list-item-title> -->
           <div v-text="story.title" />
           <v-list-item-title>{{ content }}</v-list-item-title>
         </v-list-item-content>
