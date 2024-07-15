@@ -29,7 +29,7 @@ export default {
       try {
         const subFolder = this.iconFolder ? `${this.iconFolder}/` : ''
         return require(`../assets/icons/${subFolder}icon-${this.name}.svg`)
-      } catch {
+      } catch (error) {
         return require('../assets/icons/icon-placeholder.svg')
       }
     }

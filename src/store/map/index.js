@@ -243,7 +243,7 @@ export const actions = {
     { commit },
     { collectionUrl, setCollectionCommit, addLayerCommit, datasetId }
   ) {
-    // Retrieve a layer collection and it's underlaying collectiongit
+    // Retrieve a layer collection and it's underlaying collection
     await getCatalog(collectionUrl).then(async dataset => {
       const itemLinks = _.get(dataset, 'links')
       const items = itemLinks.filter(child => child.rel === 'item')
@@ -266,6 +266,56 @@ export const actions = {
           data: dataset
         })
       }
+    })
+  },
+
+  loadGraphDataForLocation({ commit, state }, { parameter, startDate, endDate }) {
+    const datasetId = state.activeVectorDataIds
+    const locationId = 265
+    const slice = [null, 1]
+    const url = 'https://storage.googleapis.com/dgds-data-public/metocean/WavesWind.zarr'
+    // const path = parameter
+    const path = "Hm0"
+
+    return openArray({
+      store: url,
+      path: path,
+      mode: 'r'
+    }).then(res => {
+      return res.get(slice).then(data => {
+        var serie = data.data.map(serie => {
+          return {
+            type: 'line',
+            data: Array.from(serie)
+          }
+        })
+
+        let dates = [1979, 2023]
+        const category = []
+        const dateFormat = 'YYYY'
+        for (const date of dates) {
+          category.push(
+            moment(date, dateFormat).format('YYYY-MM-DDTHH:mm:ssZ')
+          )
+        }
+
+        const pointData = {
+          id: datasetId,
+          data: {
+            [locationId]: {
+              category,
+              serie,
+              type: "ensemble",
+              timeSpan: "",
+              timeFormat: "{yyyy}"
+            }
+          }
+        }
+
+        commit('addDatasetPointData', pointData)
+
+        return pointData
+      })
     })
   },
 
@@ -336,42 +386,20 @@ export const actions = {
 
         const summaryList = _.get(state, 'activeSummary')
 
-        // Define slice for data
-        const slice = dimensions.map(dim => {
-          // Note: make sure that the stations always correspond to the mapbox layers and that the
-          // other layers are the temporal layers used in the graphs..
-          if (dim[1] === 'Region') {
-            return _.get(
-              zarrLocationIndex,
-              'properties.locationId',
-              zarrLocationIndex
-            )
-          } else if (dim[1] === 'Population') {
-            return summaryList[
-              summaryList.findIndex(object => object.id === 'population')
-            ].allowedValues.findIndex(object => {
-              return (
-                object ===
-                summaryList[
-                  summaryList.findIndex(object => object.id === 'population')
-                ].chosenValue
-              )
-            })
-          } else if (dim[1] === 'Projection') {
-            return summaryList[
-              summaryList.findIndex(object => object.id === 'projection')
-            ].allowedValues.findIndex(object => {
-              return (
-                object ===
-                summaryList[
-                  summaryList.findIndex(object => object.id === 'projection')
-                ].chosenValue
-              )
-            })
+        const getSliceIndex = (dim) => {
+          if (dim === 'Region') {
+            return _.get(zarrLocationIndex, 'properties.locationId', zarrLocationIndex);
           } else {
-            return null
+            const summaryItem = summaryList.find(object => object.id.toLowerCase() === dim.toLowerCase());
+            if (summaryItem) {
+              return summaryItem.allowedValues.findIndex(object => object === summaryItem.chosenValue);
+            }
           }
-        })
+          return null;
+        };
+
+        // Define slice for data
+        const slice = dimensions.map(dim => getSliceIndex(dim));
 
         openArray({
           store: url,

@@ -32,7 +32,7 @@ export default {
         const properties = this.activeVectorData[this.datasetId].properties
         const legendFile = _.get(properties, 'deltares:legendFile')
         return require('../assets/icons/legend/' + legendFile + '.svg')
-      } catch {
+      } catch (error) {
         return require('../assets/icons/icon-placeholder.svg')
       }
     }

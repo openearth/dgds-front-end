@@ -104,194 +104,216 @@
     Loading...
   </div>
 </template>
-
-<script>
-import * as echarts from 'echarts'
-import moment from 'moment'
-import VChart, { THEME_KEY } from 'vue-echarts'
-
-export default {
-  components: {
-    VChart
-  },
-  provide() {
-    return { [THEME_KEY]: 'dark' }
-  },
-  data() {
-    return {
-      timeseriesOption: {
-        tooltip: {
-          trigger: 'axis',
-          formatter: function(e) {
-            let tooltip = ''
-            e.forEach(serie => {
-              tooltip += `<b style="font-weight:bold;">${serie.seriesName}:</b><br/>`
-              tooltip += `Datetime: ${moment(serie.data['Date+Time']).format(
-                'DD-MM-YYYY'
-              )}<br/>Value: ${Math.round(serie.data.value)}`
-            })
-            return tooltip
-          }
-        },
-        xAxis: {
-          name: 'Datetime',
-          nameLocation: 'center',
-          type: 'category',
-          nameGap: 30,
-          axisLabel: {
-            formatter: function(value) {
-              console.log(value)
-              // Assuming value is a timestamp
-              return moment(Number(value)).format('DD-MM-YYYY')
+  
+  <script>
+  import * as echarts from 'echarts'
+  import moment from 'moment'
+  import VChart, { THEME_KEY } from 'vue-echarts'
+  import { mapActions } from 'vuex'
+  
+  export default {
+    components: {
+      VChart
+    },
+    provide() {
+      return { [THEME_KEY]: 'dark' }
+    },
+    data() {
+      return {
+        timeseriesOption: {
+          tooltip: {
+            trigger: 'axis',
+            formatter: function(e) {
+              let tooltip = ''
+              e.forEach(serie => {
+                tooltip += `<b style="font-weight:bold;">${serie.seriesName}:</b><br/>`
+                tooltip += `Datetime: ${moment(serie.data['Date+Time']).format('DD-MM-YYYY')}<br/>Value: ${Math.round(serie.data.value)}`
+              })
+              return tooltip
             }
-          }
+          },
+          xAxis: {
+            name: 'Datetime',
+            nameLocation: 'center',
+            type: 'category',
+            nameGap: 30,
+            axisLabel: {
+              formatter: function(value) {
+                return moment(Number(value)).format('DD-MM-YYYY')
+              }
+            }
+          },
+          yAxis: {
+            name: '',
+            type: 'value',
+            scale: true,
+            nameTextStyle: {
+              align: 'left'
+            }
+          },
+          grid: [
+            {
+              bottom: '30%'
+            }
+          ],
+          dataZoom: [
+            {
+              type: 'inside',
+              start: 0,
+              end: 100
+            },
+            {
+              start: 0,
+              end: 100,
+              height: 50,
+              bottom: 20,
+              labelFormatter: function(value, valueStr) {
+                return moment(Number(valueStr)).format('DD-MM-YYYY')
+              }
+            }
+          ],
+          color: ['#FA8D0B'],
+          legend: {
+            orient: 'vertical',
+            show: true,
+            right: true
+          },
+          backgroundColor: 'transparent'
         },
-        yAxis: {
-          name: '',
-          type: 'value',
-          scale: true,
-          nameTextStyle: {
-            align: 'left'
-          }
-        },
-        grid: [
+        parameters: [],
+        selectedParameter: { label: '', value: '' },
+        selectedStartDate: '1984-01-01',
+        selectedEndDate: '2015-12-31',
+        data: []
+      }
+    },
+    mounted() {
+      this.fetchData()
+    },
+    methods: {
+      ...mapActions(['loadGraphDataForLocation']),
+      fetchData() {
+        fetch(`/static/data/Timeseries.json`)
+          .then(response => response.json())
+          .then(data => {
+            this.data = data
+            const keys = Object.keys(data[0]).filter(d => d !== 'Date+Time')
+  
+            this.parameters = keys.map(key => ({
+              label: this.customLabel(key),
+              value: key
+            }))
+  
+            this.appendDummyParameters()
+            this.selectedParameter = this.parameters[0]
+            this.$nextTick(() => {
+              this.updateChart()
+            })
+          })
+      },
+      customLabel(key) {
+        if (key === 'Hs (total) (m)') {
+          return 'Total significant wave height Hs,tot (m)'
+        }
+  
+        if (key === 'Tp (total) (s)') {
+          return 'Total spectral peak wave period Tp,tot (s)'
+        }
+  
+        return key
+      },
+      appendDummyParameters() {
+        const dummyParams = [
           {
-            bottom: '30%'
-          }
-        ],
-        dataZoom: [
-          {
-            type: 'inside',
-            start: 0,
-            end: 100
+            label:
+              'Horizontal 10-minute averaged wind speed at 10 m height U10 (m/s)'
           },
           {
-            start: 0,
-            end: 100,
-            height: 50,
-            bottom: 20,
-            labelFormatter: function(value, valueStr) {
-              return moment(Number(valueStr)).format('DD-MM-YYYY')
-            }
+            label:
+              'Horizontal 10-minute averaged wind speed at 120 m height U120 (m/s)'
+          },
+          {
+            label: 'Depth averaged total current velocity V,total (m/s)'
+          },
+          {
+            label: 'Depth averaged tidal current velocity V,tidal (m/s)'
+          },
+          {
+            label: 'Depth averaged residual current velocity V,res (m/s)'
           }
-        ],
-        color: ['#FA8D0B'],
-        legend: {
-          orient: 'vertical',
-          show: true,
-          right: true
-        },
-        backgroundColor: 'transparent'
+        ]
+  
+        dummyParams.forEach(({ label }) =>
+          this.parameters.push({ label, value: '' })
+        )
       },
-      parameters: [],
-      selectedParameter: { label: '', value: '' },
-      selectedStartDate: '1984-01-01',
-      selectedEndDate: '2015-12-31',
-      data: []
-    }
-  },
-  mounted() {
-    this.fetchData()
-  },
-  methods: {
-    fetchData() {
-      fetch(`/static/data/Timeseries.json`)
-        .then(response => response.json())
-        .then(data => {
-          this.data = data
-          const keys = Object.keys(data[0]).filter(d => d !== 'Date+Time')
-
-          this.parameters = keys.map(key => ({
-            label: this.customLabel(key),
-            value: key
-          }))
-
-          this.appendDummyParameters()
-          this.selectedParameter = this.parameters[0]
-          this.$nextTick(() => {
-            this.updateChart()
-          })
-        })
-    },
-    customLabel(key) {
-      if (key === 'Hs (total) (m)') {
-        return 'Total significant wave height Hs,tot (m)'
-      }
-
-      if (key === 'Tp (total) (s)') {
-        return 'Total spectral peak wave period Tp,tot (s)'
-      }
-
-      return key
-    },
-    appendDummyParameters() {
-      const dummyParams = [
-        {
-          label:
-            'Horizontal 10-minute averaged wind speed at 10 m height U10 (m/s)'
-        },
-        {
-          label:
-            'Horizontal 10-minute averaged wind speed at 120 m height U120 (m/s)'
-        },
-        {
-          label: 'Depth averaged total current velocity V,total (m/s)'
-        },
-        {
-          label: 'Depth averaged tidal current velocity V,tidal (m/s)'
-        },
-        {
-          label: 'Depth averaged residual current velocity V,res (m/s)'
-        }
-      ]
-
-      dummyParams.forEach(({ label }) =>
-        this.parameters.push({ label, value: '' })
-      )
-    },
-    updateChart() {
-      document.querySelectorAll('canvas, div').forEach(e => {
-        const instance = echarts.getInstanceByDom(e)
-        if (instance && instance.group === 'timeseriesv3') {
-          instance.setOption({
-            yAxis: {
-              name: this.selectedParameter.label
-            },
-            xAxis: {
-              data: this.data.map((d, i) => {
-                const value = moment(d['Date+Time']).valueOf()
-                return value
-              }),
-              axisLabel: {
-                formatter: value => {
-                  const date = moment(Number(value))
-                  return date.format('DD-MM-YYYY')
-                }
-              }
-            },
-            series: [
-              {
-                name: this.selectedParameter.label,
+      updateChart() {
+        document.querySelectorAll('canvas, div').forEach(e => {
+          const instance = echarts.getInstanceByDom(e)
+          if (instance && instance.group === 'timeseriesv3') {
+            instance.setOption({
+              yAxis: {
+                name: this.selectedParameter.label
+              },
+              xAxis: {
                 data: this.data.map((d, i) => {
-                  return {
-                    value: d[this.selectedParameter.value],
-                    ...d
-                  }
+                  const value = moment(d['Date+Time']).valueOf()
+                  return value
                 }),
-                symbolSize: 8,
-                type: 'line'
-              }
-            ]
-          })
-        }
-      })
-    },
-    selectParameter(parameter) {
-      this.selectedParameter = parameter
-      this.updateChart()
+                axisLabel: {
+                  formatter: value => {
+                    const date = moment(Number(value))
+                    return date.format('DD-MM-YYYY')
+                  }
+                }
+              },
+              series: [
+                {
+                  name: this.selectedParameter.label,
+                  data: this.data.map((d, i) => {
+                    return {
+                      value: d[this.selectedParameter.value],
+                      ...d
+                    }
+                  }),
+                  symbolSize: 8,
+                  type: 'line'
+                }
+              ]
+            })
+          }
+        })
+      },
+      selectParameter(parameter) {
+        this.selectedParameter = parameter
+        this.loadGraphDataForLocation({
+          parameter: parameter.value,
+          startDate: this.selectedStartDate,
+          endDate: this.selectedEndDate
+        }).then(pointData => {
+          const { data } = pointData
+          this.data = data[265].serie[0].data.map((value, index) => ({
+            'Date+Time': data[265].category[index],
+            value
+          }))
+          this.updateChart()
+        })
+      },
+      closeStartDatePicker() {
+        // Implement closing logic if needed
+      },
+      applyStartDatePicker() {
+        // Implement apply logic if needed
+      },
+      closeEndDatePicker() {
+        // Implement closing logic if needed
+      },
+      applyEndDatePicker() {
+        // Implement apply logic if needed
+      }
     }
   }
-}
-</script>
-
-<style scoped></style>
+  </script>
+  
+  <style scoped></style>
+  

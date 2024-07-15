@@ -338,15 +338,22 @@ export default {
       detail.features.forEach(feature => {
         // When a layer has a metadata with locationIdField use this layer and
         // get the locationId usin this field
-        const locId = _.get(feature, 'layer.metadata.deltares:locationIdField')
+
+        // const locId = _.get(feature, 'layer.metadata.deltares:locationIdField')
+        const locId = feature.id
+
         if (locId) {
-          locationIds.push(feature.properties[locId])
+          locationIds.push(locId)
+          // locationIds.push(feature.properties[locId])
+          feature.properties.zarrIndex = 1
         }
+        
         // write location index for zarr file to state
         if (feature.properties.zarrIndex) {
           this.setActiveLocationIndex(feature.properties.zarrIndex)
         }
       })
+
       const params = this.$route.params
       params.locationId = _.head(locationIds)
 

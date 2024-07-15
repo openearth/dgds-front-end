@@ -115,10 +115,10 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch, getCurrentInstance } from 'vue'
 import _ from 'lodash'
 import flatten from 'lodash/flatten'
-import { mapMutations, mapGetters, mapActions } from 'vuex'
+import { mapMutations, mapGetters, mapActions, useStore } from 'vuex'
 import GraphLine from '@/components/GraphLine'
 
 import {
@@ -130,7 +130,10 @@ import {
 
 export default {
   components: { GraphLine, TimeSeries, RosePlot, ExtremeValues, WeatherWindow },
-  setup(props, { root }) {
+  setup() {
+    const { proxy } = getCurrentInstance();
+    const store = useStore()
+    
     const option = ref({
       title: {
         text: 'Traffic Sources',
@@ -171,10 +174,10 @@ export default {
     })
 
     const expandedDatasets = ref([])
-    const activePointDataPerDataset = computed(() => root.$store.getters.activePointDataPerDataset)
-    const getActiveRasterLayer = computed(() => root.$store.getters.getActiveRasterLayer)
-    const activeRasterData = computed(() => root.$store.getters.activeRasterData)
-    const activeSummary = computed(() => root.$store.getters.activeSummary)
+    const activePointDataPerDataset = computed(() => store.getters.activePointDataPerDataset)
+    const getActiveRasterLayer = computed(() => store.getters.getActiveRasterLayer)
+    const activeRasterData = computed(() => store.getters.activeRasterData)
+    const activeSummary = computed(() => store.getters.activeSummary)
 
     const datasets = computed(() => {
       const activePointData = activePointDataPerDataset.value
@@ -195,7 +198,7 @@ export default {
       }
     })
 
-    const locations = computed(() => root.$route.params.locationId)
+    const locations = computed(() => proxy.$route.params.locationId)
     const getTimeStep = computed(() => {
       const date = _.get(activeRasterData.value, 'date')
       if (date) {
@@ -218,11 +221,11 @@ export default {
       return summary
     })
 
-    watch(() => root.$route.params.locationId, () => {
+    watch(() => proxy.$route.params.locationId, () => {
       updateLocationPanel()
     })
 
-    watch(() => root.$route.params.datasetIds, () => {
+    watch(() => proxy.$route.params.datasetIds, () => {
       updateLocationPanel()
     })
 
@@ -249,15 +252,15 @@ export default {
     const { loadPointDataForLocation, clearActiveLocationIds, setActiveLocationIds } = mapMutations(['clearActiveLocationIds', 'setActiveLocationIds'])
 
     const updateLocationPanel = () => {
-      const { datasetIds, locationId } = root.$route.params
+      const { datasetIds, locationId } = proxy.$route.params
       setActiveLocationIds([locationId])
       loadPointDataForLocation({ datasetIds, locationId })
     }
 
     const close = () => {
-      root.$router.push({
-        path: `/data/${root.$route.params.datasetIds}`,
-        params: { datasetIds: root.$route.params.datasetIds }
+      proxy.$router.push({
+        path: `/data/${proxy.$route.params.datasetIds}`,
+        params: { datasetIds: proxy.$route.params.datasetIds }
       })
     }
 
