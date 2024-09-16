@@ -273,7 +273,7 @@ export const actions = {
     const datasetId = state.activeVectorDataIds
     const locationId = state.activeLocationIds
     // const slice = [null, -1]
-    const url = 'https://storage.googleapis.com/dgds-data-public/metocean2/Point_0000' + locationId + '.zarr'
+    const url = 'https://storage.googleapis.com/dgds-data-public/metocean2/Point_00001.zarr'
     const path = parameter
 
     return openArray({
