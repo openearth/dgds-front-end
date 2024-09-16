@@ -33,8 +33,6 @@
           <dd class="mb-2">
             {{ email }}
           </dd>
-          <dt><h4>Phone number</h4></dt>
-          <dd>{{ phone }}</dd>
         </dl>
         <div
           v-else

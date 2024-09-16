@@ -17,98 +17,105 @@
       >
         <v-icon>mdi-close</v-icon>
       </v-btn>
-      <div
+      <div 
         class="flex-grow-1 py-3 scrollbar"
         align-space-between
       >
-        <v-expansion-panels
-          flat
-          accordion
-          multiple
-          color="background"
-        >
-          <v-expansion-panel
-            v-for="data in datasets"
-            :key="`${locations}-${data.id}-${activeSummaryId}`"
+        <div v-if="user">
+          <v-expansion-panels 
+            flat
+            accordion
+            multiple
+            color="background"
           >
-            <v-expansion-panel-header
-              class="h4"
-              color="background"
-              dark
+            <v-expansion-panel
+              v-for="data in datasets"
+              :key="`${locations}-${data.id}-${activeSummaryId}`"
             >
-              {{ data.datasetName }}
-            </v-expansion-panel-header>
-            <v-expansion-panel-content color="background">
-              <graph-line
-                :image-url="data.imageUrl"
-                :category="data.category"
-                :series="[data.serie]"
-                theme="dark"
-                :collapsible="true"
-                :units="data.units"
-                :type="data.type"
-                :time-format-type="data.timeFormat"
-                :time-span-type="data.timeSpan"
-                :parameter-id="data.id"
-                :title="data.datasetName"
-                :set-mark-point="data.id === getActiveRasterLayer"
-                :time-step="getTimeStep"
-              />
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-          <v-expansion-panel>
-            <v-expansion-panel-header
-              class="h4"
-              color="background"
-              dark
-            >
-              Time series
-            </v-expansion-panel-header>
-            <v-expansion-panel-content color="background">
-              <time-series />
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-          <v-expansion-panel>
-            <v-expansion-panel-header
-              class="h4"
-              color="background"
-              dark
-            >
-              Rose plot
-            </v-expansion-panel-header>
-            <v-expansion-panel-content color="background">
-              <rose-plot />
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-          <v-expansion-panel>
-            <v-expansion-panel-header
-              class="h4"
-              color="background"
-              dark
-            >
-              Extreme values
-            </v-expansion-panel-header>
-            <v-expansion-panel-content color="background">
-              <extreme-values />
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-          <v-expansion-panel>
-            <v-expansion-panel-header
-              class="h4"
-              color="background"
-              dark
-            >
-              Weather window
-            </v-expansion-panel-header>
-            <v-expansion-panel-content color="background">
-              <weather-window />
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
+              <v-expansion-panel-header
+                class="h4"
+                color="background"
+                dark
+              >
+                {{ data.datasetName }}
+              </v-expansion-panel-header>
+              <v-expansion-panel-content color="background">
+                <graph-line
+                  :image-url="data.imageUrl"
+                  :category="data.category"
+                  :series="[data.serie]"
+                  theme="dark"
+                  :collapsible="true"
+                  :units="data.units"
+                  :type="data.type"
+                  :time-format-type="data.timeFormat"
+                  :time-span-type="data.timeSpan"
+                  :parameter-id="data.id"
+                  :title="data.datasetName"
+                  :set-mark-point="data.id === getActiveRasterLayer"
+                  :time-step="getTimeStep"
+                />
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel>
+              <v-expansion-panel-header
+                class="h4"
+                color="background"
+                dark
+              >
+                Time series
+              </v-expansion-panel-header>
+              <v-expansion-panel-content color="background">
+                <time-series />
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel>
+              <v-expansion-panel-header
+                class="h4"
+                color="background"
+                dark
+              >
+                Rose plot
+              </v-expansion-panel-header>
+              <v-expansion-panel-content color="background">
+                <rose-plot />
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel>
+              <v-expansion-panel-header
+                class="h4"
+                color="background"
+                dark
+              >
+                Extreme values
+              </v-expansion-panel-header>
+              <v-expansion-panel-content color="background">
+                <extreme-values />
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+            <v-expansion-panel>
+              <v-expansion-panel-header
+                class="h4"
+                color="background"
+                dark
+              >
+                Weather window
+              </v-expansion-panel-header>
+              <v-expansion-panel-content color="background">
+                <weather-window />
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+
+        <div class="flex-shrink-1 bodytext-xs disclaimer">
+          Global datasets are generated with great care but may locally contain
+          inaccuracies. See the dataset descriptions for more information.
+        </div>
       </div>
-      <div class="flex-shrink-1 bodytext-xs disclaimer">
-        Global datasets are generated with great care but may locally contain
-        inaccuracies. See the dataset descriptions for more information.
+      <div v-else>
+        <custom-icon name="info" />
+        Please log in to see the graphs.
+      </div>
       </div>
     </v-container>
   </v-navigation-drawer>
@@ -130,6 +137,10 @@ import {
 
 export default {
   components: { GraphLine, TimeSeries, RosePlot, ExtremeValues, WeatherWindow },
+  computed: {
+      ...mapGetters(['colors', 'user']),
+    },
+  
   setup() {
     const { proxy } = getCurrentInstance();
     const store = useStore()

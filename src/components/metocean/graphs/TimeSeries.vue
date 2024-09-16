@@ -1,5 +1,5 @@
 <template>
-  <div v-if="data.length > 0 && parameters.length > 0">
+  <div v-if="user && data.length > 0 && parameters.length > 0">
     <v-menu offset-y>
       <template #activator="{ on }">
         <v-btn
@@ -101,7 +101,13 @@
     </div>
   </div>
   <div v-else>
-    Loading...
+    <div v-if="!user">
+      <custom-icon name="info" />
+      Please log in to see the graphs.
+    </div>
+    <div v-else>
+      Loading...
+    </div>
   </div>
 </template>
   
@@ -109,7 +115,7 @@
   import * as echarts from 'echarts'
   import moment from 'moment'
   import VChart, { THEME_KEY } from 'vue-echarts'
-  import { mapActions } from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
   
   export default {
     components: {
@@ -159,7 +165,7 @@
           dataZoom: [
             {
               type: 'inside',
-              start: 0,
+              start: 90,
               end: 100
             },
             {
@@ -187,29 +193,34 @@
         data: []
       }
     },
+    computed: {
+      ...mapGetters(['colors', 'user']),
+    },
     mounted() {
+      this.appendParams()
+      this.selectedParameter = this.parameters[0]
+
       this.fetchData()
     },
     methods: {
       ...mapActions(['loadGraphDataForLocation']),
       fetchData() {
-        fetch(`/static/data/Timeseries.json`)
-          .then(response => response.json())
-          .then(data => {
-            this.data = data
-            const keys = Object.keys(data[0]).filter(d => d !== 'Date+Time')
-  
-            this.parameters = keys.map(key => ({
-              label: this.customLabel(key),
-              value: key
-            }))
-  
-            this.appendDummyParameters()
-            this.selectedParameter = this.parameters[0]
-            this.$nextTick(() => {
-              this.updateChart()
-            })
+        this.loadGraphDataForLocation({
+          parameter: this.parameters[0].name, // You can set a default parameter here
+          startDate: this.selectedStartDate,
+          endDate: this.selectedEndDate
+        }).then(pointData => {
+          const { data } = pointData
+
+          this.data = data.serie.data.map((value, index) => ({
+            'Date+Time': data.category[index],
+            value
+          }))
+
+          this.$nextTick(() => {
+            this.updateChart()
           })
+        })
       },
       customLabel(key) {
         if (key === 'Hs (total) (m)') {
@@ -222,29 +233,20 @@
   
         return key
       },
-      appendDummyParameters() {
-        const dummyParams = [
+      appendParams() {
+        const params = [
           {
-            label:
-              'Horizontal 10-minute averaged wind speed at 10 m height U10 (m/s)'
+            label: 'Horizontal 10-minute averaged wind speed at 10 m height U10 (m/s)',
+            name: 'Hm0_tot'
           },
           {
-            label:
-              'Horizontal 10-minute averaged wind speed at 120 m height U120 (m/s)'
-          },
-          {
-            label: 'Depth averaged total current velocity V,total (m/s)'
-          },
-          {
-            label: 'Depth averaged tidal current velocity V,tidal (m/s)'
-          },
-          {
-            label: 'Depth averaged residual current velocity V,res (m/s)'
+            label: 'Precipitation',
+            name: 'Precip'
           }
         ]
-  
-        dummyParams.forEach(({ label }) =>
-          this.parameters.push({ label, value: '' })
+
+        params.forEach(({ label, name }) =>
+          this.parameters.push({ label, name })
         )
       },
       updateChart() {
@@ -277,7 +279,9 @@
                     }
                   }),
                   symbolSize: 8,
-                  type: 'line'
+                  type: 'line',
+                  large: true,
+                  largeThreshold: 2000
                 }
               ]
             })
@@ -286,16 +290,19 @@
       },
       selectParameter(parameter) {
         this.selectedParameter = parameter
+
         this.loadGraphDataForLocation({
-          parameter: parameter.value,
+          parameter: this.selectedParameter.name, // You can set a default parameter here
           startDate: this.selectedStartDate,
           endDate: this.selectedEndDate
         }).then(pointData => {
           const { data } = pointData
-          this.data = data[265].serie[0].data.map((value, index) => ({
-            'Date+Time': data[265].category[index],
+
+          this.data = data.serie.data.map((value, index) => ({
+            'Date+Time': data.category[index],
             value
           }))
+
           this.updateChart()
         })
       },

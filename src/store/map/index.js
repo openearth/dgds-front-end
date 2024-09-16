@@ -271,50 +271,76 @@ export const actions = {
 
   loadGraphDataForLocation({ commit, state }, { parameter, startDate, endDate }) {
     const datasetId = state.activeVectorDataIds
-    const locationId = 265
-    const slice = [null, 1]
-    const url = 'https://storage.googleapis.com/dgds-data-public/metocean/WavesWind.zarr'
-    // const path = parameter
-    const path = "Hm0"
+    const locationId = state.activeLocationIds
+    // const slice = [null, -1]
+    const url = 'https://storage.googleapis.com/dgds-data-public/metocean2/Point_0000' + locationId + '.zarr'
+    const path = parameter
 
     return openArray({
       store: url,
-      path: path,
+      path: 'time',
       mode: 'r'
     }).then(res => {
-      return res.get(slice).then(data => {
-        var serie = data.data.map(serie => {
-          return {
-            type: 'line',
-            data: Array.from(serie)
-          }
-        })
+      return res.get().then(time => {
+          
+        return openArray({
+          store: url,
+          path: path,
+          mode: 'r'
+        }).then(res => {
+          return res.get().then(data => {
 
-        let dates = [1979, 2023]
-        const category = []
-        const dateFormat = 'YYYY'
-        for (const date of dates) {
-          category.push(
-            moment(date, dateFormat).format('YYYY-MM-DDTHH:mm:ssZ')
-          )
-        }
+            var arrayData = Array.from(data.data);
+            
+            // Filter out NaN values
+            var filteredData = arrayData.filter(value => !isNaN(value))
+            
+            // TODO: Filter out years
+            var every12thPoint = filteredData.filter((value, index) => index % 12 === 0);
 
-        const pointData = {
-          id: datasetId,
-          data: {
-            [locationId]: {
-              category,
-              serie,
-              type: "ensemble",
-              timeSpan: "",
-              timeFormat: "{yyyy}"
+            var serie = {
+                type: 'line',
+                data: Array.from(every12thPoint)
+              }
+
+            // Convert Int32Array to a regular array
+            const timestamps = Array.from(time.data);
+
+            // Use Moment.js to convert timestamps to dates
+            const dates = timestamps.map(timestamp => {
+                return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
+            });
+            
+            // Print the dates
+            // console.log(dates);
+            // let dates = [1979, 2023]
+            const category = []
+            const dateFormat = 'YYYY'
+            for (const date of dates) {
+              if (category.length < filteredData.length)
+              {
+                category.push(
+                  moment(date, dateFormat).format('YYYY-MM-DDTHH:mm:ssZ')
+                )
+              }
             }
-          }
-        }
 
-        commit('addDatasetPointData', pointData)
+            const pointData = {
+              id: datasetId,
+              data: {
+                  category,
+                  serie,
+                  type: "ensemble",
+                  timeSpan: "",
+                  timeFormat: "{yyyy}"
+              }
+            }
 
-        return pointData
+            commit('addDatasetPointData', pointData)
+
+            return pointData
+          })
+        })
       })
     })
   },
