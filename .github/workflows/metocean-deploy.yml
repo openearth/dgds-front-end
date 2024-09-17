@@ -91,7 +91,7 @@ jobs:
         with:
           service: ${{ env.SERVICE }}
           region: ${{ env.REGION }}
-          image: europe-west4-docker.pkg.dev/dgds-i1000482-002/dgds-metocean/dgds-frontend:latest
+          image: europe-west4-docker.pkg.dev/dgds-i1000482-002/dgds-metocean/dgds-front-end:latest
 
       # If required, use the Cloud Run url output in later steps
       - name: Show Output
