@@ -300,7 +300,7 @@ export const actions = {
 
             var serie = {
                 type: 'line',
-                data: Array.from(every12thPoint)
+                data: Array.from(filteredData)
               }
 
             // Convert Int32Array to a regular array
