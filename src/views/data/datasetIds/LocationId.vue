@@ -151,171 +151,47 @@ import {
 
 export default {
   components: { GraphLine, TimeSeries, RosePlot, ExtremeValues, WeatherWindow, JointOccurence },
-  computed: {
-      ...mapGetters(['colors', 'user']),
-    },
   
-  setup() {
-    const { proxy } = getCurrentInstance()
-    const store = useStore()
-
-    const option = ref({
-      title: {
-        text: 'Traffic Sources',
-        left: 'center'
-      },
-      tooltip: {
-        trigger: 'item',
-        formatter: '{a} <br/>{b} : {c} ({d}%)'
-      },
-      legend: {
-        orient: 'vertical',
-        left: 'left',
-        data: ['Direct', 'Email', 'Ad Networks', 'Video Ads', 'Search Engines']
-      },
-      series: [
-        {
-          name: 'Traffic Sources',
-          type: 'pie',
-          radius: '55%',
-          center: ['50%', '60%'],
-          data: [
-            { value: 335, name: 'Direct' },
-            { value: 310, name: 'Email' },
-            { value: 234, name: 'Ad Networks' },
-            { value: 135, name: 'Video Ads' },
-            { value: 1548, name: 'Search Engines' }
-          ],
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)'
-            }
-          }
-        }
-      ],
-      backgroundColor: 'transparent'
-    })
-
-    const expandedDatasets = ref([])
-    const activePointDataPerDataset = computed(
-      () => store.getters.activePointDataPerDataset
-    )
-    const getActiveRasterLayer = computed(
-      () => store.getters.getActiveRasterLayer
-    )
-    const activeRasterData = computed(() => store.getters.activeRasterData)
-    const activeSummary = computed(() => store.getters.activeSummary)
-
-    const datasets = computed(() => {
-      const activePointData = activePointDataPerDataset.value
+  computed: {
+    ...mapGetters(['colors', 'user', 'activePointDataPerDataset', 'getActiveRasterLayer', 'activeRasterData', 'activeSummary']),
+    datasets() {
+      const activePointData = this.activePointDataPerDataset;
       const result = Object.keys(activePointData).map((pointId) =>
         _.get(activePointData, [pointId][0])
-      )
-      return flatten(result)
-    })
-
-    const hasSerieData = computed(() => {
-      if (_.get(datasets.value, '[0].type') === 'images') {
-        return _.get(datasets.value, '[0].imageUrl')
+      );
+      return flatten(result);
+    },
+    hasSerieData() {
+      if (_.get(this.datasets, '[0].type') === 'images') {
+        return _.get(this.datasets, '[0].imageUrl');
       } else {
-        return (
-          _.get(datasets.value, '[0].serie') &&
-          _.get(datasets.value, '[0].serie').length > 0
-        )
+        return _.get(this.datasets, '[0].serie') && _.get(this.datasets, '[0].serie').length > 0;
       }
-    })
-
-    const locations = computed(() => proxy.$route.params.locationId)
-    const getTimeStep = computed(() => {
-      const date = _.get(activeRasterData.value, 'date')
-      if (date) {
-        return date
-      } else {
-        return ''
-      }
-    })
-
-    const activeSummaryId = computed(() => {
-      let summary = ''
-      if (activeSummary.value.length === 2) {
-        summary =
-          activeSummary.value[0].chosenValue +
-          '_' +
-          activeSummary.value[1].chosenValue
-      } else {
-        summary = activeSummary.value.length
-      }
-      return summary
-    })
-
-    watch(
-      () => proxy.$route.params.locationId,
-      () => {
-        updateLocationPanel()
-      }
-    )
-
-    watch(
-      () => proxy.$route.params.datasetIds,
-      () => {
-        updateLocationPanel()
-      }
-    )
-
-    watch(activePointDataPerDataset, () => {
-      expandedDatasets.value = []
-    })
-
-    watch(activeSummary, {
-      handler() {
-        updateLocationPanel()
-      },
-      deep: true
-    })
-
-    onMounted(() => {
-      setTimeout(updateLocationPanel, 3000)
-      expandedDatasets.value = [...Array(datasets.value.length).keys()]
-    })
-
-    onUnmounted(() => {
-      clearActiveLocationIds()
-    })
-
-    const {
-      loadPointDataForLocation,
-      clearActiveLocationIds,
-      setActiveLocationIds
-    } = mapMutations(['clearActiveLocationIds', 'setActiveLocationIds'])
-
-    const updateLocationPanel = () => {
-      const { datasetIds, locationId } = proxy.$route.params
-      setActiveLocationIds([locationId])
-      loadPointDataForLocation({ datasetIds, locationId })
     }
+  },
+  
+  mounted() {
+    setTimeout(this.updateLocationPanel, 3000);
+    this.expandedDatasets = [...Array(this.datasets.length).keys()];
+  },
 
-    const close = () => {
-      proxy.$router.push({
-        path: `/data/${proxy.$route.params.datasetIds}`,
-        params: { datasetIds: proxy.$route.params.datasetIds }
-      })
-    }
-
-    return {
-      close,
-      option,
-      expandedDatasets,
-      datasets,
-      hasSerieData,
-      locations,
-      getTimeStep,
-      activeSummaryId,
-      updateLocationPanel,
+  methods: {
+    ...mapMutations(['clearActiveLocationIds', 'setActiveLocationIds']),
+    ...mapActions(['loadPointDataForLocation']),
+    updateLocationPanel() {
+      const { datasetIds, locationId } = this.$route.params;
+      console.log('Inside updateLocationPanel:', { datasetIds, locationId });
+      this.setActiveLocationIds([locationId]);
+      // this.loadPointDataForLocation({ datasetIds, locationId });
+    },
+    close() {
+      this.$router.push({
+        path: `/data/${this.$route.params.datasetIds}`,
+        params: { datasetIds: this.$route.params.datasetIds }
+      });
     }
   }
-}
+};
 </script>
 
 <style lang="css" scoped>

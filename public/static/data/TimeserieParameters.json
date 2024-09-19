@@ -1,18 +1,18 @@
 [
   {
-    "value": "U10mag",
+    "value": "U_10_mag",
     "label": "Hourly-averaged horizontal wind speed at 10 m height U_{10,mag} (m/s)"
   },
   {
-    "value": "U60mag",
+    "value": "U_60_mag",
     "label": "Hourly-averaged horizontal wind speed at 60 m height U_{60,mag} (m/s)"
   },
   {
-    "value": "U100mag",
+    "value": "U_100_mag",
     "label": "Hourly-averaged horizontal wind speed at 100 m height U_{100,mag} (m/s)"
   },
   {
-    "value": "U120mag",
+    "value": "U_120_mag",
     "label": "Hourly-averaged horizontal wind speed at 120 m height U_{120,mag} (m/s)"
   },
   {

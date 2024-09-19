@@ -273,7 +273,8 @@ export const actions = {
     const datasetId = state.activeVectorDataIds
     const locationId = state.activeLocationIds
     // const slice = [null, -1]
-    const url = 'https://storage.googleapis.com/dgds-data-public/metocean/time_series/point_00001.zarr'
+    const paddedLocationId = state.activeLocationIndex.padStart(5, '0')
+    const url = `https://storage.googleapis.com/dgds-data-public/metocean/time_series/point_${paddedLocationId}.zarr`
     const path = parameter
 
     return openArray({
@@ -291,7 +292,7 @@ export const actions = {
           return res.get().then(data => {
 
             var arrayData = Array.from(data.data);
-            console.log(arrayData)
+
             // Filter out NaN values
             var filteredData = arrayData.filter(value => !isNaN(value))
             
@@ -335,8 +336,6 @@ export const actions = {
                   timeFormat: "{yyyy}"
               }
             }
-
-            console.log(pointData)
             
             commit('addDatasetPointData', pointData)
 
