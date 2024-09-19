@@ -345,7 +345,7 @@ export default {
         if (locId) {
           locationIds.push(locId)
           // locationIds.push(feature.properties[locId])
-          feature.properties.zarrIndex = 1
+          feature.properties.zarrIndex = feature.properties.id
         }
         
         // write location index for zarr file to state
