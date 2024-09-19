@@ -149,7 +149,7 @@
         </div>
       </div>
       <div v-else>
-        Loading data...
+          Loading data...
       </div>
     </div>
     <div v-else>
@@ -162,7 +162,7 @@
 import * as echarts from 'echarts'
 import moment from 'moment'
 import VChart, { THEME_KEY } from 'vue-echarts'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -274,7 +274,12 @@ export default {
       data: []
     }
   },
+  computed: {
+      ...mapGetters(['colors', 'user']),
+  },
   mounted() {
+    this.selectedParameter = this.parameters[0]
+
     this.fetchData()
   },
   methods: {
@@ -287,27 +292,57 @@ export default {
       return label
     },
     fetchData() {
-      fetch(`/static/data/TimeserieParameters.json`)
-        .then((response) => response.json())
-        .then((parameters) => {
-          this.parameters = parameters.map((parameter) => ({
-            ...parameter,
-            label: this.transformLabel(parameter.label)
+        fetch(`/static/data/TimeserieParameters.json`)
+          .then((response) => response.json())
+          .then((parameters) => {
+            this.parameters = parameters.map((parameter) => ({
+              ...parameter,
+              label: this.transformLabel(parameter.label)
+            }))
+
+            this.selectParameter(parameters[0])
+          })
+          
+        this.loadGraphDataForLocation({
+          parameter: this.parameters[0].value,
+          startDate: this.selectedStartDate,
+          endDate: this.selectedEndDate
+        }).then(pointData => {
+          console.log(pointData)
+          const { data } = pointData
+
+          this.data = data.serie.data.map((value, index) => ({
+            'Date+Time': data.category[index],
+            value
           }))
 
-          this.selectParameter(parameters[0])
-        })
-
-      // TODO deze mag weg zodra .zarr werkt
-      fetch(`/static/data/Timeseries.json`)
-        .then((response) => response.json())
-        .then((data) => {
-          this.data = data
           this.$nextTick(() => {
             this.updateChart()
           })
         })
-    },
+      },
+    // fetchData() {
+    //   fetch(`/static/data/TimeserieParameters.json`)
+    //     .then((response) => response.json())
+    //     .then((parameters) => {
+    //       this.parameters = parameters.map((parameter) => ({
+    //         ...parameter,
+    //         label: this.transformLabel(parameter.label)
+    //       }))
+
+    //       this.selectParameter(parameters[0])
+    //     })
+
+    //   // TODO deze mag weg zodra .zarr werkt
+    //   fetch(`/static/data/Timeseries.json`)
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //       this.data = data
+    //       this.$nextTick(() => {
+    //         this.updateChart()
+    //       })
+    //     })
+    // },
     getStepInterval(data, key) {
       const firstDate = moment(data[0][key])
       const lastDate = moment(data[data.length - 1][key])
@@ -331,13 +366,16 @@ export default {
         return 0
       }
     },
-    updateChart() {
+    updateChart(){
+      console.log('Update chart call')
       document.querySelectorAll('canvas, div').forEach((e) => {
         const instance = echarts.getInstanceByDom(e)
         if (instance && instance.group === 'timeseriesv3') {
           // Determine the step interval and calculate the index for x amount of years
           const stepInterval = this.getStepInterval(this.data, 'Date+Time')
           const indexForYears = this.getIndexForTimePeriod(stepInterval, 10)
+
+          console.log(this.data)
 
           instance.setOption({
             yAxis: {
@@ -383,7 +421,9 @@ export default {
               }),
               showSymbol: false,
               symbolSize: 8,
-              type: 'line'
+              type: 'line',
+              large: true,
+              largeThreshold: 2000
             }
           })
         }
@@ -421,22 +461,29 @@ export default {
 
       console.log('getChartData parameters', parameters)
 
-      // this.loadGraphDataForLocation(parameters).then((pointData) => {
-      //   const { data } = pointData
-      //   console.log('data', data)
-      //   this.data = data[265].serie[0].data.map((value, index) => ({
-      //     'Date+Time': data[265].category[index],
-      //     value
-      //   }))
-      //   this.updateChart()
-      // })
+      this.loadGraphDataForLocation({
+        parameter: this.selectedParameter.value, // You can set a default parameter here
+        startDate: this.selectedStartDate,
+        endDate: this.selectedEndDate
+      }).then(pointData => {
+        console.log(pointData)
+        const { data } = pointData
+
+        this.data = data.serie.data.map((value, index) => ({
+          'Date+Time': data.category[index],
+          value
+        }))
+
+        this.$nextTick(() => {
+          this.updateChart()
+        })
+      })
     },
     selectParameter(parameter) {
       console.log('selectParameter parameter', parameter)
-      this.selectedParameter = parameter || {}
-      this.$nextTick(() => {
-        this.getChartData()
-      })
+      this.selectedParameter = parameter
+
+      this.getChartData()
     },
     selectDirectionalParameter(parameter) {
       this.selectedDirectionalParameter = parameter || {}

@@ -17,10 +17,11 @@
       >
         <v-icon>mdi-close</v-icon>
       </v-btn>
-      <div
+      <div 
         class="flex-grow-1 py-3 scrollbar"
         align-space-between
       >
+
         <v-expansion-panels
           flat
           accordion
@@ -150,6 +151,10 @@ import {
 
 export default {
   components: { GraphLine, TimeSeries, RosePlot, ExtremeValues, WeatherWindow, JointOccurence },
+  computed: {
+      ...mapGetters(['colors', 'user']),
+    },
+  
   setup() {
     const { proxy } = getCurrentInstance()
     const store = useStore()
