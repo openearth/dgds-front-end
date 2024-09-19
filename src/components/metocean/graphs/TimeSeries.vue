@@ -1,319 +1,519 @@
 <template>
-  <div v-if="data.length > 0 && parameters.length > 0">
-    <v-menu offset-y>
-      <template #activator="{ on }">
-        <v-btn
-          text
-          v-on="on"
-        >
-          {{ selectedParameter.label }}
-          <v-icon right>
-            mdi-chevron-down
-          </v-icon>
-        </v-btn>
-      </template>
-      <v-list>
-        <v-list-item
-          v-for="(parameter, index) in parameters"
-          :key="index"
-          @click="selectParameter(parameter)"
-        >
-          <v-list-item-title>
-            {{ parameter.label }}
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-    <v-spacer />
-    <!-- Start Date Picker -->
-    <v-menu offset-y>
-      <template #activator="{ on }">
-        Start Date
-        <v-btn
-          text
-          v-on="on"
-        >
-          {{ selectedStartDate }}
-          <v-icon right>
-            mdi-calendar
-          </v-icon>
-        </v-btn>
-      </template>
-      <v-date-picker
-        v-model="selectedStartDate"
-        scrollable
+  <div>
+    <div v-if="parameters.length > 0">
+      <v-autocomplete
+        v-model="selectedParameter"
+        :items="parameters"
+        item-value="value"
+        item-text="label"
+        label="Parameter"
+        clearable
+        return-object
+        @change="selectParameter"
       >
+        <template #item="data">
+          <v-list-item-content>
+            <v-list-item-title>
+              <span v-html="data.item.label" />
+            </v-list-item-title>
+          </v-list-item-content>
+        </template>
+        <template #selection="data">
+          <span v-html="data.item.label" />
+        </template>
+      </v-autocomplete>
+      <div v-if="selectedParameter.direction">
+        <v-autocomplete
+          v-model="selectedDirectionalParameter"
+          :items="directionalParameters"
+          item-value="value"
+          item-text="label"
+          label="Directional parameter"
+          clearable
+          return-object
+          @change="selectDirectionalParameter"
+        >
+          <template #item="data">
+            <v-list-item-content>
+              <v-list-item-title>
+                <span v-html="data.item.label" />
+              </v-list-item-title>
+            </v-list-item-content>
+          </template>
+          <template #selection="data">
+            <span v-html="data.item.label" />
+          </template>
+        </v-autocomplete>
+      </div>
+      <div v-if="selectedParameter.frequency">
+        <v-autocomplete
+          v-model="selectedFrequencyParameter"
+          :items="frequencyParameters"
+          item-value="value"
+          item-text="label"
+          label="Frequency parameter"
+          clearable
+          return-object
+          @change="selectFrequencyParameter"
+        >
+          <template #item="data">
+            <v-list-item-content>
+              <v-list-item-title>
+                <span v-html="data.item.label" />
+              </v-list-item-title>
+            </v-list-item-content>
+          </template>
+          <template #selection="data">
+            <span v-html="data.item.label" />
+          </template>
+        </v-autocomplete>
+      </div>
+    </div>
+    <div v-else>
+      Loading parameters...
+    </div>
+    <div v-if="selectedParameter.value">
+      <div v-if="data.length > 0">
         <v-spacer />
-        <v-btn
-          text
-          @click="closeStartDatePicker"
-        >
-          Cancel
-        </v-btn>
-        <v-btn
-          text
-          @click="applyStartDatePicker"
-        >
-          Apply
-        </v-btn>
-      </v-date-picker>
-    </v-menu>
-    <v-spacer />
-    <!-- End Date Picker -->
-    <v-menu offset-y>
-      <template #activator="{ on }">
-        End Date
-        <v-btn
-          text
-          v-on="on"
-        >
-          {{ selectedEndDate }}
-          <v-icon right>
-            mdi-calendar
-          </v-icon>
-        </v-btn>
-      </template>
-      <v-date-picker
-        v-model="selectedEndDate"
-        scrollable
-      >
+        <v-menu offset-y>
+          <template #activator="{ on }">
+            Start Date
+            <v-btn
+              text
+              v-on="on"
+            >
+              {{ selectedStartDate }}
+              <v-icon right>
+                mdi-calendar
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-date-picker
+            v-model="selectedStartDate"
+            scrollable
+          >
+            <v-spacer />
+            <v-btn
+              text
+              @click="closeStartDatePicker"
+            >
+              Cancel
+            </v-btn>
+            <v-btn
+              text
+              @click="applyStartDatePicker"
+            >
+              Apply
+            </v-btn>
+          </v-date-picker>
+        </v-menu>
         <v-spacer />
-        <v-btn
-          text
-          @click="closeEndDatePicker"
-        >
-          Cancel
-        </v-btn>
-        <v-btn
-          text
-          @click="applyEndDatePicker"
-        >
-          Apply
-        </v-btn>
-      </v-date-picker>
-    </v-menu>
-    <div style="width: 100%; height: 400px; margin: 8px 0px">
-      <v-chart
-        :option="timeseriesOption"
-        :autoresize="true"
-        :group="'timeseriesv3'"
-      />
+        <v-menu offset-y>
+          <template #activator="{ on }">
+            End Date
+            <v-btn
+              text
+              v-on="on"
+            >
+              {{ selectedEndDate }}
+              <v-icon right>
+                mdi-calendar
+              </v-icon>
+            </v-btn>
+          </template>
+          <v-date-picker
+            v-model="selectedEndDate"
+            scrollable
+          >
+            <v-spacer />
+            <v-btn
+              text
+              @click="closeEndDatePicker"
+            >
+              Cancel
+            </v-btn>
+            <v-btn
+              text
+              @click="applyEndDatePicker"
+            >
+              Apply
+            </v-btn>
+          </v-date-picker>
+        </v-menu>
+        <div style="width: 100%; height: 400px; margin: 8px 0px">
+          <v-chart
+            :option="timeseriesOption"
+            :autoresize="true"
+            :group="'timeseriesv3'"
+          />
+        </div>
+      </div>
+      <div v-else>
+        Loading data...
+      </div>
+    </div>
+    <div v-else>
+      Select a parameter
     </div>
   </div>
-  <div v-else>
-    Loading...
-  </div>
 </template>
-  
-  <script>
-  import * as echarts from 'echarts'
-  import moment from 'moment'
-  import VChart, { THEME_KEY } from 'vue-echarts'
-  import { mapActions } from 'vuex'
-  
-  export default {
-    components: {
-      VChart
-    },
-    provide() {
-      return { [THEME_KEY]: 'dark' }
-    },
-    data() {
-      return {
-        timeseriesOption: {
-          tooltip: {
-            trigger: 'axis',
-            formatter: function(e) {
-              let tooltip = ''
-              e.forEach(serie => {
-                tooltip += `<b style="font-weight:bold;">${serie.seriesName}:</b><br/>`
-                tooltip += `Datetime: ${moment(serie.data['Date+Time']).format('DD-MM-YYYY')}<br/>Value: ${Math.round(serie.data.value)}`
-              })
-              return tooltip
-            }
-          },
-          xAxis: {
-            name: 'Datetime',
-            nameLocation: 'center',
-            type: 'category',
-            nameGap: 30,
-            axisLabel: {
-              formatter: function(value) {
-                return moment(Number(value)).format('DD-MM-YYYY')
+
+<script>
+import * as echarts from 'echarts'
+import moment from 'moment'
+import VChart, { THEME_KEY } from 'vue-echarts'
+import { mapActions } from 'vuex'
+
+export default {
+  components: {
+    VChart
+  },
+  provide() {
+    return { [THEME_KEY]: 'dark' }
+  },
+  data() {
+    return {
+      timeseriesOption: {
+        toolbox: {
+          top: 0,
+          left: 8,
+          feature: {
+            saveAsImage: {
+              name: 'Time_series',
+              title: 'Save as image',
+              type: 'png',
+              icon: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2M8.9 13.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 14c.19-.26.57-.27.78-.02',
+              emphasis: {
+                iconStyle: {
+                  borderColor: '#fff'
+                }
               }
-            }
-          },
-          yAxis: {
-            name: '',
-            type: 'value',
-            scale: true,
-            nameTextStyle: {
-              align: 'left'
-            }
-          },
-          grid: [
-            {
-              bottom: '30%'
-            }
-          ],
-          dataZoom: [
-            {
-              type: 'inside',
-              start: 0,
-              end: 100
             },
-            {
-              start: 0,
-              end: 100,
-              height: 50,
-              bottom: 20,
-              labelFormatter: function(value, valueStr) {
-                return moment(Number(valueStr)).format('DD-MM-YYYY')
+            myFeature: {
+              show: true,
+              name: 'Time_series',
+              title: 'Download as CSV',
+              icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
+              onclick: () => {
+                this.downloadAsCSV(
+                  ['Date+Time', this.selectedParameter.value],
+                  'timeseriesv3',
+                  'Time_series'
+                )
+              },
+              emphasis: {
+                iconStyle: {
+                  borderColor: '#fff'
+                }
               }
             }
-          ],
-          color: ['#FA8D0B'],
-          legend: {
-            orient: 'vertical',
-            show: true,
-            right: true
-          },
-          backgroundColor: 'transparent'
+          }
         },
-        parameters: [],
-        selectedParameter: { label: '', value: '' },
-        selectedStartDate: '1984-01-01',
-        selectedEndDate: '2015-12-31',
-        data: []
-      }
-    },
-    mounted() {
-      this.fetchData()
-    },
-    methods: {
-      ...mapActions(['loadGraphDataForLocation']),
-      fetchData() {
-        fetch(`/static/data/Timeseries.json`)
-          .then(response => response.json())
-          .then(data => {
-            this.data = data
-            const keys = Object.keys(data[0]).filter(d => d !== 'Date+Time')
-  
-            this.parameters = keys.map(key => ({
-              label: this.customLabel(key),
-              value: key
-            }))
-  
-            this.appendDummyParameters()
-            this.selectedParameter = this.parameters[0]
-            this.$nextTick(() => {
-              this.updateChart()
+        tooltip: {
+          trigger: 'axis',
+          formatter: function (e) {
+            let tooltip = ''
+            e.forEach((serie) => {
+              tooltip += `${serie.marker} <b style="font-weight:bold;">${serie.seriesName}:</b><br/>`
+
+              const value = serie.data.value.toLocaleString('en-US', {
+                maximumFractionDigits: 2
+              })
+              tooltip += '<table>'
+              tooltip += `<tr><td>${moment(serie.data['Date+Time']).format('DD-MM-YYYY')}: <b>${value}<b/></td></tr>`
+              tooltip += '</table>'
             })
-          })
-      },
-      customLabel(key) {
-        if (key === 'Hs (total) (m)') {
-          return 'Total significant wave height Hs,tot (m)'
-        }
-  
-        if (key === 'Tp (total) (s)') {
-          return 'Total spectral peak wave period Tp,tot (s)'
-        }
-  
-        return key
-      },
-      appendDummyParameters() {
-        const dummyParams = [
-          {
-            label:
-              'Horizontal 10-minute averaged wind speed at 10 m height U10 (m/s)'
-          },
-          {
-            label:
-              'Horizontal 10-minute averaged wind speed at 120 m height U120 (m/s)'
-          },
-          {
-            label: 'Depth averaged total current velocity V,total (m/s)'
-          },
-          {
-            label: 'Depth averaged tidal current velocity V,tidal (m/s)'
-          },
-          {
-            label: 'Depth averaged residual current velocity V,res (m/s)'
+            return tooltip
           }
-        ]
-  
-        dummyParams.forEach(({ label }) =>
-          this.parameters.push({ label, value: '' })
-        )
-      },
-      updateChart() {
-        document.querySelectorAll('canvas, div').forEach(e => {
-          const instance = echarts.getInstanceByDom(e)
-          if (instance && instance.group === 'timeseriesv3') {
-            instance.setOption({
-              yAxis: {
-                name: this.selectedParameter.label
-              },
-              xAxis: {
-                data: this.data.map((d, i) => {
-                  const value = moment(d['Date+Time']).valueOf()
-                  return value
-                }),
-                axisLabel: {
-                  formatter: value => {
-                    const date = moment(Number(value))
-                    return date.format('DD-MM-YYYY')
-                  }
-                }
-              },
-              series: [
-                {
-                  name: this.selectedParameter.label,
-                  data: this.data.map((d, i) => {
-                    return {
-                      value: d[this.selectedParameter.value],
-                      ...d
-                    }
-                  }),
-                  symbolSize: 8,
-                  type: 'line'
-                }
-              ]
-            })
+        },
+        grid: {
+          containLabel: true,
+          top: 48,
+          right: 8,
+          bottom: 96,
+          left: 8
+        },
+        xAxis: {
+          name: 'Datetime',
+          nameLocation: 'center',
+          type: 'category',
+          nameGap: 30,
+          axisLabel: {
+            formatter: function (value) {
+              return moment(Number(value)).format('DD-MM-YYYY')
+            }
           }
-        })
+        },
+        yAxis: {
+          name: '',
+          type: 'value',
+          scale: true,
+          nameTextStyle: {
+            align: 'left'
+          }
+        },
+        legend: {
+          orient: 'vertical',
+          show: true,
+          top: 0,
+          right: 0
+        },
+        color: ['#F78211'],
+        backgroundColor: 'transparent'
       },
-      selectParameter(parameter) {
-        this.selectedParameter = parameter
-        this.loadGraphDataForLocation({
-          parameter: parameter.value,
-          startDate: this.selectedStartDate,
-          endDate: this.selectedEndDate
-        }).then(pointData => {
-          const { data } = pointData
-          this.data = data[265].serie[0].data.map((value, index) => ({
-            'Date+Time': data[265].category[index],
-            value
+      parameters: [],
+      selectedParameter: {},
+      selectedStartDate: '1984-01-01',
+      selectedEndDate: '2015-12-31',
+
+      directionalParameters: [],
+      selectedDirectionalParameter: {},
+      frequencyParameters: [],
+      selectedFrequencyParameter: {},
+
+      data: []
+    }
+  },
+  mounted() {
+    this.fetchData()
+  },
+  methods: {
+    ...mapActions(['loadGraphDataForLocation']),
+    transformLabel(label) {
+      label = label.replace(/_\{([^}]+)\}/g, '<sub>$1</sub>')
+      label = label.replace(/\^\{([^}]+)\}/g, '<sup>$1</sup>')
+      label = label.replace(/\{circ\}/g, '°')
+
+      return label
+    },
+    fetchData() {
+      fetch(`/static/data/TimeserieParameters.json`)
+        .then((response) => response.json())
+        .then((parameters) => {
+          this.parameters = parameters.map((parameter) => ({
+            ...parameter,
+            label: this.transformLabel(parameter.label)
           }))
-          this.updateChart()
+
+          this.selectParameter(parameters[0])
         })
-      },
-      closeStartDatePicker() {
-        // Implement closing logic if needed
-      },
-      applyStartDatePicker() {
-        // Implement apply logic if needed
-      },
-      closeEndDatePicker() {
-        // Implement closing logic if needed
-      },
-      applyEndDatePicker() {
-        // Implement apply logic if needed
+
+      // TODO deze mag weg zodra .zarr werkt
+      fetch(`/static/data/Timeseries.json`)
+        .then((response) => response.json())
+        .then((data) => {
+          this.data = data
+          this.$nextTick(() => {
+            this.updateChart()
+          })
+        })
+    },
+    getStepInterval(data, key) {
+      const firstDate = moment(data[0][key])
+      const lastDate = moment(data[data.length - 1][key])
+      const diff = lastDate.diff(firstDate, 'days')
+
+      if (diff > 365) {
+        return 'days'
+      } else {
+        return 'hours'
       }
+    },
+    getIndexForTimePeriod(period, years) {
+      const numDaysInYear = 365
+      const numHoursInDay = 24
+
+      if (period === 'days') {
+        return numDaysInYear * years
+      } else if (period === 'hours') {
+        return numHoursInDay * numDaysInYear * years
+      } else {
+        return 0
+      }
+    },
+    updateChart() {
+      document.querySelectorAll('canvas, div').forEach((e) => {
+        const instance = echarts.getInstanceByDom(e)
+        if (instance && instance.group === 'timeseriesv3') {
+          // Determine the step interval and calculate the index for x amount of years
+          const stepInterval = this.getStepInterval(this.data, 'Date+Time')
+          const indexForYears = this.getIndexForTimePeriod(stepInterval, 10)
+
+          instance.setOption({
+            yAxis: {
+              name: this.selectedParameter.label
+            },
+            xAxis: {
+              data: this.data.map((d, i) => {
+                const value = moment(d['Date+Time']).valueOf()
+                return value
+              }),
+              axisLabel: {
+                formatter: (value) => {
+                  const date = moment(Number(value))
+                  return date.format('DD-MM-YYYY')
+                }
+              }
+            },
+            dataZoom: [
+              {
+                type: 'inside',
+                startValue: Math.max(0, this.data.length - indexForYears),
+                endValue: this.data.length
+                // startValue: this.data.length - 356 * 10,
+                // endValue: this.data.length
+              },
+              {
+                height: 48,
+                right: 8,
+                bottom: 16,
+                left: 8,
+                labelFormatter: function (value, valueStr) {
+                  return moment(Number(valueStr)).format('DD-MM-YYYY')
+                }
+              }
+            ],
+            series: {
+              name: this.selectedParameter.label,
+              data: this.data.map((d, i) => {
+                return {
+                  value: d[this.selectedParameter.value],
+                  ...d
+                }
+              }),
+              showSymbol: false,
+              symbolSize: 8,
+              type: 'line'
+            }
+          })
+        }
+      })
+    },
+    getChartData() {
+      if (!this.selectedParameter.value) {
+        this.data = []
+        return
+      }
+
+      let parameters = {
+        parameter: this.selectedParameter.value,
+        startDate: this.selectedStartDate,
+        endDate: this.selectedEndDate
+      }
+
+      if (this.selectedParameter.direction) {
+        if (this.selectedDirectionalParameter) {
+          parameters.direction = this.selectedDirectionalParameter.value
+        } else {
+          this.data = []
+          return
+        }
+      }
+
+      if (this.selectedParameter.frequency) {
+        if (this.selectedFrequencyParameter) {
+          parameters.frequency = this.selectedFrequencyParameter.value
+        } else {
+          this.data = []
+          return
+        }
+      }
+
+      console.log('getChartData parameters', parameters)
+
+      // this.loadGraphDataForLocation(parameters).then((pointData) => {
+      //   const { data } = pointData
+      //   console.log('data', data)
+      //   this.data = data[265].serie[0].data.map((value, index) => ({
+      //     'Date+Time': data[265].category[index],
+      //     value
+      //   }))
+      //   this.updateChart()
+      // })
+    },
+    selectParameter(parameter) {
+      console.log('selectParameter parameter', parameter)
+      this.selectedParameter = parameter || {}
+      this.$nextTick(() => {
+        this.getChartData()
+      })
+    },
+    selectDirectionalParameter(parameter) {
+      this.selectedDirectionalParameter = parameter || {}
+      this.$nextTick(() => {
+        this.getChartData()
+      })
+    },
+    selectFrequencyParameter(parameter) {
+      this.selectedFrequencyParameter = parameter || {}
+      this.$nextTick(() => {
+        this.getChartData()
+      })
+    },
+    downloadAsCSV(keys, instanceKey, filename) {
+      document.querySelectorAll('canvas, div').forEach((e) => {
+        const instance = echarts.getInstanceByDom(e)
+        if (instance?.group === instanceKey) {
+          const option = instance.getOption()
+
+          // Get the current state of the legend (which series are selected/visible)
+          const legend = option.legend[0].selected
+
+          // Add header row to CSV
+          let csvContent = `data:text/csv;charset=utf-8,${keys.join(',')} \r\n`
+
+          // Retrieve visible data from the current state (respect dataZoom)
+          const zoomStart = option.dataZoom?.[0]?.start / 100 || 0
+          const zoomEnd = option.dataZoom?.[0]?.end / 100 || 1
+
+          option.series.forEach((serie) => {
+            if (serie.data && legend[serie.name] !== false) {
+              const startIndex = Math.floor(zoomStart * serie.data.length)
+              const endIndex = Math.ceil(zoomEnd * serie.data.length)
+
+              // Process the visible data range for this series
+              serie.data.slice(startIndex, endIndex).forEach((point) => {
+                keys.forEach((key, keyIndex) => {
+                  csvContent += keyIndex === 0 ? point[key] : `, ${point[key]}`
+                })
+                csvContent += '\r\n'
+              })
+            }
+          })
+
+          const encodedUri = encodeURI(csvContent)
+          const link = document.createElement('a')
+          link.setAttribute('href', encodedUri)
+          link.setAttribute('download', `${filename}.csv`)
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        }
+      })
+    },
+    closeStartDatePicker() {
+      // Implement closing logic if needed
+    },
+    applyStartDatePicker() {
+      // Implement apply logic if needed
+    },
+    closeEndDatePicker() {
+      // Implement closing logic if needed
+    },
+    applyEndDatePicker() {
+      // Implement apply logic if needed
     }
   }
-  </script>
-  
-  <style scoped></style>
-  
+}
+</script>
+
+<style scoped>
+::v-deep .v-select__selections {
+  white-space: nowrap !important;
+}
+.v-select__selections span {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 99%;
+}
+</style>

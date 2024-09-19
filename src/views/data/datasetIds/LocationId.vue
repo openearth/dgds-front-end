@@ -86,10 +86,10 @@
               color="background"
               dark
             >
-              Extreme values
+              Joint Occurence
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
-              <extreme-values />
+              <joint-occurence />
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -104,6 +104,18 @@
               <weather-window />
             </v-expansion-panel-content>
           </v-expansion-panel>
+          <v-expansion-panel>
+            <v-expansion-panel-header
+              class="h4"
+              color="background"
+              dark
+            >
+              Extreme values
+            </v-expansion-panel-header>
+            <v-expansion-panel-content color="background">
+              <extreme-values />
+            </v-expansion-panel-content>
+          </v-expansion-panel>
         </v-expansion-panels>
       </div>
       <div class="flex-shrink-1 bodytext-xs disclaimer">
@@ -115,7 +127,14 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted, computed, watch, getCurrentInstance } from 'vue'
+import {
+  ref,
+  onMounted,
+  onUnmounted,
+  computed,
+  watch,
+  getCurrentInstance
+} from 'vue'
 import _ from 'lodash'
 import flatten from 'lodash/flatten'
 import { mapMutations, mapGetters, mapActions, useStore } from 'vuex'
@@ -125,15 +144,16 @@ import {
   TimeSeries,
   RosePlot,
   ExtremeValues,
-  WeatherWindow
+  WeatherWindow,
+  JointOccurence
 } from '@/components/metocean'
 
 export default {
-  components: { GraphLine, TimeSeries, RosePlot, ExtremeValues, WeatherWindow },
+  components: { GraphLine, TimeSeries, RosePlot, ExtremeValues, WeatherWindow, JointOccurence },
   setup() {
-    const { proxy } = getCurrentInstance();
+    const { proxy } = getCurrentInstance()
     const store = useStore()
-    
+
     const option = ref({
       title: {
         text: 'Traffic Sources',
@@ -174,14 +194,18 @@ export default {
     })
 
     const expandedDatasets = ref([])
-    const activePointDataPerDataset = computed(() => store.getters.activePointDataPerDataset)
-    const getActiveRasterLayer = computed(() => store.getters.getActiveRasterLayer)
+    const activePointDataPerDataset = computed(
+      () => store.getters.activePointDataPerDataset
+    )
+    const getActiveRasterLayer = computed(
+      () => store.getters.getActiveRasterLayer
+    )
     const activeRasterData = computed(() => store.getters.activeRasterData)
     const activeSummary = computed(() => store.getters.activeSummary)
 
     const datasets = computed(() => {
       const activePointData = activePointDataPerDataset.value
-      const result = Object.keys(activePointData).map(pointId =>
+      const result = Object.keys(activePointData).map((pointId) =>
         _.get(activePointData, [pointId][0])
       )
       return flatten(result)
@@ -221,13 +245,19 @@ export default {
       return summary
     })
 
-    watch(() => proxy.$route.params.locationId, () => {
-      updateLocationPanel()
-    })
+    watch(
+      () => proxy.$route.params.locationId,
+      () => {
+        updateLocationPanel()
+      }
+    )
 
-    watch(() => proxy.$route.params.datasetIds, () => {
-      updateLocationPanel()
-    })
+    watch(
+      () => proxy.$route.params.datasetIds,
+      () => {
+        updateLocationPanel()
+      }
+    )
 
     watch(activePointDataPerDataset, () => {
       expandedDatasets.value = []
@@ -249,7 +279,11 @@ export default {
       clearActiveLocationIds()
     })
 
-    const { loadPointDataForLocation, clearActiveLocationIds, setActiveLocationIds } = mapMutations(['clearActiveLocationIds', 'setActiveLocationIds'])
+    const {
+      loadPointDataForLocation,
+      clearActiveLocationIds,
+      setActiveLocationIds
+    } = mapMutations(['clearActiveLocationIds', 'setActiveLocationIds'])
 
     const updateLocationPanel = () => {
       const { datasetIds, locationId } = proxy.$route.params
@@ -265,6 +299,7 @@ export default {
     }
 
     return {
+      close,
       option,
       expandedDatasets,
       datasets,
@@ -273,7 +308,6 @@ export default {
       getTimeStep,
       activeSummaryId,
       updateLocationPanel,
-      close
     }
   }
 }

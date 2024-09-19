@@ -1,135 +1,25 @@
-<!-- <template>
-  <div>
-    <v-btn-toggle v-model="selectedParameter" mandatory>
-      <v-btn
-        v-for="(parameter, i) in parameters"
-        :key="`${parameter}-${i}`"
-        :value="parameter"
-        @click="selectParameter(parameter)"
-        depressed
-      >
-        {{ parameter }}
-      </v-btn>
-    </v-btn-toggle>
-    <div style="width: 100%; height: 400px; margin: 32px 0px">
-      <v-chart class="chart" :option="roseOption" autoresize group="rosePlot" />
-    </div>
-  </div>
-</template> -->
 <template>
   <div>
-    <v-select
-      v-model="selectedtestParameter"
-      :items="testParameters"
-      label="Parameter"
+    <v-autocomplete
+      v-model="selectedParameter1"
+      :items="parameter1Options"
+      label="First parameter"
+      clearable
+      @change="selectParameter1"
+    />
+    <v-autocomplete
+      v-model="selectedParameter2"
+      :items="parameter2Options"
+      label="Second parameter"
+      clearable
+      @change="selectParameter2"
     />
     <v-select
-      v-model="selectedDirectionalParameter"
-      :items="directionalParameters"
-      label="Directional Parameter"
+      v-model="selectedMonth"
+      :items="months"
+      label="Month of interest"
     />
-    <!-- Start Date Picker -->
-    <v-menu offset-y>
-      <template #activator="{ on }">
-        Start Date
-        <v-btn
-          text
-          v-on="on"
-        >
-          {{ selectedStartDate }}
-          <v-icon right>
-            mdi-calendar
-          </v-icon>
-        </v-btn>
-      </template>
-      <v-date-picker
-        v-model="selectedStartDate"
-        scrollable
-      >
-        <v-spacer />
-        <v-btn
-          text
-          @click="closeStartDatePicker"
-        >
-          Cancel
-        </v-btn>
-        <v-btn
-          text
-          @click="applyStartDatePicker"
-        >
-          Apply
-        </v-btn>
-      </v-date-picker>
-    </v-menu>
-
-    <!-- End Date Picker -->
-    <v-menu offset-y>
-      <template #activator="{ on }">
-        End Date
-        <v-btn
-          text
-          v-on="on"
-        >
-          {{ selectedEndDate }}
-          <v-icon right>
-            mdi-calendar
-          </v-icon>
-        </v-btn>
-      </template>
-      <v-date-picker
-        v-model="selectedEndDate"
-        scrollable
-      >
-        <v-spacer />
-        <v-btn
-          text
-          @click="closeEndDatePicker"
-        >
-          Cancel
-        </v-btn>
-        <v-btn
-          text
-          @click="applyEndDatePicker"
-        >
-          Apply
-        </v-btn>
-      </v-date-picker>
-    </v-menu>
-    <div class="multiselect-dropdown">
-      <div class="dropdown-header">
-        <span class="header-text">Months of interest</span>
-        <br>
-        <button
-          class="dropdown-toggle"
-          @click="toggleDropdown"
-        >
-          {{
-            selectedItems.length > 0 ? selectedItems.join(', ') : 'Select Items'
-          }}
-        </button>
-      </div>
-      <div>
-        <ul
-          v-show="isOpen"
-          class="dropdown-menu"
-        >
-          <li
-            v-for="(item, index) in items"
-            :key="index"
-          >
-            <label class="checkbox-button">
-              <input
-                v-model="selectedItems"
-                type="checkbox"
-                :value="item"
-              >
-              <span class="checkmark" /> {{ item }}
-            </label>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div style="width: 100%; height: 400px; margin: 32px 0px">
+    <div style="width: 100%; height: 400px; margin: 8px 0px">
       <v-chart
         class="chart"
         :option="roseOption"
@@ -141,7 +31,9 @@
 </template>
 
 <script>
+import * as echarts from 'echarts'
 import VChart, { THEME_KEY } from 'vue-echarts'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -153,43 +45,262 @@ export default {
   data() {
     return {
       parameters: [
-        'Horizontal 10-minute averaged wind speed at 10 m height U10 (m/s)',
-        'Horizontal 10-minute averaged wind speed at 120 m height U120 (m/s)',
-        'Total significant wave height Hs,tot (m)',
-        'Total spectral peak wave period Tp,tot (s)',
-        'U10',
-        'U120'
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 10 m height',
+          parameter2: 'Hourly-averaged horizontal wind direction at 10 m height'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 60 m height',
+          parameter2: 'Hourly-averaged horizontal wind direction at 60 m height'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 100 m height',
+          parameter2:
+            'Hourly-averaged horizontal wind direction at 100 m height'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 120 m height',
+          parameter2:
+            'Hourly-averaged horizontal wind direction at 120 m height'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 160 m height',
+          parameter2:
+            'Hourly-averaged horizontal wind direction at 160 m height'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 200 m height',
+          parameter2:
+            'Hourly-averaged horizontal wind direction at 200 m height'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 250 m height',
+          parameter2:
+            'Hourly-averaged horizontal wind direction at 250 m height'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 300 m height',
+          parameter2:
+            'Hourly-averaged horizontal wind direction at 300 m height'
+        },
+        {
+          parameter1: 'Depth-averaged total current speed',
+          parameter2: 'Depth-averaged total current direction'
+        },
+        {
+          parameter1: 'Depth-averaged tidal current speed',
+          parameter2: 'Depth-averaged tidal current direction'
+        },
+        {
+          parameter1: 'Depth-averaged residual current speed',
+          parameter2: 'Depth-averaged residual current direction'
+        },
+        {
+          parameter1: 'Total current speed at 100% of the water depth',
+          parameter2: 'Total current direction at 100% of the water depth'
+        },
+        {
+          parameter1: 'Tidal current speed at 100% of the water depth',
+          parameter2: 'Tidal current direction at 100% of the water depth'
+        },
+        {
+          parameter1: 'Residual current speed at 100% of the water depth',
+          parameter2: 'Residual current direction at 100% of the water depth'
+        },
+        {
+          parameter1: 'Total current speed at 75% of the water depth',
+          parameter2: 'Total current direction at 75% of the water depth'
+        },
+        {
+          parameter1: 'Tidal current speed at 75% of the water depth',
+          parameter2: 'Tidal current direction at 75% of the water depth'
+        },
+        {
+          parameter1: 'Residual current speed at 75% of the water depth',
+          parameter2: 'Residual current direction at 75% of the water depth'
+        },
+        {
+          parameter1: 'Total current speed at 50% of the water depth',
+          parameter2: 'Total current direction at 50% of the water depth'
+        },
+        {
+          parameter1: 'Tidal current speed at 50% of the water depth',
+          parameter2: 'Tidal current direction at 50% of the water depth'
+        },
+        {
+          parameter1: 'Residual current speed at 50% of the water depth',
+          parameter2: 'Residual current direction at 50% of the water depth'
+        },
+        {
+          parameter1: 'Total current speed at 25% of the water depth',
+          parameter2: 'Total current direction at 25% of the water depth'
+        },
+        {
+          parameter1: 'Tidal current speed at 25% of the water depth',
+          parameter2: 'Tidal current direction at 25% of the water depth'
+        },
+        {
+          parameter1: 'Residual current speed at 25% of the water depth',
+          parameter2: 'Residual current direction at 25% of the water depth'
+        },
+        {
+          parameter1: 'Total current speed at 5% of the water depth',
+          parameter2: 'Total current direction at 5% of the water depth'
+        },
+        {
+          parameter1: 'Tidal current speed at 5% of the water depth',
+          parameter2: 'Tidal current direction at 5% of the water depth'
+        },
+        {
+          parameter1: 'Residual current speed at 5% of the water depth',
+          parameter2: 'Residual current direction at 5% of the water depth'
+        },
+        {
+          parameter1: 'Significant wave height for total sea',
+          parameter2: 'Peak wave period for total sea'
+        },
+        {
+          parameter1: 'Significant wave height for total sea',
+          parameter2:
+            'Mean wave period (based on spectral moments of order 2 en 0) for total sea'
+        },
+        {
+          parameter1: 'Significant wave height for total sea',
+          parameter2: 'Mean wave direction for total sea'
+        },
+        {
+          parameter1: 'Significant wave height for total sea',
+          parameter2: 'Peak wave direction for total sea'
+        },
+        {
+          parameter1: 'Peak wave period for total sea',
+          parameter2: 'Mean wave direction for total sea'
+        },
+        {
+          parameter1: 'Peak wave period for total sea',
+          parameter2: 'Peak wave direction for total sea'
+        },
+        {
+          parameter1: 'Significant wave height for swell',
+          parameter2: 'Peak wave period for swell'
+        },
+        {
+          parameter1: 'Significant wave height for swell',
+          parameter2:
+            'Mean wave period (based on spectral moments of order 2 en 0) for swell'
+        },
+        {
+          parameter1: 'Significant wave height for swell',
+          parameter2: 'Mean wave direction for swell'
+        },
+        {
+          parameter1: 'Significant wave height for swell',
+          parameter2: 'Peak wave direction for swell'
+        },
+        {
+          parameter1: 'Peak wave period for swell',
+          parameter2: 'Mean wave direction for swell'
+        },
+        {
+          parameter1: 'Peak wave period for swell',
+          parameter2: 'Peak wave direction for swell'
+        },
+        {
+          parameter1: 'Significant wave height for wind sea',
+          parameter2: 'Peak wave period for wind sea'
+        },
+        {
+          parameter1: 'Significant wave height for wind sea',
+          parameter2:
+            'Mean wave period (based on spectral moments of order 2 en 0) for wind sea'
+        },
+        {
+          parameter1: 'Significant wave height for wind sea',
+          parameter2: 'Mean wave direction for wind sea'
+        },
+        {
+          parameter1: 'Significant wave height for wind sea',
+          parameter2: 'Peak wave direction for wind sea'
+        },
+        {
+          parameter1: 'Peak wave period for wind sea',
+          parameter2: 'Mean wave direction for wind sea'
+        },
+        {
+          parameter1: 'Peak wave period for wind sea',
+          parameter2: 'Peak wave direction for wind sea'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 10 m height',
+          parameter2: 'Hourly-averaged horizontal wind direction at 10 m height'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 60 m height',
+          parameter2: 'Hourly-averaged horizontal wind direction at 60 m height'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 100 m height',
+          parameter2:
+            'Hourly-averaged horizontal wind direction at 100 m height'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 120 m height',
+          parameter2:
+            'Hourly-averaged horizontal wind direction at 120 m height'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 160 m height',
+          parameter2:
+            'Hourly-averaged horizontal wind direction at 160 m height'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 200 m height',
+          parameter2:
+            'Hourly-averaged horizontal wind direction at 200 m height'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 250 m height',
+          parameter2:
+            'Hourly-averaged horizontal wind direction at 250 m height'
+        },
+        {
+          parameter1: 'Hourly-averaged horizontal wind speed at 300 m height',
+          parameter2:
+            'Hourly-averaged horizontal wind direction at 300 m height'
+        },
+        {
+          parameter1: 'Significant wave height for total sea',
+          parameter2: 'Mean wave direction for total sea'
+        },
+        {
+          parameter1: 'Significant wave height for total sea',
+          parameter2: 'Mean wave direction for total sea'
+        },
+        {
+          parameter1: 'Total water level',
+          parameter2: 'Depth-averaged total current direction'
+        },
+        {
+          parameter1: 'Residual water level',
+          parameter2: 'Depth-averaged residual current direction'
+        },
+        {
+          parameter1: 'Total water level',
+          parameter2: 'Significant wave height for total sea'
+        },
+        {
+          parameter1: 'Total water level',
+          parameter2: 'Significant wave height for total sea'
+        }
       ],
-      selectedParameter: 'U10',
-      testParameters: [
-        'Horizontal 10-minute averaged wind speed at 10 m height U10 (m/s)',
-        'Horizontal 10-minute averaged wind speed at 120 m height U120 (m/s)',
-        'Total significant wave height Hs,tot (m)',
-        'Total spectral peak wave period Tp,tot (s)'
-      ],
-      selectedTestParameter:
-        'Horizontal 10-minute averaged wind speed at 10 m height U10 (m/s)',
-      directionalParameters: [
-        'Mean Wave Direction MWD (°N)',
-        'Peak Wave Direction PWD (°N)'
-      ], // Dummy parameters for the dropdown
-      selectedDirectionalParameter: 'Mean Wave Direction MWD (°N)', // Store the selected directional parameter
-      MonthsofInterestParameters: [
-        { parameter: 'Jan', selected: true },
-        { parameter: 'Feb', selected: true },
-        { parameter: 'Mar', selected: true },
-        { parameter: 'Apr', selected: true },
-        { parameter: 'May', selected: true },
-        { parameter: 'Jun', selected: true },
-        { parameter: 'Jul', selected: true },
-        { parameter: 'Aug', selected: true },
-        { parameter: 'Sep', selected: true },
-        { parameter: 'Oct', selected: true },
-        { parameter: 'Nov', selected: true },
-        { parameter: 'Dec', selected: true }
-      ],
-      isOpen: false,
-      selectedItems: [
+      parameter1Options: [],
+      parameter2Options: [],
+      selectedParameter1: '',
+      selectedParameter2: '',
+
+      selectedMonth: 'All-year',
+      months: [
+        'All-year',
         'Jan',
         'Feb',
         'Mar',
@@ -203,35 +314,180 @@ export default {
         'Nov',
         'Dec'
       ],
-      items: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec'
-      ],
-      selectedStartDate: '2014-01-01',
-      selectedEndDate: '2015-12-31',
-      classes: [
-        '<3.25',
-        '3.25 - 6.5',
-        '6.5 - 9.75',
-        '9.75 - 13',
-        '13 - 16.26',
-        '16.26 - 19.51',
-        '19.51 - 22.76',
-        '22.76 - 26.01',
-        '26.01 - 29.26',
-        '> 29.26'
-      ],
-      dataset: [
+
+      classes: [],
+      data: [],
+      roseOption: {
+        toolbox: {
+          top: 0,
+          left: 8,
+          feature: {
+            saveAsImage: {
+              name: 'Extreme_values',
+              title: 'Save as image',
+              type: 'png',
+              icon: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2M8.9 13.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 14c.19-.26.57-.27.78-.02',
+              emphasis: {
+                iconStyle: {
+                  borderColor: '#fff'
+                }
+              }
+            },
+            myFeature: {
+              show: true,
+              name: 'Extreme_values',
+              title: 'Download as CSV',
+              icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
+              onclick: () => {
+                this.downloadAsCSV(
+                  [
+                    this.selectedParameter1,
+                    this.selectedParameter2,
+                    'class',
+                    'winddirection'
+                  ],
+                  'rosePlot',
+                  'Rose_plot'
+                )
+              },
+              emphasis: {
+                iconStyle: {
+                  borderColor: '#fff'
+                }
+              }
+            }
+          }
+        },
+        tooltip: {
+          trigger: 'item',
+          formatter: function (e) {
+            const { U10, winddirection } = e.data
+            return `Winddirection: ${winddirection} <br/>U10: ${U10} <br/>Windspeed (m/s): ${e.data.class}`
+          },
+          textStyle: {
+            color: '#000'
+          }
+        },
+        angleAxis: {
+          type: 'category',
+          data: [
+            0, 22.5, 45, 67.5, 90, 112.5, 135, 157.5, 180, 202.5, 225, 247.5,
+            270, 292.5, 315, 337.5
+          ],
+          boundaryGap: false,
+          axisTick: {
+            show: true
+          },
+          splitLine: {
+            show: true
+          },
+          axisLabel: {
+            show: true,
+            interval: 1
+          }
+        },
+        radiusAxis: {
+          axisLabel: {
+            show: true,
+            textStyle: {
+              color: 'white',
+              fontWeight: 'bold',
+              textShadowColor: 'black',
+              textShadowBlur: 4
+            },
+            formatter: function (e) {
+              return `${e}%`
+            }
+          },
+          axisTick: {
+            show: false
+          },
+          axisLine: {
+            show: false
+          }
+        },
+        polar: {
+          center: ['40%', '50%'],
+          radius: '80%'
+        },
+        color: [
+          '#F5DA4D',
+          '#FCAE12',
+          '#F78211',
+          '#E75D2F',
+          '#CB4149',
+          '#A92E5E',
+          '#85216B',
+          '#60136E',
+          '#3A0A63',
+          '#140B35'
+        ],
+        backgroundColor: 'transparent'
+      }
+    }
+  },
+  mounted() {
+    this.populateParameter1Options()
+    this.populateParameter2Options()
+  },
+  methods: {
+    ...mapActions(['loadGraphDataForLocation']),
+    selectParameter1(value) {
+      this.selectedParameter1 = value
+      this.updateParameter2Options()
+    },
+    selectParameter2(value) {
+      this.selectedParameter2 = value
+      this.updateParameter1Options()
+    },
+    populateParameter1Options() {
+      const uniqueParameter1Options = [
+        ...new Set(this.parameters.map((item) => item.parameter1))
+      ]
+      this.parameter1Options = uniqueParameter1Options
+      this.$nextTick(() => {
+        this.selectParameter1(uniqueParameter1Options[0])
+      })
+    },
+    populateParameter2Options() {
+      const uniqueParameter2Options = [
+        ...new Set(this.parameters.map((item) => item.parameter2))
+      ]
+      this.parameter2Options = uniqueParameter2Options
+      this.$nextTick(() => {
+        this.selectParameter2(uniqueParameter2Options[0])
+      })
+    },
+    updateParameter2Options() {
+      if (this.selectedParameter1) {
+        this.parameter2Options = this.parameters
+          .filter((item) => item.parameter1 === this.selectedParameter1)
+          .map((item) => item.parameter2)
+      } else {
+        this.populateParameter2Options()
+      }
+
+      this.getChartData(this.selectedParameter1, this.selectedParameter2)
+    },
+    updateParameter1Options() {
+      if (this.selectedParameter2) {
+        this.parameter1Options = this.parameters
+          .filter((item) => item.parameter2 === this.selectedParameter2)
+          .map((item) => item.parameter1)
+      } else {
+        this.populateParameter1Options()
+      }
+
+      this.getChartData(this.selectedParameter1, this.selectedParameter2)
+    },
+    getChartData(parameter1, parameter2) {
+      if (!parameter1 || !parameter2 || !this.selectedMonth) {
+        this.data = []
+        this.updateChart()
+        return
+      }
+
+      this.data = [
         {
           U10: 0.78,
           U120: 0.5,
@@ -1192,23 +1448,44 @@ export default {
           class: '> 29.26',
           winddirection: 337.5
         }
-      ],
-      roseOption: null
-    }
-  },
-  mounted() {
-    this.updateData()
-  },
-  methods: {
-    toggleDropdown() {
-      this.isOpen = !this.isOpen
+      ]
+
+      this.classes = [
+        '<3.25',
+        '3.25 - 6.5',
+        '6.5 - 9.75',
+        '9.75 - 13',
+        '13 - 16.26',
+        '16.26 - 19.51',
+        '19.51 - 22.76',
+        '22.76 - 26.01',
+        '26.01 - 29.26',
+        '> 29.26'
+      ]
+
+      this.updateChart()
+
+      // this.loadGraphDataForLocation({
+      //   parameter1: parameter1,
+      //   parameter2: parameter2,
+      //   month: this.selectedMonth
+      // }).then((pointData) => {
+      //   console.log('getChartData pointData', pointData)
+      //   const { data } = pointData
+      //   console.log('getChartData data', data)
+      //   // this.data = data[265].serie[0].data.map((value, index) => ({
+      //   //   'Date+Time': data[265].category[index],
+      //   //   value
+      //   // }))
+      //   // this.updateChart()
+      // })
     },
     createSeriesData() {
-      return this.classes.map(c => {
-        const seriesData = this.dataset
-          .filter(d => d.class === c)
-          .map(d => {
-            d.value = d[this.selectedParameter]
+      return this.classes.map((c) => {
+        const seriesData = this.data
+          .filter((d) => d.class === c)
+          .map((d) => {
+            d.value = d['U10']
             return d
           })
 
@@ -1222,167 +1499,65 @@ export default {
         }
       })
     },
-    updateData() {
-      this.roseOption = {
-        tooltip: {
-          trigger: 'item',
-          formatter: function(e) {
-            const { U10, winddirection } = e.data
-            return `Winddirection: ${winddirection} <br/>U10: ${U10} <br/>Windspeed (m/s): ${e.data.class}`
-          },
-          textStyle: {
-            color: '#000'
-          }
-        },
-        color: [
-          '#F5DA4D',
-          '#FCAE12',
-          '#F78211',
-          '#E75D2F',
-          '#CB4149',
-          '#A92E5E',
-          '#85216B',
-          '#60136E',
-          '#3A0A63',
-          '#140B35'
-        ],
-        angleAxis: {
-          type: 'category',
-          data: [
-            0,
-            22.5,
-            45,
-            67.5,
-            90,
-            112.5,
-            135,
-            157.5,
-            180,
-            202.5,
-            225,
-            247.5,
-            270,
-            292.5,
-            315,
-            337.5
-          ],
-          boundaryGap: false,
-          axisTick: {
-            show: true
-          },
-          splitLine: {
-            show: true
-          },
-          axisLabel: {
-            show: true,
-            interval: 1
-          }
-        },
-        radiusAxis: {
-          axisLabel: {
-            show: true,
-            textStyle: {
-              color: 'white',
-              fontWeight: 'bold',
-              textShadowColor: 'black',
-              textShadowBlur: 4
-            },
-            formatter: function(e) {
-              return `${e}%`
+    updateChart() {
+      document.querySelectorAll('canvas, div').forEach((e) => {
+        const instance = echarts.getInstanceByDom(e)
+        if (instance && instance.group === 'rosePlot') {
+          instance.setOption({
+            series: this.createSeriesData(),
+            legend: {
+              orient: 'vertical',
+              title: 'Wind speed (m/s)',
+              show: true,
+              top: 0,
+              right: 0,
+              data: this.classes
             }
-          },
-          axisTick: {
-            show: false
-          },
-          axisLine: {
-            show: false
-          }
-        },
-        polar: {
-          center: ['60%', '50%'],
-          radius: '80%'
-        },
-        series: this.createSeriesData(),
-        legend: {
-          orient: 'vertical',
-          title: 'Wind speed (m/s)',
-          show: true,
-          left: true,
-          data: this.classes
-        },
-        backgroundColor: 'transparent'
-      }
+          })
+        }
+      })
     },
-    selectParameter(value) {
-      this.selectedParameter = value
-      this.updateData()
+    downloadAsCSV(keys, instanceKey, filename) {
+      document.querySelectorAll('canvas, div').forEach((e) => {
+        const instance = echarts.getInstanceByDom(e)
+        if (instance?.group === instanceKey) {
+          const option = instance.getOption()
+
+          // Get the current state of the legend (which series are selected/visible)
+          const legend = option.legend[0].selected
+
+          // Add header row to CSV
+          let csvContent = `data:text/csv;charset=utf-8,${keys.join(',')} \r\n`
+
+          // Retrieve visible data from the current state (respect dataZoom)
+          const zoomStart = option.dataZoom?.[0]?.start / 100 || 0
+          const zoomEnd = option.dataZoom?.[0]?.end / 100 || 1
+
+          option.series.forEach((serie) => {
+            if (serie.data && legend[serie.name] !== false) {
+              const startIndex = Math.floor(zoomStart * serie.data.length)
+              const endIndex = Math.ceil(zoomEnd * serie.data.length)
+
+              // Process the visible data range for this series
+              serie.data.slice(startIndex, endIndex).forEach((point) => {
+                keys.forEach((key, keyIndex) => {
+                  csvContent += keyIndex === 0 ? point[key] : `, ${point[key]}`
+                })
+                csvContent += '\r\n'
+              })
+            }
+          })
+
+          const encodedUri = encodeURI(csvContent)
+          const link = document.createElement('a')
+          link.setAttribute('href', encodedUri)
+          link.setAttribute('download', `${filename}.csv`)
+          document.body.appendChild(link)
+          link.click()
+          document.body.removeChild(link)
+        }
+      })
     }
   }
 }
 </script>
-
-<style scoped>
-.selected-options {
-  margin-top: 10px;
-}
-
-.multiselect-dropdown {
-  border-bottom: 1px solid #ccc; /* Add a bottom border to the whole component */
-}
-
-.dropdown-header {
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px;
-  border-bottom: 1px solid lightgray; /* Add a bottom border to the header */
-}
-
-.header-text {
-  color: lightgray;
-  font-size: 12px;
-}
-
-.dropdown-toggle {
-  background: none;
-  border: none;
-  cursor: pointer;
-  outline: none;
-  text-decoration: underline; /* Underline the button text */
-}
-
-.checkbox-button {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  padding: 8px;
-}
-.checkmark {
-  width: 20px;
-  height: 20px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-right: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.checkbox-button input[type='checkbox'] {
-  opacity: 0;
-  position: absolute;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
-.checkbox-button input[type='checkbox']:checked + .checkmark::before {
-  content: '\2713'; /* Checkmark symbol */
-  font-size: 16px;
-  color: #007bff; /* Color for checked items */
-}
-
-ol,
-ul {
-  list-style: none;
-}
-</style>
