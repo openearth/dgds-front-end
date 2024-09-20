@@ -85,7 +85,7 @@ jobs:
           
       - name: 'Build and Push Container'
         run: |-
-          DOCKER_TAG="$${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/dgds-metocean/dgds-front-end:latest"
+          DOCKER_TAG="europe-west4-docker.pkg.dev/dgds-i1000482-002/dgds-metocean/dgds-front-end:latest"
           docker build --tag "${DOCKER_TAG}" .
           docker push "${DOCKER_TAG}"
 
