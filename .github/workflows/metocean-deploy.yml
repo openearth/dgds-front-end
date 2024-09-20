@@ -89,6 +89,24 @@ jobs:
           username: 'oauth2accesstoken'
           password: '${{ secrets.AUTH_TOKEN }}'
           registry: 'europe-west4-docker.pkg.dev'
+
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_VUE_APP_MAPBOX_TOKEN: ${{ secrets.VUE_APP_MAPBOX_TOKEN }}
+          envkey_VUE_APP_MAPBOX_STYLE: ${{ secrets.VUE_APP_MAPBOX_STYLE }}
+          envkey_VUE_APP_MAPBOX_LAYERS_STYLE: ${{ secrets.VUE_APP_MAPBOX_LAYERS_STYLE }}
+          envkey_VUE_APP_SERVER_URL: ${{ secrets.VUE_APP_SERVER_URL }}
+          envkey_VUE_APP_CATALOG_URL: "https://storage.googleapis.com/dgds-stack-metocean/stac/current/collection.json"
+  
+          envkey_VUE_APP_AUTH_AUTHORITY: ${{ secrets.VUE_APP_AUTH_AUTHORITY }}
+          envkey_VUE_APP_AUTH_ID: ${{ secrets.VUE_APP_AUTH_ID }}
+          envkey_VUE_APP_AUTH_TYPE: ${{ secrets.VUE_APP_AUTH_TYPE }}
+          envkey_VUE_APP_AUTH_SCOPE: ${{ secrets.VUE_APP_AUTH_SCOPE }}
+  
+          envkey_VUE_APP_STORIES_CONFIGURATION_URL: ${{ secrets.VUE_APP_STORIES_CONFIGURATION_URL }}
+          envkey_VUE_APP_NEWS_CONFIGURATION_URL: ${{ secrets.VUE_APP_NEWS_CONFIGURATION_URL }}
+          file_name: .env
           
       - name: 'Build and Push Container'
         run: |-
