@@ -46,9 +46,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "metocean-prod" ]
+    branches: [ "metocean-deploy-test" ]
   pull_request:
-    branches: [ "metocean-prod" ]
+    branches: [ "metocean-deploy-test" ]
 
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }} # TODO: update Google Cloud project id
@@ -82,6 +82,12 @@ jobs:
         uses: 'google-github-actions/auth@v0'
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+          
+      - name: 'Build and Push Container'
+        run: |-
+          DOCKER_TAG="$${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:latest"
+          docker build --tag "${DOCKER_TAG}" .
+          docker push "${DOCKER_TAG}"
 
       # END - Docker auth and build
 
