@@ -9,6 +9,7 @@
         label="Parameter"
         clearable
         return-object
+        persistent-counter
         @change="selectParameter"
       >
         <template #item="data">
@@ -22,57 +23,11 @@
           <span v-html="data.item.label" />
         </template>
       </v-autocomplete>
-      <div v-if="selectedParameter.direction">
-        <v-autocomplete
-          v-model="selectedDirectionalParameter"
-          :items="directionalParameters"
-          item-value="value"
-          item-text="label"
-          label="Directional parameter"
-          clearable
-          return-object
-          @change="selectDirectionalParameter"
-        >
-          <template #item="data">
-            <v-list-item-content>
-              <v-list-item-title>
-                <span v-html="data.item.label" />
-              </v-list-item-title>
-            </v-list-item-content>
-          </template>
-          <template #selection="data">
-            <span v-html="data.item.label" />
-          </template>
-        </v-autocomplete>
-      </div>
-      <div v-if="selectedParameter.frequency">
-        <v-autocomplete
-          v-model="selectedFrequencyParameter"
-          :items="frequencyParameters"
-          item-value="value"
-          item-text="label"
-          label="Frequency parameter"
-          clearable
-          return-object
-          @change="selectFrequencyParameter"
-        >
-          <template #item="data">
-            <v-list-item-content>
-              <v-list-item-title>
-                <span v-html="data.item.label" />
-              </v-list-item-title>
-            </v-list-item-content>
-          </template>
-          <template #selection="data">
-            <span v-html="data.item.label" />
-          </template>
-        </v-autocomplete>
-      </div>
     </div>
     <div v-else>
       Loading parameters...
     </div>
-    <div v-if="selectedParameter.value">
+    <div v-if="selectedParameter?.value">
       <div v-if="data.length > 0">
         <v-spacer />
         <v-menu offset-y>
@@ -149,7 +104,7 @@
         </div>
       </div>
       <div v-else>
-          Loading data...
+        Loading data...
       </div>
     </div>
     <div v-else>
@@ -196,7 +151,7 @@ export default {
               icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
               onclick: () => {
                 this.downloadAsCSV(
-                  ['Date+Time', this.selectedParameter.value],
+                  ['Date+Time', "value"],
                   'timeseriesv3',
                   'Time_series'
                 )
@@ -211,10 +166,11 @@ export default {
         },
         tooltip: {
           trigger: 'axis',
+          confine: true,
           formatter: function (e) {
             let tooltip = ''
             e.forEach((serie) => {
-              tooltip += `${serie.marker} <b style="font-weight:bold;">${serie.seriesName}:</b><br/>`
+              tooltip += `${serie.marker} <b style="font-weight:bold;">${this.transformLabel(serie.seriesName)}:</b><br/>`
 
               const value = serie.data.value.toLocaleString('en-US', {
                 maximumFractionDigits: 2
@@ -224,7 +180,7 @@ export default {
               tooltip += '</table>'
             })
             return tooltip
-          }
+          }.bind(this)
         },
         grid: {
           containLabel: true,
@@ -244,20 +200,7 @@ export default {
             }
           }
         },
-        yAxis: {
-          name: '',
-          type: 'value',
-          scale: true,
-          nameTextStyle: {
-            align: 'left'
-          }
-        },
-        legend: {
-          orient: 'vertical',
-          show: true,
-          top: 0,
-          right: 0
-        },
+        yAxis: {},
         color: ['#F78211'],
         backgroundColor: 'transparent'
       },
@@ -266,21 +209,14 @@ export default {
       selectedStartDate: '1984-01-01',
       selectedEndDate: '2015-12-31',
 
-      directionalParameters: [],
-      selectedDirectionalParameter: {},
-      frequencyParameters: [],
-      selectedFrequencyParameter: {},
-
       data: []
     }
   },
   computed: {
-      ...mapGetters(['colors', 'user']),
+    ...mapGetters(['colors', 'user'])
   },
   mounted() {
-    this.selectedParameter = this.parameters[0]
-
-    this.fetchData()
+    this.fetchParameters()
   },
   methods: {
     ...mapActions(['loadGraphDataForLocation']),
@@ -291,58 +227,18 @@ export default {
 
       return label
     },
-    fetchData() {
-        fetch(`/static/data/TimeserieParameters.json`)
-          .then((response) => response.json())
-          .then((parameters) => {
-            this.parameters = parameters.map((parameter) => ({
-              ...parameter,
-              label: this.transformLabel(parameter.label)
-            }))
-
-            this.selectParameter(parameters[0])
-          })
-          
-        this.loadGraphDataForLocation({
-          parameter: this.parameters[0].value,
-          startDate: this.selectedStartDate,
-          endDate: this.selectedEndDate
-        }).then(pointData => {
-          console.log(pointData)
-          const { data } = pointData
-
-          this.data = data.serie.data.map((value, index) => ({
-            'Date+Time': data.category[index],
-            value
+    fetchParameters() {
+      fetch(`/static/data/TimeserieParameters.json`)
+        .then((response) => response.json())
+        .then((parameters) => {
+          this.parameters = parameters.map((parameter) => ({
+            ...parameter,
+            label: this.transformLabel(parameter.label)
           }))
 
-          this.$nextTick(() => {
-            this.updateChart()
-          })
+          this.selectParameter(parameters[0])
         })
-      },
-    // fetchData() {
-    //   fetch(`/static/data/TimeserieParameters.json`)
-    //     .then((response) => response.json())
-    //     .then((parameters) => {
-    //       this.parameters = parameters.map((parameter) => ({
-    //         ...parameter,
-    //         label: this.transformLabel(parameter.label)
-    //       }))
-
-    //       this.selectParameter(parameters[0])
-    //     })
-
-    //   // TODO deze mag weg zodra .zarr werkt
-    //   fetch(`/static/data/Timeseries.json`)
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       this.data = data
-    //       this.$nextTick(() => {
-    //         this.updateChart()
-    //       })
-    //     })
-    // },
+    },
     getStepInterval(data, key) {
       const firstDate = moment(data[0][key])
       const lastDate = moment(data[data.length - 1][key])
@@ -366,8 +262,7 @@ export default {
         return 0
       }
     },
-    updateChart(){
-      console.log('Update chart call')
+    updateChart() {
       document.querySelectorAll('canvas, div').forEach((e) => {
         const instance = echarts.getInstanceByDom(e)
         if (instance && instance.group === 'timeseriesv3') {
@@ -375,57 +270,100 @@ export default {
           const stepInterval = this.getStepInterval(this.data, 'Date+Time')
           const indexForYears = this.getIndexForTimePeriod(stepInterval, 10)
 
-          console.log(this.data)
-
-          instance.setOption({
-            yAxis: {
-              name: this.selectedParameter.label
-            },
-            xAxis: {
-              data: this.data.map((d, i) => {
-                const value = moment(d['Date+Time']).valueOf()
-                return value
-              }),
-              axisLabel: {
-                formatter: (value) => {
-                  const date = moment(Number(value))
-                  return date.format('DD-MM-YYYY')
-                }
-              }
-            },
-            dataZoom: [
-              {
-                type: 'inside',
-                startValue: Math.max(0, this.data.length - indexForYears),
-                endValue: this.data.length
-                // startValue: this.data.length - 356 * 10,
-                // endValue: this.data.length
+          instance.setOption(
+            {
+              yAxis: {},
+              xAxis: {
+                name: 'Datetime',
+                nameLocation: 'center',
+                type: 'category',
+                nameGap: 30,
+                axisLabel: {
+                  formatter: function (value) {
+                    return moment(Number(value)).format('DD-MM-YYYY')
+                  }
+                },
+                data: this.data.map((d, i) => {
+                  const value = moment(d['Date+Time']).valueOf()
+                  return value
+                })
               },
-              {
-                height: 48,
-                right: 8,
-                bottom: 16,
-                left: 8,
-                labelFormatter: function (value, valueStr) {
-                  return moment(Number(valueStr)).format('DD-MM-YYYY')
+              dataZoom: [
+                {
+                  type: 'inside',
+                  startValue: Math.max(0, this.data.length - indexForYears),
+                  endValue: this.data.length
+                  // startValue: this.data.length - 356 * 10,
+                  // endValue: this.data.length
+                },
+                {
+                  height: 48,
+                  right: 8,
+                  bottom: 16,
+                  left: 8,
+                  labelFormatter: function (value, valueStr) {
+                    return moment(Number(valueStr)).format('DD-MM-YYYY')
+                  }
                 }
-              }
-            ],
-            series: {
-              name: this.selectedParameter.label,
-              data: this.data.map((d, i) => {
-                return {
-                  value: d[this.selectedParameter.value],
-                  ...d
+              ],
+              legend: {
+                orient: 'vertical',
+                show: true,
+                top: 4,
+                right: 0,
+                formatter: function (name) {
+                  let formattedName = this.transformLabel(name)
+
+                  formattedName = formattedName.replace(
+                    /<sub>(.*?)<\/sub>/g,
+                    '{sub|$1}'
+                  )
+
+                  formattedName = formattedName.replace(
+                    /<sup>(.*?)<\/sup>/g,
+                    '{sup|$1}'
+                  )
+
+                  return formattedName
+                }.bind(this),
+                textStyle: {
+                  overflow: 'breakAll',
+                  rich: {
+                    sub: {
+                      fontSize: 8,
+                      lineHeight: 2.5
+                    },
+                    sup: {
+                      fontSize: 8
+                    }
+                  }
                 }
-              }),
-              showSymbol: false,
-              symbolSize: 8,
-              type: 'line',
-              large: true,
-              largeThreshold: 2000
+              },
+              series: [
+                {
+                  name: this.selectedParameter.label,
+                  data: this.data.map((d, i) => {
+                    return {
+                      value: d[this.selectedParameter.value],
+                      ...d
+                    }
+                  }),
+                  showSymbol: false,
+                  symbolSize: 8,
+                  type: 'line'
+                }
+              ]
+            },
+            {
+              replaceMerge: [
+                'yAxis',
+                'xAxis',
+                'dataZoom',
+                'legend',
+                'series'
+              ]
             }
-          })
+          )
         }
       })
     },
@@ -435,38 +373,11 @@ export default {
         return
       }
 
-      let parameters = {
+      this.loadGraphDataForLocation({
         parameter: this.selectedParameter.value,
         startDate: this.selectedStartDate,
         endDate: this.selectedEndDate
-      }
-
-      if (this.selectedParameter.direction) {
-        if (this.selectedDirectionalParameter) {
-          parameters.direction = this.selectedDirectionalParameter.value
-        } else {
-          this.data = []
-          return
-        }
-      }
-
-      if (this.selectedParameter.frequency) {
-        if (this.selectedFrequencyParameter) {
-          parameters.frequency = this.selectedFrequencyParameter.value
-        } else {
-          this.data = []
-          return
-        }
-      }
-
-      console.log('getChartData parameters', parameters)
-
-      this.loadGraphDataForLocation({
-        parameter: this.selectedParameter.value, // You can set a default parameter here
-        startDate: this.selectedStartDate,
-        endDate: this.selectedEndDate
-      }).then(pointData => {
-        console.log(pointData)
+      }).then((pointData) => {
         const { data } = pointData
 
         this.data = data.serie.data.map((value, index) => ({
@@ -480,22 +391,9 @@ export default {
       })
     },
     selectParameter(parameter) {
-      console.log('selectParameter parameter', parameter)
       this.selectedParameter = parameter
 
       this.getChartData()
-    },
-    selectDirectionalParameter(parameter) {
-      this.selectedDirectionalParameter = parameter || {}
-      this.$nextTick(() => {
-        this.getChartData()
-      })
-    },
-    selectFrequencyParameter(parameter) {
-      this.selectedFrequencyParameter = parameter || {}
-      this.$nextTick(() => {
-        this.getChartData()
-      })
     },
     downloadAsCSV(keys, instanceKey, filename) {
       document.querySelectorAll('canvas, div').forEach((e) => {
@@ -556,11 +454,14 @@ export default {
 
 <style scoped>
 ::v-deep .v-select__selections {
-  white-space: nowrap !important;
+  white-space: nowrap;
 }
 .v-select__selections span {
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 99%;
+}
+::v-deep .v-autocomplete.v-select.v-input--is-focused input {
+  min-width: 0;
 }
 </style>
