@@ -284,19 +284,11 @@ export const actions = {
       return res.get().then(data => {
 
         var arrayData = Array.from(data.data);
-
-        // Filter out NaN values
-        var filteredData = arrayData.filter(value => !isNaN(value))
-
-        var serie = {
-            type: 'line',
-            data: Array.from(filteredData)
-          }
         
         const pointData = {
           id: datasetId,
           data: {
-              serie,
+              arrayData,
               type: "ensemble",
               timeSpan: "",
               timeFormat: "{yyyy}"
