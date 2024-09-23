@@ -156,8 +156,8 @@
       "label": "Wave steepness Stpn_{tot} (-)"
   },
   {
-      "value": "H_s/d",
-      "label": "Hs over depth ratio H_{s}/d (-)"
+      "value": "H_s_d",
+      "label": "Significant wave height over depth ratio H_{s}/d (-)"
   },
   {
       "value": "T_air_10",

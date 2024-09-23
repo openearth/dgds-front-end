@@ -158,14 +158,12 @@ export default {
         ...new Set(this.parameters.map((item) => item.parameter1))
       ]
       this.parameter1Options = uniqueParameter1Options
-      this.selectParameter1(uniqueParameter1Options[0])
     },
     populateParameter2Options() {
       const uniqueParameter2Options = [
         ...new Set(this.parameters.map((item) => item.parameter2))
       ]
       this.parameter2Options = uniqueParameter2Options
-      this.selectParameter2(uniqueParameter2Options[0])
     },
     updateParameter2Options() {
       if (this.selectedParameter1) {
