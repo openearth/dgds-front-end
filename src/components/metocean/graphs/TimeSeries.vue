@@ -215,9 +215,28 @@ export default {
             label: this.transformLabel(parameter.label)
           }))
 
-          this.selectParameter(parameters[0])
+            this.selectParameter(parameters[0])
+          })
+          
+        this.loadGraphDataForLocation({
+          parameter: this.parameters[0].value,
+          startDate: this.selectedStartDate,
+          endDate: this.selectedEndDate,
+          graph: 'time_series'
+        }).then(pointData => {
+          console.log(pointData)
+          const { data } = pointData
+
+          this.data = data.serie.data.map((value, index) => ({
+            'Date+Time': data.category[index],
+            value
+          }))
+
+          this.$nextTick(() => {
+            this.updateChart()
+          })
         })
-    },
+      },
     getStepInterval(data, key) {
       const firstDate = moment(data[0][key])
       const lastDate = moment(data[data.length - 1][key])
@@ -408,8 +427,10 @@ export default {
       this.loadGraphDataForLocation({
         parameter: this.selectedParameter.value,
         startDate: this.selectedStartDate,
-        endDate: this.selectedEndDate
-      }).then((pointData) => {
+        endDate: this.selectedEndDate,
+        graph: 'time_series'
+      }).then(pointData => {
+        console.log(pointData)
         const { data } = pointData
 
         this.data = data.serie.data.map((value, index) => ({

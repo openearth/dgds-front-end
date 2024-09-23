@@ -9,6 +9,7 @@ WORKDIR /app
 # Copy all files from current directory to working dir in image
 COPY . .
 # install node modules and build assets
+RUN npm update --legacy-peer-deps
 RUN npm install && npm run build
 
 # nginx state for serving content

@@ -19,6 +19,7 @@
 <script>
 import * as echarts from 'echarts'
 import VChart, { THEME_KEY } from 'vue-echarts'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -136,6 +137,7 @@ export default {
     this.fetchData()
   },
   methods: {
+    ...mapActions(['loadGraphDataForLocation']),
     fetchData() {
       const parameters = [
         'Extreme mean wind speed U10 (m/s)',

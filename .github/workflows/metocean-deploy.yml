@@ -78,10 +78,41 @@ jobs:
 
       # NOTE: Alternative option - authentication via credentials json
       - name: Google Auth
-        id: auth
-        uses: 'google-github-actions/auth@v0'
+        id: 'auth'
+        uses: 'google-github-actions/auth@f112390a2df9932162083945e46d439060d66ec2' # google-github-actions/auth@v2
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
+
+      - name: 'Docker Auth'
+        uses: 'docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567' # docker/login-action@v3
+        with:
+          username: 'oauth2accesstoken'
+          password: '${{ secrets.AUTH_TOKEN }}'
+          registry: 'europe-west4-docker.pkg.dev'
+
+      - name: Make envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_VUE_APP_MAPBOX_TOKEN: ${{ secrets.VUE_APP_MAPBOX_TOKEN }}
+          envkey_VUE_APP_MAPBOX_STYLE: ${{ secrets.VUE_APP_MAPBOX_STYLE }}
+          envkey_VUE_APP_MAPBOX_LAYERS_STYLE: ${{ secrets.VUE_APP_MAPBOX_LAYERS_STYLE }}
+          envkey_VUE_APP_SERVER_URL: ${{ secrets.VUE_APP_SERVER_URL }}
+          envkey_VUE_APP_CATALOG_URL: "https://storage.googleapis.com/dgds-stack-metocean/stac/current/collection.json"
+  
+          envkey_VUE_APP_AUTH_AUTHORITY: ${{ secrets.VUE_APP_AUTH_AUTHORITY }}
+          envkey_VUE_APP_AUTH_ID: ${{ secrets.VUE_APP_AUTH_ID }}
+          envkey_VUE_APP_AUTH_TYPE: ${{ secrets.VUE_APP_AUTH_TYPE }}
+          envkey_VUE_APP_AUTH_SCOPE: ${{ secrets.VUE_APP_AUTH_SCOPE }}
+  
+          envkey_VUE_APP_STORIES_CONFIGURATION_URL: ${{ secrets.VUE_APP_STORIES_CONFIGURATION_URL }}
+          envkey_VUE_APP_NEWS_CONFIGURATION_URL: ${{ secrets.VUE_APP_NEWS_CONFIGURATION_URL }}
+          file_name: .env
+          
+      - name: 'Build and Push Container'
+        run: |-
+          DOCKER_TAG="europe-west4-docker.pkg.dev/dgds-i1000482-002/dgds-metocean/dgds-front-end:latest"
+          docker build --tag "${DOCKER_TAG}" .
+          docker push "${DOCKER_TAG}"
 
       # END - Docker auth and build
 
