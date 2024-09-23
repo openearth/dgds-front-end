@@ -21,7 +21,6 @@
         class="flex-grow-1 py-3 scrollbar"
         align-space-between
       >
-
         <v-expansion-panels
           flat
           accordion
@@ -66,7 +65,9 @@
               Time series
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
-              <time-series />
+              <time-series
+                :location-id="$route.params.locationId"
+              />
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -78,7 +79,9 @@
               Rose plot
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
-              <rose-plot />
+              <rose-plot
+                :location-id="$route.params.locationId"
+              />
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -102,7 +105,9 @@
               Weather window
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
-              <weather-window />
+              <weather-window
+                :location-id="$route.params.locationId"
+              />
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -114,7 +119,9 @@
               Extreme values
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
-              <extreme-values />
+              <extreme-values
+                :location-id="$route.params.locationId"
+              />
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>

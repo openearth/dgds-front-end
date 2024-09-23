@@ -1,437 +1,426 @@
 [
   {
-    "value": "U_10_mag",
-    "label": "Hourly-averaged horizontal wind speed at 10 m height U_{10,mag} (m/s)"
+      "value": "U_10_mag",
+      "label": "Hourly-averaged horizontal wind speed at 10 m height U_{10,mag} (m/s)"
   },
   {
-    "value": "U_60_mag",
-    "label": "Hourly-averaged horizontal wind speed at 60 m height U_{60,mag} (m/s)"
+      "value": "U_60_mag",
+      "label": "Hourly-averaged horizontal wind speed at 60 m height U_{60,mag} (m/s)"
   },
   {
-    "value": "U_100_mag",
-    "label": "Hourly-averaged horizontal wind speed at 100 m height U_{100,mag} (m/s)"
+      "value": "U_100_mag",
+      "label": "Hourly-averaged horizontal wind speed at 100 m height U_{100,mag} (m/s)"
   },
   {
-    "value": "U_120_mag",
-    "label": "Hourly-averaged horizontal wind speed at 120 m height U_{120,mag} (m/s)"
+      "value": "U_120_mag",
+      "label": "Hourly-averaged horizontal wind speed at 120 m height U_{120,mag} (m/s)"
   },
   {
-    "value": "U_{160,mag}",
-    "label": "Hourly-averaged horizontal wind speed at 160 m height U_{160,mag} (m/s)"
+      "value": "U_160_mag",
+      "label": "Hourly-averaged horizontal wind speed at 160 m height U_{160,mag} (m/s)"
   },
   {
-    "value": "U_{200,mag}",
-    "label": "Hourly-averaged horizontal wind speed at 200 m height U_{200,mag} (m/s)"
+      "value": "U_200_mag",
+      "label": "Hourly-averaged horizontal wind speed at 200 m height U_{200,mag} (m/s)"
   },
   {
-    "value": "U_{250,mag}",
-    "label": "Hourly-averaged horizontal wind speed at 250 m height U_{250,mag} (m/s)"
+      "value": "U_250_mag",
+      "label": "Hourly-averaged horizontal wind speed at 250 m height U_{250,mag} (m/s)"
   },
   {
-    "value": "U_{300,mag}",
-    "label": "Hourly-averaged horizontal wind speed at 300 m height U_{300,mag} (m/s)"
+      "value": "U_300_mag",
+      "label": "Hourly-averaged horizontal wind speed at 300 m height U_{300,mag} (m/s)"
   },
   {
-    "value": "U_{10,dir}",
-    "label": "Hourly-averaged horizontal wind direction at 10 m height U_{10,dir} ({circ}N)"
+      "value": "U_10_dir",
+      "label": "Hourly-averaged horizontal wind direction at 10 m height U_{10,dir} ({circ}N_coming from)"
   },
   {
-    "value": "U_{60,dir}",
-    "label": "Hourly-averaged horizontal wind direction at 60 m height U_{60,dir} ({circ}N)"
+      "value": "U_60_dir",
+      "label": "Hourly-averaged horizontal wind direction at 60 m height U_{60,dir} ({circ}N_coming from)"
   },
   {
-    "value": "U_{100,dir}",
-    "label": "Hourly-averaged horizontal wind direction at 100 m height U_{100,dir} ({circ}N)"
+      "value": "U_100_dir",
+      "label": "Hourly-averaged horizontal wind direction at 100 m height U_{100,dir} ({circ}N_coming from)"
   },
   {
-    "value": "U_{120,dir}",
-    "label": "Hourly-averaged horizontal wind direction at 120 m height U_{120,dir} ({circ}N)"
+      "value": "U_120_dir",
+      "label": "Hourly-averaged horizontal wind direction at 120 m height U_{120,dir} ({circ}N_coming from)"
   },
   {
-    "value": "U_{160,dir}",
-    "label": "Hourly-averaged horizontal wind direction at 160 m height U_{160,dir} ({circ}N)"
+      "value": "U_160_dir",
+      "label": "Hourly-averaged horizontal wind direction at 160 m height U_{160,dir} ({circ}N_coming from)"
   },
   {
-    "value": "U_{200,dir}",
-    "label": "Hourly-averaged horizontal wind direction at 200 m height U_{200,dir} ({circ}N)"
+      "value": "U_200_dir",
+      "label": "Hourly-averaged horizontal wind direction at 200 m height U_{200,dir} ({circ}N_coming from)"
   },
   {
-    "value": "U_{250,dir}",
-    "label": "Hourly-averaged horizontal wind direction at 250 m height U_{250,dir} ({circ}N)"
+      "value": "U_250_dir",
+      "label": "Hourly-averaged horizontal wind direction at 250 m height U_{250,dir} ({circ}N_coming from)"
   },
   {
-    "value": "U_{300,dir}",
-    "label": "Hourly-averaged horizontal wind direction at 300 m height U_{300,dir} ({circ}N)"
+      "value": "U_300_dir",
+      "label": "Hourly-averaged horizontal wind direction at 300 m height U_{300,dir} ({circ}N_coming from)"
   },
   {
-    "value": "H_{s,tot}",
-    "label": "Significant wave height for total sea H_{s,tot} (m)"
+      "value": "H_s_tot",
+      "label": "Significant wave height for total sea H_{s,tot} (m)"
   },
   {
-    "value": "T_{p,tot}",
-    "label": "Peak wave period for total sea T_{p,tot} (s)"
+      "value": "T_p_tot",
+      "label": "Peak wave period for total sea T_{p,tot} (s)"
   },
   {
-    "value": "T_{m02,tot}",
-    "label": "Mean wave period (based on spectral moments of order 2 en 0) for total sea T_{m02,tot} (s)"
+      "value": "T_m02_tot",
+      "label": "Mean wave period for total sea T_{m02,tot} (s)"
   },
   {
-    "value": "MWD_{tot}",
-    "label": "Mean wave direction for total sea MWD_{tot} ({circ}N)"
+      "value": "MWD_tot",
+      "label": "Mean wave direction for total sea MWD_{tot} ({circ}N_coming from)"
   },
   {
-    "value": "PWD_{tot}",
-    "label": "Peak wave direction for total sea PWD_{tot} ({circ}N)"
+      "value": "PWD_tot",
+      "label": "Peak wave direction for total sea PWD_{tot} ({circ}N_coming from)"
   },
   {
-    "value": "DSpr_{tot}",
-    "label": "Directional spreading for total sea DSpr_{tot} ({circ})"
+      "value": "DSpr_tot",
+      "label": "Directional spreading for total sea DSpr_{tot} ({circ})"
   },
   {
-    "value": "H_{s,swell}",
-    "label": "Significant wave height for swell H_{s,swell} (m)"
+      "value": "H_s_swell",
+      "label": "Significant wave height for swell H_{s,swell} (m)"
   },
   {
-    "value": "T_{p,swell}",
-    "label": "Peak wave period for swell T_{p,swell} (s)"
+      "value": "T_p_swell",
+      "label": "Peak wave period for swell T_{p,swell} (s)"
   },
   {
-    "value": "T_{m02,swell}",
-    "label": "Mean wave period (based on spectral moments of order 2 en 0) for swell T_{m02,swell} (s)"
+      "value": "T_m02_swell",
+      "label": "Mean wave period for swell T_{m02,swell} (s)"
   },
   {
-    "value": "MWD_{swell}",
-    "label": "Mean wave direction for swell MWD_{swell} ({circ}N)"
+      "value": "MWD_swell",
+      "label": "Mean wave direction for swell MWD_{swell} ({circ}N_coming from)"
   },
   {
-    "value": "PWD_{swell}",
-    "label": "Peak wave direction for swell PWD_{swell} ({circ}N)"
+      "value": "PWD_swell",
+      "label": "Peak wave direction for swell PWD_{swell} ({circ}N_coming from)"
   },
   {
-    "value": "DSPR_{swell}",
-    "label": "Directional spreading for swell DSPR_{swell} ({circ})"
+      "value": "DSPR_swell",
+      "label": "Directional spreading for swell DSPR_{swell} ({circ})"
   },
   {
-    "value": "H_{s,sea}",
-    "label": "Significant wave height for wind sea H_{s,sea} (m)"
+      "value": "H_s_sea",
+      "label": "Significant wave height for wind sea H_{s,sea} (m)"
   },
   {
-    "value": "T_{p,sea}",
-    "label": "Peak wave period for wind sea T_{p,sea} (s)"
+      "value": "T_p_sea",
+      "label": "Peak wave period for wind sea T_{p,sea} (s)"
   },
   {
-    "value": "T_{m02,sea}",
-    "label": "Mean wave period (based on spectral moments of order 2 en 0) for wind sea T_{m02,sea} (s)"
+      "value": "T_m02_sea",
+      "label": "Mean wave period for wind sea T_{m02,sea} (s)"
   },
   {
-    "value": "MWD_{sea}",
-    "label": "Mean wave direction for wind sea MWD_{sea} ({circ}N)"
+      "value": "MWD_sea",
+      "label": "Mean wave direction for wind sea MWD_{sea} ({circ}N_coming from)"
   },
   {
-    "value": "PWD_{sea}",
-    "label": "Peak wave direction for wind sea PWD_{sea} ({circ}N)"
+      "value": "PWD_sea",
+      "label": "Peak wave direction for wind sea PWD_{sea} ({circ}N_coming from)"
   },
   {
-    "value": "DSPR_{sea}",
-    "label": "Directional spreading for wind sea DSPR_{sea} ({circ})"
+      "value": "DSPR_sea",
+      "label": "Directional spreading for wind sea DSPR_{sea} ({circ})"
   },
   {
-    "value": "H_{max,tot}",
-    "label": "Maximum individual wave height H_{max,tot} (m)"
+      "value": "H_max_tot",
+      "label": "Maximum individual wave height H_{max,tot} (m)"
   },
   {
-    "value": "T_{Hmax,tot}",
-    "label": "Waveperiod at Hmax T_{Hmax,tot} (s)"
+      "value": "T_Hmax_tot",
+      "label": "Waveperiod at Hmax T_{Hmax,tot} (s)"
   },
   {
-    "value": "T_{m-1,0,tot}",
-    "label": "Mean wave period (based on spectral moments of order -1 en 0) for total sea T_{m-1,0,tot} (s)"
+      "value": "T_m-1_0_tot",
+      "label": "Mean wave period for total sea T_{m-1,0,tot} (s)"
   },
   {
-    "value": "T_{m0,1,tot}",
-    "label": "Mean wave period (based on spectral moments of order 0 en 1) for total sea T_{m0,1,tot} (s)"
+      "value": "T_m0_1_tot",
+      "label": "Mean wave period for total sea T_{m0,1,tot} (s)"
   },
   {
-    "value": "Stpn_{tot}",
-    "label": "Wave steepness Stpn_{tot} (-)"
+      "value": "Stpn_tot",
+      "label": "Wave steepness Stpn_{tot} (-)"
   },
   {
-    "value": "H_{s}/d",
-    "label": "Hs over depth ratio H_{s}/d (-)"
+      "value": "H_s_d",
+      "label": "Significant wave height over depth ratio H_{s}/d (-)"
   },
   {
-    "value": "T_{air,10}",
-    "label": "Air temperature at 10 m T_{air,10} ({circ}C)"
+      "value": "T_air_10",
+      "label": "Air temperature at 10 m T_{air,10} ({circ}C)"
   },
   {
-    "value": "T_{air,60}",
-    "label": "Air temperature at 60 m T_{air,60} ({circ}C)"
+      "value": "T_air_60",
+      "label": "Air temperature at 60 m T_{air,60} ({circ}C)"
   },
   {
-    "value": "T_{air,100}",
-    "label": "Air temperature at 100 m T_{air,100} ({circ}C)"
+      "value": "T_air_100",
+      "label": "Air temperature at 100 m T_{air,100} ({circ}C)"
   },
   {
-    "value": "T_{air,120}",
-    "label": "Air temperature at 120 m T_{air,120} ({circ}C)"
+      "value": "T_air_120",
+      "label": "Air temperature at 120 m T_{air,120} ({circ}C)"
   },
   {
-    "value": "T_{air,160}",
-    "label": "Air temperature at 160 m T_{air,160} ({circ}C)"
+      "value": "T_air_160",
+      "label": "Air temperature at 160 m T_{air,160} ({circ}C)"
   },
   {
-    "value": "T_{air,200}",
-    "label": "Air temperature at 200 m T_{air,200} ({circ}C)"
+      "value": "T_air_200",
+      "label": "Air temperature at 200 m T_{air,200} ({circ}C)"
   },
   {
-    "value": "T_{air,250}",
-    "label": "Air temperature at 250 m T_{air,250} ({circ}C)"
+      "value": "T_air_250",
+      "label": "Air temperature at 250 m T_{air,250} ({circ}C)"
   },
   {
-    "value": "T_{air,300}",
-    "label": "Air temperature at 300 m T_{air,300} ({circ}C)"
+      "value": "T_air_300",
+      "label": "Air temperature at 300 m T_{air,300} ({circ}C)"
   },
   {
-    "value": "RH_{10}",
-    "label": "Relative humidity at 10 m RH_{10} (%)"
+      "value": "RH_10",
+      "label": "Relative humidity at 10 m RH_{10} (%)"
   },
   {
-    "value": "RH_{60}",
-    "label": "Relative humidity at 60 m RH_{60} (%)"
+      "value": "RH_60",
+      "label": "Relative humidity at 60 m RH_{60} (%)"
   },
   {
-    "value": "RH_{100}",
-    "label": "Relative humidity at 100 m RH_{100} (%)"
+      "value": "RH_100",
+      "label": "Relative humidity at 100 m RH_{100} (%)"
   },
   {
-    "value": "RH_{120}",
-    "label": "Relative humidity at 120 m RH_{120} (%)"
+      "value": "RH_120",
+      "label": "Relative humidity at 120 m RH_{120} (%)"
   },
   {
-    "value": "RH_{160}",
-    "label": "Relative humidity at 160 m RH_{160} (%)"
+      "value": "RH_160",
+      "label": "Relative humidity at 160 m RH_{160} (%)"
   },
   {
-    "value": "RH_{200}",
-    "label": "Relative humidity at 200 m RH_{200} (%)"
+      "value": "RH_200",
+      "label": "Relative humidity at 200 m RH_{200} (%)"
   },
   {
-    "value": "RH_{250}",
-    "label": "Relative humidity at 250 m RH_{250} (%)"
+      "value": "RH_250",
+      "label": "Relative humidity at 250 m RH_{250} (%)"
   },
   {
-    "value": "RH_{300}",
-    "label": "Relative humidity at 300 m RH_{300} (%)"
+      "value": "RH_300",
+      "label": "Relative humidity at 300 m RH_{300} (%)"
   },
   {
-    "value": "p_{10}",
-    "label": "Air pressure at 10 m p_{10} (hPa)"
+      "value": "p_10",
+      "label": "Air pressure at 10 m p_{10} (hPa)"
   },
   {
-    "value": "p_{60}",
-    "label": "Air pressure at 60 m p_{60} (hPa)"
+      "value": "p_60",
+      "label": "Air pressure at 60 m p_{60} (hPa)"
   },
   {
-    "value": "p_{100}",
-    "label": "Air pressure at 100 m p_{100} (hPa)"
+      "value": "p_100",
+      "label": "Air pressure at 100 m p_{100} (hPa)"
   },
   {
-    "value": "p_{120}",
-    "label": "Air pressure at 120 m p_{120} (hPa)"
+      "value": "p_120",
+      "label": "Air pressure at 120 m p_{120} (hPa)"
   },
   {
-    "value": "p_{160}",
-    "label": "Air pressure at 160 m p_{160} (hPa)"
+      "value": "p_160",
+      "label": "Air pressure at 160 m p_{160} (hPa)"
   },
   {
-    "value": "p_{200}",
-    "label": "Air pressure at 200 m p_{200} (hPa)"
+      "value": "p_200",
+      "label": "Air pressure at 200 m p_{200} (hPa)"
   },
   {
-    "value": "p_{250}",
-    "label": "Air pressure at 250 m p_{250} (hPa)"
+      "value": "p_250",
+      "label": "Air pressure at 250 m p_{250} (hPa)"
   },
   {
-    "value": "p_{300}",
-    "label": "Air pressure at 300 m p_{300} (hPa)"
+      "value": "p_300",
+      "label": "Air pressure at 300 m p_{300} (hPa)"
   },
   {
-    "value": "Q_{b,tot}",
-    "label": "Fraction breaking waves Q_{b,tot} (-)"
+      "value": "Q_b_tot",
+      "label": "Fraction breaking waves Q_{b,tot} (-)"
   },
   {
-    "value": "U_{orb,tot,d100}",
-    "label": "Orbital velocity at the bottom U_{orb,tot,d100} (m/s)"
+      "value": "U_orb_tot_d100",
+      "label": "Orbital velocity at the bottom U_{orb,tot,d100} (m/s)"
   },
   {
-    "value": "L_{p,tot}",
-    "label": "Wavelength L_{p,tot} (m)"
+      "value": "L_p_tot",
+      "label": "Wavelength L_{p,tot} (m)"
   },
   {
-    "value": "CS_{tot,d5}",
-    "label": "Total current speed at 5% of the water depth CS_{tot,d5} (m/s)"
+      "value": "CS_tot_d5",
+      "label": "Total current speed at 5% of the water depth CS_{tot,d5} (m/s)"
   },
   {
-    "value": "CS_{tot,d25}",
-    "label": "Total current speed at 25% of the water depth CS_{tot,d25} (m/s)"
+      "value": "CS_tot_d25",
+      "label": "Total current speed at 25% of the water depth CS_{tot,d25} (m/s)"
   },
   {
-    "value": "CS_{tot,d50}",
-    "label": "Total current speed at 50% of the water depth CS_{tot,d50} (m/s)"
+      "value": "CS_tot_d50",
+      "label": "Total current speed at 50% of the water depth CS_{tot,d50} (m/s)"
   },
   {
-    "value": "CS_{tot,d75}",
-    "label": "Total current speed at 75% of the water depth CS_{tot,d75} (m/s)"
+      "value": "CS_tot_d75",
+      "label": "Total current speed at 75% of the water depth CS_{tot,d75} (m/s)"
   },
   {
-    "value": "CS_{tot,d100}",
-    "label": "Total current speed at 100% of the water depth CS_{tot,d100} (m/s)"
+      "value": "CS_tot_d100",
+      "label": "Total current speed at 100% of the water depth CS_{tot,d100} (m/s)"
   },
   {
-    "value": "CS_{tot,dav}",
-    "label": "Depth-averaged total current speed CS_{tot,dav} (m/s)"
+      "value": "CS_tot_dav",
+      "label": "Depth-averaged total current speed CS_{tot,dav} (m/s)"
   },
   {
-    "value": "CS_{tid,d5}",
-    "label": "Tidal current speed at 5% of the water depth CS_{tid,d5} (m/s)"
+      "value": "CS_tid_d5",
+      "label": "Tidal current speed at 5% of the water depth CS_{tid,d5} (m/s)"
   },
   {
-    "value": "CS_{tid,d25}",
-    "label": "Tidal current speed at 25% of the water depth CS_{tid,d25} (m/s)"
+      "value": "CS_tid_d25",
+      "label": "Tidal current speed at 25% of the water depth CS_{tid,d25} (m/s)"
   },
   {
-    "value": "CS_{tid,d50}",
-    "label": "Tidal current speed at 50% of the water depth CS_{tid,d50} (m/s)"
+      "value": "CS_tid_d50",
+      "label": "Tidal current speed at 50% of the water depth CS_{tid,d50} (m/s)"
   },
   {
-    "value": "CS_{tid,d75}",
-    "label": "Tidal current speed at 75% of the water depth CS_{tid,d75} (m/s)"
+      "value": "CS_tid_d75",
+      "label": "Tidal current speed at 75% of the water depth CS_{tid,d75} (m/s)"
   },
   {
-    "value": "CS_{tid,d100}",
-    "label": "Tidal current speed at 100% of the water depth CS_{tid,d100} (m/s)"
+      "value": "CS_tid_d100",
+      "label": "Tidal current speed at 100% of the water depth CS_{tid,d100} (m/s)"
   },
   {
-    "value": "CS_{tid,dav}",
-    "label": "Depth-averaged tidal current speed CS_{tid,dav} (m/s)"
+      "value": "CS_tid_dav",
+      "label": "Depth-averaged tidal current speed CS_{tid,dav} (m/s)"
   },
   {
-    "value": "CS_{res,d5}",
-    "label": "Residual current speed at 5% of the water depth CS_{res,d5} (m/s)"
+      "value": "CS_res_d5",
+      "label": "Residual current speed at 5% of the water depth CS_{res,d5} (m/s)"
   },
   {
-    "value": "CS_{res,d25}",
-    "label": "Residual current speed at 25% of the water depth CS_{res,d25} (m/s)"
+      "value": "CS_res_d25",
+      "label": "Residual current speed at 25% of the water depth CS_{res,d25} (m/s)"
   },
   {
-    "value": "CS_{res,d50}",
-    "label": "Residual current speed at 50% of the water depth CS_{res,d50} (m/s)"
+      "value": "CS_res_d50",
+      "label": "Residual current speed at 50% of the water depth CS_{res,d50} (m/s)"
   },
   {
-    "value": "CS_{res,d75}",
-    "label": "Residual current speed at 75% of the water depth CS_{res,d75} (m/s)"
+      "value": "CS_res_d75",
+      "label": "Residual current speed at 75% of the water depth CS_{res,d75} (m/s)"
   },
   {
-    "value": "CS_{res,d100}",
-    "label": "Residual current speed at 100% of the water depth CS_{res,d100} (m/s)"
+      "value": "CS_res_d100",
+      "label": "Residual current speed at 100% of the water depth CS_{res,d100} (m/s)"
   },
   {
-    "value": "CS_{res,dav}",
-    "label": "Depth-averaged residual current speed CS_{res,dav} (m/s)"
+      "value": "CD_res_dav",
+      "label": "Depth-averaged residual current speed CS_{res,dav} (m/s)"
   },
   {
-    "value": "CD_{tot,d5}",
-    "label": "Total current direction at 5% of the water depth CD_{tot,d5} ({circ}N)"
+      "value": "CD_tot_d5",
+      "label": "Total current direction at 5% of the water depth CD_{tot,d5} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{tot,d25}",
-    "label": "Total current direction at 25% of the water depth CD_{tot,d25} ({circ}N)"
+      "value": "CD_tot_d25",
+      "label": "Total current direction at 25% of the water depth CD_{tot,d25} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{tot,d50}",
-    "label": "Total current direction at 50% of the water depth CD_{tot,d50} ({circ}N)"
+      "value": "CD_tot_d50",
+      "label": "Total current direction at 50% of the water depth CD_{tot,d50} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{tot,d75}",
-    "label": "Total current direction at 75% of the water depth CD_{tot,d75} ({circ}N)"
+      "value": "CD_tot_d75",
+      "label": "Total current direction at 75% of the water depth CD_{tot,d75} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{tot,d100}",
-    "label": "Total current direction at 100% of the water depth CD_{tot,d100} ({circ}N)"
+      "value": "CD_tot_d100",
+      "label": "Total current direction at 100% of the water depth CD_{tot,d100} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{tot,dav}",
-    "label": "Depth-averaged total current direction CD_{tot,dav} ({circ}N)"
+      "value": "CD_tot_dav",
+      "label": "Depth-averaged total current direction CD_{tot,dav} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{tid,d5}",
-    "label": "Tidal current direction at 5% of the water depth CD_{tid,d5} ({circ}N)"
+      "value": "CD_tid_d5",
+      "label": "Tidal current direction at 5% of the water depth CD_{tid,d5} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{tid,d25}",
-    "label": "Tidal current direction at 25% of the water depth CD_{tid,d25} ({circ}N)"
+      "value": "CD_tid_d25",
+      "label": "Tidal current direction at 25% of the water depth CD_{tid,d25} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{tid,d50}",
-    "label": "Tidal current direction at 50% of the water depth CD_{tid,d50} ({circ}N)"
+      "value": "CD_tid_d50",
+      "label": "Tidal current direction at 50% of the water depth CD_{tid,d50} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{tid,d75}",
-    "label": "Tidal current direction at 75% of the water depth CD_{tid,d75} ({circ}N)"
+      "value": "CD_tid_d75",
+      "label": "Tidal current direction at 75% of the water depth CD_{tid,d75} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{tid,d100}",
-    "label": "Tidal current direction at 100% of the water depth CD_{tid,d100} ({circ}N)"
+      "value": "CD_tid_d100",
+      "label": "Tidal current direction at 100% of the water depth CD_{tid,d100} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{tid,dav}",
-    "label": "Depth-averaged tidal current direction CD_{tid,dav} ({circ}N)"
+      "value": "CD_tid_dav",
+      "label": "Depth-averaged tidal current direction CD_{tid,dav} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{res,d5}",
-    "label": "Residual current direction at 5% of the water depth CD_{res,d5} ({circ}N)"
+      "value": "CD_res_d5",
+      "label": "Residual current direction at 5% of the water depth CD_{res,d5} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{res,d25}",
-    "label": "Residual current direction at 25% of the water depth CD_{res,d25} ({circ}N)"
+      "value": "CD_res_d25",
+      "label": "Residual current direction at 25% of the water depth CD_{res,d25} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{res,d50}",
-    "label": "Residual current direction at 50% of the water depth CD_{res,d50} ({circ}N)"
+      "value": "CD_res_d50",
+      "label": "Residual current direction at 50% of the water depth CD_{res,d50} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{res,d75}",
-    "label": "Residual current direction at 75% of the water depth CD_{res,d75} ({circ}N)"
+      "value": "CD_res_d75",
+      "label": "Residual current direction at 75% of the water depth CD_{res,d75} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{res,d100}",
-    "label": "Residual current direction at 100% of the water depth CD_{res,d100} ({circ}N)"
+      "value": "CD_res_d100",
+      "label": "Residual current direction at 100% of the water depth CD_{res,d100} ({circ}N_coming from)"
   },
   {
-    "value": "CD_{res,dav}",
-    "label": "Depth-averaged residual current direction CD_{res,dav} ({circ}N)"
+      "value": "CS_res_dav",
+      "label": "Depth-averaged residual current direction CD_{res,dav} ({circ}N_coming from)"
   },
   {
-    "value": "WL_{tot}",
-    "label": "Total water level WL_{tot} (m+MSL)"
+      "value": "WL_tot",
+      "label": "Total water level WL_{tot} (m+MSL)"
   },
   {
-    "value": "WL_{tid}",
-    "label": "Tidal water level WL_{tid} (m+MSL)"
+      "value": "WL_tid",
+      "label": "Tidal water level WL_{tid} (m+MSL)"
   },
   {
-    "value": "WL_{res}",
-    "label": "Residual water level WL_{res} (m)"
-  },
-  {
-    "value": "S1D",
-    "label": "1D-Wave spectra (variance density as a function of frequency) S1D (m_{2}/Hz)",
-    "frequency": true
-  },
-  {
-    "value": "S2D",
-    "label": "2D-Wave spectra (variance density as a function of frequency and direction) S2D (m^{2} / Hz / {circ})",
-    "direction": true,
-    "frequency": true
+      "value": "WL_res",
+      "label": "Residual water level WL_{res} (m)"
   }
 ]
