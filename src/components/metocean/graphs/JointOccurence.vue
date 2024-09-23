@@ -134,7 +134,7 @@ export default {
     this.fetchData()
   },
   methods: {
-    ...mapActions(['loadGraphDataForLocation']),
+    ...mapActions(['loadNonTimeGraphDataForLocation']),
     fetchData() {
       fetch(`/static/data/JointOccurenceParameters.json`)
         .then((response) => response.json())
@@ -143,6 +143,24 @@ export default {
 
           this.populateParameter1Options()
           this.populateParameter2Options()
+
+          this.loadNonTimeGraphDataForLocation({
+            parameter: parameter,
+            month: this.selectedMonth,
+            graph: 'roseplots_jots'
+          }).then(pointData => {
+            console.log(pointData)
+            const { data } = pointData
+
+            this.data = data.serie.data.map((value, index) => ({
+              'Date+Time': data.category[index],
+              value
+            }))
+
+            this.$nextTick(() => {
+              this.updateChart()
+            })
+          })
         })
     },
     selectParameter1(value) {
@@ -196,172 +214,172 @@ export default {
         return
       }
 
-      this.data = [
-        [0, 0, 4.21],
-        [0, 1, 13.45],
-        [0, 2, 6.34],
-        [0, 3, 1.77],
-        [0, 4, 0.85],
-        [0, 5, 0.32],
-        [0, 6, 0.09],
-        [0, 7, 0.06],
-        [0, 8, 0.01],
-        [0, 9, null],
-        [0, 10, null],
-        [1, 0, 0.09],
-        [1, 1, 20.22],
-        [1, 2, 18.68],
-        [1, 3, 5.19],
-        [1, 4, 2.12],
-        [1, 5, 0.73],
-        [1, 6, 0.12],
-        [1, 7, 0.01],
-        [1, 8, null],
-        [1, 9, null],
-        [1, 10, null],
-        [2, 0, null],
-        [2, 1, 0.49],
-        [2, 2, 13.94],
-        [2, 3, 2.62],
-        [2, 4, 0.54],
-        [2, 5, 0.18],
-        [2, 6, 0.05],
-        [2, 7, 0],
-        [2, 8, null],
-        [2, 9, null],
-        [2, 10, null],
-        [3, 0, null],
-        [3, 1, null],
-        [3, 2, 2.65],
-        [3, 3, 3.2],
-        [3, 4, 0.25],
-        [3, 5, 0.03],
-        [3, 6, 0.01],
-        [3, 7, 0],
-        [3, 8, null],
-        [3, 9, null],
-        [3, 10, null],
-        [4, 0, null],
-        [4, 1, null],
-        [4, 2, 0.01],
-        [4, 3, 1.17],
-        [4, 4, 0.24],
-        [4, 5, 0.01],
-        [4, 6, 0],
-        [4, 7, null],
-        [4, 8, null],
-        [4, 9, null],
-        [4, 10, null],
-        [5, 0, null],
-        [5, 1, null],
-        [5, 2, null],
-        [5, 3, 0.11],
-        [5, 4, 0.16],
-        [5, 5, 0.03],
-        [5, 6, 0],
-        [5, 7, null],
-        [5, 8, null],
-        [5, 9, null],
-        [5, 10, null],
-        [6, 0, null],
-        [6, 1, null],
-        [6, 2, null],
-        [6, 3, 0],
-        [6, 4, 0.02],
-        [6, 5, 0.02],
-        [6, 6, 0],
-        [6, 7, null],
-        [6, 8, null],
-        [6, 9, null],
-        [6, 10, null],
-        [7, 0, null],
-        [7, 1, null],
-        [7, 2, null],
-        [7, 3, null],
-        [7, 4, null],
-        [7, 5, 0],
-        [7, 6, 0],
-        [7, 7, null],
-        [7, 8, null],
-        [7, 9, null],
-        [7, 10, null],
-        [8, 0, null],
-        [8, 1, null],
-        [8, 2, null],
-        [8, 3, null],
-        [8, 4, null],
-        [8, 5, 0],
-        [8, 6, 0],
-        [8, 7, null],
-        [8, 8, null],
-        [8, 9, null],
-        [8, 10, null],
-        [9, 0, null],
-        [9, 1, null],
-        [9, 2, null],
-        [9, 3, null],
-        [9, 4, null],
-        [9, 5, null],
-        [9, 6, null],
-        [9, 7, null],
-        [9, 8, null],
-        [9, 9, null],
-        [9, 10, null],
-        [10, 0, null],
-        [10, 1, null],
-        [10, 2, null],
-        [10, 3, null],
-        [10, 4, null],
-        [10, 5, null],
-        [10, 6, null],
-        [10, 7, null],
-        [10, 8, null],
-        [10, 9, null],
-        [10, 10, null]
-      ]
-      this.xAxisData = [
-        '0.0-4.0',
-        '4.0-6.0',
-        '6.0-8.0',
-        '8.0-10.0',
-        '10.0-12.0',
-        '12.0-14.0',
-        '14.0-16.0',
-        '16.0-18.0',
-        '18.0-20.0',
-        '20.0-22.0',
-        '>22.0'
-      ]
-      this.yAxisData = [
-        '0.1-1.0',
-        '1.0-2.0',
-        '2.0-3.0',
-        '3.0-4.0',
-        '4.0-5.0',
-        '5.0-6.0',
-        '6.0-7.0',
-        '7.0-8.0',
-        '8.0-9.0',
-        '9.0-10.0',
-        '>10'
-      ]
+      // this.data = [
+      //   [0, 0, 4.21],
+      //   [0, 1, 13.45],
+      //   [0, 2, 6.34],
+      //   [0, 3, 1.77],
+      //   [0, 4, 0.85],
+      //   [0, 5, 0.32],
+      //   [0, 6, 0.09],
+      //   [0, 7, 0.06],
+      //   [0, 8, 0.01],
+      //   [0, 9, null],
+      //   [0, 10, null],
+      //   [1, 0, 0.09],
+      //   [1, 1, 20.22],
+      //   [1, 2, 18.68],
+      //   [1, 3, 5.19],
+      //   [1, 4, 2.12],
+      //   [1, 5, 0.73],
+      //   [1, 6, 0.12],
+      //   [1, 7, 0.01],
+      //   [1, 8, null],
+      //   [1, 9, null],
+      //   [1, 10, null],
+      //   [2, 0, null],
+      //   [2, 1, 0.49],
+      //   [2, 2, 13.94],
+      //   [2, 3, 2.62],
+      //   [2, 4, 0.54],
+      //   [2, 5, 0.18],
+      //   [2, 6, 0.05],
+      //   [2, 7, 0],
+      //   [2, 8, null],
+      //   [2, 9, null],
+      //   [2, 10, null],
+      //   [3, 0, null],
+      //   [3, 1, null],
+      //   [3, 2, 2.65],
+      //   [3, 3, 3.2],
+      //   [3, 4, 0.25],
+      //   [3, 5, 0.03],
+      //   [3, 6, 0.01],
+      //   [3, 7, 0],
+      //   [3, 8, null],
+      //   [3, 9, null],
+      //   [3, 10, null],
+      //   [4, 0, null],
+      //   [4, 1, null],
+      //   [4, 2, 0.01],
+      //   [4, 3, 1.17],
+      //   [4, 4, 0.24],
+      //   [4, 5, 0.01],
+      //   [4, 6, 0],
+      //   [4, 7, null],
+      //   [4, 8, null],
+      //   [4, 9, null],
+      //   [4, 10, null],
+      //   [5, 0, null],
+      //   [5, 1, null],
+      //   [5, 2, null],
+      //   [5, 3, 0.11],
+      //   [5, 4, 0.16],
+      //   [5, 5, 0.03],
+      //   [5, 6, 0],
+      //   [5, 7, null],
+      //   [5, 8, null],
+      //   [5, 9, null],
+      //   [5, 10, null],
+      //   [6, 0, null],
+      //   [6, 1, null],
+      //   [6, 2, null],
+      //   [6, 3, 0],
+      //   [6, 4, 0.02],
+      //   [6, 5, 0.02],
+      //   [6, 6, 0],
+      //   [6, 7, null],
+      //   [6, 8, null],
+      //   [6, 9, null],
+      //   [6, 10, null],
+      //   [7, 0, null],
+      //   [7, 1, null],
+      //   [7, 2, null],
+      //   [7, 3, null],
+      //   [7, 4, null],
+      //   [7, 5, 0],
+      //   [7, 6, 0],
+      //   [7, 7, null],
+      //   [7, 8, null],
+      //   [7, 9, null],
+      //   [7, 10, null],
+      //   [8, 0, null],
+      //   [8, 1, null],
+      //   [8, 2, null],
+      //   [8, 3, null],
+      //   [8, 4, null],
+      //   [8, 5, 0],
+      //   [8, 6, 0],
+      //   [8, 7, null],
+      //   [8, 8, null],
+      //   [8, 9, null],
+      //   [8, 10, null],
+      //   [9, 0, null],
+      //   [9, 1, null],
+      //   [9, 2, null],
+      //   [9, 3, null],
+      //   [9, 4, null],
+      //   [9, 5, null],
+      //   [9, 6, null],
+      //   [9, 7, null],
+      //   [9, 8, null],
+      //   [9, 9, null],
+      //   [9, 10, null],
+      //   [10, 0, null],
+      //   [10, 1, null],
+      //   [10, 2, null],
+      //   [10, 3, null],
+      //   [10, 4, null],
+      //   [10, 5, null],
+      //   [10, 6, null],
+      //   [10, 7, null],
+      //   [10, 8, null],
+      //   [10, 9, null],
+      //   [10, 10, null]
+      // ]
+      // this.xAxisData = [
+      //   '0.0-4.0',
+      //   '4.0-6.0',
+      //   '6.0-8.0',
+      //   '8.0-10.0',
+      //   '10.0-12.0',
+      //   '12.0-14.0',
+      //   '14.0-16.0',
+      //   '16.0-18.0',
+      //   '18.0-20.0',
+      //   '20.0-22.0',
+      //   '>22.0'
+      // ]
+      // this.yAxisData = [
+      //   '0.1-1.0',
+      //   '1.0-2.0',
+      //   '2.0-3.0',
+      //   '3.0-4.0',
+      //   '4.0-5.0',
+      //   '5.0-6.0',
+      //   '6.0-7.0',
+      //   '7.0-8.0',
+      //   '8.0-9.0',
+      //   '9.0-10.0',
+      //   '>10'
+      // ]
 
-      this.updateChart()
+      // this.updateChart()
 
-      // this.loadGraphDataForLocation({
-      //   parameter1: parameter1,
-      //   parameter2: parameter2,
-      //   month: this.selectedMonth
-      // }).then((pointData) => {
-      //   console.log('getChartData pointData', pointData)
-      //   const { data } = pointData
-      //   console.log('getChartData data', data)
-      //   // this.data = data[265].serie[0].data.map((value, index) => ({
-      //   //   'Date+Time': data[265].category[index],
-      //   //   value
-      //   // }))
-      //   // this.updateChart()
-      // })
+      this.loadNonTimeGraphDataForLocation({
+        parameter: parameter,
+        month: this.selectedMonth,
+        graph: 'roseplots_jots'
+      }).then((pointData) => {
+        console.log('getChartData pointData', pointData)
+        const { data } = pointData
+        console.log('getChartData data', data)
+        // this.data = data[265].serie[0].data.map((value, index) => ({
+        //   'Date+Time': data[265].category[index],
+        //   value
+        // }))
+        // this.updateChart()
+      })
     },
     isValueInRange(range, value) {
       const min = Math.min(...range)

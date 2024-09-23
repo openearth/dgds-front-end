@@ -46,9 +46,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "metocean-deploy-test" ]
+    branches: [ "metocean-prod" ]
   pull_request:
-    branches: [ "metocean-deploy-test" ]
+    branches: [ "metocean-prod" ]
 
 env:
   PROJECT_ID: ${{ secrets.RUN_PROJECT }} # TODO: update Google Cloud project id

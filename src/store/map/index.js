@@ -269,12 +269,53 @@ export const actions = {
     })
   },
 
-  loadGraphDataForLocation({ commit, state }, { parameter, startDate, endDate }) {
+  loadNonTimeGraphDataForLocation({ commit, state }, { parameter, month, graph }) {
     const datasetId = state.activeVectorDataIds
-    const locationId = state.activeLocationIds
-    // const slice = [null, -1]
+    // const paddedLocationId = state.activeLocationIndex.padStart(5, '0')
+    const paddedLocationId = '06435'
+    const url = `https://storage.googleapis.com/dgds-data-public/metocean/${graph}/point_${paddedLocationId}.zarr`
+    const path = 'JOT-Hs-Tz'
+    console.log(parameter)
+    return openArray({
+      store: url,
+      path: path,
+      mode: 'r'
+    }).then(res => {
+      return res.get().then(data => {
+
+        var arrayData = Array.from(data.data);
+
+        // Filter out NaN values
+        var filteredData = arrayData.filter(value => !isNaN(value))
+
+        var serie = {
+            type: 'line',
+            data: Array.from(filteredData)
+          }
+        
+        const pointData = {
+          id: datasetId,
+          data: {
+              serie,
+              type: "ensemble",
+              timeSpan: "",
+              timeFormat: "{yyyy}"
+          }
+        }
+        
+        // commit('addDatasetPointData', pointData)
+
+        return pointData
+      })
+    })
+
+  },
+
+  loadGraphDataForLocation({ commit, state }, { parameter, startDate, endDate, graph }) {
+    const datasetId = state.activeVectorDataIds
     const paddedLocationId = state.activeLocationIndex.padStart(5, '0')
-    const url = `https://storage.googleapis.com/dgds-data-public/metocean/time_series/point_${paddedLocationId}.zarr`
+
+    const url = `https://storage.googleapis.com/dgds-data-public/metocean/${graph}/point_${paddedLocationId}.zarr`
     const path = parameter
 
     return openArray({

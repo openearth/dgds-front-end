@@ -306,7 +306,8 @@ export default {
         this.loadGraphDataForLocation({
           parameter: this.parameters[0].value,
           startDate: this.selectedStartDate,
-          endDate: this.selectedEndDate
+          endDate: this.selectedEndDate,
+          graph: 'time_series'
         }).then(pointData => {
           console.log(pointData)
           const { data } = pointData
@@ -321,28 +322,6 @@ export default {
           })
         })
       },
-    // fetchData() {
-    //   fetch(`/static/data/TimeserieParameters.json`)
-    //     .then((response) => response.json())
-    //     .then((parameters) => {
-    //       this.parameters = parameters.map((parameter) => ({
-    //         ...parameter,
-    //         label: this.transformLabel(parameter.label)
-    //       }))
-
-    //       this.selectParameter(parameters[0])
-    //     })
-
-    //   // TODO deze mag weg zodra .zarr werkt
-    //   fetch(`/static/data/Timeseries.json`)
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       this.data = data
-    //       this.$nextTick(() => {
-    //         this.updateChart()
-    //       })
-    //     })
-    // },
     getStepInterval(data, key) {
       const firstDate = moment(data[0][key])
       const lastDate = moment(data[data.length - 1][key])
@@ -459,12 +438,11 @@ export default {
         }
       }
 
-      console.log('getChartData parameters', parameters)
-
       this.loadGraphDataForLocation({
         parameter: this.selectedParameter.value, // You can set a default parameter here
         startDate: this.selectedStartDate,
-        endDate: this.selectedEndDate
+        endDate: this.selectedEndDate,
+        graph: 'time_series'
       }).then(pointData => {
         console.log(pointData)
         const { data } = pointData
