@@ -1,0 +1,2074 @@
+{
+  "JOT-CS_res_d5-CD_res_d5": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Residual current speed CS_{res,d5} (m/s)",
+      "bin": "CS_res_d_bins"
+    },
+    "parameter2": {
+      "title": "Residual current direction at 5% of the water depth CD_{res,d5} ({circ}N going to)",
+      "bin": "CD_res_d_bins"
+    }
+  },
+  "JOT-CS_res_d100-CD_res_d100": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Residual current speed CS_{res,d100} (m/s) ",
+      "bin": "CS_res_d_bins"
+    },
+    "parameter2": {
+      "title": "Residual current direction at 100% of the water depth CD_{res,d100} ({circ}N going to)",
+      "bin": "CD_res_d_bins"
+    }
+  },
+  "JOT-CS_res_d25-CD_res_d25": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Residual current speed CS_{res,d25} (m/s) ",
+      "bin": "CS_res_d_bins"
+    },
+    "parameter2": {
+      "title": "Residual current direction at 25% of the water depth CD_{res,d25} ({circ}N going to)",
+      "bin": "CD_res_d_bins"
+    }
+  },
+  "JOT-CS_res_d50-CD_res_d50": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Residual current speed CS_{res,d50} (m/s) ",
+      "bin": "CS_res_d_bins"
+    },
+    "parameter2": {
+      "title": "Residual current direction at 50% of the water depth CD_{res,d50} ({circ}N going to)",
+      "bin": "CD_res_d_bins"
+    }
+  },
+  "JOT-CS_res_d75-CD_res_d75": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Residual current speed CS_{res,d75} (m/s) ",
+      "bin": "CS_res_d_bins"
+    },
+    "parameter2": {
+      "title": "Residual current direction at 75% of the water depth CD_{res,d75} ({circ}N going to)",
+      "bin": "CD_res_d_bins"
+    }
+  },
+  "JOT-CS_res_dav-CD_res_dav": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Depth-averaged residual current speed CS_{res,dav} (m/s)",
+      "bin": "CS_res_dav_bins"
+    },
+    "parameter2": {
+      "title": "Depth-averaged residual current direction CD_{res,dav} ({circ}N going to)",
+      "bin": "CD_res_dav_bins"
+    }
+  },
+  "JOT-CS_tid_d5-CD_tid_d5": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Tidal current speed CS_{tid,d5} (m/s)",
+      "bin": "CS_tid_d_bins"
+    },
+    "parameter2": {
+      "title": "Tidal current direction at 5% of the water depth CD_{tid,d5} ({circ}N going to)",
+      "bin": "CD_tid_d_bins"
+    }
+  },
+  "JOT-CS_tid_d100-CD_tid_d100": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Tidal current speed CS_{tid,d100} (m/s)",
+      "bin": "CS_tid_d_bins"
+    },
+    "parameter2": {
+      "title": "Tidal current direction at 100% of the water depth CD_{tid,d100} ({circ}N going to)",
+      "bin": "CD_tid_d_bins"
+    }
+  },
+  "JOT-CS_tid_d25-CD_tid_d25": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Tidal current speed CS_{tid,d25} (m/s)",
+      "bin": "CS_tid_d_bins"
+    },
+    "parameter2": {
+      "title": "Tidal current direction at 25% of the water depth CD_{tid,d25} ({circ}N going to)",
+      "bin": "CD_tid_d_bins"
+    }
+  },
+  "JOT-CS_tid_d50-CD_tid_d50": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Tidal current speed CS_{tid,d50} (m/s)",
+      "bin": "CS_tid_d_bins"
+    },
+    "parameter2": {
+      "title": "Tidal current direction at 50% of the water depth CD_{tid,d50} ({circ}N going to)",
+      "bin": "CD_tid_d_bins"
+    }
+  },
+  "JOT-CStid_d75-CDtid_d75": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Tidal current speed CS_{tid,d75} (m/s)",
+      "bin": "CS_tid_d_bins"
+    },
+    "parameter2": {
+      "title": "Tidal current direction at 75% of the water depth CD_{tid,d75} ({circ}N going to)",
+      "bin": "CD_tid_d_bins"
+    }
+  },
+  "JOT-CS_tid_dav-CD_tid_dav": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Depth-averaged tidal current speed CS_{tid,dav} (m/s)",
+      "bin": "CS_tid_dav_bins"
+    },
+    "parameter2": {
+      "title": "Depth-averaged tidal current direction CD_{tid,dav} ({circ}N going to)",
+      "bin": "CD_tid_dav_bins"
+    }
+  },
+  "JOT-CS_tot_d5-CD_tot_d5": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Total current speed CS_{tot,d5} (m/s)",
+      "bin": "CS_tot_d_bins"
+    },
+    "parameter2": {
+      "title": "Total current direction at 5% of the water depth CD_{tot,d5} ({circ}N going to)",
+      "bin": "CD_tot_d_bins"
+    }
+  },
+  "JOT-CS_tot_d100-CD_tot_d100": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Total current speed CS_{tot,d100} (m/s)",
+      "bin": "CS_tot_d_bins"
+    },
+    "parameter2": {
+      "title": "Total current direction at 100% of the water depth CD_{tot,d100} ({circ}N going to)",
+      "bin": "CD_tot_d_bins"
+    }
+  },
+  "JOT-CS_tot_d25-CD_tot_d25": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Total current speed CS_{tot,d25} (m/s)",
+      "bin": "CS_tot_d_bins"
+    },
+    "parameter2": {
+      "title": "Total current direction at 25% of the water depth CD_{tot,d25} ({circ}N going to)",
+      "bin": "CD_tot_d_bins"
+    }
+  },
+  "JOT-CS_tot_d50-CD_tot_d50": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Total current speed CS_{tot,d50} (m/s)",
+      "bin": "CS_tot_d_bins"
+    },
+    "parameter2": {
+      "title": "Total current direction at 50% of the water depth CD_{tot,d50} ({circ}N going to)",
+      "bin": "CD_tot_d_bins"
+    }
+  },
+  "JOT-CS_tot_d75-CD_tot_d75": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Total current speed CS_{tot,d75} (m/s)",
+      "bin": "CS_tot_d_bins"
+    },
+    "parameter2": {
+      "title": "Total current direction at 75% of the water depth CD_{tot,d75} ({circ}N going to)",
+      "bin": "CD_tot_d_bins"
+    }
+  },
+  "JOT-CS_tot_dav-CD_tot_dav": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Depth-averaged total current speed CS_{tot,dav} (m/s)",
+      "bin": "CS_tot_dav_bins"
+    },
+    "parameter2": {
+      "title": "Depth-averaged total current direction CD_{tot,dav} ({circ}N going to)",
+      "bin": "CD_tot_dav_bins"
+    }
+  },
+  "JOT-H_s_tot-CS_res_dav": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    },
+    "parameter2": {
+      "title": "Depth-averaged residual current direction CD_{res,dav} ({circ}N going to)",
+      "bin": "CS_res_dav_bins"
+    }
+  },
+  "JOT-H_s_tot-CS_tot_dav": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    },
+    "parameter2": {
+      "title": "Depth-averaged total current direction CD_{tot,dav} ({circ}N going to)",
+      "bin": "CS_tot_dav_bins"
+    }
+  },
+  "JOT-H_s_tot-MWD_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    }
+  },
+  "JOT-H_s_sea-MWD_sea": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for wind sea H_{s,sea} (m)",
+      "bin": "H_s_sea_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave direction for wind sea MWD_{sea} ({circ}N coming from)",
+      "bin": "MWD_sea_bins"
+    }
+  },
+  "JOT-H_s_swell-MWD_swell": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for swell H_{s,swell} (m)",
+      "bin": "H_s_swell_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave direction for swell MWD_{swell} ({circ}N coming from)",
+      "bin": "MWD_swell_bins"
+    }
+  },
+  "JOT-H_s_tot-PWD_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    },
+    "parameter2": {
+      "title": "Peak wave direction for total sea PWD_{tot} ({circ}N coming from)",
+      "bin": "PWD_tot_bins"
+    }
+  },
+  "JOT-H_s_sea-PWD_sea": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for wind sea H_{s,sea} (m)",
+      "bin": "H_s_sea_bins"
+    },
+    "parameter2": {
+      "title": "Peak wave direction for wind sea PWD_{sea} ({circ}N coming from)",
+      "bin": "PWD_sea_bins"
+    }
+  },
+  "JOT-H_s_swell-PWD_swell": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for swell H_{s,swell} (m)",
+      "bin": "H_s_swell_bins"
+    },
+    "parameter2": {
+      "title": "Peak wave direction for swell PWD_{swell} ({circ}N coming from)",
+      "bin": "PWD_swell_bins"
+    }
+  },
+  "JOT-H_s_tot-T_p_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    },
+    "parameter2": {
+      "title": "Peak wave period for total sea T_{p,tot} (s)",
+      "bin": "T_p_tot_bins"
+    }
+  },
+  "JOT-H_s_sea-T_p_sea": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for wind sea H_{s,sea} (m)",
+      "bin": "H_s_sea_bins"
+    },
+    "parameter2": {
+      "title": "Peak wave period for wind sea T_{p,sea} (s)",
+      "bin": "T_p_sea_bins"
+    }
+  },
+  "JOT-H_s_swell-T_p_swell": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for swell H_{s,swell} (m)",
+      "bin": "H_s_swell_bins"
+    },
+    "parameter2": {
+      "title": "Peak wave period for swell T_{p,swell} (s)",
+      "bin": "T_p_swell_bins"
+    }
+  },
+  "JOT-H_s_tot-T_m02_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave period (based on spectral moments of order 2 en 0) for total sea T_{m02_tot} (s)",
+      "bin": "T_m02_tot_bins"
+    }
+  },
+  "JOT-H_s_sea-T_m02_sea": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for wind sea H_{s,sea} (m)",
+      "bin": "H_s_sea_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave period (based on spectral moments of order 2 en 0) for wind sea T_{m02_sea} (s)",
+      "bin": "T_m02_sea_bins"
+    }
+  },
+  "JOT-H_s_swell-T_m02_swell": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for swell H_{s,swell} (m)",
+      "bin": "H_s_swell_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave period (based on spectral moments of order 2 en 0) for swell T_{m02_swell} (s)",
+      "bin": "T_m02_swell_bins"
+    }
+  },
+  "JOT-H_s_tot-U_100_mag": {
+    "selection_box": {
+      "title": "Direction",
+      "options": [
+        "Omni",
+        "0/360",
+        "30",
+        "60",
+        "90",
+        "120",
+        "150",
+        "180",
+        "210",
+        "240",
+        "270",
+        "300",
+        "330"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind speed at 100 m height U_{100,mag} (m/s)",
+      "bin": "U_mag_bins"
+    }
+  },
+  "JOT-H_s_tot-U_10_mag": {
+    "selection_box": {
+      "title": "Direction",
+      "options": [
+        "Omni",
+        "0/360",
+        "30",
+        "60",
+        "90",
+        "120",
+        "150",
+        "180",
+        "210",
+        "240",
+        "270",
+        "300",
+        "330"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind speed at 10 m height U_{10,mag} (m/s)",
+      "bin": "U_mag_bins"
+    }
+  },
+  "JOT-H_s_tot-U_120_mag": {
+    "selection_box": {
+      "title": "Direction",
+      "options": [
+        "Omni",
+        "0/360",
+        "30",
+        "60",
+        "90",
+        "120",
+        "150",
+        "180",
+        "210",
+        "240",
+        "270",
+        "300",
+        "330"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height fot total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind speed at 120 m height U_{120,mag} (m/s)",
+      "bin": "U_mag_bins"
+    }
+  },
+  "JOT-H_s_tot-U_160_mag": {
+    "selection_box": {
+      "title": "Direction",
+      "options": [
+        "Omni",
+        "0/360",
+        "30",
+        "60",
+        "90",
+        "120",
+        "150",
+        "180",
+        "210",
+        "240",
+        "270",
+        "300",
+        "330"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind speed at 160 m height U_{160,mag} (m/s)",
+      "bin": "U_mag_bins"
+    }
+  },
+  "JOT-H_s_tot-U_200_mag": {
+    "selection_box": {
+      "title": "Direction",
+      "options": [
+        "Omni",
+        "0/360",
+        "30",
+        "60",
+        "90",
+        "120",
+        "150",
+        "180",
+        "210",
+        "240",
+        "270",
+        "300",
+        "330"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind speed at 200 m height U_{200,mag} (m/s)",
+      "bin": "U_mag_bins"
+    }
+  },
+  "JOT-H_s_tot-U_250_mag": {
+    "selection_box": {
+      "title": "Direction",
+      "options": [
+        "Omni",
+        "0/360",
+        "30",
+        "60",
+        "90",
+        "120",
+        "150",
+        "180",
+        "210",
+        "240",
+        "270",
+        "300",
+        "330"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind speed at 250 m height U_{250,mag} (m/s)",
+      "bin": "U_mag_bins"
+    }
+  },
+  "JOT-H_s_tot-U_300_mag": {
+    "selection_box": {
+      "title": "Direction",
+      "options": [
+        "Omni",
+        "0/360",
+        "30",
+        "60",
+        "90",
+        "120",
+        "150",
+        "180",
+        "210",
+        "240",
+        "270",
+        "300",
+        "330"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind speed at 300 m height U_{300,mag} (m/s)",
+      "bin": "U_mag_bins"
+    }
+  },
+  "JOT-H_s_tot-U_60_mag": {
+    "selection_box": {
+      "title": "Direction",
+      "options": [
+        "Omni",
+        "0/360",
+        "30",
+        "60",
+        "90",
+        "120",
+        "150",
+        "180",
+        "210",
+        "240",
+        "270",
+        "300",
+        "330"
+      ]
+    },
+    "parameter1": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind speed at 60 m height U_{60,mag} (m/s)",
+      "bin": "U_mag_bins"
+    }
+  },
+  "JOT-MWD_tot-U_100_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 100 m height U_{100,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_100_mag-MWD_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 100 m height U_{100,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    }
+  },
+  "JOT-MWD_tot-U_10_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 10 m height U_{10,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_10_mag-MWD_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 10 m height U_{10,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    }
+  },
+  "JOT-MWD_tot-U_120_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 120 m height U_{120,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_120_mag-MWD_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 120 m height U_{120,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    }
+  },
+  "JOT-MWD_tot-U_160_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 160 m height U_{160,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_160_mag-MWD_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 160 m height U_{160,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    }
+  },
+  "JOT-MWD_tot-U_200_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 200 m height U_{200,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_200_mag-MWD_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 200 m height U_{200,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    }
+  },
+  "JOT-MWD_tot-U_250_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 250 m height U_{250,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_250_mag-MWD_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 250 m height U_{250,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    }
+  },
+  "JOT-MWD_tot-U_300_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 300 m height U_{300,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_300_mag-MWD_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 300 m height U_{300,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    }
+  },
+  "JOT-MWD_tot-U_60_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 60 m height U_{60,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_60_mag-MWD_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 60 m height U_{60,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    }
+  },
+  "JOT-T_p_tot-MWD_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Peak wave period for total sea T_{p_tot} (s)",
+      "bin": "T_p_tot_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
+      "bin": "MWD_tot_bins"
+    }
+  },
+  "JOT-T_p_sea-MWD_sea": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Peak wave period for wind sea T_{p_sea} (s)",
+      "bin": "T_p_sea_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave direction for wind sea MWD_{sea} ({circ}N coming from)",
+      "bin": "MWD_sea_bins"
+    }
+  },
+  "JOT-T_p_swell-MWD_swell": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Peak wave period for swell T_{p_swell} (s)",
+      "bin": "T_p_swell_bins"
+    },
+    "parameter2": {
+      "title": "Mean wave direction for swell MWD_{well} ({circ}N coming from)",
+      "bin": "MWD_swell_bins"
+    }
+  },
+  "JOT-T_p_tot-PWD_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Peak wave period for total sea T_{p_tot} (s)",
+      "bin": "T_p_tot_bins"
+    },
+    "parameter2": {
+      "title": "Peak wave direction for total sea PWD_{tot} ({circ}N coming from)",
+      "bin": "PWD_tot_bins"
+    }
+  },
+  "JOT-T_p_sea-PWD_sea": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Peak wave period for wind sea T_{p_sea} (s)",
+      "bin": "T_p_sea_bins"
+    },
+    "parameter2": {
+      "title": "Peak wave direction for wind sea PWD_{sea} ({circ}N coming from)",
+      "bin": "PWD_sea_bins"
+    }
+  },
+  "JOT-T_p_swell-PWD_swell": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Peak wave period for swell T_{p_swell} (s)",
+      "bin": "T_p_swell_bins"
+    },
+    "parameter2": {
+      "title": "Peak wave direction for swell PWD_{swell} ({circ}N coming from)",
+      "bin": "PWD_swell_bins"
+    }
+  },
+  "JOT-U_100_mag-U_100_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 100 m height U_{100,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 100 m height U_{100,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_10_mag-U_10_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 10 m height U_{10,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 10 m height U_{10,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_120_mag-U_120_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 120 m height U_{120,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 120 m height U_{120,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_160_mag-U_160_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 160 m height U_{160,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 160 m height U_{160,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_200_mag-U_200_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 200 m height U_{200,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 200 m height U_{200,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_250_mag-U_250_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 250 m height U_{250,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 250 m height U_{250,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_300_mag-U_300_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 300 m height U_{300,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 300 m height U_{300,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-U_60_mag-U_60_dir": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Hourly-averaged horizontal wind speed at 60 m height U_{60,mag} (m/s)",
+      "bin": "U_mag_bins"
+    },
+    "parameter2": {
+      "title": "Hourly-averaged horizontal wind direction at 60 m height U_{60,dir} ({circ}N coming from)",
+      "bin": "U_dir_bins"
+    }
+  },
+  "JOT-WL_res-CD_res_dav": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Residual water level WL_{res} (m)",
+      "bin": "WL_res_bins"
+    },
+    "parameter2": {
+      "title": "Depth-averaged residual current direction CD_{res,dav} ({circ}N coming from)",
+      "bin": "CS_res_dav_bins"
+    }
+  },
+  "JOT-WL_tot-CD_tot_dav": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Total water level WL_{tot} (m+MSL)",
+      "bin": "WL_tot_bins"
+    },
+    "parameter2": {
+      "title": "Depth-averaged total current direction CD_{tot,dav} ({circ}N coming from)",
+      "bin": "CS_tot_dav_bins"
+    }
+  },
+  "JOT-WL_tot-H_s_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Total water level WL_{tot} (m+MSL)",
+      "bin": "WL_tot_bins"
+    },
+    "parameter2": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    }
+  },
+  "JOT-WL_res-H_s_tot": {
+    "selection_box": {
+      "title": "Months of interest",
+      "options": [
+        "All-year",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
+    },
+    "parameter1": {
+      "title": "Residual water level WL_{res} (m+MSL)",
+      "bin": "WL_rest_bins"
+    },
+    "parameter2": {
+      "title": "Significant wave height for total sea H_{s,tot} (m)",
+      "bin": "H_s_tot_bins"
+    }
+  }
+}
