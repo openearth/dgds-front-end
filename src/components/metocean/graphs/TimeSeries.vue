@@ -28,48 +28,6 @@
     <div v-else>
       Loading parameters...
     </div>
-    <v-spacer />
-    <v-menu offset-y>
-      <template #activator="{ on }">
-        Start Date
-        <v-btn
-          text
-          :disabled="isLoading"
-          v-on="on"
-        >
-          {{ selectedStartDate }}
-          <v-icon right>
-            mdi-calendar
-          </v-icon>
-        </v-btn>
-      </template>
-      <v-date-picker
-        v-model="selectedStartDate"
-        scrollable
-        @change="applyStartDatePicker"
-      />
-    </v-menu>
-    <v-spacer />
-    <v-menu offset-y>
-      <template #activator="{ on }">
-        End Date
-        <v-btn
-          text
-          :disabled="isLoading"
-          v-on="on"
-        >
-          {{ selectedEndDate }}
-          <v-icon right>
-            mdi-calendar
-          </v-icon>
-        </v-btn>
-      </template>
-      <v-date-picker
-        v-model="selectedEndDate"
-        scrollable
-        @change="applyEndDatePicker"
-      />
-    </v-menu>
     <div style="width: 100%; height: 400px; margin: 8px 0px">
       <v-chart
         ref="timeseries"
@@ -136,6 +94,10 @@ export default {
         tooltip: {
           trigger: 'axis',
           confine: true,
+          padding: 4,
+          textStyle: {
+            fontSize: 12
+          },
           formatter: function (e) {
             let tooltip = ''
             e.forEach((serie) => {
@@ -177,8 +139,6 @@ export default {
       },
       parameters: [],
       selectedParameter: {},
-      selectedStartDate: '1984-01-01',
-      selectedEndDate: '2015-12-31',
 
       data: [],
       isLoading: false
@@ -215,34 +175,34 @@ export default {
             label: this.transformLabel(parameter.label)
           }))
 
-            this.selectParameter(parameters[0])
-          })
-          
-        this.loadGraphDataForLocation({
-          parameter: this.parameters[0].value,
-          startDate: this.selectedStartDate,
-          endDate: this.selectedEndDate,
-          graph: 'time_series'
-        }).then(pointData => {
-          console.log(pointData)
-          const { data } = pointData
-
-          this.data = data.serie.data.map((value, index) => ({
-            'Date+Time': data.category[index],
-            value
-          }))
-
-          this.$nextTick(() => {
-            this.updateChart()
-          })
+          this.selectParameter(parameters[0])
         })
-      },
+    },
     getStepInterval(data, key) {
       const firstDate = moment(data[0][key])
-      const lastDate = moment(data[data.length - 1][key])
+      const lastDate = moment(data[1][key])
       const diff = lastDate.diff(firstDate, 'days')
 
-      if (diff > 365) {
+      if (diff >= 1) {
+        return 'days'
+      } else {
+        return 'hours'
+      }
+    },
+    getAverageStepInterval(data, key) {
+      if (data.length < 2) return 'days'
+
+      let totalDiff = 0
+
+      for (let i = 1; i < data.length; i++) {
+        const prevDate = moment(data[i - 1][key])
+        const currDate = moment(data[i][key])
+        totalDiff += currDate.diff(prevDate, 'hours')
+      }
+
+      const averageDiff = totalDiff / (data.length - 1)
+
+      if (averageDiff >= 24) {
         return 'days'
       } else {
         return 'hours'
@@ -264,10 +224,9 @@ export default {
       const instance = this.$refs.timeseries?.chart
 
       if (instance) {
-        if (this.data.length === 0) {
+        if (!this.data || this.data?.length === 0) {
           instance.setOption(
             {
-              series: [],
               xAxis: {
                 name: 'Datetime',
                 nameLocation: 'center',
@@ -287,17 +246,18 @@ export default {
                   bottom: 16,
                   left: 8
                 }
-              ]
+              ],
+              series: []
             },
             {
-              replaceMerge: ['series', 'xAxis', 'dataZoom']
+              replaceMerge: ['xAxis', 'dataZoom', 'series']
             }
           )
           return
         }
 
-        // Determine the step interval and calculate the index for x amount of years
         const stepInterval = this.getStepInterval(this.data, 'Date+Time')
+        // const stepInterval = this.getAverageStepInterval(this.data, 'Date+Time')
         const indexForYears = this.getIndexForTimePeriod(stepInterval, 10)
 
         instance.setOption(
@@ -325,8 +285,6 @@ export default {
                 type: 'inside',
                 startValue: Math.max(0, this.data.length - indexForYears),
                 endValue: this.data.length
-                // startValue: this.data.length - 356 * 10,
-                // endValue: this.data.length
               },
               {
                 height: 48,
@@ -344,19 +302,23 @@ export default {
               top: 4,
               right: 0,
               formatter: function (name) {
-                let formattedName = this.transformLabel(name)
+                // let formattedName = this.transformLabel(name)
+                
+                return this.transformLabel(name)
+                  .replace(/<sub>(.*?)<\/sub>/g, '{sub|$1}')
+                  .replace(/<sup>(.*?)<\/sup>/g, '{sup|$1}')
 
-                formattedName = formattedName.replace(
-                  /<sub>(.*?)<\/sub>/g,
-                  '{sub|$1}'
-                )
+                // formattedName = formattedName.replace(
+                //   /<sub>(.*?)<\/sub>/g,
+                //   '{sub|$1}'
+                // )
 
-                formattedName = formattedName.replace(
-                  /<sup>(.*?)<\/sup>/g,
-                  '{sup|$1}'
-                )
+                // formattedName = formattedName.replace(
+                //   /<sup>(.*?)<\/sup>/g,
+                //   '{sup|$1}'
+                // )
 
-                return formattedName
+                // return formattedName
               }.bind(this),
               textStyle: {
                 overflow: 'breakAll',
@@ -426,10 +388,8 @@ export default {
 
       this.loadGraphDataForLocation({
         parameter: this.selectedParameter.value,
-        startDate: this.selectedStartDate,
-        endDate: this.selectedEndDate,
         graph: 'time_series'
-      }).then(pointData => {
+      }).then((pointData) => {
         console.log(pointData)
         const { data } = pointData
 

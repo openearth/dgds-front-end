@@ -278,10 +278,11 @@ export const actions = {
     console.log(parameter)
     return openArray({
       store: url,
-      path: path,
+      path: parameter,
       mode: 'r'
     }).then(res => {
       return res.get().then(data => {
+        console.log("data", data)
 
         var arrayData = Array.from(data.data);
         
@@ -303,12 +304,11 @@ export const actions = {
 
   },
 
-  loadGraphDataForLocation({ commit, state }, { parameter, startDate, endDate, graph }) {
+  loadGraphDataForLocation({ commit, state }, { parameter, graph }) {
     const datasetId = state.activeVectorDataIds
     const paddedLocationId = state.activeLocationIndex.padStart(5, '0')
 
     const url = `https://storage.googleapis.com/dgds-data-public/metocean/${graph}/point_${paddedLocationId}.zarr`
-    const path = parameter
 
     return openArray({
       store: url,
@@ -319,7 +319,7 @@ export const actions = {
           
         return openArray({
           store: url,
-          path: path,
+          path: parameter,
           mode: 'r'
         }).then(res => {
           return res.get().then(data => {
