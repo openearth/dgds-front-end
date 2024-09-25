@@ -1,0 +1,693 @@
+{
+    "PERS-H_s_tot": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "Hs": {
+            "title": "Hs",
+            "options": [
+                "< 0.25 m",
+                "< 0.50 m",
+                "< 0.75 m",
+                "< 1.00 m",
+                "< 1.25 m",
+                "< 1.50 m",
+                "< 1.75 m",
+                "< 2.00 m",
+                "< 2.25 m",
+                "< 2.75 m",
+                "< 3.00 m",
+                "< 3.50 m",
+                "< 4.00 m",
+                "< 4.50 m",
+                "< 5.00 m"
+            ]
+         },
+        "parameter": {
+            "title": "Persistence significant wave height for total sea H_{s,tot} (m)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-U_10_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Persistence hourly-averaged horizontal wind speed at 10 m height U_{10,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-U_100_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Persistence hourly-averaged horizontal wind speed at 100 m height U_{100,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-U_120_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Persistence hourly-averaged horizontal wind speed at 120 m height U_{120,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-U_160_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Persistence hourly-averaged horizontal wind speed at 160 m height U_{160,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-U_200_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Persistence hourly-averaged horizontal wind speed at 200 m height U_{200,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-U_250_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Persistence hourly-averaged horizontal wind speed at 250 m height U_{250,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-U_300_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Persistence hourly-averaged horizontal wind speed at 300 m height U_{300,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-U_60_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Persistence hourly-averaged horizontal wind speed at 60 m height U_{60,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-H_s_tot-U_10_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "Hs": {
+            "title": "Hs",
+            "options": [
+                "< 0.25 m",
+                "< 0.50 m",
+                "< 0.75 m",
+                "< 1.00 m",
+                "< 1.25 m",
+                "< 1.50 m",
+                "< 1.75 m",
+                "< 2.00 m",
+                "< 2.25 m",
+                "< 2.75 m",
+                "< 3.00 m",
+                "< 3.50 m",
+                "< 4.00 m",
+                "< 4.50 m",
+                "< 5.00 m"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 10 m height U_{10,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-H_s_tot-U_100_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "Hs": {
+            "title": "Hs",
+            "options": [
+                "< 0.25 m",
+                "< 0.50 m",
+                "< 0.75 m",
+                "< 1.00 m",
+                "< 1.25 m",
+                "< 1.50 m",
+                "< 1.75 m",
+                "< 2.00 m",
+                "< 2.25 m",
+                "< 2.75 m",
+                "< 3.00 m",
+                "< 3.50 m",
+                "< 4.00 m",
+                "< 4.50 m",
+                "< 5.00 m"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 100 m height U_{100,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-H_s_tot-U_120_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "Hs": {
+            "title": "Hs",
+            "options": [
+                "< 0.25 m",
+                "< 0.50 m",
+                "< 0.75 m",
+                "< 1.00 m",
+                "< 1.25 m",
+                "< 1.50 m",
+                "< 1.75 m",
+                "< 2.00 m",
+                "< 2.25 m",
+                "< 2.75 m",
+                "< 3.00 m",
+                "< 3.50 m",
+                "< 4.00 m",
+                "< 4.50 m",
+                "< 5.00 m"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 120 m height U_{120,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-H_s_tot-U_160_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "Hs": {
+            "title": "Hs",
+            "options": [
+                "< 0.25 m",
+                "< 0.50 m",
+                "< 0.75 m",
+                "< 1.00 m",
+                "< 1.25 m",
+                "< 1.50 m",
+                "< 1.75 m",
+                "< 2.00 m",
+                "< 2.25 m",
+                "< 2.75 m",
+                "< 3.00 m",
+                "< 3.50 m",
+                "< 4.00 m",
+                "< 4.50 m",
+                "< 5.00 m"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 160 m height U_{160,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-H_s_tot-U_200_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "Hs": {
+            "title": "Hs",
+            "options": [
+                "< 0.25 m",
+                "< 0.50 m",
+                "< 0.75 m",
+                "< 1.00 m",
+                "< 1.25 m",
+                "< 1.50 m",
+                "< 1.75 m",
+                "< 2.00 m",
+                "< 2.25 m",
+                "< 2.75 m",
+                "< 3.00 m",
+                "< 3.50 m",
+                "< 4.00 m",
+                "< 4.50 m",
+                "< 5.00 m"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 200 m height U_{200,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-H_s_tot-U_250_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "Hs": {
+            "title": "Hs",
+            "options": [
+                "< 0.25 m",
+                "< 0.50 m",
+                "< 0.75 m",
+                "< 1.00 m",
+                "< 1.25 m",
+                "< 1.50 m",
+                "< 1.75 m",
+                "< 2.00 m",
+                "< 2.25 m",
+                "< 2.75 m",
+                "< 3.00 m",
+                "< 3.50 m",
+                "< 4.00 m",
+                "< 4.50 m",
+                "< 5.00 m"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 250 m height U_{250,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-H_s_tot-U_300_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "Hs": {
+            "title": "Hs",
+            "options": [
+                "< 0.25 m",
+                "< 0.50 m",
+                "< 0.75 m",
+                "< 1.00 m",
+                "< 1.25 m",
+                "< 1.50 m",
+                "< 1.75 m",
+                "< 2.00 m",
+                "< 2.25 m",
+                "< 2.75 m",
+                "< 3.00 m",
+                "< 3.50 m",
+                "< 4.00 m",
+                "< 4.50 m",
+                "< 5.00 m"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 300 m height U_{300,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    },
+    "PERS-H_s_tot-U_60_mag": {
+        "selection_box1": {
+            "title": "Percentile (exceedance)",
+            "options": [
+                "P20",
+                "P50",
+                "P80"
+            ]
+         },
+        "Hs": {
+            "title": "Hs",
+            "options": [
+                "< 0.25 m",
+                "< 0.50 m",
+                "< 0.75 m",
+                "< 1.00 m",
+                "< 1.25 m",
+                "< 1.50 m",
+                "< 1.75 m",
+                "< 2.00 m",
+                "< 2.25 m",
+                "< 2.75 m",
+                "< 3.00 m",
+                "< 3.50 m",
+                "< 4.00 m",
+                "< 4.50 m",
+                "< 5.00 m"
+            ]
+         },
+        "U": {
+            "title": "Umag",
+            "options": [
+                "< 2.0 m/s",
+                "< 4.0 m/s",
+                "< 6.0 m/s",
+                "< 8.0 m/s",
+                "< 9.0 m/s",
+                "< 10.0 m/s",
+                "< 11.0 m/s",
+                "< 12.0 m/s",
+                "< 15.0 m/s",
+                "< 20.0 m/s",
+                "< 25.0 m/s"
+            ]
+         },
+        "parameter": {
+            "title": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 300 m height U_{60,mag,extreme} (m/s)",
+            "bin1": "duration_bins",
+            "bin2": "period_bins"
+        }
+    }
+}

@@ -1,0 +1,410 @@
+{
+    "EXTR-CS_tot_d100": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Total extreme current speed at 100% of the water depth CS_{tot,extreme,d100} (m/s)",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-CS_tot_d25": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Total extreme current speed at 25% of the water depth CS_{tot,extreme,d25} (m/s)",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-CS_tot_d5": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Total extreme current speed at 5% of the water depth CS_{tot,extreme,d5} (m/s)",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-CS_tot_d50": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Total extreme current speed at 50% of the water depth CS_{tot,extreme,d50} (m/s)",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-CS_tot_d75": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Total extreme current speed at 75% of the water depth CS_{tot,extreme,d75} (m/s)",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-CS_tot_dav": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Total extreme current speed depth-averaged CS_{tot,extreme,dav} (m/s)",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-H_s_tot": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Extreme significant wave height for total sea H_{s,tot,extreme} (m)",
+            "bin": "return_period_bins_10000"
+        }
+    },
+    "EXTR-U_100_mag": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Hourly-averaged extreme horizontal wind speed at 100 m height U_{100,mag,extreme} (m/s)",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-U_10_mag": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Hourly-averaged extreme horizontal wind speed at 10 m height U_{10,mag,extreme} (m/s)",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-U_120_mag": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Hourly-averaged extreme horizontal wind speed at 120 m height U_{120,mag,extreme} (m/s)",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-U_160_mag": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Hourly-averaged extreme horizontal wind speed at 160 m height U_{160,mag,extreme} (m/s)",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-U_200_mag": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Hourly-averaged extreme horizontal wind speed at 200 m height U_{200,mag,extreme} (m/s)",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-U_250_mag": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Hourly-averaged extreme horizontal wind speed at 250 m height U_{250,mag,extreme} (m/s)",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-U_300_mag": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Hourly-averaged extreme horizontal wind speed at 300 m height U_{300,mag,extreme} (m/s)",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-U_60_mag": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Hourly-averaged extreme horizontal wind speed at 60 m height U_{60,mag,extreme} (m/s)",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-Wlv_tot_max": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Extreme water level for total sea maxima Wlv_{tot,extreme,max} (m+MSL",
+            "bin": "return_period_bins_1000"
+        }
+    },
+    "EXTR-Wlv_tot_min": {
+        "selection_box": {
+            "title": "Direction",
+            "options": [
+                "Omni",
+                "0/360",
+                "30",
+                "60",
+                "90",
+                "120",
+                "150",
+                "180",
+                "210",
+                "240",
+                "270",
+                "300",
+                "330"
+            ]
+         },
+        "parameter": {
+            "title": "Extreme water level for total sea minima Wlv_{tot,extreme,min} (m+MSL)",
+            "bin": "return_period_bins_1000"
+        }
+    }
+}

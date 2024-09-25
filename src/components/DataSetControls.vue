@@ -35,15 +35,6 @@
             >
               <v-row>
                 <v-col
-                  cols="1"
-                  class="ma-auto pa-0"
-                >
-                  <custom-icon
-                    :name="dataset.id"
-                    icon-folder="datasets"
-                  />
-                </v-col>
-                <v-col
                   cols="7"
                   class="ma-auto pa-0"
                 >

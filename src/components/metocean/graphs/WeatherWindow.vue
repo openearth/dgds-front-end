@@ -1,19 +1,47 @@
 <template>
   <div>
-    <v-btn-toggle
-      v-model="selectedExceedance"
-      mandatory
-    >
-      <v-btn
-        v-for="(exceedance, i) in exceedances"
-        :key="`${exceedance}-${i}`"
-        :value="exceedance"
-        depressed
-        @click="selectExceedance(exceedance)"
+    <div>
+      <v-select
+          v-model="selectedType"
+          :items="parameters"
+          item-text="parameter.label"
+          label="Select Type"
+          @change="onTypeChange"
+          outlined
+      ></v-select>
+
+      <div v-if="hsParameters">
+        <v-select
+          v-model="selectedHs"
+          :items="hsParameters"
+          label="Hs"
+        />
+      </div>
+
+      <div v-if="uParameters">
+        <v-select
+          v-model="selectedU"
+          :items="uParameters"
+          label="Umag"
+        />
+      </div>
+    </div>
+
+    <div v-if="exceedances">
+      <v-btn-toggle
+        v-model="selectedExceedance"
+        mandatory
       >
-        {{ exceedance }}
-      </v-btn>
-    </v-btn-toggle>
+        <v-btn
+          v-for="(exceedance, i) in exceedances"
+          :key="`${exceedance}-${i}`"
+          :value="exceedance"
+          @click="selectExceedance(exceedance)"
+        >
+          {{ exceedance }}
+        </v-btn>
+      </v-btn-toggle>
+    </div>
     <div
       style="
         display: flex;
@@ -58,6 +86,7 @@
 <script>
 import * as echarts from 'echarts'
 import VChart, { THEME_KEY } from 'vue-echarts'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -69,23 +98,18 @@ export default {
   data() {
     return {
       data: [],
+      selectedType: null,
+      selectedHs: null,
+      selectedU: null,
+      parameters: [],
+      definitions: {},
+      thresholdParameters: [],
+      selectedParam: null,
+      hsParameters: null,
+      uParameters: null,
       durations: [],
-      exceedances: [],
-      months: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-        'All-year'
-      ],
+      exceedances: null,
+      months: [],
       thresholds: {},
       selectedExceedance: null,
       selectedThresholds: {},
@@ -204,29 +228,28 @@ export default {
     this.fetchData()
   },
   methods: {
+    ...mapActions(['loadNonTimeGraphDataForLocation']),
     fetchData() {
-      fetch('/static/data/PersistencyHsU10.json').then((response) => {
-        if (response) {
-          response.json().then((json) => {
-            this.data = json
-
-            const durations = this.getUniquePropertyValues(json, 'duration')
-            this.durations = durations
-
-            const exceedances = this.getUniquePropertyValues(json, 'exceedance')
-            this.exceedances = exceedances
-            this.selectExceedance(exceedances[1])
-
-            const thresholds = this.getUniqueThresholdKeys(json)
-            this.thresholds = thresholds
-
-            Object.keys(thresholds).forEach((key) => {
-              thresholds[key]?.[1] &&
-                this.selectThreshold(key, thresholds[key][1])
-            })
-          })
-        }
+      fetch(`/static/data/PERS_bins.json`)
+        .then((response) => response.json())
+        .then((bins) => {
+          this.months = bins.period_bins
+          this.durations = bins.duration_bins
       })
+
+      fetch(`/static/data/PERS-parameters.json`)
+        .then((response) => response.json())
+        .then((parameters) => {
+          
+          this.parameters = parameters
+          this.thresholdParameters = parameters.map(item => item.label)
+        })
+
+      fetch(`/static/data/PERS-definition.json`)
+        .then((response) => response.json())
+        .then((definitions) => {
+          this.definitions = definitions
+        })
     },
     updateChart() {
       document.querySelectorAll('canvas, div').forEach((e) => {
@@ -272,6 +295,47 @@ export default {
         }
       })
     },
+    onTypeChange() {
+      this.data = []
+
+      this.$nextTick(() => {
+        this.updateChart()
+      })
+      
+      this.selectedHs = null
+      this.selectedU = null
+      this.exceedances = null
+      this.hsParameters = null
+      this.uParameters = null
+      this.selectedParameters = null
+
+      this.selectedParam = this.parameters.find(
+        param => param.parameter.label === this.selectedType
+      )
+
+      const sel = "PERS-" + this.selectedParam.parameter.value
+
+      const definition = this.definitions[sel]
+      
+      this.exceedances = definition.selection_box1.options
+
+      // Check if the selected parameter has 'Hs' or 'U'
+      if (definition) {
+        if (definition.Hs) {
+          this.hsParameters = definition.Hs.options
+        } else {
+          this.hsParameters = null
+        }
+        if (definition.U) {
+          this.uParameters = definition.U.options
+        } else {
+          this.uParameters = null
+        }
+      } else {
+        this.hsParameters = null
+        this.uParameters = null
+      }
+    },
     downloadAsCSV(keys, instanceKey, filename) {
       document.querySelectorAll('canvas, div').forEach((e) => {
         const instance = echarts.getInstanceByDom(e)
@@ -282,13 +346,11 @@ export default {
           const legend = option.legend[0].selected
 
           // Add header row to CSV
-          let csvContent = `data:text/csv;charset=utf-8,${keys.join(',')} \r\n`
+          let csvContent = `data:text/csvcharset=utf-8,${keys.join(',')} \r\n`
 
           // Retrieve visible data from the current state (respect dataZoom)
           const zoomStart = option.dataZoom?.[0]?.start / 100 || 0
           const zoomEnd = option.dataZoom?.[0]?.end / 100 || 1
-
-          console.log('option.series', option.series)
 
           option.series.forEach((serie) => {
             if (serie.data && legend[serie.name] !== false) {
@@ -338,7 +400,7 @@ export default {
     //       })
 
     //       // Add header row to CSV
-    //       let csvContent = `data:text/csv;charset=utf-8,${columnNames.join(',')} \r\n`
+    //       let csvContent = `data:text/csvcharset=utf-8,${columnNames.join(',')} \r\n`
 
     //       // Retrieve visible data from the current state (respect dataZoom)
     //       visibleSeriesIndices.forEach((seriesIndex) => {
@@ -384,30 +446,78 @@ export default {
     //     }
     //   })
     // },
-    getChartData(thresholds, exceedance) {
-      if (!exceedance || Object.values(thresholds).length < 2) return
+    createSlice(exceedance) {
+      if(this.selectedHs && this.selectedU)
+        return [0, this.hsParameters.indexOf(this.selectedHs), this.uParameters.indexOf(this.selectedU), this.exceedances.indexOf(exceedance)]
+      else if (this.selectedHs && !this.selectedU)
+        return [0, this.hsParameters.indexOf(this.selectedHs), this.exceedances.indexOf(exceedance)]
+      else if (!this.selectedHs && this.selectedU)
+        return [0, this.uParameters.indexOf(this.selectedU), this.exceedances.indexOf(exceedance)]
 
-      console.log('getChartData thresholds', thresholds)
-      console.log('getChartData exceedance', exceedance)
+    },
+    clearData() {
+      this.data = []
 
-      this.updateChart()
-      // this.loadGraphDataForLocation({
-      //   ...thresholds,
-      //   exceedance: exceedance
-      // }).then((pointData) => {
-      //   console.log('getChartData pointData', pointData)
-      //   const { data } = pointData
-      //   console.log('getChartData data', data)
-      //   // this.data = data[265].serie[0].data.map((value, index) => ({
-      //   //   'Date+Time': data[265].category[index],
-      //   //   value
-      //   // }))
-      //   // this.updateChart()
-      // })
+      this.$nextTick(() => {
+        this.updateChart()
+      })
+    },
+    getChartData(exceedance) {
+      if(this.hsParameters != null && this.selectedHs == null)
+      {
+        this.clearData()
+      } 
+      else if (this.uParameters != null && this.selectedU == null)
+      {
+        this.clearData()
+      } else {
+        this.loadNonTimeGraphDataForLocation({
+          parameter: "PERS-" + this.selectedParam.parameter.value,
+          slice: this.createSlice(exceedance),
+          graph: 'persistency_values'
+        }).then(pointData => {
+          const { data } = pointData
+
+          // Corresponding month names
+          const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+          // Function to convert Float64Array to object structure
+          const convertToObject = (dataArray, exceedance) => {
+            let dataObject = []
+
+            this.durations.forEach((duration, index) => {
+              let obj = {}              
+
+              months.forEach((month, indexMonth) => {
+                obj[month] = dataArray[index][indexMonth].toFixed(3)
+              })
+
+              obj["All-year"] = dataArray[index].reduce((sum, val) => sum + val, 0).toFixed(3)
+              obj["exceedance"] = exceedance
+              obj["duration"] = duration
+              obj["threshold"] = {}
+
+              dataObject.push(obj)
+
+            })
+
+            return dataObject
+          }
+
+          // Mapping original data to desired format
+          const transformedData = convertToObject(data.arrayData, exceedance)
+
+          this.data = transformedData
+
+          this.$nextTick(() => {
+            this.updateChart()
+          })
+        })
+      }
     },
     selectExceedance(value) {
       this.selectedExceedance = value
-      this.getChartData(this.selectedThresholds, value)
+      this.getChartData(value)
     },
     selectThreshold(key, value) {
       this.selectedThresholds[key] = value
@@ -441,6 +551,6 @@ export default {
 
 <style scoped>
 .weather-window-table {
-  background-color: transparent !important;
+  background-color: transparent !important
 }
 </style>
