@@ -160,33 +160,13 @@ export default {
         .then((response) => response.json())
         .then((parameters) => {
           this.parameters = parameters
-          console.log(this.parameters)
         })
-
-      // console.log(this.parameters)
 
       fetch(`/static/data/EXTR-definition.json`)
         .then((response) => response.json())
         .then((definitions) => {
           this.definitions = definitions
         })
-
-      // this.loadNonTimeGraphDataForLocation({
-      //   parameter: this.parameters[0],
-      //   graph: 'extreme_values'
-      // }).then((pointData) => {
-      //   console.log('getChartData pointData', pointData)
-      //   const { data } = pointData
-      //   console.log('getChartData data', data)
-      //   // this.data = data[265].serie[0].data.map((value, index) => ({
-      //   //   'Date+Time': data[265].category[index],
-      //   //   value
-      //   // }))
-             
-      //   this.$nextTick(() => {
-      //     this.updateChart()
-      //   })
-      // })
     },
     createSeriesData() {
       return [
@@ -298,12 +278,8 @@ export default {
         slice: [0, this.directions.indexOf(direction)],
         graph: 'extreme_values'
       }).then((pointData) => {
-        // console.log('getChartData pointData', pointData)
         const { data } = pointData
 
-
-
-        console.log('arraydata', data.arrayData)
         this.data = data.arrayData.map((arr, index) => ({
           returnPeriod: returnPeriods[index],
           bestEstimate: arr[0],
@@ -332,9 +308,6 @@ export default {
       const sel = "EXTR-" + this.selectedParameter.parameter.value
 
       this.directions = this.definitions[sel].selection_box.options
-
-      console.log(this.directions)
-      //this.getChartData(parameter)
     },
     selectDirection(direction){
       this.selectedDirection = direction

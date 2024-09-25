@@ -109,21 +109,7 @@ export default {
       uParameters: null,
       durations: [],
       exceedances: null,
-      months: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec',
-        'All-year'
-      ],
+      months: [],
       thresholds: {},
       selectedExceedance: null,
       selectedThresholds: {},
@@ -259,8 +245,6 @@ export default {
           this.thresholdParameters = parameters.map(item => item.label)
         })
 
-      // console.log(this.parameters)
-
       fetch(`/static/data/PERS-definition.json`)
         .then((response) => response.json())
         .then((definitions) => {
@@ -321,16 +305,15 @@ export default {
       this.selectedHs = null
       this.selectedU = null
       this.exceedances = null
-      
       this.hsParameters = null
       this.uParameters = null
+      this.selectedParameters = null
 
       this.selectedParam = this.parameters.find(
         param => param.parameter.label === this.selectedType
       )
 
       const sel = "PERS-" + this.selectedParam.parameter.value
-      // Find in definitions
 
       const definition = this.definitions[sel]
       
@@ -368,8 +351,6 @@ export default {
           // Retrieve visible data from the current state (respect dataZoom)
           const zoomStart = option.dataZoom?.[0]?.start / 100 || 0
           const zoomEnd = option.dataZoom?.[0]?.end / 100 || 1
-
-          console.log('option.series', option.series)
 
           option.series.forEach((serie) => {
             if (serie.data && legend[serie.name] !== false) {
@@ -474,25 +455,27 @@ export default {
         return [0, this.uParameters.indexOf(this.selectedU), this.exceedances.indexOf(exceedance)]
 
     },
+    clearData() {
+      this.data = []
+
+      this.$nextTick(() => {
+        this.updateChart()
+      })
+    },
     getChartData(exceedance) {
-      console.log("visualize for exceedence", exceedance)
-
-      if((this.hsParameters != null && this.selectedHs != null) && (this.uParameters != null && this.selectedU != null))
+      if(this.hsParameters != null && this.selectedHs == null)
       {
-        this.data = []
-
-        this.$nextTick(() => {
-          this.updateChart()
-        })
-      }
-      else
+        this.clearData()
+      } 
+      else if (this.uParameters != null && this.selectedU == null)
       {
+        this.clearData()
+      } else {
         this.loadNonTimeGraphDataForLocation({
           parameter: "PERS-" + this.selectedParam.parameter.value,
           slice: this.createSlice(exceedance),
           graph: 'persistency_values'
         }).then(pointData => {
-          console.log(pointData)
           const { data } = pointData
 
           // Corresponding month names
@@ -512,7 +495,7 @@ export default {
               obj["All-year"] = dataArray[index].reduce((sum, val) => sum + val, 0).toFixed(3)
               obj["exceedance"] = exceedance
               obj["duration"] = duration
-              obj["threshold"] = { "U10": "< 2.0 m/s" }
+              obj["threshold"] = {}
 
               dataObject.push(obj)
 
@@ -533,7 +516,6 @@ export default {
       }
     },
     selectExceedance(value) {
-      console.log(value)
       this.selectedExceedance = value
       this.getChartData(value)
     },
