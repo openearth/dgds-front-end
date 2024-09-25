@@ -1,0 +1,104 @@
+[
+    {
+        "parameter": {
+            "label": "Persistence significant wave height for total sea H_{s,tot} (m)",
+            "value": "H_s_tot"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Persistence hourly-averaged horizontal wind speed at 10 m height U_{10,mag,extreme} (m/s)",
+            "value": "U_10_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Persistence hourly-averaged horizontal wind speed at 100 m height U_{100,mag,extreme} (m/s)",
+            "value": "U_100_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Persistence hourly-averaged horizontal wind speed at 120 m height U_{120,mag,extreme} (m/s)",
+            "value": "U_120_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Persistence hourly-averaged horizontal wind speed at 160 m height U_{160,mag,extreme} (m/s)",
+            "value": "U_160_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Persistence hourly-averaged horizontal wind speed at 200 m height U_{200,mag,extreme} (m/s)",
+            "value": "U_200_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Persistence hourly-averaged horizontal wind speed at 250 m height U_{250,mag,extreme} (m/s)",
+            "value": "U_250_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Persistence hourly-averaged horizontal wind speed at 300 m height U_{300,mag,extreme} (m/s)",
+            "value": "U_300_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Persistence hourly-averaged horizontal wind speed at 60 m height U_{60,mag,extreme} (m/s)",
+            "value": "U_60_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 10 m height U_{10,mag,extreme} (m/s)",
+            "value": "H_s_tot-U_10_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 100 m height U_{100,mag,extreme} (m/s)",
+            "value": "H_s_tot-U_100_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 120 m height U_{120,mag,extreme} (m/s)",
+            "value": "H_s_tot-U_120_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 160 m height U_{160,mag,extreme} (m/s)",
+            "value": "H_s_tot-U_160_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 200 m height U_{200,mag,extreme} (m/s)",
+            "value": "H_s_tot-U_200_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 250 m height U_{250,mag,extreme} (m/s)",
+            "value": "H_s_tot-U_250_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 300 m height U_{300,mag,extreme} (m/s)",
+            "value": "H_s_tot-U_300_mag"
+        }
+    },
+    {
+        "parameter": {
+            "label": "Combined persistence significant wave height for total sea H_{s,tot} (m) and hourly-averaged horizontal wind speed at 300 m height U_{60,mag,extreme} (m/s)",
+            "value": "H_s_tot-U_60_mag"
+        }
+    }
+]

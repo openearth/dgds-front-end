@@ -3,8 +3,15 @@
     <v-select
       v-model="selectedParameter"
       :items="parameters"
+      item-text="parameter.label"
       label="Parameter"
       @change="selectParameter"
+    />
+    <v-select
+      v-model="selectedDirection"
+      :items="directions"
+      label="Direction"
+      @change="selectDirection"
     />
     <div style="width: 100%; height: 400px; margin: 8px 0px">
       <v-chart
@@ -34,7 +41,11 @@ export default {
     return {
       data: [],
       parameters: [],
+      definitions: [],
+      bins: [],
+      directions: null,
       selectedParameter: null,
+      selectedDirection: null,
       lineOption: {
         toolbox: {
           top: 0,
@@ -137,17 +148,45 @@ export default {
     this.fetchData()
   },
   methods: {
-    ...mapActions(['loadGraphDataForLocation']),
+    ...mapActions(['loadNonTimeGraphDataForLocation']),
     fetchData() {
-      const parameters = [
-        'Extreme mean wind speed U10 (m/s)',
-        'Extreme seastates SS (-)'
-      ]
-      this.parameters = parameters
-
-      this.$nextTick(() => {
-        this.selectParameter(parameters[0])
+      fetch(`/static/data/EXTR-bins.json`)
+        .then((response) => response.json())
+        .then((bins) => {
+          this.bins = bins
       })
+
+      fetch(`/static/data/EXTR-parameters.json`)
+        .then((response) => response.json())
+        .then((parameters) => {
+          this.parameters = parameters
+          console.log(this.parameters)
+        })
+
+      // console.log(this.parameters)
+
+      fetch(`/static/data/EXTR-definition.json`)
+        .then((response) => response.json())
+        .then((definitions) => {
+          this.definitions = definitions
+        })
+
+      // this.loadNonTimeGraphDataForLocation({
+      //   parameter: this.parameters[0],
+      //   graph: 'extreme_values'
+      // }).then((pointData) => {
+      //   console.log('getChartData pointData', pointData)
+      //   const { data } = pointData
+      //   console.log('getChartData data', data)
+      //   // this.data = data[265].serie[0].data.map((value, index) => ({
+      //   //   'Date+Time': data[265].category[index],
+      //   //   value
+      //   // }))
+             
+      //   this.$nextTick(() => {
+      //     this.updateChart()
+      //   })
+      // })
     },
     createSeriesData() {
       return [
@@ -192,13 +231,18 @@ export default {
         }
       ]
     },
+    formatText(dataArray) {
+      let text = '';
+
+      dataArray.forEach(item => {
+        text += `${item.returnPeriod} year: ${item.bestEstimate} (${item.lowerBound} - ${item.upperBound}) \n`;
+      })
+
+      return text;
+    },
     createGraphic() {
-      let text = '1 year: 22.3 (21.9 - 22.7) \n'
-      text += '10 year: 26.1 (24.8 - 27.4) \n'
-      text += '50 year: 28.8 (26.5 - 31.8) \n'
-      text += '100 year: 30.0 (27.1 - 34.1) \n'
-      text += '1.000 year:  33.9 (28.7 - 42.4) \n'
-      text += '10.000 year:  37.7 (29.9 - 52.7)'
+      // Get formatted text
+      const text = this.formatText(this.data);
 
       return [
         {
@@ -242,219 +286,59 @@ export default {
         }
       ]
     },
-    getChartData(parameter) {
-      this.data = [
-        {
-          returnPeriod: 0.3,
-          bestEstimate: 20.025,
-          lowerBound: 19.855,
-          upperBound: 20.225
-        },
-        {
-          returnPeriod: 0.5,
-          bestEstimate: 20.912,
-          lowerBound: 20.642,
-          upperBound: 21.19
-        },
-        {
-          returnPeriod: 1.1,
-          bestEstimate: 22.278,
-          lowerBound: 21.896,
-          upperBound: 22.673
-        },
-        {
-          returnPeriod: 2,
-          bestEstimate: 23.311,
-          lowerBound: 22.765,
-          upperBound: 23.824
-        },
-        {
-          returnPeriod: 3,
-          bestEstimate: 24.01,
-          lowerBound: 23.32,
-          upperBound: 24.662
-        },
-        {
-          returnPeriod: 4,
-          bestEstimate: 24.505,
-          lowerBound: 23.695,
-          upperBound: 25.286
-        },
-        {
-          returnPeriod: 5,
-          bestEstimate: 24.888,
-          lowerBound: 23.974,
-          upperBound: 25.769
-        },
-        {
-          returnPeriod: 6,
-          bestEstimate: 25.202,
-          lowerBound: 24.21,
-          upperBound: 26.199
-        },
-        {
-          returnPeriod: 7,
-          bestEstimate: 25.466,
-          lowerBound: 24.405,
-          upperBound: 26.565
-        },
-        {
-          returnPeriod: 8,
-          bestEstimate: 25.695,
-          lowerBound: 24.565,
-          upperBound: 26.884
-        },
-        {
-          returnPeriod: 9,
-          bestEstimate: 25.897,
-          lowerBound: 24.686,
-          upperBound: 27.157
-        },
-        {
-          returnPeriod: 10,
-          bestEstimate: 26.078,
-          lowerBound: 24.797,
-          upperBound: 27.408
-        },
-        {
-          returnPeriod: 20,
-          bestEstimate: 27.263,
-          lowerBound: 25.564,
-          upperBound: 29.227
-        },
-        {
-          returnPeriod: 30,
-          bestEstimate: 27.955,
-          lowerBound: 25.963,
-          upperBound: 30.335
-        },
-        {
-          returnPeriod: 40,
-          bestEstimate: 28.445,
-          lowerBound: 26.258,
-          upperBound: 31.182
-        },
-        {
-          returnPeriod: 50,
-          bestEstimate: 28.825,
-          lowerBound: 26.481,
-          upperBound: 31.845
-        },
-        {
-          returnPeriod: 60,
-          bestEstimate: 29.135,
-          lowerBound: 26.656,
-          upperBound: 32.382
-        },
-        {
-          returnPeriod: 70,
-          bestEstimate: 29.397,
-          lowerBound: 26.795,
-          upperBound: 32.859
-        },
-        {
-          returnPeriod: 80,
-          bestEstimate: 29.623,
-          lowerBound: 26.913,
-          upperBound: 33.305
-        },
-        {
-          returnPeriod: 90,
-          bestEstimate: 29.823,
-          lowerBound: 27.009,
-          upperBound: 33.706
-        },
-        {
-          returnPeriod: 100,
-          bestEstimate: 30.002,
-          lowerBound: 27.093,
-          upperBound: 34.056
-        },
-        {
-          returnPeriod: 200,
-          bestEstimate: 31.176,
-          lowerBound: 27.617,
-          upperBound: 36.37
-        },
-        {
-          returnPeriod: 300,
-          bestEstimate: 31.861,
-          lowerBound: 27.898,
-          upperBound: 37.721
-        },
-        {
-          returnPeriod: 400,
-          bestEstimate: 32.346,
-          lowerBound: 28.112,
-          upperBound: 38.778
-        },
-        {
-          returnPeriod: 500,
-          bestEstimate: 32.722,
-          lowerBound: 28.264,
-          upperBound: 39.647
-        },
-        {
-          returnPeriod: 600,
-          bestEstimate: 33.029,
-          lowerBound: 28.378,
-          upperBound: 40.375
-        },
-        {
-          returnPeriod: 700,
-          bestEstimate: 33.288,
-          lowerBound: 28.466,
-          upperBound: 41.002
-        },
-        {
-          returnPeriod: 800,
-          bestEstimate: 33.513,
-          lowerBound: 28.54,
-          upperBound: 41.538
-        },
-        {
-          returnPeriod: 900,
-          bestEstimate: 33.71,
-          lowerBound: 28.604,
-          upperBound: 42.003
-        },
-        {
-          returnPeriod: 1000,
-          bestEstimate: 33.887,
-          lowerBound: 28.667,
-          upperBound: 42.423
-        },
-        {
-          returnPeriod: 4000,
-          bestEstimate: 36.208,
-          lowerBound: 29.482,
-          upperBound: 48.403
-        },
-        {
-          returnPeriod: 10000,
-          bestEstimate: 37.734,
-          lowerBound: 29.915,
-          upperBound: 52.693
-        }
-      ]
-      this.updateChart()
+    getChartData(direction) {
+      // this.updateChart()
+      const sel = "EXTR-" + this.selectedParameter.parameter.value
+      const bin = this.definitions[sel].parameter.bin
 
-      // this.loadGraphDataForLocation({
-      //   parameter: parameter,
-      // }).then((pointData) => {
-      //   console.log('getChartData pointData', pointData)
-      //   const { data } = pointData
-      //   console.log('getChartData data', data)
-      //   // this.data = data[265].serie[0].data.map((value, index) => ({
-      //   //   'Date+Time': data[265].category[index],
-      //   //   value
-      //   // }))
-      //   // this.updateChart()
-      // })
+      const returnPeriods = this.bins[bin]
+
+      this.loadNonTimeGraphDataForLocation({
+        parameter: sel,
+        slice: [0, this.directions.indexOf(direction)],
+        graph: 'extreme_values'
+      }).then((pointData) => {
+        // console.log('getChartData pointData', pointData)
+        const { data } = pointData
+
+
+
+        console.log('arraydata', data.arrayData)
+        this.data = data.arrayData.map((arr, index) => ({
+          returnPeriod: returnPeriods[index],
+          bestEstimate: arr[0],
+          lowerBound: arr[1],
+          upperBound: arr[2]
+        }))
+
+        this.$nextTick(() => {
+          this.updateChart()
+        })
+      })
     },
     selectParameter(parameter) {
-      this.selectedParameter = parameter
-      this.getChartData(parameter)
+      this.selectedDirection = null
+      this.data = []
+
+      this.$nextTick(() => {
+        this.updateChart()
+      })
+
+      this.directions = null
+      this.selectedParameter = this.parameters.find(
+        param => param.parameter.label === parameter
+      )
+
+      const sel = "EXTR-" + this.selectedParameter.parameter.value
+
+      this.directions = this.definitions[sel].selection_box.options
+
+      console.log(this.directions)
+      //this.getChartData(parameter)
+    },
+    selectDirection(direction){
+      this.selectedDirection = direction
+      this.getChartData(direction)
     },
     updateChart() {
       document.querySelectorAll('canvas, div').forEach((e) => {

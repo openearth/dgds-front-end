@@ -1,0 +1,27 @@
+{
+    "period_bins": [
+        "All-year",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+    ],
+    "duration_bins": [
+        "t >= 1h",
+        "t >= 2h",
+        "t >= 4h",
+        "t >= 6h",
+        "t >= 12h",
+        "t >= 24h",
+        "t >= 48h",
+        "t >= 72h"
+    ]
+}

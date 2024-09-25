@@ -269,19 +269,19 @@ export const actions = {
     })
   },
 
-  loadNonTimeGraphDataForLocation({ commit, state }, { parameter, month, graph }) {
+  loadNonTimeGraphDataForLocation({ commit, state }, { parameter, slice, graph }) {
     const datasetId = state.activeVectorDataIds
     // const paddedLocationId = state.activeLocationIndex.padStart(5, '0')
     const paddedLocationId = '06435'
     const url = `https://storage.googleapis.com/dgds-data-public/metocean/${graph}/point_${paddedLocationId}.zarr`
-    const path = 'JOT-Hs-Tz'
-    console.log(parameter)
+    const path = parameter
+    // console.log(parameter)
     return openArray({
       store: url,
       path: path,
       mode: 'r'
     }).then(res => {
-      return res.get().then(data => {
+      return res.get(slice).then(data => {
 
         var arrayData = Array.from(data.data);
         
@@ -294,8 +294,6 @@ export const actions = {
               timeFormat: "{yyyy}"
           }
         }
-        
-        // commit('addDatasetPointData', pointData)
 
         return pointData
       })
@@ -349,7 +347,7 @@ export const actions = {
             // console.log(dates);
             // let dates = [1979, 2023]
             const category = []
-            const dateFormat = 'YYYY'
+            const dateFormat = 'YYYY-MM-DDTHH:mm'
             for (const date of dates) {
               if (category.length < filteredData.length)
               {
