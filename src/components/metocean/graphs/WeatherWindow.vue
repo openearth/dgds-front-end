@@ -172,7 +172,7 @@ export default {
 
             tooltip += '<table>'
             e.forEach((serie) => {
-              tooltip += `<tr><td>${serie.marker}</td><td>${serie.data.duration}<td><td><b>${serie.data.value}</b></td></tr>`
+              tooltip += `<tr><td>${serie.marker}</td><td style="padding-right:8px;">${serie.data.duration}<td><td><b>${serie.data.value}</b></td></tr>`
             })
             tooltip += '</table>'
 
@@ -473,8 +473,8 @@ export default {
       } else if (this.uParameters != null && this.selectedU == null) {
         this.clearData()
       } else if (
-        this.exceedances !== null &&
-        this.selectedExceedance === null
+        this.exceedances != null &&
+        this.selectedExceedance == null
       ) {
         this.clearData()
       } else {
@@ -537,13 +537,15 @@ export default {
       }
     },
     selectExceedance(value) {
-      this.selectedExceedance = value
+      this.selectedExceedance = this.selectedExceedance === value ? null : value
+      
       this.$nextTick(() => {
         this.getChartData()
       })
     },
     selectThreshold(key, value) {
       this.selectedThresholds[key] = value
+
       this.$nextTick(() => {
         this.getChartData()
       })
