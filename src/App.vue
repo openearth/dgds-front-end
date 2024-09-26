@@ -25,6 +25,7 @@
             edit-icon="mdi-account-details"
             step="1"
             class="stepper-icon py-0"
+            data-v-step="7"
             @click="goToStories"
           >
             Stories

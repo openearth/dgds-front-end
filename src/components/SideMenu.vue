@@ -36,7 +36,6 @@
             v-for="item in getThemes"
             :key="item"
             :active="isActive(item)"
-            :data-v-step="item === 'Flooding' ? '2' : false"
             @click="toggleTheme(item)"
           >
             <v-list-item-icon class="mr-6">
@@ -79,7 +78,7 @@
                   <custom-icon name="account" />
                 </v-list-item-icon>
                 <v-list-item-content>
-                  <v-list-item-title data-v-step="6">
+                  <v-list-item-title>
                     Account
                   </v-list-item-title>
                 </v-list-item-content>

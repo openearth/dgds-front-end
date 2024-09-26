@@ -1,14 +1,29 @@
 <template>
   <div>
     <div>
-      <v-select
-          v-model="selectedType"
-          :items="parameters"
-          item-text="parameter.label"
-          label="Select Type"
-          @change="onTypeChange"
-          outlined
-      ></v-select>
+      <v-autocomplete
+        v-model="selectedParameter"
+        :items="parameters"
+        item-value="value"
+        item-text="label"
+        label="Parameter"
+        clearable
+        return-object
+        persistent-counter
+        :disabled="isLoading"
+        @change="selectParameter"
+      >
+        <template #item="data">
+          <v-list-item-content>
+            <v-list-item-title>
+              <span v-html="data.item.label" />
+            </v-list-item-title>
+          </v-list-item-content>
+        </template>
+        <template #selection="data">
+          <span v-html="data.item.label" />
+        </template>
+      </v-autocomplete>
 
       <div v-if="hsParameters">
         <v-select
@@ -28,10 +43,7 @@
     </div>
 
     <div v-if="exceedances">
-      <v-btn-toggle
-        v-model="selectedExceedance"
-        mandatory
-      >
+      <v-btn-toggle v-model="selectedExceedance">
         <v-btn
           v-for="(exceedance, i) in exceedances"
           :key="`${exceedance}-${i}`"
@@ -66,6 +78,7 @@
     </div>
     <div style="width: 100%; height: 300px; margin: 8px 0px">
       <v-chart
+        ref="weatherWindow"
         :option="weatherWindowOption"
         autoresize
         group="weatherWindow"
@@ -98,13 +111,12 @@ export default {
   data() {
     return {
       data: [],
-      selectedType: null,
+      selectedParameter: null,
       selectedHs: null,
       selectedU: null,
       parameters: [],
       definitions: {},
       thresholdParameters: [],
-      selectedParam: null,
       hsParameters: null,
       uParameters: null,
       durations: [],
@@ -137,7 +149,6 @@ export default {
               onclick: () => {
                 this.downloadAsCSV(
                   ['duration', 'month', 'value'],
-                  'weatherWindow',
                   'weather_window'
                 )
               },
@@ -151,14 +162,19 @@ export default {
         },
         tooltip: {
           trigger: 'axis',
+          confine: true,
+          padding: 6,
+          textStyle: {
+            fontSize: 14
+          },
           formatter: function (e) {
             let tooltip = `Month: <b>${e[0].data.month}</b><br/>`
 
-            tooltip += "<table>"
+            tooltip += '<table>'
             e.forEach((serie) => {
               tooltip += `<tr><td>${serie.marker}</td><td>${serie.data.duration}<td><td><b>${serie.data.value}</b></td></tr>`
             })
-            tooltip += "</table>"
+            tooltip += '</table>'
 
             return tooltip
           }
@@ -204,7 +220,8 @@ export default {
           '#140B35'
         ],
         backgroundColor: 'transparent'
-      }
+      },
+      isLoading: false
     }
   },
   computed: {
@@ -225,24 +242,37 @@ export default {
     }
   },
   mounted() {
-    this.fetchData()
+    this.fetchParameters()
   },
   methods: {
     ...mapActions(['loadNonTimeGraphDataForLocation']),
-    fetchData() {
+    transformLabel(label) {
+      label = label.replace(/_\{([^}]+)\}/g, '<sub>$1</sub>')
+      label = label.replace(/\^\{([^}]+)\}/g, '<sup>$1</sup>')
+      label = label.replace(/\{circ\}/g, '°')
+
+      return label
+    },
+    fetchParameters() {
       fetch(`/static/data/PERS_bins.json`)
         .then((response) => response.json())
         .then((bins) => {
           this.months = bins.period_bins
           this.durations = bins.duration_bins
-      })
+        })
 
       fetch(`/static/data/PERS-parameters.json`)
         .then((response) => response.json())
-        .then((parameters) => {
-          
-          this.parameters = parameters
-          this.thresholdParameters = parameters.map(item => item.label)
+        .then((json) => {
+          this.parameters = json.map((j) => {
+            return {
+              ...j,
+              label: this.transformLabel(j.label)
+            }
+          })
+          this.thresholdParameters = json.map((j) =>
+            this.transformLabel(j.label)
+          )
         })
 
       fetch(`/static/data/PERS-definition.json`)
@@ -252,14 +282,51 @@ export default {
         })
     },
     updateChart() {
-      document.querySelectorAll('canvas, div').forEach((e) => {
-        const instance = echarts.getInstanceByDom(e)
-        if (instance && instance.group === 'weatherWindow') {
-          instance.setOption({
-            series: this.createSeriesData()
-          })
+      const instance = this.$refs.weatherWindow?.chart
+
+      if (instance) {
+        if (!this.data || this.data?.length === 0) {
+          instance.setOption(
+            {
+              series: []
+            },
+            {
+              replaceMerge: ['series']
+            }
+          )
+
+          return
         }
-      })
+
+        this.isLoading = true
+        instance.setOption({ series: [] }, { replaceMerge: ['series'] })
+
+        instance.showLoading({
+          text: 'Loading data...',
+          color: '#409EFF',
+          textColor: 'rgba(0,0,0,1)',
+          maskColor: 'rgba(220, 220, 220, 0.8)',
+          zlevel: 0
+        })
+
+        instance.on('rendered', () => {
+          if (instance.getOption().series?.length > 0) {
+            this.isLoading = false
+            instance.hideLoading()
+
+            instance.off('rendered')
+          }
+        })
+
+        instance.setOption(
+          {
+            series: this.createSeriesData()
+          },
+          {
+            replaceMerge: ['series']
+          }
+        )
+      }
     },
     findSeriesData(duration) {
       const filteredData = this.data.find(
@@ -295,13 +362,13 @@ export default {
         }
       })
     },
-    onTypeChange() {
+    selectParameter() {
       this.data = []
 
       this.$nextTick(() => {
         this.updateChart()
       })
-      
+
       this.selectedHs = null
       this.selectedU = null
       this.exceedances = null
@@ -309,14 +376,10 @@ export default {
       this.uParameters = null
       this.selectedParameters = null
 
-      this.selectedParam = this.parameters.find(
-        param => param.parameter.label === this.selectedType
-      )
-
-      const sel = "PERS-" + this.selectedParam.parameter.value
+      const sel = 'PERS-' + this.selectedParameter.value
 
       const definition = this.definitions[sel]
-      
+
       this.exceedances = definition.selection_box1.options
 
       // Check if the selected parameter has 'Hs' or 'U'
@@ -336,124 +399,66 @@ export default {
         this.uParameters = null
       }
     },
-    downloadAsCSV(keys, instanceKey, filename) {
-      document.querySelectorAll('canvas, div').forEach((e) => {
-        const instance = echarts.getInstanceByDom(e)
-        if (instance?.group === instanceKey) {
-          const option = instance.getOption()
+    downloadAsCSV(keys, filename) {
+      const instance = this.$refs.weatherWindow?.chart
 
-          // Get the current state of the legend (which series are selected/visible)
-          const legend = option.legend[0].selected
+      if (instance) {
+        const option = instance.getOption()
 
-          // Add header row to CSV
-          let csvContent = `data:text/csvcharset=utf-8,${keys.join(',')} \r\n`
+        // Get the current state of the legend (which series are selected/visible)
+        const legend = option.legend[0].selected
 
-          // Retrieve visible data from the current state (respect dataZoom)
-          const zoomStart = option.dataZoom?.[0]?.start / 100 || 0
-          const zoomEnd = option.dataZoom?.[0]?.end / 100 || 1
+        // Add header row to CSV
+        let csvContent = `data:text/csvcharset=utf-8,${keys.join(',')} \r\n`
 
-          option.series.forEach((serie) => {
-            if (serie.data && legend[serie.name] !== false) {
-              const startIndex = Math.floor(zoomStart * serie.data.length)
-              const endIndex = Math.ceil(zoomEnd * serie.data.length)
+        // Retrieve visible data from the current state (respect dataZoom)
+        const zoomStart = option.dataZoom?.[0]?.start / 100 || 0
+        const zoomEnd = option.dataZoom?.[0]?.end / 100 || 1
 
-              // Process the visible data range for this series
-              serie.data.slice(startIndex, endIndex).forEach((point) => {
-                keys.forEach((key, keyIndex) => {
-                  csvContent += keyIndex === 0 ? point[key] : `, ${point[key]}`
-                })
-                csvContent += '\r\n'
+        option.series.forEach((serie) => {
+          if (serie.data && legend[serie.name] !== false) {
+            const startIndex = Math.floor(zoomStart * serie.data.length)
+            const endIndex = Math.ceil(zoomEnd * serie.data.length)
+
+            // Process the visible data range for this series
+            serie.data.slice(startIndex, endIndex).forEach((point) => {
+              keys.forEach((key, keyIndex) => {
+                csvContent += keyIndex === 0 ? point[key] : `, ${point[key]}`
               })
-            }
-          })
+              csvContent += '\r\n'
+            })
+          }
+        })
 
-          const encodedUri = encodeURI(csvContent)
-          const link = document.createElement('a')
-          link.setAttribute('href', encodedUri)
-          link.setAttribute('download', `${filename}.csv`)
-          document.body.appendChild(link)
-          link.click()
-          document.body.removeChild(link)
-        }
-      })
+        const encodedUri = encodeURI(csvContent)
+        const link = document.createElement('a')
+        link.setAttribute('href', encodedUri)
+        link.setAttribute('download', `${filename}.csv`)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
     },
-    // downloadAsCSV() {
-    //   document.querySelectorAll('canvas, div').forEach((e) => {
-    //     const instance = echarts.getInstanceByDom(e)
-    //     if (instance && instance.group === 'weatherWindow') {
-    //       const data = []
-    //       const columnNames = []
-    //       const option = instance.getOption()
-
-    //       // Get the current state of the legend (which series are selected/visible)
-    //       const legend = option.legend[0].selected
-
-    //       // Track the visible series indices
-    //       const visibleSeriesIndices = []
-
-    //       // Add column names based on visible series names
-    //       option.series.forEach((series, seriesIndex) => {
-    //         if (legend[series.name] !== false) {
-    //           columnNames.push(series.name) // Only include visible series
-    //           visibleSeriesIndices.push(seriesIndex) // Track its index
-    //         }
-    //       })
-
-    //       // Add header row to CSV
-    //       let csvContent = `data:text/csvcharset=utf-8,${columnNames.join(',')} \r\n`
-
-    //       // Retrieve visible data from the current state (respect dataZoom)
-    //       visibleSeriesIndices.forEach((seriesIndex) => {
-    //         const series = option.series[seriesIndex]
-    //         if (series.data) {
-    //           const zoomStart = option.dataZoom?.[0]?.start / 100 || 0
-    //           const zoomEnd = option.dataZoom?.[0]?.end / 100 || 1
-
-    //           const startIndex = Math.floor(zoomStart * series.data.length)
-    //           const endIndex = Math.ceil(zoomEnd * series.data.length)
-
-    //           // Ensure the data array is properly constructed for the visible data
-    //           series.data
-    //             .slice(startIndex, endIndex)
-    //             .forEach((point, dataIndex) => {
-    //               if (!data[dataIndex]) {
-    //                 data[dataIndex] = []
-    //               }
-    //               // Handle [x, y] or y format, append only visible series data
-    //               if (Array.isArray(point)) {
-    //                 data[dataIndex].push(point[1]) // Take y value
-    //               } else {
-    //                 data[dataIndex].push(point) // Take single value
-    //               }
-    //             })
-    //         }
-    //       })
-
-    //       // Convert array to CSV string
-    //       data.forEach((rowArray) => {
-    //         const row = rowArray.join(',')
-    //         csvContent += row + '\r\n'
-    //       })
-
-    //       // Create a download link and trigger download
-    //       const encodedUri = encodeURI(csvContent)
-    //       const link = document.createElement('a')
-    //       link.setAttribute('href', encodedUri)
-    //       link.setAttribute('download', 'Weather_window.csv')
-    //       document.body.appendChild(link)
-    //       link.click()
-    //       document.body.removeChild(link)
-    //     }
-    //   })
-    // },
-    createSlice(exceedance) {
-      if(this.selectedHs && this.selectedU)
-        return [0, this.hsParameters.indexOf(this.selectedHs), this.uParameters.indexOf(this.selectedU), this.exceedances.indexOf(exceedance)]
+    createSlice() {
+      if (this.selectedHs && this.selectedU)
+        return [
+          0,
+          this.hsParameters.indexOf(this.selectedHs),
+          this.uParameters.indexOf(this.selectedU),
+          this.exceedances.indexOf(this.selectedExceedance)
+        ]
       else if (this.selectedHs && !this.selectedU)
-        return [0, this.hsParameters.indexOf(this.selectedHs), this.exceedances.indexOf(exceedance)]
+        return [
+          0,
+          this.hsParameters.indexOf(this.selectedHs),
+          this.exceedances.indexOf(this.selectedExceedance)
+        ]
       else if (!this.selectedHs && this.selectedU)
-        return [0, this.uParameters.indexOf(this.selectedU), this.exceedances.indexOf(exceedance)]
-
+        return [
+          0,
+          this.uParameters.indexOf(this.selectedU),
+          this.exceedances.indexOf(this.selectedExceedance)
+        ]
     },
     clearData() {
       this.data = []
@@ -462,50 +467,66 @@ export default {
         this.updateChart()
       })
     },
-    getChartData(exceedance) {
-      if(this.hsParameters != null && this.selectedHs == null)
-      {
+    getChartData() {
+      if (this.hsParameters != null && this.selectedHs == null) {
         this.clearData()
-      } 
-      else if (this.uParameters != null && this.selectedU == null)
-      {
+      } else if (this.uParameters != null && this.selectedU == null) {
+        this.clearData()
+      } else if (
+        this.exceedances !== null &&
+        this.selectedExceedance === null
+      ) {
         this.clearData()
       } else {
         this.loadNonTimeGraphDataForLocation({
-          parameter: "PERS-" + this.selectedParam.parameter.value,
-          slice: this.createSlice(exceedance),
+          parameter: 'PERS-' + this.selectedParameter.value,
+          slice: this.createSlice(this.selectedExceedance),
           graph: 'persistency_values'
-        }).then(pointData => {
+        }).then((pointData) => {
           const { data } = pointData
 
           // Corresponding month names
-          const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+          const months = [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec'
+          ]
 
           // Function to convert Float64Array to object structure
-          const convertToObject = (dataArray, exceedance) => {
+          const convertToObject = (dataArray) => {
             let dataObject = []
 
             this.durations.forEach((duration, index) => {
-              let obj = {}              
+              let obj = {}
 
               months.forEach((month, indexMonth) => {
                 obj[month] = dataArray[index][indexMonth].toFixed(3)
               })
 
-              obj["All-year"] = dataArray[index].reduce((sum, val) => sum + val, 0).toFixed(3)
-              obj["exceedance"] = exceedance
-              obj["duration"] = duration
-              obj["threshold"] = {}
+              obj['All-year'] = dataArray[index]
+                .reduce((sum, val) => sum + val, 0)
+                .toFixed(3)
+              obj['exceedance'] = this.selectedExceedance
+              obj['duration'] = duration
+              obj['threshold'] = {}
 
               dataObject.push(obj)
-
             })
 
             return dataObject
           }
 
           // Mapping original data to desired format
-          const transformedData = convertToObject(data.arrayData, exceedance)
+          const transformedData = convertToObject(data.arrayData)
 
           this.data = transformedData
 
@@ -517,40 +538,37 @@ export default {
     },
     selectExceedance(value) {
       this.selectedExceedance = value
-      this.getChartData(value)
+      this.$nextTick(() => {
+        this.getChartData()
+      })
     },
     selectThreshold(key, value) {
       this.selectedThresholds[key] = value
-      this.getChartData(this.selectedThresholds, this.selectedExceedance)
+      this.$nextTick(() => {
+        this.getChartData()
+      })
     },
     getCellData(duration, key) {
       const filteredData = this.findSeriesData(duration)
       return filteredData[key]
-    },
-    getUniquePropertyValues(arr, property) {
-      return [...new Set(arr.map((obj) => obj[property]))]
-    },
-    getUniqueThresholdKeys(arr) {
-      const thresholdKeys = {}
-      arr.forEach((obj) => {
-        const threshold = obj.threshold || {}
-        Object.keys(threshold).forEach((key) => {
-          if (!thresholdKeys[key]) {
-            thresholdKeys[key] = [threshold[key]]
-          } else if (!thresholdKeys[key].includes(threshold[key])) {
-            thresholdKeys[key].push(threshold[key])
-          }
-        })
-      })
-
-      return thresholdKeys
     }
   }
 }
 </script>
 
 <style scoped>
+::v-deep .v-select__selections {
+  white-space: nowrap;
+}
+.v-select__selections span {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 99%;
+}
+::v-deep .v-autocomplete.v-select.v-input--is-focused input {
+  min-width: 0;
+}
 .weather-window-table {
-  background-color: transparent !important
+  background-color: transparent !important;
 }
 </style>

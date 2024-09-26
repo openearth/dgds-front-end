@@ -17,57 +17,28 @@
       >
         <v-icon>mdi-close</v-icon>
       </v-btn>
-      <div 
+      <div
         class="flex-grow-1 py-3 scrollbar"
         align-space-between
       >
         <v-expansion-panels
+          v-model="expandedPanels"
           flat
           accordion
           multiple
           color="background"
         >
-          <v-expansion-panel
-            v-for="data in datasets"
-            :key="`${locations}-${data.id}-${activeSummaryId}`"
-          >
-            <v-expansion-panel-header
-              class="h4"
-              color="background"
-              dark
-            >
-              {{ data.datasetName }}
-            </v-expansion-panel-header>
-            <v-expansion-panel-content color="background">
-              <graph-line
-                :image-url="data.imageUrl"
-                :category="data.category"
-                :series="[data.serie]"
-                theme="dark"
-                :collapsible="true"
-                :units="data.units"
-                :type="data.type"
-                :time-format-type="data.timeFormat"
-                :time-span-type="data.timeSpan"
-                :parameter-id="data.id"
-                :title="data.datasetName"
-                :set-mark-point="data.id === getActiveRasterLayer"
-                :time-step="getTimeStep"
-              />
-            </v-expansion-panel-content>
-          </v-expansion-panel>
           <v-expansion-panel>
             <v-expansion-panel-header
               class="h4"
               color="background"
               dark
+              data-v-step="5"
             >
               Time series
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
-              <time-series
-                :location-id="$route.params.locationId"
-              />
+              <time-series :location-id="$route.params.locationId" />
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -79,9 +50,7 @@
               Rose plot
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
-              <rose-plot
-                :location-id="$route.params.locationId"
-              />
+              <rose-plot :location-id="$route.params.locationId" />
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -105,9 +74,7 @@
               Weather window
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
-              <weather-window
-                :location-id="$route.params.locationId"
-              />
+              <weather-window :location-id="$route.params.locationId" />
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel>
@@ -119,9 +86,7 @@
               Extreme values
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
-              <extreme-values
-                :location-id="$route.params.locationId"
-              />
+              <extreme-values :location-id="$route.params.locationId" />
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -135,18 +100,9 @@
 </template>
 
 <script>
-import {
-  ref,
-  onMounted,
-  onUnmounted,
-  computed,
-  watch,
-  getCurrentInstance
-} from 'vue'
 import _ from 'lodash'
 import flatten from 'lodash/flatten'
-import { mapMutations, mapGetters, mapActions, useStore } from 'vuex'
-import GraphLine from '@/components/GraphLine'
+import { mapMutations, mapGetters, mapActions } from 'vuex'
 
 import {
   TimeSeries,
@@ -157,48 +113,85 @@ import {
 } from '@/components/metocean'
 
 export default {
-  components: { GraphLine, TimeSeries, RosePlot, ExtremeValues, WeatherWindow, JointOccurence },
-  
+  components: {
+    TimeSeries,
+    RosePlot,
+    ExtremeValues,
+    WeatherWindow,
+    JointOccurence
+  },
+  data() {
+    return {
+      expandedPanels: []
+    }
+  },
   computed: {
-    ...mapGetters(['colors', 'user', 'activePointDataPerDataset', 'getActiveRasterLayer', 'activeRasterData', 'activeSummary']),
+    ...mapGetters([
+      'colors',
+      'user',
+      'activePointDataPerDataset',
+      'getActiveRasterLayer',
+      'activeRasterData',
+      'activeSummary',
+      'getExpandedPanels'
+    ]),
     datasets() {
-      const activePointData = this.activePointDataPerDataset;
+      const activePointData = this.activePointDataPerDataset
       const result = Object.keys(activePointData).map((pointId) =>
         _.get(activePointData, [pointId][0])
-      );
-      return flatten(result);
+      )
+      return flatten(result)
     },
     hasSerieData() {
       if (_.get(this.datasets, '[0].type') === 'images') {
-        return _.get(this.datasets, '[0].imageUrl');
+        return _.get(this.datasets, '[0].imageUrl')
       } else {
-        return _.get(this.datasets, '[0].serie') && _.get(this.datasets, '[0].serie').length > 0;
+        return (
+          _.get(this.datasets, '[0].serie') &&
+          _.get(this.datasets, '[0].serie').length > 0
+        )
       }
     }
   },
-  
+  watch: {
+    getExpandedPanels: {
+      immediate: true,
+      handler(newVal) {
+        this.expandedPanels = newVal
+      }
+    },
+    expandedPanels(newVal) {
+      this.$store.commit('setExpandedPanels', newVal)
+    }
+  },
+
   mounted() {
-    setTimeout(this.updateLocationPanel, 3000);
-    this.expandedDatasets = [...Array(this.datasets.length).keys()];
+    setTimeout(this.updateLocationPanel, 3000)
+    this.expandedDatasets = [...Array(this.datasets.length).keys()]
   },
 
   methods: {
-    ...mapMutations(['clearActiveLocationIds', 'setActiveLocationIds']),
+    ...mapMutations([
+      'clearActiveLocationIds',
+      'setActiveLocationIds',
+      'setExpandedPanels'
+    ]),
     ...mapActions(['loadPointDataForLocation']),
     updateLocationPanel() {
-      const { datasetIds, locationId } = this.$route.params;
-      console.log('Inside updateLocationPanel:', { datasetIds, locationId });
-      this.setActiveLocationIds([locationId]);
+      const { datasetIds, locationId } = this.$route.params
+      console.log('Inside updateLocationPanel:', { datasetIds, locationId })
+      this.setActiveLocationIds([locationId])
       // this.loadPointDataForLocation({ datasetIds, locationId });
     },
     close() {
+      this.$store.commit('setExpandedPanels', [])
       this.$router.push({
         path: `/data/${this.$route.params.datasetIds}`,
         params: { datasetIds: this.$route.params.datasetIds }
-      });
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

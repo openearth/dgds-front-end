@@ -15,38 +15,20 @@
           id="user-agreements"
           class="markdown"
           :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
-          v-html="UserAgreements1"
+          v-html="UserAgreementsMetocean"
         />
         <div
-          v-for="(dataset, index, count) in getDatasets"
-          :key="`license_use-${dataset.id}`"
-        >
-          <span
-            id="user-agreements"
-            class="markdown"
-            :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
-            v-html="markedText(`- 2.${count + 2}.  ${dataset['license_use']}`)"
-          />
-        </div>
+          id="user-agreements"
+          class="markdown"
+          :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
+          v-html="UserAgreements1"
+        />
         <div
           id="user-agreements"
           class="markdown"
           :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
           v-html="UserAgreements2"
         />
-        <div
-          v-for="(dataset, index, count) in getDatasets"
-          :key="`license_warranty-${dataset.id}`"
-        >
-          <span
-            id="user-agreements"
-            class="markdown"
-            :anchor-attributes="{ target: '_blank', rel: 'noopener' }"
-            v-html="
-              markedText(`- 6.${count + 2}.  ${dataset['license_warranty']}`)
-            "
-          />
-        </div>
         <div
           id="user-agreements"
           class="markdown"
@@ -100,6 +82,7 @@
 </template>
 
 <script>
+import UserAgreementsMetocean from '@/assets/docs/user-agreements - metocean.md'
 import UserAgreements1 from '@/assets/docs/user-agreements - part 1.md'
 import UserAgreements2 from '@/assets/docs/user-agreements - part 2.md'
 import UserAgreements3 from '@/assets/docs/user-agreements - part 3.md'
@@ -115,6 +98,7 @@ export default {
   data() {
     return {
       open: true,
+      UserAgreementsMetocean,
       UserAgreements1,
       UserAgreements2,
       UserAgreements3,

@@ -28,7 +28,11 @@
     <div v-else>
       Loading parameters...
     </div>
-    <div style="width: 100%; height: 400px; margin: 8px 0px">
+    <div style="width: 100%; height: 400px; margin: 8px 0px; position: relative;">
+      <div
+        data-v-step="6"
+        style="position: absolute; top: 12px; width: 48px; left: 16px;"
+      />
       <v-chart
         ref="timeseries"
         :option="timeseriesOption"

@@ -12,7 +12,6 @@
     <v-mapbox-navigation-control
       :options="{ visualizePitch: true }"
       position="bottom-right"
-      data-v-step="5"
     />
     <v-mapbox-selected-point-layer
       v-if="mapLoaded"
@@ -330,6 +329,16 @@ export default {
         })
     },
     selectLocations(detail) {
+      const params = this.$route.params
+
+      if (!detail) {
+        this.$router.push({
+          path: `/data/${params.datasetIds}`,
+          params
+        })
+        return
+      }
+
       // On the selection (by mouse event on map) of a location update the
       // route accordingly
       this.geometry = detail.geometry
@@ -354,7 +363,6 @@ export default {
         }
       })
 
-      const params = this.$route.params
       params.locationId = _.head(locationIds)
 
       // Check if route is different, and only change if this is the case (to avoid route errors with SLR data)

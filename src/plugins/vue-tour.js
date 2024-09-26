@@ -8,54 +8,53 @@ export const tourConfig = {
 export const tourSteps = [
   {
     target: '[data-v-step="1"]',
-    content: 'Welcome to <strong>BlueEarth Data</strong>!',
+    content: 'Welcome to <strong>Metocean PEZ</strong>!',
     params: {
       placement: 'right'
     }
   },
   {
     target: '[data-v-step="2"]',
-    content: 'BlueEarth Data is organized by <strong>theme</strong>.',
-    params: {
-      placement: 'right'
-    }
-  },
-  {
-    target: '[data-v-step="3"]',
-    content: '<strong>Datasets</strong> for each theme are listed here.',
+    content: '<strong>Map layers</strong> component to turn on/off layers.',
     params: {
       placement: 'left'
     }
   },
   {
-    target: '[data-v-step="4"]',
-    content:
-      'Toggle <strong>spatial maps</strong> and <strong>time series</strong> for each dataset.',
+    target: '[data-v-step="3"]',
+    content: 'Layer with point data.',
     params: {
-      placement: 'bottom'
+      placement: 'left'
+    }
+  },
+  {
+    target: '[data-v-step="3"]',
+    content: 'Click on a location for <strong>time series</strong> and more.',
+    params: {
+      placement: 'left'
     }
   },
   {
     target: '[data-v-step="5"]',
     content:
-      'Click on a <strong>data point</strong> on the map to see more details.',
+      'Expand the accordions to see the available data.',
     params: {
-      placement: 'bottom'
+      placement: 'right'
     }
   },
   {
     target: '[data-v-step="6"]',
     content:
-      'You can download data if you are <strong>registered</strong> and <strong>logged in</strong>.',
+      'You can download the current view as a PNG or download data as CSV',
     params: {
       placement: 'right'
     }
   },
   {
-    target: '[data-v-step="6"]',
-    content: 'Have fun!',
+    target: '[data-v-step="7"]',
+    content: 'Click here for the available Stories.',
     params: {
-      placement: 'right'
+      placement: 'bottom'
     }
   }
 ]

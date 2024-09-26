@@ -1,4 +1,4 @@
-## Blue Earth Data User Agreement Deltares
+## Metocean User Agreement Deltares
 
 This legal agreement (hereinafter “User Agreement”) governs the conditions of use of this Deltares Open Data website and the data products (hereinafter “Data Products”) to be found, accessed and downloaded through our website.
 
@@ -6,7 +6,7 @@ Please read this User Agreement carefully.
 
 This is a legal agreement between you – either as individual or acting on behalf of a legal entity - and Stichting Deltares (hereinafter “Deltares”). This agreement is effective upon your submission of consent, by checking and clicking on the “I-Agree” button below.  
 
-The use of this Blue Earth Data website (hereinafter “Website”), and the Data Products resulting from the use of therefrom, is subject to the conditions of this User Agreement as set out below.  
+The use of this Metocean website (hereinafter “Website”), and the Data Products resulting from the use of therefrom, is subject to the conditions of this User Agreement as set out below.  
 
 By marking the “I agree”-checkbox:
 

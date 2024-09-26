@@ -4,9 +4,11 @@
     raised
     max-height="80vh"
     class="pa-0 data-set-controls"
-    data-v-step="3"
   >
-    <v-card-title class="h3">
+    <v-card-title
+      class="h3"
+      data-v-step="2"
+    >
       {{ themeName }}
     </v-card-title>
     <v-card-text class="scrollbar data-set-controls__text px-0 pb-0">
@@ -26,14 +28,13 @@
           <v-expansion-panel
             v-for="(dataset, index) in datasets"
             :key="dataset.id"
-            :data-v-step="index === 1 ? '4' : false"
           >
             <v-expansion-panel-header
               hide-actions
               color="background"
               dark
             >
-              <v-row>
+              <v-row :data-v-step="index === 'mo' ? '3' : false">
                 <v-col
                   cols="7"
                   class="ma-auto pa-0"
@@ -178,7 +179,7 @@ import marked from 'marked'
 import _ from 'lodash'
 
 const renderer = new marked.Renderer()
-renderer.link = function(href, title, text) {
+renderer.link = function (href, title, text) {
   return `<a target="_blank" href="${href}" title="${title}">${text}</a>`
 }
 
@@ -299,7 +300,7 @@ export default {
         if (oldParams.includes(dataset.id)) {
           // if oldparams already includes id, remove from route
           // this way, it is removed from the route is switch is disabled
-          newParams = oldParams.filter(param => param !== dataset.id)
+          newParams = oldParams.filter((param) => param !== dataset.id)
           // newParams = oldParams
           if (newParams.length === 0) {
             newParams = undefined
@@ -340,7 +341,7 @@ export default {
       if (!layers) {
         return false
       }
-      const typeArray = layers.map(layer => {
+      const typeArray = layers.map((layer) => {
         const title = _.get(layer, 'title')
         if (!title) {
           return false

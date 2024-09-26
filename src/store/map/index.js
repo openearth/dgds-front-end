@@ -21,13 +21,18 @@ export const getDefaultState = () => ({
   activeTheme: '',
   loadingRasterLayers: false,
   geographicalScope: '',
-  activeVectorDataIds: 'mo',
-  activeSummary: []
+  activeVectorDataIds: '',//'mo',
+  activeSummary: [],
+
+  expandedPanels: []
 })
 
 export const state = getDefaultState()
 
 export const mutations = {
+  setExpandedPanels(state, expandedPanels) {
+    state.expandedPanels = expandedPanels
+  },
   resetMap(state) {
     state.activeDatasetIds = []
     state.activeLocationIds = []
@@ -55,7 +60,7 @@ export const mutations = {
     state.activeTheme = {}
   },
   setActiveLocationIds(state, ids) {
-    state.activeLocationIds = flatten(ids.map(id => id.split(',')))
+    state.activeLocationIds = flatten(ids.map(id => id.split ? id.split(',') : id))
   },
   setActiveLocationIndex(state, index) {
     state.activeLocationIndex = index
@@ -284,14 +289,14 @@ export const actions = {
       return res.get(slice).then(data => {
 
         var arrayData = Array.from(data.data);
-        
+
         const pointData = {
           id: datasetId,
           data: {
-              arrayData,
-              type: "ensemble",
-              timeSpan: "",
-              timeFormat: "{yyyy}"
+            arrayData,
+            type: "ensemble",
+            timeSpan: "",
+            timeFormat: "{yyyy}"
           }
         }
 
@@ -313,7 +318,7 @@ export const actions = {
       mode: 'r'
     }).then(res => {
       return res.get().then(time => {
-          
+
         return openArray({
           store: url,
           path: parameter,
@@ -325,31 +330,30 @@ export const actions = {
 
             // Filter out NaN values
             var filteredData = arrayData.filter(value => !isNaN(value))
-            
+
             // TODO: Filter out years
             var every12thPoint = filteredData.filter((value, index) => index % 12 === 0);
 
             var serie = {
-                type: 'line',
-                data: Array.from(filteredData)
-              }
+              type: 'line',
+              data: Array.from(filteredData)
+            }
 
             // Convert Int32Array to a regular array
             const timestamps = Array.from(time.data);
 
             // Use Moment.js to convert timestamps to dates
             const dates = timestamps.map(timestamp => {
-                return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
+              return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
             });
-            
+
             // Print the dates
             // console.log(dates);
             // let dates = [1979, 2023]
             const category = []
             const dateFormat = 'YYYY-MM-DDTHH:mm'
             for (const date of dates) {
-              if (category.length < filteredData.length)
-              {
+              if (category.length < filteredData.length) {
                 category.push(
                   moment(date, dateFormat).format('YYYY-MM-DDTHH:mm:ssZ')
                 )
@@ -359,14 +363,14 @@ export const actions = {
             const pointData = {
               id: datasetId,
               data: {
-                  category,
-                  serie,
-                  type: "ensemble",
-                  timeSpan: "",
-                  timeFormat: "{yyyy}"
+                category,
+                serie,
+                type: "ensemble",
+                timeSpan: "",
+                timeFormat: "{yyyy}"
               }
             }
-            
+
             commit('addDatasetPointData', pointData)
 
             return pointData
@@ -590,6 +594,10 @@ export const actions = {
 }
 
 export const getters = {
+  getExpandedPanels(state) {
+    return state.expandedPanels
+  },
+
   activeDatasetIds(state) {
     return state.activeDatasetIds
   },

@@ -39,23 +39,27 @@ export default {
         const features = this.map.queryRenderedFeatures()
 
         let feature = ''
-        feature = features.find(feat => feat.properties.locationId === location)
+        feature = features.find(
+          (feat) => feat.properties.locationId === location
+        )
         // if feature does not include locationId, check for name
         if (feature === undefined) {
-          feature = features.find(feat => feat.properties.Name === location)
+          feature = features.find((feat) => feat.properties.Name === location)
         }
         if (feature === undefined) {
-          feature = features.find(feat => feat.id === location)
+          feature = features.find((feat) => feat.id?.toString() === location?.toString())
         }
-
-        this.map.panTo({
-          lng: feature.geometry.coordinates[0],
-          lat: feature.geometry.coordinates[1]
-        })
-        this.$emit('select-locations', {
-          features: [feature],
-          geometry: feature.geometry
-        })
+        
+        if (feature) {
+          this.map.panTo({
+            lng: feature.geometry.coordinates[0],
+            lat: feature.geometry.coordinates[1]
+          })
+          this.$emit('select-locations', {
+            features: [feature],
+            geometry: feature.geometry
+          })
+        }
       }
     }, 1500)
   },
@@ -78,7 +82,7 @@ export default {
     addToMap() {
       const layer = this.layer
       this.map.addLayer(layer)
-      this.map.on('click', layer.id, event => {
+      this.map.on('click', layer.id, (event) => {
         const method = _.get(layer, 'onClick.method')
         if (method) {
           this[method](layer, event)
@@ -135,14 +139,14 @@ export default {
         const from = point([event.lngLat.lng, event.lngLat.lat])
 
         // filter out the features belonging to the layertozoomto
-        const feats = features.filter(feat => {
+        const feats = features.filter((feat) => {
           return (
             _.get(feat, 'layer.id') === _.get(layer, 'onClick.layerToZoomTo')
           )
         })
 
         // calculate all distances from new center point to these features
-        const distances = feats.map(f => {
+        const distances = feats.map((f) => {
           const to = point(_.get(f, 'geometry.coordinates'))
           return distance(from, to)
         })

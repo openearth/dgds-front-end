@@ -1,4 +1,4 @@
-### Providing metocean data for the Princess Elisabeth Zone
+## Providing metocean data for the Princess Elisabeth Zone
 
 Scroll naar beneden voor de Nederlandse tekst
 
@@ -11,7 +11,7 @@ To be able to realize the largest possible share of additional offshore renewabl
 By providing high-quality metocean data within a morphologically active area with large sand banks beforehand to the market, the costs for the development of the additional capacity and the amount of materials needed can be substantially reduced making sure that the OWFs within the three lots are not designed using overconservative environmental conditions.
 From this online dataset future tenderers can extract the data (timeseries and statistics) at the exact location they require and use it as input for design. Furthermore, as the PEZ metocean dataset reaches further than the limits of the development area itself, the metocean data could also be used for a multitude of other purposes by the general public.
 
-### Metocean gegevens voor de Prinses Elisabeth Zone
+## Metocean gegevens voor de Prinses Elisabeth Zone
 
 De Belgische federale overheid streeft ernaar om de totale capaciteit van operationele offshore windenergie te verhogen van de huidige 2,2 GW naar 5,4-5,8 GW uiterlijk in 2030, door de ontwikkeling van nieuwe offshore windparken binnen de drie kavels van de Prinses Elisabeth Zone (PEZ).
 
@@ -21,7 +21,7 @@ Door metocean-gegevens van hoge kwaliteit binnen een morfologisch actief gebied 
 
 Uit deze online dataset kunnen toekomstige inschrijvers de data (tijdreeksen en statistieken) verkrijgen op de exacte locatie die ze nodig hebben en deze gebruiken als input voor het ontwerp. Maar aangezien de PEZ metocean-dataset verder reikt dan de grenzen van het ontwikkelingsgebied zelf, kunnen de metocean-data ook voor een set aan andere doeleinden door het brede publiek worden gebruikt.
 
-### Fourniture de données météo-océaniques pour la Zone Princesse Elisabeth
+## Fourniture de données météo-océaniques pour la Zone Princesse Elisabeth
 
 Le gouvernement fédéral belge vise à augmenter la capacité totale de l'énergie éolienne offshore opérationnelle de 2,2 GW actuellement, à 5,4-5,8 GW d'ici 2030 au plus tard, grâce au développement de nouveaux parcs éoliens offshore dans les trois parcelles de la Zone Princesse Elisabeth (PEZ).
 
@@ -30,5 +30,3 @@ Afin de pouvoir réaliser la plus grande part possible de la production supplém
 En fournissant au préalable au marché des données métocéaniques de haute qualité dans une zone morphologiquement active avec d'importants bancs de sable, les coûts de développement de la capacité supplémentaire et la quantité de matériaux nécessaires peuvent être considérablement réduits, ce qui garantit que les OWF dans les trois lots ne sont pas conçus en utilisant des conditions environnementales trop conservatrices.
 
 À partir de cet ensemble de données en ligne, les futurs soumissionnaires peuvent extraire les données (séries chronologiques et statistiques) à l'endroit exact dont ils ont besoin et les utiliser comme données d'entrée pour la conception. En outre, comme le jeu de données métocéaniques de la PEZ dépasse les limites de la zone de développement proprement dite, les données métocéaniques pourraient également être utilisées à une multitude d'autres fins par le grand public.
-
-Deltares values your privacy. Our general Privacy Statement can be found [here](https://oss.deltares.nl/web/delft-fews/privacy-declaration).
