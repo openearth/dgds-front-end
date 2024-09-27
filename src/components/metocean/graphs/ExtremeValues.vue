@@ -55,6 +55,12 @@ export default {
       [THEME_KEY]: 'dark'
     }
   },
+  props: {
+    locationId: {
+      type: [String, Number],
+      default: ''
+    }
+  },
   data() {
     return {
       data: [],
@@ -87,7 +93,12 @@ export default {
               icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
               onclick: () => {
                 this.downloadAsCSV(
-                  ['return period', '2.5% bound', 'best estimate', '97.5% bound'],
+                  [
+                    'return period',
+                    '2.5% bound',
+                    'best estimate',
+                    '97.5% bound'
+                  ],
                   'Extreme_values'
                 )
               },
@@ -150,6 +161,13 @@ export default {
       isLoading: false
     }
   },
+  watch: {
+    locationId(newLocationId) {
+      if (newLocationId) {
+        this.getChartData()
+      }
+    }
+  },
   mounted() {
     this.fetchParameters()
   },
@@ -205,7 +223,10 @@ export default {
         {
           name: 'Best estimate',
           type: 'line',
-          data: this.data.map((line) => [line['return period'], line['best estimate']]),
+          data: this.data.map((line) => [
+            line['return period'],
+            line['best estimate']
+          ]),
           dimensions: ['return period', 'best estimate'],
           encode: {
             x: 'return period',
@@ -303,7 +324,6 @@ export default {
       }).then((pointData) => {
         const { data } = pointData
 
-        console.log('data.arrayData', data.arrayData)
         this.data = data.arrayData
           .filter((arr) => arr[0] && arr[1] && arr[2])
           .map((arr, index) => ({
@@ -374,8 +394,6 @@ export default {
           }
         })
 
-        console.log('updateChart this.data', this.data)
-
         instance.setOption(
           {
             series: this.createSeriesData(),
@@ -414,7 +432,8 @@ export default {
 
             // Process the visible data range for this series
             serie.data.slice(startIndex, endIndex).forEach((point) => {
-              const returnPeriodIndex = serie.dimensions.indexOf('return period')
+              const returnPeriodIndex =
+                serie.dimensions.indexOf('return period')
               const returnPeriod = point[returnPeriodIndex]
 
               // Initialize the group if necessary

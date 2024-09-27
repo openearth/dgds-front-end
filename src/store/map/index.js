@@ -37,12 +37,12 @@ export const mutations = {
     state.activeDatasetIds = []
     state.activeLocationIds = []
     state.activeLocationIndex = []
-    state.activeLocationName = []
+    state.activeLocationName = ''
     state.activeTheme = ''
     state.loadingRasterLayers = false
   },
   setActiveDatasetIds(state, ids) {
-    state.activeDatasetIds = ids
+    Vue.set(state, 'activeDatasetIds', ids)
   },
   setGeographicalScope(state, scope) {
     state.geographicalScope = scope
@@ -67,13 +67,7 @@ export const mutations = {
     state.activeLocationIndex = index
   },
   setActiveLocationName(state, name) {
-    state.activeLocationName = name
-  },
-  getActiveLocationName() {
-    return state.activeLocationName
-  },
-  setActiveLocationName(state, name) {
-    state.activeLocationName = name
+    Vue.set(state, 'activeLocationName', name)
   },
   clearActiveLocationIds(state) {
     state.activeLocationIds = []
@@ -81,14 +75,11 @@ export const mutations = {
   clearActiveLocationIndex(state) {
     state.activeLocationIndex = []
   },
-  clearActiveLocationName(state) {
-    state.activeLocationName = []
-  },
   setActiveRasterLayerId(state, id) {
     state.activeRasterLayerId = id
   },
-  setActiveVectorDataIds(state, id) {
-    state.activeVectorDataIds = id
+  setActiveVectorDataIds(state, ids) {
+    Vue.set(state, 'activeVectorDataIds', ids)
   },
   setActiveSummary(state, summary) {
     Vue.set(state, 'activeSummary', summary)
@@ -611,6 +602,9 @@ export const actions = {
 }
 
 export const getters = {
+  getActiveLocationName(state) {
+    return state.activeLocationName
+  },
   getExpandedPanels(state) {
     return state.expandedPanels
   },

@@ -42,7 +42,7 @@
               <time-series :location-id="$route.params.locationId" />
             </v-expansion-panel-content>
           </v-expansion-panel>
-          <v-expansion-panel>
+          <v-expansion-panel v-if="activeLocationName?.includes('PEI')">
             <v-expansion-panel-header
               class="h4"
               color="background"
@@ -54,7 +54,7 @@
               <rose-plot :location-id="$route.params.locationId" />
             </v-expansion-panel-content>
           </v-expansion-panel>
-          <v-expansion-panel>
+          <v-expansion-panel v-if="activeLocationName?.includes('PEI')">
             <v-expansion-panel-header
               class="h4"
               color="background"
@@ -66,7 +66,7 @@
               <joint-occurence />
             </v-expansion-panel-content>
           </v-expansion-panel>
-          <v-expansion-panel>
+          <v-expansion-panel v-if="activeLocationName?.includes('PEI')">
             <v-expansion-panel-header
               class="h4"
               color="background"
@@ -78,7 +78,7 @@
               <weather-window :location-id="$route.params.locationId" />
             </v-expansion-panel-content>
           </v-expansion-panel>
-          <v-expansion-panel>
+          <v-expansion-panel v-if="activeLocationName?.includes('PEI')">
             <v-expansion-panel-header
               class="h4"
               color="background"
@@ -93,7 +93,7 @@
         </v-expansion-panels>
       </div>
       <div v-else>
-          <p>Please login to view the detailed graphs</p>
+        <p>Please login to view the detailed graphs</p>
       </div>
       <div class="flex-shrink-1 bodytext-xs disclaimer">
         Global datasets are generated with great care but may locally contain
@@ -126,6 +126,7 @@ export default {
   },
   data() {
     return {
+      activeLocationName: '',
       expandedPanels: []
     }
   },
@@ -137,8 +138,8 @@ export default {
       'getActiveRasterLayer',
       'activeRasterData',
       'activeSummary',
-      'getExpandedPanels',
-      'getActiveLocationName'
+      'getActiveLocationName',
+      'getExpandedPanels'
     ]),
     datasets() {
       const activePointData = this.activePointDataPerDataset
@@ -159,6 +160,12 @@ export default {
     }
   },
   watch: {
+    getActiveLocationName: {
+      immediate: true,
+      handler(newVal) {
+        this.activeLocationName = newVal
+      }
+    },
     getExpandedPanels: {
       immediate: true,
       handler(newVal) {
