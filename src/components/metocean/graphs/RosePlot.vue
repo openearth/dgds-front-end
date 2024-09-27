@@ -208,7 +208,7 @@ export default {
       fetch(`/static/data/JOT-parameters.json`)
         .then((response) => response.json())
         .then((json) => {
-          this.parameters = json.map((j) => ({
+          this.parameters = json.filter(j => j.rose).map((j) => ({
             parameter1: {
               ...j.parameter1,
               label: this.transformLabel(j.parameter1.label)

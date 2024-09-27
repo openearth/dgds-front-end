@@ -7,7 +7,9 @@
     "parameter2": {
       "label": "Residual current direction at 5% of the water depth CD_{res,d5} ({circ}N going to)",
       "value": "CD_res_d5"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -17,7 +19,9 @@
     "parameter2": {
       "label": "Residual current direction at 100% of the water depth CD_{res,d100} ({circ}N going to)",
       "value": "CD_res_d100"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -27,7 +31,9 @@
     "parameter2": {
       "label": "Residual current direction at 25% of the water depth CD_{res,d25} ({circ}N going to)",
       "value": "CD_res_d25"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -37,7 +43,9 @@
     "parameter2": {
       "label": "Residual current direction at 50% of the water depth CD_{res,d50} ({circ}N going to)",
       "value": "CD_res_d50"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -47,7 +55,9 @@
     "parameter2": {
       "label": "Residual current direction at 75% of the water depth CD_{res,d75} ({circ}N going to)",
       "value": "CD_res_d75"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -57,7 +67,9 @@
     "parameter2": {
       "label": "Depth-averaged residual current direction CD_{res,dav} ({circ}N going to)",
       "value": "CD_res_dav"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -67,7 +79,9 @@
     "parameter2": {
       "label": "Tidal current direction at 5% of the water depth CD_{tid,d5} ({circ}N going to)",
       "value": "CD_tid_d5"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -77,7 +91,9 @@
     "parameter2": {
       "label": "Tidal current direction at 100% of the water depth CD_{tid,d100} ({circ}N going to)",
       "value": "CD_tid_d100"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -87,7 +103,9 @@
     "parameter2": {
       "label": "Tidal current direction at 25% of the water depth CD_{tid,d25} ({circ}N going to)",
       "value": "CD_tid_d25"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -97,7 +115,9 @@
     "parameter2": {
       "label": "Tidal current direction at 50% of the water depth CD_{tid,d50} ({circ}N going to)",
       "value": "CD_tid_d50"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -107,7 +127,9 @@
     "parameter2": {
       "label": "Tidal current direction at 75% of the water depth CD_{tid,d75} ({circ}N going to)",
       "value": "CDtid_d75"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -117,7 +139,9 @@
     "parameter2": {
       "label": "Depth-averaged tidal current direction CD_{tid,dav} ({circ}N going to)",
       "value": "CD_tid_dav"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -127,7 +151,9 @@
     "parameter2": {
       "label": "Total current direction at 5% of the water depth CD_{tot,d5} ({circ}N going to)",
       "value": "CD_tot_d5"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -137,7 +163,9 @@
     "parameter2": {
       "label": "Total current direction at 100% of the water depth CD_{tot,d100} ({circ}N going to)",
       "value": "CD_tot_d100"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -147,7 +175,9 @@
     "parameter2": {
       "label": "Total current direction at 25% of the water depth CD_{tot,d25} ({circ}N going to)",
       "value": "CD_tot_d25"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -157,7 +187,9 @@
     "parameter2": {
       "label": "Total current direction at 50% of the water depth CD_{tot,d50} ({circ}N going to)",
       "value": "CD_tot_d50"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -167,7 +199,9 @@
     "parameter2": {
       "label": "Total current direction at 75% of the water depth CD_{tot,d75} ({circ}N going to)",
       "value": "CD_tot_d75"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -177,7 +211,9 @@
     "parameter2": {
       "label": "Depth-averaged total current direction CD_{tot,dav} ({circ}N going to)",
       "value": "CD_tot_dav"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -187,7 +223,9 @@
     "parameter2": {
       "label": "Depth-averaged residual current direction CD_{res,dav} ({circ}N going to)",
       "value": "CS_res_dav"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -197,7 +235,9 @@
     "parameter2": {
       "label": "Depth-averaged total current direction CD_{tot,dav} ({circ}N going to)",
       "value": "CS_tot_dav"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -207,7 +247,9 @@
     "parameter2": {
       "label": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
       "value": "MWD_tot"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -217,7 +259,9 @@
     "parameter2": {
       "label": "Mean wave direction for wind sea MWD_{sea} ({circ}N coming from)",
       "value": "MWD_sea"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -227,7 +271,9 @@
     "parameter2": {
       "label": "Mean wave direction for swell MWD_{swell} ({circ}N coming from)",
       "value": "MWD_swell"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -237,7 +283,9 @@
     "parameter2": {
       "label": "Peak wave direction for total sea PWD_{tot} ({circ}N coming from)",
       "value": "PWD_tot"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -247,7 +295,9 @@
     "parameter2": {
       "label": "Peak wave direction for wind sea PWD_{sea} ({circ}N coming from)",
       "value": "PWD_sea"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -257,7 +307,9 @@
     "parameter2": {
       "label": "Peak wave direction for swell PWD_{swell} ({circ}N coming from)",
       "value": "PWD_swell"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -267,7 +319,9 @@
     "parameter2": {
       "label": "Peak wave period for total sea T_{p,tot} (s)",
       "value": "T_p_tot"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -277,7 +331,9 @@
     "parameter2": {
       "label": "Peak wave period for wind sea T_{p,sea} (s)",
       "value": "T_p_sea"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -287,7 +343,9 @@
     "parameter2": {
       "label": "Peak wave period for swell T_{p,swell} (s)",
       "value": "T_p_swell"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -297,7 +355,9 @@
     "parameter2": {
       "label": "Mean wave period (based on spectral moments of order 2 en 0) for total sea T_{m02_tot} (s)",
       "value": "T_m02_tot"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -307,7 +367,9 @@
     "parameter2": {
       "label": "Mean wave period (based on spectral moments of order 2 en 0) for wind sea T_{m02_sea} (s)",
       "value": "T_m02_sea"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -317,7 +379,9 @@
     "parameter2": {
       "label": "Mean wave period (based on spectral moments of order 2 en 0) for swell T_{m02_swell} (s)",
       "value": "T_m02_swell"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -327,7 +391,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind speed at 100 m height U_{100,mag} (m/s)",
       "value": "U_100_mag"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -337,7 +403,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind speed at 10 m height U_{10,mag} (m/s)",
       "value": "U_10_mag"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -347,7 +415,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind speed at 120 m height U_{120,mag} (m/s)",
       "value": "U_120_mag"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -357,7 +427,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind speed at 160 m height U_{160,mag} (m/s)",
       "value": "U_160_mag"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -367,7 +439,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind speed at 200 m height U_{200,mag} (m/s)",
       "value": "U_200_mag"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -377,7 +451,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind speed at 250 m height U_{250,mag} (m/s)",
       "value": "U_250_mag"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -387,7 +463,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind speed at 300 m height U_{300,mag} (m/s)",
       "value": "U_300_mag"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -397,7 +475,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind speed at 60 m height U_{60,mag} (m/s)",
       "value": "U_60_mag"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -407,7 +487,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 100 m height U_{100,dir} ({circ}N coming from)",
       "value": "U_100_dir"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -417,7 +499,9 @@
     "parameter2": {
       "label": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
       "value": "MWD_tot"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -427,7 +511,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 10 m height U_{10,dir} ({circ}N coming from)",
       "value": "U_10_dir"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -437,7 +523,9 @@
     "parameter2": {
       "label": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
       "value": "MWD_tot"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -447,7 +535,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 120 m height U_{120,dir} ({circ}N coming from)",
       "value": "U_120_dir"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -457,7 +547,9 @@
     "parameter2": {
       "label": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
       "value": "MWD_tot"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -467,7 +559,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 160 m height U_{160,dir} ({circ}N coming from)",
       "value": "U_160_dir"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -477,7 +571,9 @@
     "parameter2": {
       "label": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
       "value": "MWD_tot"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -487,7 +583,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 200 m height U_{200,dir} ({circ}N coming from)",
       "value": "U_200_dir"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -497,7 +595,9 @@
     "parameter2": {
       "label": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
       "value": "MWD_tot"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -507,7 +607,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 250 m height U_{250,dir} ({circ}N coming from)",
       "value": "U_250_dir"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -517,7 +619,9 @@
     "parameter2": {
       "label": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
       "value": "MWD_tot"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -527,7 +631,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 300 m height U_{300,dir} ({circ}N coming from)",
       "value": "U_300_dir"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -537,7 +643,9 @@
     "parameter2": {
       "label": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
       "value": "MWD_tot"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -547,7 +655,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 60 m height U_{60,dir} ({circ}N coming from)",
       "value": "U_60_dir"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -557,7 +667,9 @@
     "parameter2": {
       "label": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
       "value": "MWD_tot"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -567,7 +679,9 @@
     "parameter2": {
       "label": "Mean wave direction for total sea MWD_{tot} ({circ}N coming from)",
       "value": "MWD_tot"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -577,7 +691,9 @@
     "parameter2": {
       "label": "Mean wave direction for wind sea MWD_{sea} ({circ}N coming from)",
       "value": "MWD_sea"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -587,7 +703,9 @@
     "parameter2": {
       "label": "Mean wave direction for swell MWD_{well} ({circ}N coming from)",
       "value": "MWD_swell"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -597,7 +715,9 @@
     "parameter2": {
       "label": "Peak wave direction for total sea PWD_{tot} ({circ}N coming from)",
       "value": "PWD_tot"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -607,7 +727,9 @@
     "parameter2": {
       "label": "Peak wave direction for wind sea PWD_{sea} ({circ}N coming from)",
       "value": "PWD_sea"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -617,7 +739,9 @@
     "parameter2": {
       "label": "Peak wave direction for swell PWD_{swell} ({circ}N coming from)",
       "value": "PWD_swell"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -627,7 +751,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 100 m height U_{100,dir} ({circ}N coming from)",
       "value": "U_100_dir"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -637,7 +763,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 10 m height U_{10,dir} ({circ}N coming from)",
       "value": "U_10_dir"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -647,7 +775,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 120 m height U_{120,dir} ({circ}N coming from)",
       "value": "U_120_dir"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -657,7 +787,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 160 m height U_{160,dir} ({circ}N coming from)",
       "value": "U_160_dir"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -667,7 +799,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 200 m height U_{200,dir} ({circ}N coming from)",
       "value": "U_200_dir"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -677,7 +811,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 250 m height U_{250,dir} ({circ}N coming from)",
       "value": "U_250_dir"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -687,7 +823,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 300 m height U_{300,dir} ({circ}N coming from)",
       "value": "U_300_dir"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -697,7 +835,9 @@
     "parameter2": {
       "label": "Hourly-averaged horizontal wind direction at 60 m height U_{60,dir} ({circ}N coming from)",
       "value": "U_60_dir"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -707,7 +847,9 @@
     "parameter2": {
       "label": "Depth-averaged residual current direction CD_{res,dav} ({circ}N coming from)",
       "value": "CD_res_dav"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -717,7 +859,9 @@
     "parameter2": {
       "label": "Depth-averaged total current direction CD_{tot,dav} ({circ}N coming from)",
       "value": "CD_tot_dav"
-    }
+    },
+    "rose": true,
+    "jot": true
   },
   {
     "parameter1": {
@@ -727,7 +871,9 @@
     "parameter2": {
       "label": "Significant wave height for total sea H_{s,tot} (m)",
       "value": "H_s_tot"
-    }
+    },
+    "rose": false,
+    "jot": true
   },
   {
     "parameter1": {
@@ -737,6 +883,8 @@
     "parameter2": {
       "label": "Significant wave height for total sea H_{s,tot} (m)",
       "value": "H_s_tot"
-    }
+    },
+    "rose": false,
+    "jot": true
   }
 ]

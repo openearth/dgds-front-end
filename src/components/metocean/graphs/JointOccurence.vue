@@ -173,16 +173,18 @@ export default {
       fetch(`/static/data/JOT-parameters.json`)
         .then((response) => response.json())
         .then((json) => {
-          this.parameters = json.map((j) => ({
-            parameter1: {
-              ...j.parameter1,
-              label: this.transformLabel(j.parameter1.label)
-            },
-            parameter2: {
-              ...j.parameter2,
-              label: this.transformLabel(j.parameter2.label)
-            }
-          }))
+          this.parameters = json
+            .filter((j) => j.jot)
+            .map((j) => ({
+              parameter1: {
+                ...j.parameter1,
+                label: this.transformLabel(j.parameter1.label)
+              },
+              parameter2: {
+                ...j.parameter2,
+                label: this.transformLabel(j.parameter2.label)
+              }
+            }))
 
           this.populateParameter1Options()
           this.populateParameter2Options()
@@ -415,7 +417,10 @@ export default {
                   title: 'Download as CSV',
                   icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
                   onclick: () => {
-                    this.downloadAsCSV([this.xAxis.bin, this.yAxis.bin, 'value'], 'Joint_occurence')
+                    this.downloadAsCSV(
+                      [this.xAxis.bin, this.yAxis.bin, 'value'],
+                      'Joint_occurence'
+                    )
                   },
                   emphasis: {
                     iconStyle: {
