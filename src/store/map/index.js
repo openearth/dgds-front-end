@@ -37,6 +37,7 @@ export const mutations = {
     state.activeDatasetIds = []
     state.activeLocationIds = []
     state.activeLocationIndex = []
+    state.activeLocationName = []
     state.activeTheme = ''
     state.loadingRasterLayers = false
   },
@@ -65,11 +66,23 @@ export const mutations = {
   setActiveLocationIndex(state, index) {
     state.activeLocationIndex = index
   },
+  setActiveLocationName(state, name) {
+    state.activeLocationName = name
+  },
+  getActiveLocationName() {
+    return state.activeLocationName
+  },
+  setActiveLocationName(state, name) {
+    state.activeLocationName = name
+  },
   clearActiveLocationIds(state) {
     state.activeLocationIds = []
   },
   clearActiveLocationIndex(state) {
     state.activeLocationIndex = []
+  },
+  clearActiveLocationName(state) {
+    state.activeLocationName = []
   },
   setActiveRasterLayerId(state, id) {
     state.activeRasterLayerId = id
@@ -272,6 +285,10 @@ export const actions = {
         })
       }
     })
+  },
+
+  loadActiveStateName({ state, dispatch }) {
+    return state.activeLocationName
   },
 
   loadNonTimeGraphDataForLocation({ commit, state }, { parameter, slice, graph }) {

@@ -182,7 +182,8 @@ export default {
       'clearActiveDatasetIds',
       'setActiveRasterLayerId',
       'setGeographicalScope',
-      'setActiveLocationIndex'
+      'setActiveLocationIndex',
+      'setActiveLocationName'
     ]),
 
     getMapboxLayers(collection) {
@@ -360,6 +361,7 @@ export default {
         // write location index for zarr file to state
         if (feature.properties.zarrIndex) {
           this.setActiveLocationIndex(feature.properties.zarrIndex)
+          this.setActiveLocationName(feature.properties.name)
         }
       })
 
