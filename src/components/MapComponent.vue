@@ -150,15 +150,19 @@ export default {
       // Get Default vector mapboxlayer
       const defaultVectorLayer = getVectorLayer()
       // get all unique layerIds
-      const layerIds = vectorLayers.map(layer => layer.id)
+      const layerIds = vectorLayers.map((layer) => layer.id)
       const uniqueLayerIds = _.uniq(layerIds)
+
+      const datasetIds = Object.keys(this.activeVectorData)
+      this.$store.commit('setActiveVectorDataIds', datasetIds)
+
       // for each layer id merge the mapboxlayers that have that id
-      const newLayers = uniqueLayerIds.map(id => {
-        const groupedLayers = vectorLayers.filter(layer => layer.id === id)
+      const newLayers = uniqueLayerIds.map((id) => {
+        const groupedLayers = vectorLayers.filter((layer) => layer.id === id)
         const flattenedLayers = _.flatten(groupedLayers)
         const layer = _(flattenedLayers)
           .groupBy('id')
-          .map(g =>
+          .map((g) =>
             _.mergeWith({}, ...g, (obj, src) =>
               _.isArray(obj) ? obj.concat(src) : undefined
             )
@@ -174,6 +178,7 @@ export default {
         // Return the first and only merged object
         return mergedFilter
       })
+
       return newLayers
     }
   },
@@ -187,18 +192,18 @@ export default {
     ]),
 
     getMapboxLayers(collection) {
-      const vectorDatasets = this.activeDatasetIds.map(datasetId => {
+      const vectorDatasets = this.activeDatasetIds.map((datasetId) => {
         return _.get(collection, datasetId)
       })
       const mapboxLayers = []
-      vectorDatasets.forEach(dataset => {
+      vectorDatasets.forEach((dataset) => {
         if (!_.has(dataset, 'layers')) {
           return
         }
-        dataset.layers.forEach(layer => {
+        dataset.layers.forEach((layer) => {
           if (_.has(dataset, 'summaries')) {
             // If extra selection is needed and described in the summaries.
-            const layerSelected = this.activeSummary.every(summary => {
+            const layerSelected = this.activeSummary.every((summary) => {
               if (layer.id.includes(summary.id)) {
                 const substring = layer.id.split(`${summary.id}-`)[1]
                 return substring.indexOf(summary.chosenValue) === 0
@@ -243,7 +248,7 @@ export default {
       // if there is a filterIds, concatenate the values into filter
       if (_.get(layer, 'filterIds')) {
         const filter = ['any']
-        layer.filterIds.forEach(id => {
+        layer.filterIds.forEach((id) => {
           filter.push(['==', ['get', id], true])
         })
         layer.filter = filter
@@ -314,8 +319,8 @@ export default {
           'Content-Type': 'application/json'
         }
       })
-        .then(response => response.json())
-        .then(resp => {
+        .then((response) => response.json())
+        .then((resp) => {
           if (resp.value) {
             const dataset = this.getDatasets[this.getActiveRasterLayer]
             const units = _.get(dataset, 'properties.deltares:units')
@@ -345,7 +350,7 @@ export default {
       this.geometry = detail.geometry
       const locationIds = []
       // detail.feature.properties contains attributes from Mapbox points
-      detail.features.forEach(feature => {
+      detail.features.forEach((feature) => {
         // When a layer has a metadata with locationIdField use this layer and
         // get the locationId usin this field
 
@@ -357,11 +362,11 @@ export default {
           // locationIds.push(feature.properties[locId])
           feature.properties.zarrIndex = feature.properties.id
         }
-        
+
         // write location index for zarr file to state
         if (feature.properties.zarrIndex) {
           this.setActiveLocationIndex(feature.properties.zarrIndex)
-          this.setActiveLocationName(feature.properties.name)
+          this.$store.commit('setActiveLocationName', feature.properties.Name)
         }
       })
 

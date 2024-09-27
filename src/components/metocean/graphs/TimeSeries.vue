@@ -46,6 +46,7 @@
 import moment from 'moment'
 import VChart, { THEME_KEY } from 'vue-echarts'
 import { mapActions, mapGetters } from 'vuex'
+import "echarts"
 
 export default {
   components: {
@@ -56,7 +57,7 @@ export default {
   },
   props: {
     locationId: {
-      type: String,
+      type: [String, Number],
       default: ''
     }
   },

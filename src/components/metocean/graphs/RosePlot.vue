@@ -81,7 +81,7 @@ export default {
   },
   props: {
     locationId: {
-      type: String,
+      type: [String, Number],
       default: ''
     }
   },

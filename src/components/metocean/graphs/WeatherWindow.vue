@@ -97,7 +97,6 @@
 </template>
 
 <script>
-import * as echarts from 'echarts'
 import VChart, { THEME_KEY } from 'vue-echarts'
 import { mapActions } from 'vuex'
 
@@ -107,6 +106,12 @@ export default {
   },
   provide() {
     return { [THEME_KEY]: 'dark' }
+  },
+  props: {
+    locationId: {
+      type: [String, Number],
+      default: ''
+    }
   },
   data() {
     return {
@@ -239,6 +244,13 @@ export default {
         })
         return item
       })
+    }
+  },
+  watch: {
+    locationId(newLocationId) {
+      if (newLocationId) {
+        this.getChartData()
+      }
     }
   },
   mounted() {

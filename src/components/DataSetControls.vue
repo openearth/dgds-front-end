@@ -104,13 +104,13 @@
               class="pa-0"
               color="background"
             >
-              <div v-if="getActiveVectorDataIds === dataset.id">
+              <div v-if="activeVectorDataIds === dataset.id">
                 <static-legend
                   :dataset-id="dataset.id"
                   class="data-set-controls__legend-bar"
                 />
               </div>
-              <div v-if="getActiveVectorDataIds === dataset.id">
+              <div v-if="activeVectorDataIds === dataset.id">
                 <br>
                 <v-row>
                   <v-col
@@ -195,6 +195,13 @@ export default {
       default: () => {}
     }
   },
+  data() {
+    return {
+      hoverId: '',
+      activeRasterLayer: '',
+      activeVectorDataIds: ''
+    }
+  },
   computed: {
     ...mapGetters([
       'getActiveRasterLayer',
@@ -213,7 +220,7 @@ export default {
         const activeDataset =
           this.hoverId === dataset.id ||
           this.activeRasterLayer === dataset.id ||
-          (this.getActiveVectorDataIds === dataset.id &&
+          (this.activeVectorDataIds === dataset.id &&
             _.get(
               this.activeVectorData,
               `${dataset.id}.properties.deltares:legendFile`
@@ -225,7 +232,7 @@ export default {
       const params = this.$route.params
       const initialDataset = _.get(this.datasets, `${params.datasetIds}`)
 
-      if (this.getActiveVectorDataIds === '' && params.datasetIds !== '') {
+      if (this.activeVectorDataIds === '' && params.datasetIds !== '') {
         if (
           typeof initialDataset !== 'undefined' &&
           typeof initialDataset.summaries !== 'undefined'
@@ -248,10 +255,12 @@ export default {
       }
     }
   },
-  data() {
-    return {
-      hoverId: '',
-      activeRasterLayer: ''
+  watch: {
+    getActiveVectorDataIds: {
+      immediate: true,
+      handler(newVal) {
+        this.activeVectorDataIds = newVal
+      }
     }
   },
   mounted() {
@@ -288,10 +297,11 @@ export default {
       let oldParams = _.get(this.$route, 'params.datasetIds')
       const params = this.$route.params
       let newParams
+
       if (!oldParams) {
         // If oldParams is undefined, set newParams by id
         newParams = dataset.id
-      } else if (oldParams && this.getActiveVectorDataIds === '') {
+      } else if (oldParams && this.activeVectorDataIds === '') {
         // When entering site with vector layer enabled, leave param in route as is
         newParams = oldParams
       } else if (oldParams && typeof dataset.id !== 'undefined') {
@@ -324,7 +334,8 @@ export default {
       }
 
       // Store which vector layers are active
-      this.setActiveVectorDataIds(params.datasetIds)
+      // this.setActiveVectorDataIds(params.datasetIds)
+      this.$store.commit('setActiveVectorDataIds', params.datasetIds)
 
       // create new activeSummary list (only if summary exists for dataset)
       if (dataset.summaries !== undefined) {
