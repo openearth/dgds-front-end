@@ -18,6 +18,7 @@
         <v-icon>mdi-close</v-icon>
       </v-btn>
       <div
+        v-if="user"
         class="flex-grow-1 py-3 scrollbar"
         align-space-between
       >
@@ -91,6 +92,9 @@
           </v-expansion-panel>
         </v-expansion-panels>
       </div>
+      <div v-else>
+          <p>Please login to view the detailed graphs</p>
+      </div>
       <div class="flex-shrink-1 bodytext-xs disclaimer">
         Global datasets are generated with great care but may locally contain
         inaccuracies. See the dataset descriptions for more information.
@@ -133,7 +137,8 @@ export default {
       'getActiveRasterLayer',
       'activeRasterData',
       'activeSummary',
-      'getExpandedPanels'
+      'getExpandedPanels',
+      'getActiveLocationName'
     ]),
     datasets() {
       const activePointData = this.activePointDataPerDataset
@@ -176,7 +181,7 @@ export default {
       'setActiveLocationIds',
       'setExpandedPanels'
     ]),
-    ...mapActions(['loadPointDataForLocation']),
+    ...mapActions(['loadPointDataForLocation', 'loadActiveStateName']),
     updateLocationPanel() {
       const {
         // datasetIds,
@@ -184,6 +189,8 @@ export default {
       } = this.$route.params
       // console.log('Inside updateLocationPanel:', { datasetIds, locationId })
       this.setActiveLocationIds(locationId ? [locationId] : [])
+      // if (this.loadActiveStateName.contains('PEI'))
+      //   this.peiPoint == true
       // this.loadPointDataForLocation({ datasetIds, locationId });
     },
     close() {
