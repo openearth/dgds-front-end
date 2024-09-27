@@ -200,7 +200,10 @@ export default {
             x: 'return period',
             y: '2.5% bound'
           },
-          showSymbol: false
+          showSymbol: false,
+          lineStyle: {
+            type: 'dashed'
+          }
         },
         {
           name: 'Best estimate',
@@ -211,10 +214,7 @@ export default {
             x: 'return period',
             y: 'best estimate'
           },
-          showSymbol: false,
-          lineStyle: {
-            type: 'dashed'
-          }
+          showSymbol: false
         },
         {
           name: '97.5% Bound',
