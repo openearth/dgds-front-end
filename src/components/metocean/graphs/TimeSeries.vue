@@ -394,7 +394,6 @@ export default {
         parameter: this.selectedParameter.value,
         graph: 'time_series'
       }).then((pointData) => {
-        console.log(pointData)
         const { data } = pointData
 
         this.data = data.serie.data.map((value, index) => ({

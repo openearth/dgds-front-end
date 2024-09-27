@@ -1,104 +1,70 @@
 [
-{
-    "parameter" : {
-        "label": "Total extreme current speed at 100% of the water depth CS_{tot,extreme,d100} (m/s)",
-        "value": "CS_tot_d100"
-    }
-},
-{
-    "parameter" : {
-        "label": "Total extreme current speed at 25% of the water depth CS_{tot,extreme,d25} (m/s)",
-        "value": "CS_tot_d25"
-    }
-},
-{
-    "parameter" : {
-        "label": "Total extreme current speed at 5% of the water depth CS_{tot,extreme,d5} (m/s)",
-        "value": "CS_tot_d5"
-    }
-},
-{
-    "parameter" : {
-        "label": "Total extreme current speed at 50% of the water depth CS_{tot,extreme,d50} (m/s)",
-        "value": "CS_tot_d50"
-    }
-},
-{
-    "parameter" : {
-        "label": "Total extreme current speed at 75% of the water depth CS_{tot,extreme,d75} (m/s)",
-        "value": "CS_tot_d75"
-    }
-},
-{
-    "parameter" : {
-        "label": "Total extreme current speed depth-averaged CS_{tot,extreme,dav} (m/s)",
-        "value": "CS_tot_dav"
-    }
-},
-{
-    "parameter" : {
-        "label": "Extreme significant wave height for total sea H_{s,tot,extreme} (m)",
-        "value": "H_s_tot"
-    }
-},
-{
-    "parameter" : {
-        "label": "Hourly-averaged extreme horizontal wind speed at 100 m height U_{100,mag,extreme} (m/s)",
-        "value": "U_100_mag"
-    }
-},
-{
-    "parameter" : {
-        "label": "Hourly-averaged extreme horizontal wind speed at 10 m height U_{10,mag,extreme} (m/s)",
-        "value": "U_10_mag"
-    }
-},
-{
-    "parameter" : {
-        "label": "Hourly-averaged extreme horizontal wind speed at 120 m height U_{120,mag,extreme} (m/s)",
-        "value": "U_120_mag"
-    }
-},
-{
-    "parameter" : {
-        "label": "Hourly-averaged extreme horizontal wind speed at 160 m height U_{160,mag,extreme} (m/s)",
-        "value": "U_160_mag"
-    }
-},
-{
-    "parameter" : {
-        "label": "Hourly-averaged extreme horizontal wind speed at 200 m height U_{200,mag,extreme} (m/s)",
-        "value": "U_200_mag"
-    }
-},
-{
-    "parameter" : {
-        "label": "Hourly-averaged extreme horizontal wind speed at 250 m height U_{250,mag,extreme} (m/s)",
-        "value": "U_250_mag"
-    }
-},
-{
-    "parameter" : {
-        "label": "Hourly-averaged extreme horizontal wind speed at 300 m height U_{300,mag,extreme} (m/s)",
-        "value": "U_300_mag"
-    }
-},
-{
-    "parameter" : {
-        "label": "Hourly-averaged extreme horizontal wind speed at 60 m height U_{60,mag,extreme} (m/s)",
-        "value": "U_60_mag"
-    }
-},
-{
-    "parameter" : {
-        "label": "Extreme water level for total sea maxima Wlv_{tot,extreme,max} (m+MSL",
-        "value": "Wlv_tot_max"
-    }
-},
-{
-    "parameter" : {
-        "label": "Extreme water level for total sea minima Wlv_{tot,extreme,min} (m+MSL)",
-        "value": "Wlv_tot_min"
-    }
-}
+  {
+    "label": "Total extreme current speed at 100% of the water depth CS_{tot,extreme,d100} (m/s)",
+    "value": "CS_tot_d100"
+  },
+  {
+    "label": "Total extreme current speed at 25% of the water depth CS_{tot,extreme,d25} (m/s)",
+    "value": "CS_tot_d25"
+  },
+  {
+    "label": "Total extreme current speed at 5% of the water depth CS_{tot,extreme,d5} (m/s)",
+    "value": "CS_tot_d5"
+  },
+  {
+    "label": "Total extreme current speed at 50% of the water depth CS_{tot,extreme,d50} (m/s)",
+    "value": "CS_tot_d50"
+  },
+  {
+    "label": "Total extreme current speed at 75% of the water depth CS_{tot,extreme,d75} (m/s)",
+    "value": "CS_tot_d75"
+  },
+  {
+    "label": "Total extreme current speed depth-averaged CS_{tot,extreme,dav} (m/s)",
+    "value": "CS_tot_dav"
+  },
+  {
+    "label": "Extreme significant wave height for total sea H_{s,tot,extreme} (m)",
+    "value": "H_s_tot"
+  },
+  {
+    "label": "Hourly-averaged extreme horizontal wind speed at 100 m height U_{100,mag,extreme} (m/s)",
+    "value": "U_100_mag"
+  },
+  {
+    "label": "Hourly-averaged extreme horizontal wind speed at 10 m height U_{10,mag,extreme} (m/s)",
+    "value": "U_10_mag"
+  },
+  {
+    "label": "Hourly-averaged extreme horizontal wind speed at 120 m height U_{120,mag,extreme} (m/s)",
+    "value": "U_120_mag"
+  },
+  {
+    "label": "Hourly-averaged extreme horizontal wind speed at 160 m height U_{160,mag,extreme} (m/s)",
+    "value": "U_160_mag"
+  },
+  {
+    "label": "Hourly-averaged extreme horizontal wind speed at 200 m height U_{200,mag,extreme} (m/s)",
+    "value": "U_200_mag"
+  },
+  {
+    "label": "Hourly-averaged extreme horizontal wind speed at 250 m height U_{250,mag,extreme} (m/s)",
+    "value": "U_250_mag"
+  },
+  {
+    "label": "Hourly-averaged extreme horizontal wind speed at 300 m height U_{300,mag,extreme} (m/s)",
+    "value": "U_300_mag"
+  },
+  {
+    "label": "Hourly-averaged extreme horizontal wind speed at 60 m height U_{60,mag,extreme} (m/s)",
+    "value": "U_60_mag"
+  },
+  {
+    "label": "Extreme water level for total sea maxima Wlv_{tot,extreme,max} (m+MSL",
+    "value": "Wlv_tot_max"
+  },
+  {
+    "label": "Extreme water level for total sea minima Wlv_{tot,extreme,min} (m+MSL)",
+    "value": "Wlv_tot_min"
+  }
 ]

@@ -45,7 +45,7 @@ export const tourSteps = [
   {
     target: '[data-v-step="6"]',
     content:
-      'You can download the current view as a PNG or download data as CSV',
+      'You can download the current view as a <strong>PNG</strong> or download data as <strong>CSV</strong>.',
     params: {
       placement: 'right'
     }

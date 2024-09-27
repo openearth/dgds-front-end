@@ -178,9 +178,12 @@ export default {
     ]),
     ...mapActions(['loadPointDataForLocation']),
     updateLocationPanel() {
-      const { datasetIds, locationId } = this.$route.params
-      console.log('Inside updateLocationPanel:', { datasetIds, locationId })
-      this.setActiveLocationIds([locationId])
+      const {
+        // datasetIds,
+        locationId
+      } = this.$route.params
+      // console.log('Inside updateLocationPanel:', { datasetIds, locationId })
+      this.setActiveLocationIds(locationId ? [locationId] : [])
       // this.loadPointDataForLocation({ datasetIds, locationId });
     },
     close() {

@@ -102,7 +102,7 @@ export default {
         tooltip: {
           trigger: 'item',
           confine: true,
-          padding: 2,
+          padding: 4,
           textStyle: {
             fontSize: 12
           },
@@ -153,21 +153,9 @@ export default {
           }
         },
         polar: {
-          center: ['35%', '50%'],
-          radius: '75%'
+          center: ['40%', '50%'],
+          radius: '80%'
         },
-        // color: [
-        //   '#F5DA4D',
-        //   '#FCAE12',
-        //   '#F78211',
-        //   '#E75D2F',
-        //   '#CB4149',
-        //   '#A92E5E',
-        //   '#85216B',
-        //   '#60136E',
-        //   '#3A0A63',
-        //   '#140B35'
-        // ],
         color: [
           '#F5DA4D',
           '#F2CD47',
@@ -464,9 +452,15 @@ export default {
             series: this.createSeriesData(dataForSelection),
             legend: {
               orient: 'vertical',
+              type: 'scroll',
               show: true,
               top: 0,
-              right: 0
+              right: 0,
+              pageIconColor: "rgba(255,255,255,0.9)",
+              pageIconInactiveColor: "rgba(255,255,255,0.4)",
+              pageTextStyle: {
+                color: "rgba(255,255,255,0.7)",
+              }
             }
           },
           {
@@ -491,7 +485,6 @@ export default {
         const zoomEnd = option.dataZoom?.[0]?.end / 100 || 1
 
         option.series.forEach((serie) => {
-          console.log('serie', serie)
           if (serie.data && legend[serie.name] !== false) {
             const startIndex = Math.floor(zoomStart * serie.data.length)
             const endIndex = Math.ceil(zoomEnd * serie.data.length)

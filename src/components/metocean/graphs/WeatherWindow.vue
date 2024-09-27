@@ -163,7 +163,7 @@ export default {
         tooltip: {
           trigger: 'axis',
           confine: true,
-          padding: 6,
+          padding: 4,
           textStyle: {
             fontSize: 14
           },
@@ -256,9 +256,9 @@ export default {
     fetchParameters() {
       fetch(`/static/data/PERS_bins.json`)
         .then((response) => response.json())
-        .then((bins) => {
-          this.months = bins.period_bins
-          this.durations = bins.duration_bins
+        .then((json) => {
+          this.months = json.period_bins
+          this.durations = json.duration_bins
         })
 
       fetch(`/static/data/PERS-parameters.json`)
@@ -277,8 +277,8 @@ export default {
 
       fetch(`/static/data/PERS-definition.json`)
         .then((response) => response.json())
-        .then((definitions) => {
-          this.definitions = definitions
+        .then((json) => {
+          this.definitions = json
         })
     },
     updateChart() {
@@ -365,39 +365,20 @@ export default {
     selectParameter() {
       this.data = []
 
-      this.$nextTick(() => {
-        this.updateChart()
-      })
+      const sel = 'PERS-' + this.selectedParameter?.value
+      const definition = this.definitions[sel]
 
       this.selectedHs = null
       this.selectedU = null
-      this.exceedances = null
-      this.hsParameters = null
-      this.uParameters = null
-      this.selectedParameters = null
+      this.selectedExceedance = null
 
-      const sel = 'PERS-' + this.selectedParameter.value
+      this.exceedances = definition?.selection_box1?.options || null
+      this.hsParameters = definition?.Hs?.options || null
+      this.uParameters = definition?.U?.options || null
 
-      const definition = this.definitions[sel]
-
-      this.exceedances = definition.selection_box1.options
-
-      // Check if the selected parameter has 'Hs' or 'U'
-      if (definition) {
-        if (definition.Hs) {
-          this.hsParameters = definition.Hs.options
-        } else {
-          this.hsParameters = null
-        }
-        if (definition.U) {
-          this.uParameters = definition.U.options
-        } else {
-          this.uParameters = null
-        }
-      } else {
-        this.hsParameters = null
-        this.uParameters = null
-      }
+      this.$nextTick(() => {
+        this.updateChart()
+      })
     },
     downloadAsCSV(keys, filename) {
       const instance = this.$refs.weatherWindow?.chart
@@ -472,10 +453,7 @@ export default {
         this.clearData()
       } else if (this.uParameters != null && this.selectedU == null) {
         this.clearData()
-      } else if (
-        this.exceedances != null &&
-        this.selectedExceedance == null
-      ) {
+      } else if (this.exceedances != null && this.selectedExceedance == null) {
         this.clearData()
       } else {
         this.loadNonTimeGraphDataForLocation({
@@ -538,7 +516,7 @@ export default {
     },
     selectExceedance(value) {
       this.selectedExceedance = this.selectedExceedance === value ? null : value
-      
+
       this.$nextTick(() => {
         this.getChartData()
       })

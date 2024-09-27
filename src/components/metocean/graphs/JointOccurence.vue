@@ -103,12 +103,11 @@ export default {
         tooltip: {
           position: 'top',
           confine: true,
-          padding: 6,
+          padding: 4,
           textStyle: {
             fontSize: 14
           },
           formatter: function (e) {
-            console.log('e', e)
             let tooltip = '<table>'
 
             Object.keys(e.data).forEach((key, i) => {
@@ -289,7 +288,7 @@ export default {
           data: this.bins[jot.parameter1.bin].reverse()
         }
 
-        const newHeight = 100 + this.bins[jot.parameter1.bin].length * 20
+        const newHeight = 120 + this.bins[jot.parameter1.bin].length * 20
         this.chartHeight = newHeight
 
         this.$nextTick(() => {
