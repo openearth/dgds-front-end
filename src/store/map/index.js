@@ -284,8 +284,8 @@ export const actions = {
 
   loadNonTimeGraphDataForLocation({ commit, state }, { parameter, slice, graph }) {
     const datasetId = state.activeVectorDataIds
-    // const paddedLocationId = state.activeLocationIndex.padStart(5, '0')
-    const paddedLocationId = '06435'
+    const paddedLocationId = state.activeLocationIndex.padStart(5, '0')
+    // const paddedLocationId = '06435'
     const url = `https://storage.googleapis.com/dgds-data-public/metocean/${graph}/point_${paddedLocationId}.zarr`
     const path = parameter
     // console.log(parameter)
