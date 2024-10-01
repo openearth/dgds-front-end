@@ -93,6 +93,18 @@ export default {
       parameter2Options: [],
       selectedParameter1: {},
       selectedParameter2: {},
+      baseColors: [
+        '#F5DA4D',
+        '#FCAE12',
+        '#F78211',
+        '#E75D2F',
+        '#CB4149',
+        '#A92E5E',
+        '#85216B',
+        '#60136E',
+        '#3A0A63',
+        '#140B35'
+      ],
 
       selectionBox: null,
 
@@ -156,29 +168,7 @@ export default {
           center: ['40%', '50%'],
           radius: '80%'
         },
-        color: [
-          '#F5DA4D',
-          '#F2CD47',
-          '#FCAE12',
-          '#F99711',
-          '#F78211',
-          '#F36D23',
-          '#E75D2F',
-          '#D74B36',
-          '#CB4149',
-          '#B73C53',
-          '#A92E5E',
-          '#962C62',
-          '#85216B',
-          '#73216E',
-          '#60136E',
-          '#4F1164',
-          '#3A0A63',
-          '#2D0B54',
-          '#140B35',
-          '#0F082A',
-          '#0B061E'
-        ],
+        color: this.baseColors,
         backgroundColor: 'transparent'
       },
 
@@ -208,16 +198,18 @@ export default {
       fetch(`/static/data/JOT-parameters.json`)
         .then((response) => response.json())
         .then((json) => {
-          this.parameters = json.filter(j => j.rose).map((j) => ({
-            parameter1: {
-              ...j.parameter1,
-              label: this.transformLabel(j.parameter1.label)
-            },
-            parameter2: {
-              ...j.parameter2,
-              label: this.transformLabel(j.parameter2.label)
-            }
-          }))
+          this.parameters = json
+            .filter((j) => j.rose)
+            .map((j) => ({
+              parameter1: {
+                ...j.parameter1,
+                label: this.transformLabel(j.parameter1.label)
+              },
+              parameter2: {
+                ...j.parameter2,
+                label: this.transformLabel(j.parameter2.label)
+              }
+            }))
 
           this.populateParameter1Options()
           this.populateParameter2Options()
@@ -243,7 +235,9 @@ export default {
     },
     selectParameter3(value) {
       this.selectionBox.value = value
-      this.updateChart()
+      this.$nextTick(() => {
+        this.updateChart()
+      })
     },
     populateParameter1Options() {
       const uniqueParameter1Options = [
@@ -260,7 +254,9 @@ export default {
     updateParameter2Options() {
       if (this.selectedParameter1) {
         this.parameter2Options = this.parameters
-          .filter((item) => item.parameter1 === this.selectedParameter1)
+          .filter(
+            (item) => item.parameter1.value === this.selectedParameter1.value
+          )
           .map((item) => item.parameter2)
       } else {
         this.populateParameter2Options()
@@ -273,7 +269,9 @@ export default {
     updateParameter1Options() {
       if (this.selectedParameter2) {
         this.parameter1Options = this.parameters
-          .filter((item) => item.parameter2 === this.selectedParameter2)
+          .filter(
+            (item) => item.parameter2.value === this.selectedParameter2.value
+          )
           .map((item) => item.parameter1)
       } else {
         this.populateParameter1Options()
@@ -345,7 +343,7 @@ export default {
           data: seriesData,
           stack: 'stack1',
           z: 0,
-          dimensions: ['class', 'direction', 'value']//[this.classesAxis.bin, this.angleAxis.bin, 'Value']
+          dimensions: ['class', 'direction', 'value'] //[this.classesAxis.bin, this.angleAxis.bin, 'Value']
         }
       })
     },
@@ -368,7 +366,8 @@ export default {
           instance.setOption(
             {
               series: [],
-              legend: {}
+              legend: {},
+              color: this.baseColors
             },
             {
               replaceMerge: ['series', 'legend']
@@ -397,6 +396,11 @@ export default {
             instance.off('rendered')
           }
         })
+
+        const colors = this.generateColors(
+          this.baseColors,
+          this.classesAxis.data.length
+        )
 
         instance.setOption(
           {
@@ -456,12 +460,14 @@ export default {
               show: true,
               top: 0,
               right: 0,
-              pageIconColor: "rgba(255,255,255,0.9)",
-              pageIconInactiveColor: "rgba(255,255,255,0.4)",
+              pageIconColor: 'rgba(255,255,255,0.9)',
+              pageIconInactiveColor: 'rgba(255,255,255,0.4)',
               pageTextStyle: {
-                color: "rgba(255,255,255,0.7)",
-              }
-            }
+                color: 'rgba(255,255,255,0.7)'
+              },
+              selectedMode: false
+            },
+            color: colors.reverse()
           },
           {
             replaceMerge: ['toolbox', 'angleAxis', 'series', 'legend']
@@ -507,6 +513,40 @@ export default {
         link.click()
         document.body.removeChild(link)
       }
+    },
+    interpolateColor(color1, color2, factor) {
+      let result = '#'
+      for (let i = 1; i <= 5; i += 2) {
+        const val1 = parseInt(color1.substr(i, 2), 16)
+        const val2 = parseInt(color2.substr(i, 2), 16)
+        const val = Math.round(val1 + factor * (val2 - val1))
+          .toString(16)
+          .padStart(2, '0')
+        result += val
+      }
+      return result
+    },
+    generateColors(baseColors, datasetLength) {
+      const baseLength = baseColors.length
+      const colors = []
+
+      // If dataset length is less than or equal to base color length, use only the base colors
+      if (datasetLength <= baseLength) {
+        return baseColors.slice(0, datasetLength)
+      }
+
+      // If dataset length is greater, interpolate between the base colors
+      for (let i = 0; i < datasetLength; i++) {
+        const scale = i / (datasetLength - 1)
+        const index = Math.floor(scale * (baseLength - 1))
+        const factor = scale * (baseLength - 1) - index
+
+        const color1 = baseColors[index]
+        const color2 = baseColors[Math.min(index + 1, baseLength - 1)]
+        colors.push(this.interpolateColor(color1, color2, factor))
+      }
+
+      return colors
     }
   }
 }

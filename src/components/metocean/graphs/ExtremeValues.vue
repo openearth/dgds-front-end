@@ -260,7 +260,7 @@ export default {
       let text = ''
 
       dataArray.forEach((item) => {
-        text += `${item['return period']} year: ${item['2.5% bound']} (${item['best estimate']} - ${item['97.5% bound']}) \n`
+        text += `${item['return period']} year: ${item['best estimate']} (${item['2.5% bound']} - ${item['97.5% bound']}) \n`
       })
 
       return text
