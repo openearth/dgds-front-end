@@ -30,6 +30,7 @@
           v-model="selectedHs"
           :items="hsParameters"
           label="Hs"
+          @change="selectHsParameter"
         />
       </div>
 
@@ -38,6 +39,7 @@
           v-model="selectedU"
           :items="uParameters"
           label="Umag"
+          @change="selectUParameter"
         />
       </div>
     </div>
@@ -192,17 +194,26 @@ export default {
           left: 32
         },
         xAxis: {
-          name: 'Durations',
+          name: 'Months',
           nameLocation: 'center',
           nameGap: 24,
           type: 'category',
-          data: this.months
+          axisLabel: {
+            formatter: (e) => {
+              const months = this.months?.slice(1, this.months.length) || []
+              console.log("e", e)
+              return months[e]
+            }
+          }
         },
         yAxis: {
           name: 'Percentage of time',
           nameLocation: 'center',
-          nameGap: 48,
+          nameGap: 40,
           type: 'value',
+          min: 0,
+          max: 100,
+          interval: 10,
           axisLabel: { formatter: (e) => `${e}%` }
         },
         legend: {
@@ -269,6 +280,7 @@ export default {
       fetch(`/static/data/PERS_bins.json`)
         .then((response) => response.json())
         .then((json) => {
+          console.log('json.period_bins', json.period_bins)
           this.months = json.period_bins
           this.durations = json.duration_bins
         })
@@ -355,7 +367,8 @@ export default {
     createSeriesData() {
       return this.durations.map((duration) => {
         const filteredData = this.findSeriesData(duration)
-        const serieData = this.months.map((month) => ({
+        const months = this.months?.slice(1, this.months.length) || []
+        const serieData = months.map((month) => ({
           duration: duration,
           month: month,
           value: filteredData[month]
@@ -390,6 +403,16 @@ export default {
 
       this.$nextTick(() => {
         this.updateChart()
+      })
+    },
+    selectHsParameter(){
+      this.$nextTick(() => {
+        this.getChartData()
+      })
+    },
+    selectUParameter() {
+      this.$nextTick(() => {
+        this.getChartData()
       })
     },
     downloadAsCSV(keys, filename) {
@@ -477,6 +500,7 @@ export default {
 
           // Corresponding month names
           const months = [
+            'All-year',
             'Jan',
             'Feb',
             'Mar',
@@ -499,12 +523,9 @@ export default {
               let obj = {}
 
               months.forEach((month, indexMonth) => {
-                obj[month] = dataArray[index][indexMonth].toFixed(3)
+                obj[month] = Math.round(dataArray[index][indexMonth] * 100)
               })
 
-              obj['All-year'] = dataArray[index]
-                .reduce((sum, val) => sum + val, 0)
-                .toFixed(3)
               obj['exceedance'] = this.selectedExceedance
               obj['duration'] = duration
               obj['threshold'] = {}
@@ -542,7 +563,7 @@ export default {
     },
     getCellData(duration, key) {
       const filteredData = this.findSeriesData(duration)
-      return filteredData[key]
+      return filteredData[key] != undefined ? `${filteredData[key]}%` : null
     }
   }
 }

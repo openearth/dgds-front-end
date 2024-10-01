@@ -467,7 +467,7 @@ export default {
               },
               selectedMode: false
             },
-            color: colors.reverse()
+            color: colors
           },
           {
             replaceMerge: ['toolbox', 'angleAxis', 'series', 'legend']
