@@ -291,7 +291,7 @@ export default {
         }
         this.yAxis = {
           ...jot.parameter1,
-          data: this.bins[jot.parameter1.bin].reverse()
+          data: this.bins[jot.parameter1.bin]
         }
 
         const newHeight = 120 + this.bins[jot.parameter1.bin].length * 22
