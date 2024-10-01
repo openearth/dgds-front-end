@@ -131,7 +131,7 @@ export default {
         },
         grid: {
           containLabel: true,
-          top: 75,
+          top: 72,
           right: 0,
           bottom: 16,
           left: 28
@@ -227,7 +227,9 @@ export default {
     updateParameter2Options() {
       if (this.selectedParameter1) {
         this.parameter2Options = this.parameters
-          .filter((item) => item.parameter1 === this.selectedParameter1)
+          .filter(
+            (item) => item.parameter1.value === this.selectedParameter1.value
+          )
           .map((item) => item.parameter2)
       } else {
         this.populateParameter2Options()
@@ -240,7 +242,9 @@ export default {
     updateParameter1Options() {
       if (this.selectedParameter2) {
         this.parameter1Options = this.parameters
-          .filter((item) => item.parameter2 === this.selectedParameter2)
+          .filter(
+            (item) => item.parameter2.value === this.selectedParameter2.value
+          )
           .map((item) => item.parameter1)
       } else {
         this.populateParameter1Options()
@@ -290,7 +294,7 @@ export default {
           data: this.bins[jot.parameter1.bin]
         }
 
-        const newHeight = 120 + this.bins[jot.parameter1.bin].length * 20
+        const newHeight = 120 + this.bins[jot.parameter1.bin].length * 22
         this.chartHeight = newHeight
 
         this.$nextTick(() => {
@@ -372,27 +376,51 @@ export default {
         const option = instance.getOption()
         const visualMap = option.visualMap?.[0]?.range
 
-        dataForSelection.forEach((selection, yIndex) => {
-          const currentYAxis = this.yAxis.data[yIndex]
+        if (this.xAxis.data.length >= this.yAxis.data.length) {
+          dataForSelection.forEach((selection, xIndex) => {
+            const currentXAxis = this.xAxis.data[xIndex]
 
-          this.xAxis.data.forEach((xAxisValue, xIndex) => {
-            let value = selection[xIndex]
-            value = value != null && !isNaN(value) ? parseFloat(value) : 0
+            this.yAxis.data.forEach((yAxisValue, yIndex) => {
+              let value = selection[yIndex]
+              value = value != null && !isNaN(value) ? parseFloat(value) : 0
 
-            yAxisTotals[yIndex] += parseFloat(value)
-            xAxisTotals[xIndex] += parseFloat(value)
+              yAxisTotals[yIndex] += value
+              xAxisTotals[xIndex] += value
 
-            seriesData.push([
-              xAxisValue,
-              currentYAxis,
-              value === 0 ? null : value
-            ])
+              seriesData.push([
+                currentXAxis,
+                yAxisValue,
+                value === 0 ? null : value
+              ])
 
-            if (value > max) {
-              max = value
-            }
+              if (value > max) {
+                max = value
+              }
+            })
           })
-        })
+        } else {
+          dataForSelection.forEach((selection, yIndex) => {
+            const currentYAxis = this.yAxis.data[yIndex]
+
+            this.xAxis.data.forEach((xAxisValue, xIndex) => {
+              let value = selection[xIndex]
+              value = value != null && !isNaN(value) ? parseFloat(value) : 0
+
+              yAxisTotals[yIndex] += value
+              xAxisTotals[xIndex] += value
+
+              seriesData.push([
+                xAxisValue,
+                currentYAxis,
+                value === 0 ? null : value
+              ])
+
+              if (value > max) {
+                max = value
+              }
+            })
+          })
+        }
 
         instance.setOption(
           {
@@ -448,7 +476,10 @@ export default {
                     }
                   }
                 },
-                nameGap: 40,
+                nameGap: 20 + seriesData?.[0]?.[0]?.length * 3 || 60,
+                nameTruncate: {
+                  maxWidth: instance.getWidth() - 28
+                },
                 type: 'category',
                 position: 'top',
                 splitArea: {
@@ -503,7 +534,10 @@ export default {
                     }
                   }
                 },
-                nameGap: 68,
+                nameGap: 20 + seriesData?.[0]?.[1]?.length * 5 || 60,
+                nameTruncate: {
+                  maxWidth: this.chartHeight - 80
+                },
                 type: 'category',
                 position: 'left',
                 splitArea: {
@@ -522,7 +556,7 @@ export default {
               {
                 name: 'Total (100)',
                 nameLocation: 'start',
-                nameGap: 24,
+                nameGap: 32,
                 type: 'category',
                 position: 'right',
                 data: yAxisTotals.map((t) => t.toFixed(2)),
