@@ -366,7 +366,7 @@ export default {
         // write location index for zarr file to state
         if (feature.properties.zarrIndex) {
           this.setActiveLocationIndex(feature.properties.zarrIndex)
-          this.$store.commit('setActiveLocationName', feature.properties.Name)
+          this.$store.commit('setActiveLocationName', String(feature.properties.Name))
         }
       })
 

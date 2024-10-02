@@ -284,7 +284,7 @@ export const actions = {
 
   loadNonTimeGraphDataForLocation({ commit, state }, { parameter, slice, graph }) {
     const datasetId = state.activeVectorDataIds
-    const paddedLocationId = state.activeLocationIndex.padStart(5, '0')
+    const paddedLocationId = state.activeLocationIndex.toString().padStart(5, '0')
     // const paddedLocationId = '06435'
     const url = `https://storage.googleapis.com/dgds-data-public/metocean/${graph}/point_${paddedLocationId}.zarr`
     const path = parameter
@@ -316,7 +316,7 @@ export const actions = {
 
   loadGraphDataForLocation({ commit, state }, { parameter, graph }) {
     const datasetId = state.activeVectorDataIds
-    const paddedLocationId = state.activeLocationIndex.padStart(5, '0')
+    const paddedLocationId = state.activeLocationIndex.toString().padStart(5, '0')
     // const paddedLocationId = '06435'
     const url = `https://storage.googleapis.com/dgds-data-public/metocean/${graph}/point_${paddedLocationId}.zarr`
 
@@ -352,7 +352,7 @@ export const actions = {
 
             // Use Moment.js to convert timestamps to dates
             const dates = timestamps.map(timestamp => {
-              return moment.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
+              return moment.unix(timestamp).utc().format('YYYY-MM-DD HH:mm:ss');
             });
 
             // Print the dates
