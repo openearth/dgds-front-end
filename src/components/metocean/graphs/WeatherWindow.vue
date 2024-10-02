@@ -91,6 +91,7 @@
         :headers="tableHeaders"
         :items="tableItems"
         disable-sort
+        dense
         hide-default-footer
         class="weather-window-table"
       />
@@ -100,7 +101,7 @@
 
 <script>
 import VChart, { THEME_KEY } from 'vue-echarts'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -133,40 +134,6 @@ export default {
       selectedExceedance: null,
       selectedThresholds: {},
       weatherWindowOption: {
-        toolbox: {
-          top: 0,
-          left: 8,
-          feature: {
-            saveAsImage: {
-              name: 'Weather_window',
-              title: 'Save as image',
-              type: 'png',
-              icon: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2M8.9 13.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 14c.19-.26.57-.27.78-.02',
-              emphasis: {
-                iconStyle: {
-                  borderColor: '#fff'
-                }
-              }
-            },
-            myFeature: {
-              show: true,
-              name: 'Weather_window',
-              title: 'Download as CSV',
-              icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
-              onclick: () => {
-                this.downloadAsCSV(
-                  ['duration', 'month', 'value'],
-                  'weather_window'
-                )
-              },
-              emphasis: {
-                iconStyle: {
-                  borderColor: '#fff'
-                }
-              }
-            }
-          }
-        },
         tooltip: {
           trigger: 'axis',
           confine: true,
@@ -188,7 +155,7 @@ export default {
         },
         grid: {
           containLabel: true,
-          top: 48,
+          top: 56,
           right: 8,
           bottom: 16,
           left: 32
@@ -201,7 +168,6 @@ export default {
           axisLabel: {
             formatter: (e) => {
               const months = this.months?.slice(1, this.months.length) || []
-              console.log("e", e)
               return months[e]
             }
           }
@@ -219,7 +185,7 @@ export default {
         legend: {
           orient: 'vertical',
           show: true,
-          top: 0,
+          top: 32,
           right: 0,
           data: this.durations
         },
@@ -243,8 +209,20 @@ export default {
   computed: {
     tableHeaders() {
       return [
-        { text: 'Duration', value: 'duration' },
-        ...this.months.map((month) => ({ text: month, value: month }))
+        {
+          text: 'Duration',
+          value: 'duration',
+          width: 60,
+          class: 'weather-window-header',
+          cellClass: 'weather-window-cell'
+        },
+        ...this.months.map((month, i) => ({
+          width: i === 0 ? 60 : 40,
+          text: month,
+          value: month,
+          class: 'weather-window-header',
+          cellClass: 'weather-window-cell'
+        }))
       ]
     },
     tableItems() {
@@ -269,6 +247,7 @@ export default {
   },
   methods: {
     ...mapActions(['loadNonTimeGraphDataForLocation']),
+    ...mapGetters(['getActiveLocationName']),
     transformLabel(label) {
       label = label.replace(/_\{([^}]+)\}/g, '<sub>$1</sub>')
       label = label.replace(/\^\{([^}]+)\}/g, '<sup>$1</sup>')
@@ -276,11 +255,17 @@ export default {
 
       return label
     },
+    replaceSubSupTags(label) {
+      return label
+        .replace(/<sub>/g, '')
+        .replace(/<\/sub>/g, '')
+        .replace(/<sup>/g, '')
+        .replace(/<\/sup>/g, '')
+    },
     fetchParameters() {
       fetch(`/static/data/PERS_bins.json`)
         .then((response) => response.json())
         .then((json) => {
-          console.log('json.period_bins', json.period_bins)
           this.months = json.period_bins
           this.durations = json.duration_bins
         })
@@ -312,10 +297,11 @@ export default {
         if (!this.data || this.data?.length === 0) {
           instance.setOption(
             {
+              title: {},
               series: []
             },
             {
-              replaceMerge: ['series']
+              replaceMerge: ['title', 'series']
             }
           )
 
@@ -323,7 +309,10 @@ export default {
         }
 
         this.isLoading = true
-        instance.setOption({ series: [] }, { replaceMerge: ['series'] })
+        instance.setOption(
+          { title: {}, series: [] },
+          { replaceMerge: ['title', 'series'] }
+        )
 
         instance.showLoading({
           text: 'Loading data...',
@@ -342,12 +331,59 @@ export default {
           }
         })
 
+        const locationName = this.getActiveLocationName()
+
         instance.setOption(
           {
+            title: {
+              top: -10,
+              left: 0,
+              subtext: this.createTitleText(),
+              subtextStyle: {
+                width: instance.getWidth() - 64,
+                fontSize: 10,
+                overflow: 'truncate'
+              }
+            },
+            toolbox: {
+              top: 0,
+              right: 8,
+              feature: {
+                saveAsImage: {
+                  backgroundColor: '#1E1E1E',
+                  name: `Weather_window_${locationName}`,
+                  title: 'Save as image',
+                  type: 'png',
+                  icon: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2M8.9 13.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 14c.19-.26.57-.27.78-.02',
+                  emphasis: {
+                    iconStyle: {
+                      borderColor: '#fff'
+                    }
+                  }
+                },
+                myFeature: {
+                  show: true,
+                  name: `Weather_window_${locationName}`,
+                  title: 'Download as CSV',
+                  icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
+                  onclick: () => {
+                    this.downloadAsCSV(
+                      ['duration', 'month', 'value'],
+                      `Weather_window_${locationName}`
+                    )
+                  },
+                  emphasis: {
+                    iconStyle: {
+                      borderColor: '#fff'
+                    }
+                  }
+                }
+              }
+            },
             series: this.createSeriesData()
           },
           {
-            replaceMerge: ['series']
+            replaceMerge: ['title', 'toolbox', 'series']
           }
         )
       }
@@ -377,7 +413,8 @@ export default {
         return {
           name: duration,
           type: 'line',
-          symbolSize: 8,
+          showSymbol: true,
+          symbolSize: 6,
           data: serieData,
           dimensions: ['month', 'value', 'duration'],
           encode: {
@@ -386,6 +423,23 @@ export default {
           }
         }
       })
+    },
+    createTitleText() {
+      let title = ''
+      if (this.selectedParameter) {
+        title += `Parameter: ${this.replaceSubSupTags(this.selectedParameter.label)} \n`
+      }
+      if (this.selectedHs) {
+        title += `Hs: ${this.selectedHs} \n`
+      }
+      if (this.selectedU) {
+        title += `U: ${this.selectedU} \n`
+      }
+      if (this.selectedExceedance) {
+        title += `Exceedance ${this.selectedExceedance} \n`
+      }
+
+      return title
     },
     selectParameter() {
       this.data = []
@@ -405,7 +459,7 @@ export default {
         this.updateChart()
       })
     },
-    selectHsParameter(){
+    selectHsParameter() {
       this.$nextTick(() => {
         this.getChartData()
       })
@@ -583,5 +637,12 @@ export default {
 }
 .weather-window-table {
   background-color: transparent !important;
+}
+::v-deep .weather-window-table .weather-window-header,
+::v-deep .weather-window-table .weather-window-cell {
+  padding: 0 8px;
+}
+::v-deep .weather-window-table .weather-window-cell {
+  font-size: 0.75rem;
 }
 </style>
