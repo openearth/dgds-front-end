@@ -363,23 +363,11 @@
     "selection_box": {
       "title": "Direction",
       "options": [
-        "Omni",
-        "0/360",
-        "30",
-        "60",
-        "90",
-        "120",
-        "150",
-        "180",
-        "210",
-        "240",
-        "270",
-        "300",
-        "330"
+        "Omni"
       ]
     },
     "parameter": {
-      "title": "Extreme water level for total sea maxima Wlv_{tot,extreme,max} (m+MSL",
+      "title": "Extreme water level for total sea maxima Wlv_{tot,extreme,max} (m+MSL)",
       "bin": "return_period_bins_1000"
     }
   },
@@ -387,19 +375,7 @@
     "selection_box": {
       "title": "Direction",
       "options": [
-        "Omni",
-        "0/360",
-        "30",
-        "60",
-        "90",
-        "120",
-        "150",
-        "180",
-        "210",
-        "240",
-        "270",
-        "300",
-        "330"
+        "Omni"
       ]
     },
     "parameter": {

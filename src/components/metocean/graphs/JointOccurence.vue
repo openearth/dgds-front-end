@@ -71,7 +71,7 @@
 
 <script>
 import VChart, { THEME_KEY } from 'vue-echarts'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -156,6 +156,7 @@ export default {
   },
   methods: {
     ...mapActions(['loadNonTimeGraphDataForLocation']),
+    ...mapGetters(['getActiveLocationName']),
     transformLabel(label) {
       label = label.replace(/_\{([^}]+)\}/g, '<sub>$1</sub>')
       label = label.replace(/\^\{([^}]+)\}/g, '<sup>$1</sup>')
@@ -329,6 +330,7 @@ export default {
         if (!dataForSelection || dataForSelection?.length === 0) {
           instance.setOption(
             {
+              title: {},
               xAxis: {},
               yAxis: {},
               visualMap: null,
@@ -343,7 +345,7 @@ export default {
         }
 
         this.isLoading = true
-        instance.setOption({ series: [] }, { replaceMerge: ['series'] })
+        instance.setOption({ title: {}, series: [] }, { replaceMerge: ['series'] })
 
         instance.showLoading({
           text: 'Loading data...',
@@ -422,14 +424,27 @@ export default {
           })
         }
 
+        const locationName = this.getActiveLocationName()
+
         instance.setOption(
           {
+            title: {
+              top: -10,
+              left: 0,
+              subtext: this.createTitleText(),
+              subtextStyle: {
+                width: instance.getWidth() - (168 + 64),
+                fontSize: 10,
+                overflow: 'truncate'
+              }
+            },
             toolbox: {
               top: 0,
-              left: 8,
+              right: 168,
               feature: {
                 saveAsImage: {
-                  name: 'Joint_occurence',
+                  backgroundColor: "#1E1E1E",
+                  name: `Joint_occurence_${locationName}`,
                   title: 'Save as image',
                   type: 'png',
                   icon: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2M8.9 13.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 14c.19-.26.57-.27.78-.02',
@@ -441,13 +456,13 @@ export default {
                 },
                 myFeature: {
                   show: true,
-                  name: 'Joint_occurence',
+                  name: `Joint_occurence_${locationName}`,
                   title: 'Download as CSV',
                   icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
                   onclick: () => {
                     this.downloadAsCSV(
                       [this.xAxis.bin, this.yAxis.bin, 'value'],
-                      'Joint_occurence'
+                      `Joint_occurence_${locationName}`
                     )
                   },
                   emphasis: {
@@ -590,8 +605,8 @@ export default {
                   ]
                 : [min, max],
               calculable: true,
-              right: 0,
               top: 0,
+              right: 0,
               orient: 'horizontal',
               inRange: {
                 color: ['#fff', '#faf9f0', '#f6efa6', '#d88273', '#bf444c']
@@ -611,7 +626,7 @@ export default {
                   verticalAlign: 'center',
                   formatter: (e) => {
                     return e.data[2].toLocaleString('en-US', {
-                      maximumFractionDigits: 1
+                      maximumFractionDigits: 2
                     })
                   }
                 },
@@ -629,7 +644,7 @@ export default {
             ]
           },
           {
-            replaceMerge: ['toolbox', 'xAxis', 'yAxis', 'visualMap', 'series']
+            replaceMerge: ['title', 'toolbox', 'xAxis', 'yAxis', 'visualMap', 'series']
           }
         )
       }
@@ -682,6 +697,20 @@ export default {
         link.click()
         document.body.removeChild(link)
       }
+    },
+    createTitleText() {
+      let title = ''
+      // if (this.selectedParameter1) {
+      //   title += `First parameter: ${this.replaceSubSupTags(this.selectedParameter1.label)} \n`
+      // }
+      // if (this.selectedParameter2) {
+      //   title += `Second parameter: ${this.replaceSubSupTags(this.selectedParameter2.label)} \n`
+      // }
+      if (this.selectionBox.value) {
+        title += `${this.selectionBox.title}: ${this.selectionBox.value} \n`
+      }
+
+      return title
     }
   }
 }

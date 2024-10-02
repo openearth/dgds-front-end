@@ -44,7 +44,7 @@
 
 <script>
 import VChart, { THEME_KEY } from 'vue-echarts'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -71,45 +71,6 @@ export default {
       selectedParameter: null,
       selectedDirection: null,
       lineOption: {
-        toolbox: {
-          top: 0,
-          left: 8,
-          feature: {
-            saveAsImage: {
-              name: 'Extreme_values',
-              title: 'Save as image',
-              type: 'png',
-              icon: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2M8.9 13.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 14c.19-.26.57-.27.78-.02',
-              emphasis: {
-                iconStyle: {
-                  borderColor: '#fff'
-                }
-              }
-            },
-            myFeature: {
-              show: true,
-              name: 'Extreme_values',
-              title: 'Download as CSV',
-              icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
-              onclick: () => {
-                this.downloadAsCSV(
-                  [
-                    'return period',
-                    '2.5% bound',
-                    'best estimate',
-                    '97.5% bound'
-                  ],
-                  'Extreme_values'
-                )
-              },
-              emphasis: {
-                iconStyle: {
-                  borderColor: '#fff'
-                }
-              }
-            }
-          }
-        },
         grid: {
           containLabel: true,
           top: 48,
@@ -140,7 +101,11 @@ export default {
           name: 'Return period',
           nameLocation: 'center',
           nameGap: 24,
-          type: 'log'
+          type: 'log',
+          axisLabel: {
+            alignMinLabel: 'left',
+            alignMaxLabel: 'right'
+          }
         },
         yAxis: {
           name: 'Value',
@@ -152,7 +117,7 @@ export default {
         legend: {
           orient: 'vertical',
           show: true,
-          top: 0,
+          top: 32,
           right: 0
         },
         color: ['#F5DA4D', '#F78211', '#CB4149', '#85216B', '#3A0A63'],
@@ -173,12 +138,20 @@ export default {
   },
   methods: {
     ...mapActions(['loadNonTimeGraphDataForLocation']),
+    ...mapGetters(['getActiveLocationName']),
     transformLabel(label) {
       label = label.replace(/_\{([^}]+)\}/g, '<sub>$1</sub>')
       label = label.replace(/\^\{([^}]+)\}/g, '<sup>$1</sup>')
       label = label.replace(/\{circ\}/g, '°')
 
       return label
+    },
+    replaceSubSupTags(label) {
+      return label
+        .replace(/<sub>/g, '')
+        .replace(/<\/sub>/g, '')
+        .replace(/<sup>/g, '')
+        .replace(/<\/sup>/g, '')
     },
     fetchParameters() {
       fetch(`/static/data/EXTR-bins.json`)
@@ -218,7 +191,8 @@ export default {
             x: 'return period',
             y: '2.5% bound'
           },
-          showSymbol: false,
+          showSymbol: true,
+          symbolSize: 6,
           lineStyle: {
             type: 'dashed'
           }
@@ -235,7 +209,8 @@ export default {
             x: 'return period',
             y: 'best estimate'
           },
-          showSymbol: false
+          showSymbol: true,
+          symbolSize: 6
         },
         {
           name: '97.5% Bound',
@@ -249,7 +224,8 @@ export default {
             x: 'return period',
             y: '97.5% bound'
           },
-          showSymbol: false,
+          showSymbol: true,
+          symbolSize: 6,
           lineStyle: {
             type: 'dashed'
           }
@@ -363,11 +339,12 @@ export default {
         if (!this.data || this.data?.length === 0) {
           instance.setOption(
             {
+              title: {},
               series: [],
               graphic: null
             },
             {
-              replaceMerge: ['series', 'graphic']
+              replaceMerge: ['title', 'series', 'graphic']
             }
           )
 
@@ -394,13 +371,65 @@ export default {
           }
         })
 
+        const locationName = this.getActiveLocationName()
+        
         instance.setOption(
           {
+            title: {
+              top: -10,
+              left: 0,
+              subtext: this.createTitleText(),
+              subtextStyle: {
+                width: instance.getWidth() - 64,
+                fontSize: 10,
+                overflow: 'truncate'
+              }
+            },
+            toolbox: {
+              top: 0,
+              right: 8,
+              feature: {
+                saveAsImage: {
+                  backgroundColor: '#1E1E1E',
+                  name: `Extreme_values_${locationName}`,
+                  title: 'Save as image',
+                  type: 'png',
+                  icon: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2M8.9 13.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 14c.19-.26.57-.27.78-.02',
+                  emphasis: {
+                    iconStyle: {
+                      borderColor: '#fff'
+                    }
+                  }
+                },
+                myFeature: {
+                  show: true,
+                  name: `Extreme_values_${locationName}`,
+                  title: 'Download as CSV',
+                  icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
+                  onclick: () => {
+                    this.downloadAsCSV(
+                      [
+                        'return period',
+                        '2.5% bound',
+                        'best estimate',
+                        '97.5% bound'
+                      ],
+                      `Extreme_values_${locationName}`
+                    )
+                  },
+                  emphasis: {
+                    iconStyle: {
+                      borderColor: '#fff'
+                    }
+                  }
+                }
+              }
+            },
             series: this.createSeriesData(),
             graphic: this.createGraphic()
           },
           {
-            replaceMerge: ['series', 'graphic']
+            replaceMerge: ['title', 'toolbox', 'series', 'graphic']
           }
         )
       }
@@ -470,6 +499,17 @@ export default {
         link.click()
         document.body.removeChild(link)
       }
+    },
+    createTitleText() {
+      let title = ''
+      if (this.selectedParameter) {
+        title += `Parameter: ${this.replaceSubSupTags(this.selectedParameter.label)} \n`
+      }
+      if (this.selectedDirection) {
+        title += `Direction: ${this.selectedDirection} \n`
+      }
+
+      return title
     }
   }
 }

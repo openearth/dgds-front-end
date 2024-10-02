@@ -28,10 +28,12 @@
     <div v-else>
       Loading parameters...
     </div>
-    <div style="width: 100%; height: 400px; margin: 8px 0px; position: relative;">
+    <div
+      style="width: 100%; height: 400px; margin: 8px 0px; position: relative"
+    >
       <div
         data-v-step="6"
-        style="position: absolute; top: 12px; width: 48px; left: 16px;"
+        style="position: absolute; top: 12px; width: 48px; left: 16px"
       />
       <v-chart
         ref="timeseries"
@@ -46,7 +48,7 @@
 import moment from 'moment'
 import VChart, { THEME_KEY } from 'vue-echarts'
 import { mapActions, mapGetters } from 'vuex'
-import "echarts"
+import 'echarts'
 
 export default {
   components: {
@@ -65,37 +67,6 @@ export default {
     return {
       timeseriesOption: {
         animation: false,
-        toolbox: {
-          top: 0,
-          left: 8,
-          feature: {
-            saveAsImage: {
-              name: 'Time_series',
-              title: 'Save as image',
-              type: 'png',
-              icon: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2M8.9 13.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 14c.19-.26.57-.27.78-.02',
-              emphasis: {
-                iconStyle: {
-                  borderColor: '#fff'
-                }
-              }
-            },
-            myFeature: {
-              show: true,
-              name: 'Time_series',
-              title: 'Download as CSV',
-              icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
-              onclick: () => {
-                this.downloadAsCSV(['Date+Time', 'value'], 'Time_series')
-              },
-              emphasis: {
-                iconStyle: {
-                  borderColor: '#fff'
-                }
-              }
-            }
-          }
-        },
         tooltip: {
           trigger: 'axis',
           confine: true,
@@ -164,12 +135,20 @@ export default {
   },
   methods: {
     ...mapActions(['loadGraphDataForLocation']),
+    ...mapGetters(['getActiveLocationName']),
     transformLabel(label) {
       label = label.replace(/_\{([^}]+)\}/g, '<sub>$1</sub>')
       label = label.replace(/\^\{([^}]+)\}/g, '<sup>$1</sup>')
       label = label.replace(/\{circ\}/g, '°')
 
       return label
+    },
+    replaceSubSupTags(label) {
+      return label
+        .replace(/<sub>/g, '')
+        .replace(/<\/sub>/g, '')
+        .replace(/<sup>/g, '')
+        .replace(/<\/sup>/g, '')
     },
     fetchParameters() {
       fetch(`/static/data/TimeserieParameters.json`)
@@ -180,7 +159,7 @@ export default {
             label: this.transformLabel(parameter.label)
           }))
 
-          this.selectParameter(parameters[0])
+          this.selectParameter(this.parameters[0])
         })
     },
     getStepInterval(data, key) {
@@ -232,6 +211,7 @@ export default {
         if (!this.data || this.data?.length === 0) {
           instance.setOption(
             {
+              title: {},
               xAxis: {
                 name: 'Datetime',
                 nameLocation: 'center',
@@ -255,7 +235,7 @@ export default {
               series: []
             },
             {
-              replaceMerge: ['xAxis', 'dataZoom', 'series']
+              replaceMerge: ['title', 'xAxis', 'dataZoom', 'series']
             }
           )
           return
@@ -265,8 +245,55 @@ export default {
         // const stepInterval = this.getAverageStepInterval(this.data, 'Date+Time')
         const indexForYears = this.getIndexForTimePeriod(stepInterval, 10)
 
+        const locationName = this.getActiveLocationName()
+
         instance.setOption(
           {
+            title: {
+              top: -10,
+              left: 0,
+              subtext: this.createTitleText(),
+              subtextStyle: {
+                width: instance.getWidth() - 64,
+                fontSize: 10,
+                overflow: 'truncate'
+              }
+            },
+            toolbox: {
+              top: 0,
+              right: 8,
+              feature: {
+                saveAsImage: {
+                  backgroundColor: '#1E1E1E',
+                  name: `Time_series_${locationName}`,
+                  title: 'Save as image',
+                  type: 'png',
+                  icon: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2M8.9 13.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 14c.19-.26.57-.27.78-.02',
+                  emphasis: {
+                    iconStyle: {
+                      borderColor: '#fff'
+                    }
+                  }
+                },
+                myFeature: {
+                  show: true,
+                  name: `Time_series_${locationName}`,
+                  title: 'Download as CSV',
+                  icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
+                  onclick: () => {
+                    this.downloadAsCSV(
+                      ['Date+Time', 'value'],
+                      `Time_series_${locationName}`
+                    )
+                  },
+                  emphasis: {
+                    iconStyle: {
+                      borderColor: '#fff'
+                    }
+                  }
+                }
+              }
+            },
             yAxis: {
               scale: true
             },
@@ -304,43 +331,12 @@ export default {
             legend: {
               orient: 'vertical',
               show: true,
-              top: 4,
-              right: 0,
-              formatter: function (name) {
-                // let formattedName = this.transformLabel(name)
-                
-                return this.transformLabel(name)
-                  .replace(/<sub>(.*?)<\/sub>/g, '{sub|$1}')
-                  .replace(/<sup>(.*?)<\/sup>/g, '{sup|$1}')
-
-                // formattedName = formattedName.replace(
-                //   /<sub>(.*?)<\/sub>/g,
-                //   '{sub|$1}'
-                // )
-
-                // formattedName = formattedName.replace(
-                //   /<sup>(.*?)<\/sup>/g,
-                //   '{sup|$1}'
-                // )
-
-                // return formattedName
-              }.bind(this),
-              textStyle: {
-                overflow: 'breakAll',
-                rich: {
-                  sub: {
-                    fontSize: 8,
-                    lineHeight: 2.5
-                  },
-                  sup: {
-                    fontSize: 8
-                  }
-                }
-              }
+              top: 32,
+              right: 0
             },
             series: [
               {
-                name: this.selectedParameter.label,
+                name: 'Time series', //this.selectedParameter.label,
                 data: this.data.map((d, i) => {
                   return {
                     value: d[this.selectedParameter.value],
@@ -354,7 +350,14 @@ export default {
             ]
           },
           {
-            replaceMerge: ['yAxis', 'xAxis', 'dataZoom', 'legend', 'series']
+            replaceMerge: [
+              'toolbox',
+              'yAxis',
+              'xAxis',
+              'dataZoom',
+              'legend',
+              'series'
+            ]
           }
         )
       }
@@ -451,11 +454,13 @@ export default {
         document.body.removeChild(link)
       }
     },
-    applyStartDatePicker() {
-      this.getChartData()
-    },
-    applyEndDatePicker() {
-      this.getChartData()
+    createTitleText() {
+      let title = ''
+      if (this.selectedParameter) {
+        title += `Parameter: ${this.replaceSubSupTags(this.selectedParameter.label)} \n`
+      }
+
+      return title
     }
   }
 }

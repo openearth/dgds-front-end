@@ -68,7 +68,7 @@
 
 <script>
 import VChart, { THEME_KEY } from 'vue-echarts'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -165,7 +165,7 @@ export default {
           }
         },
         polar: {
-          center: ['40%', '50%'],
+          center: ['40%', '55%'],
           radius: '80%'
         },
         color: this.baseColors,
@@ -187,6 +187,14 @@ export default {
   },
   methods: {
     ...mapActions(['loadNonTimeGraphDataForLocation']),
+    ...mapGetters(['getActiveLocationName']),
+    replaceSubSupTags(label) {
+      return label
+        .replace(/<sub>/g, '')
+        .replace(/<\/sub>/g, '')
+        .replace(/<sup>/g, '')
+        .replace(/<\/sup>/g, '')
+    },
     transformLabel(label) {
       label = label.replace(/_\{([^}]+)\}/g, '<sub>$1</sub>')
       label = label.replace(/\^\{([^}]+)\}/g, '<sup>$1</sup>')
@@ -318,7 +326,7 @@ export default {
         }
         this.classesAxis = {
           ...jot.parameter1,
-          data: this.bins[jot.parameter1.bin].reverse()
+          data: this.bins[jot.parameter1.bin]
         }
 
         this.$nextTick(() => {
@@ -365,12 +373,13 @@ export default {
         if (!dataForSelection || dataForSelection?.length === 0) {
           instance.setOption(
             {
+              title: {},
               series: [],
               legend: {},
               color: this.baseColors
             },
             {
-              replaceMerge: ['series', 'legend']
+              replaceMerge: ['title', 'series', 'legend']
             }
           )
 
@@ -378,7 +387,13 @@ export default {
         }
 
         this.isLoading = true
-        instance.setOption({ series: [] }, { replaceMerge: ['series'] })
+        instance.setOption(
+          {
+            title: {},
+            series: []
+          },
+          { replaceMerge: ['title', 'series'] }
+        )
 
         instance.showLoading({
           text: 'Loading data...',
@@ -402,14 +417,27 @@ export default {
           this.classesAxis.data.length
         )
 
+        const locationName = this.getActiveLocationName()
+
         instance.setOption(
           {
+            title: {
+              top: -10,
+              left: 0,
+              subtext: this.createTitleText(),
+              subtextStyle: {
+                width: instance.getWidth() - 64,
+                fontSize: 10,
+                overflow: 'truncate'
+              }
+            },
             toolbox: {
               top: 0,
-              left: 8,
+              right: 8,
               feature: {
                 saveAsImage: {
-                  name: 'Extreme_values',
+                  backgroundColor: '#1E1E1E',
+                  name: `Rose_plot_${locationName}`,
                   title: 'Save as image',
                   type: 'png',
                   icon: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2M8.9 13.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 14c.19-.26.57-.27.78-.02',
@@ -421,13 +449,13 @@ export default {
                 },
                 myFeature: {
                   show: true,
-                  name: 'Extreme_values',
+                  name: `Rose_plot_${locationName}`,
                   title: 'Download as CSV',
                   icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
                   onclick: () => {
                     this.downloadAsCSV(
                       ['class', 'direction', 'value'],
-                      'Rose_plot'
+                      `Rose_plot_${locationName}`
                     )
                   },
                   emphasis: {
@@ -442,6 +470,7 @@ export default {
               type: 'category',
               data: this.angleAxis.data,
               boundaryGap: false,
+              startAngle: 90,
               axisTick: {
                 show: true
               },
@@ -458,7 +487,7 @@ export default {
               orient: 'vertical',
               type: 'scroll',
               show: true,
-              top: 0,
+              top: 32,
               right: 0,
               pageIconColor: 'rgba(255,255,255,0.9)',
               pageIconInactiveColor: 'rgba(255,255,255,0.4)',
@@ -470,7 +499,7 @@ export default {
             color: colors
           },
           {
-            replaceMerge: ['toolbox', 'angleAxis', 'series', 'legend']
+            replaceMerge: ['title', 'toolbox', 'angleAxis', 'series', 'legend']
           }
         )
       }
@@ -547,6 +576,20 @@ export default {
       }
 
       return colors
+    },
+    createTitleText() {
+      let title = ''
+      if (this.selectedParameter1) {
+        title += `First parameter: ${this.replaceSubSupTags(this.selectedParameter1.label)} \n`
+      }
+      if (this.selectedParameter2) {
+        title += `Second parameter: ${this.replaceSubSupTags(this.selectedParameter2.label)} \n`
+      }
+      if (this.selectionBox.value) {
+        title += `${this.selectionBox.title}: ${this.selectionBox.value} \n`
+      }
+
+      return title
     }
   }
 }
