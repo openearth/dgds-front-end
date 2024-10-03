@@ -18,7 +18,7 @@
         <v-icon>mdi-close</v-icon>
       </v-btn>
       <div
-        v-if="user.email && user.email.includes('@deltares.nl')"
+        v-if="activeLocationName && user && user.email && user.email.includes('@deltares.nl')"
         class="flex-grow-1 py-3 scrollbar"
         align-space-between
       >
@@ -93,7 +93,7 @@
         </v-expansion-panels>
       </div>
       <div v-else>
-        <p>You are not authorised to view the detailed graphs</p>
+        <p>You are not authorised to view the detailed graphs or the data has not been made available yet.</p>
       </div>
       <div class="flex-shrink-1 bodytext-xs disclaimer">
         Global datasets are generated with great care but may locally contain
