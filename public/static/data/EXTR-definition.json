@@ -143,6 +143,30 @@
       "bin": "return_period_bins_1000"
     }
   },
+  "EXTR-CS_res_dav": {
+    "selection_box": {
+      "title": "Direction",
+      "options": [
+        "Omni",
+        "0/360",
+        "30",
+        "60",
+        "90",
+        "120",
+        "150",
+        "180",
+        "210",
+        "240",
+        "270",
+        "300",
+        "330"
+      ]
+    },
+    "parameter": {
+      "title": "Residual extreme current speed depth-averaged CS_{res,extreme,dav} (m/s)",
+      "bin": "return_period_bins_1000"
+    }
+  },
   "EXTR-H_s_tot": {
     "selection_box": {
       "title": "Direction",

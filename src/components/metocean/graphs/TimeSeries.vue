@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="parameters.length > 0">
+    <div v-if="parameters?.length > 0">
       <v-autocomplete
         v-model="selectedParameter"
         :items="parameters"
@@ -33,7 +33,7 @@
     >
       <div
         data-v-step="6"
-        style="position: absolute; top: 12px; width: 48px; left: 16px"
+        style="position: absolute; top: 12px; right: 0"
       />
       <v-chart
         ref="timeseries"
@@ -58,6 +58,10 @@ export default {
     return { [THEME_KEY]: 'dark' }
   },
   props: {
+    locationDataset: {
+      type: [String],
+      default: ''
+    },
     locationId: {
       type: [String, Number],
       default: ''
@@ -67,6 +71,7 @@ export default {
     return {
       timeseriesOption: {
         animation: false,
+        toolbox: this.getToolbox(),
         tooltip: {
           trigger: 'axis',
           confine: true,
@@ -121,6 +126,13 @@ export default {
     }
   },
   watch: {
+    locationDataset: {
+      immediate: true,
+      handler(newLocationDataset) {
+        console.log('newLocationDataset', newLocationDataset)
+        this.fetchParameters(newLocationDataset)
+      }
+    },
     locationId(newLocationId) {
       if (newLocationId) {
         this.getChartData()
@@ -130,9 +142,7 @@ export default {
   computed: {
     ...mapGetters(['colors', 'user'])
   },
-  mounted() {
-    this.fetchParameters()
-  },
+  mounted() {},
   methods: {
     ...mapActions(['loadGraphDataForLocation']),
     ...mapGetters(['getActiveLocationName']),
@@ -150,8 +160,13 @@ export default {
         .replace(/<sup>/g, '')
         .replace(/<\/sup>/g, '')
     },
-    fetchParameters() {
-      fetch(`/static/data/TimeserieParameters.json`)
+    fetchParameters(dataset) {
+      let fileName = 'TimeserieParameters'
+      if (dataset === 'metocean_WRA_points2') {
+        fileName = 'TimeserieParameters-WRA'
+      }
+
+      fetch(`/static/data/${fileName}.json`)
         .then((response) => response.json())
         .then((parameters) => {
           this.parameters = parameters.map((parameter) => ({
@@ -159,7 +174,8 @@ export default {
             label: this.transformLabel(parameter.label)
           }))
 
-          this.selectParameter(this.parameters[0])
+          this.selectParameter()
+          // this.selectParameter(this.parameters[0])
         })
     },
     getStepInterval(data, key) {
@@ -212,6 +228,7 @@ export default {
           instance.setOption(
             {
               title: {},
+              toolbox: {},
               xAxis: {
                 name: 'Datetime',
                 nameLocation: 'center',
@@ -259,41 +276,7 @@ export default {
                 overflow: 'truncate'
               }
             },
-            toolbox: {
-              top: 0,
-              right: 8,
-              feature: {
-                saveAsImage: {
-                  backgroundColor: '#1E1E1E',
-                  name: `Time_series_${locationName}`,
-                  title: 'Save as image',
-                  type: 'png',
-                  icon: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2M8.9 13.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 14c.19-.26.57-.27.78-.02',
-                  emphasis: {
-                    iconStyle: {
-                      borderColor: '#fff'
-                    }
-                  }
-                },
-                myFeature: {
-                  show: true,
-                  name: `Time_series_${locationName}`,
-                  title: 'Download as CSV',
-                  icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
-                  onclick: () => {
-                    this.downloadAsCSV(
-                      ['Date+Time', 'value'],
-                      `Time_series_${locationName}`
-                    )
-                  },
-                  emphasis: {
-                    iconStyle: {
-                      borderColor: '#fff'
-                    }
-                  }
-                }
-              }
-            },
+            toolbox: this.getToolbox(locationName),
             yAxis: {
               scale: true
             },
@@ -374,7 +357,13 @@ export default {
       const instance = this.$refs.timeseries?.chart
       if (instance) {
         this.isLoading = true
-        instance.setOption({ series: [] }, { replaceMerge: ['series'] })
+        instance.setOption(
+          {
+            toolbox: this.getToolbox(),
+            series: []
+          },
+          { replaceMerge: ['toolbox', 'series'] }
+        )
 
         instance.showLoading({
           text: 'Loading data...',
@@ -385,7 +374,7 @@ export default {
         })
 
         instance.on('rendered', () => {
-          if (instance.getOption().series?.length > 0) {
+          if (instance.getOption()?.series?.length > 0) {
             this.isLoading = false
             instance.hideLoading()
 
@@ -461,6 +450,44 @@ export default {
       }
 
       return title
+    },
+    getToolbox(locationName) {
+      const fileName = locationName
+        ? `Time_series_${locationName}`
+        : 'Time_series'
+
+      return {
+        top: 0,
+        right: 8,
+        feature: {
+          saveAsImage: {
+            backgroundColor: '#1E1E1E',
+            name: fileName,
+            title: 'Sav as image',
+            type: 'png',
+            icon: 'M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2M8.9 13.98l2.1 2.53 3.1-3.99c.2-.26.6-.26.8.01l3.51 4.68c.25.33.01.8-.4.8H6.02c-.42 0-.65-.48-.39-.81L8.12 14c.19-.26.57-.27.78-.02',
+            emphasis: {
+              iconStyle: {
+                borderColor: '#fff'
+              }
+            }
+          },
+          myFeature: {
+            show: true,
+            name: fileName,
+            title: 'Download as CSV',
+            icon: 'M16.59 9H15V4c0-.55-.45-1-1-1h-4c-.55 0-1 .45-1 1v5H7.41c-.89 0-1.34 1.08-.71 1.71l4.59 4.59c.39.39 1.02.39 1.41 0l4.59-4.59c.63-.63.19-1.71-.7-1.71M5 19c0 .55.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1H6c-.55 0-1 .45-1 1',
+            onclick: () => {
+              this.downloadAsCSV(['Date+Time', 'value'], fileName)
+            },
+            emphasis: {
+              iconStyle: {
+                borderColor: '#fff'
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

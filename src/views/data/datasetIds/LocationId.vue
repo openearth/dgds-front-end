@@ -39,7 +39,10 @@
               Time series
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
-              <time-series :location-id="$route.params.locationId" />
+              <time-series
+                :location-dataset="activeLocationDataset"
+                :location-id="$route.params.locationId"
+              />
             </v-expansion-panel-content>
           </v-expansion-panel>
           <v-expansion-panel v-if="activeLocationName?.includes('PEI')">
@@ -78,7 +81,7 @@
               <weather-window :location-id="$route.params.locationId" />
             </v-expansion-panel-content>
           </v-expansion-panel>
-          <v-expansion-panel v-if="activeLocationName?.includes('PEI')">
+          <v-expansion-panel v-if="activeLocationDataset == 'metocean_points'">
             <v-expansion-panel-header
               class="h4"
               color="background"
@@ -127,6 +130,7 @@ export default {
   data() {
     return {
       activeLocationName: '',
+      activeLocationDataset: '',
       expandedPanels: []
     }
   },
@@ -139,6 +143,7 @@ export default {
       'activeRasterData',
       'activeSummary',
       'getActiveLocationName',
+      'getActiveLocationDataset',
       'getExpandedPanels'
     ]),
     datasets() {
@@ -166,6 +171,12 @@ export default {
         this.activeLocationName = newVal
       }
     },
+    getActiveLocationDataset: {
+      immediate: true,
+      handler(newVal) {
+        this.activeLocationDataset = newVal
+      }
+    },
     getExpandedPanels: {
       immediate: true,
       handler(newVal) {
@@ -188,7 +199,7 @@ export default {
       'setActiveLocationIds',
       'setExpandedPanels'
     ]),
-    ...mapActions(['loadPointDataForLocation', 'loadActiveStateName']),
+    ...mapActions(['loadPointDataForLocation']),
     updateLocationPanel() {
       const {
         // datasetIds,
@@ -196,9 +207,6 @@ export default {
       } = this.$route.params
       // console.log('Inside updateLocationPanel:', { datasetIds, locationId })
       this.setActiveLocationIds(locationId ? [locationId] : [])
-      // if (this.loadActiveStateName.contains('PEI'))
-      //   this.peiPoint == true
-      // this.loadPointDataForLocation({ datasetIds, locationId });
     },
     close() {
       this.$store.commit('setExpandedPanels', [])

@@ -38,6 +38,7 @@ export const mutations = {
     state.activeLocationIds = []
     state.activeLocationIndex = []
     state.activeLocationName = ''
+    state.activeLocationDataset = ''
     state.activeTheme = ''
     state.loadingRasterLayers = false
   },
@@ -68,6 +69,9 @@ export const mutations = {
   },
   setActiveLocationName(state, name) {
     Vue.set(state, 'activeLocationName', name)
+  },
+  setActiveLocationDataset(state, name) {
+    Vue.set(state, 'activeLocationDataset', name)
   },
   clearActiveLocationIds(state) {
     state.activeLocationIds = []
@@ -276,10 +280,6 @@ export const actions = {
         })
       }
     })
-  },
-
-  loadActiveStateName({ state, dispatch }) {
-    return state.activeLocationName
   },
 
   loadNonTimeGraphDataForLocation({ commit, state }, { parameter, slice, graph }) {
@@ -604,6 +604,9 @@ export const actions = {
 export const getters = {
   getActiveLocationName(state) {
     return state.activeLocationName
+  },
+  getActiveLocationDataset(state) {
+    return state.activeLocationDataset
   },
   getExpandedPanels(state) {
     return state.expandedPanels
