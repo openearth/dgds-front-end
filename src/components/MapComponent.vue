@@ -367,11 +367,11 @@ export default {
         // write location index for zarr file to state
         if (feature.source.includes('metocean')) {
           this.$store.commit('setActiveLocationDataset', feature.sourceLayer)
+          this.$store.commit('setActiveLocationName', feature.properties.Name)
         }
         
         if (feature.properties.zarrIndex) {
           this.setActiveLocationIndex(feature.properties.zarrIndex)
-          this.$store.commit('setActiveLocationName', feature.properties.Name)
         }
       })
 
