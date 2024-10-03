@@ -129,7 +129,6 @@ export default {
     locationDataset: {
       immediate: true,
       handler(newLocationDataset) {
-        console.log('newLocationDataset', newLocationDataset)
         this.fetchParameters(newLocationDataset)
       }
     },

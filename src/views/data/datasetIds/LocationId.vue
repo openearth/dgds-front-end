@@ -1,5 +1,6 @@
 <template>
   <v-navigation-drawer
+    v-if="['metocean_points', 'metocean_WRA_points2'].includes(activeLocationDataset)"
     class="pl-16"
     permanent
     absolute
