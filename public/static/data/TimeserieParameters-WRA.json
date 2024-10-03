@@ -1,0 +1,54 @@
+[
+  {
+      "label": "Hourly-averaged horizontal wind direction at 10 m height U_{10,dir} ({circ}N coming from)",
+      "value": "U_10_dir"
+  },
+  {
+      "label": "Hourly-averaged horizontal wind direction at 60 m height U_{60,dir} ({circ}N coming from)",
+      "value": "U_60_dir"
+  },
+  {
+      "label": "Hourly-averaged horizontal wind direction at 100 m height U_{100,dir} ({circ}N coming from)",
+      "value": "U_100_dir"
+  },
+  {
+      "label": "Hourly-averaged horizontal wind direction at 120 m height U_{120,dir} ({circ}N coming from)",
+      "value": "U_120_dir"
+  },
+  {
+      "label": "Hourly-averaged horizontal wind direction at 160 m height U_{160,dir} ({circ}N coming from)",
+      "value": "U_160_dir"
+  },
+  {
+      "label": "Hourly-averaged horizontal wind direction at 200 m height U_{200,dir} ({circ}N coming from)",
+      "value": "U_200_dir"
+  },
+  {
+      "label": "Hourly-averaged horizontal wind direction at 250 m height U_{250,dir} ({circ}N coming from)",
+      "value": "U_250_dir"
+  },
+  {
+      "label": "Hourly-averaged horizontal wind speed at 10 m height U_{10,mag} (m/s)",
+      "value": "U_10_mag"
+  },
+  {
+      "label": "Hourly-averaged horizontal wind speed at 60 m height U_{60,mag} (m/s)",
+      "value": "U_60_mag"
+  },
+  {
+      "label": "Hourly-averaged horizontal wind speed at 120 m height U_{120,mag} (m/s)",
+      "value": "U_120_mag"
+  },
+  {
+      "label": "Hourly-averaged horizontal wind speed at 160 m height U_{160,mag} (m/s)",
+      "value": "U_160_mag"
+  },
+  {
+      "label": "Hourly-averaged horizontal wind speed at 200 m height U_{200,mag} (m/s)",
+      "value": "U_200_mag"
+  },
+  {
+      "label": "Hourly-averaged horizontal wind speed at 250 m height U_{250,mag} (m/s)",
+      "value": "U_250_mag"
+  }
+]

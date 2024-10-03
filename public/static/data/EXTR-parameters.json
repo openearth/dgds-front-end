@@ -24,6 +24,10 @@
     "value": "CS_tot_dav"
   },
   {
+    "label": "Residual extreme current speed depth-averaged CS_{res,extreme,dav} (m/s)",
+    "value": "CS_res_dav"
+  },
+  {
     "label": "Extreme significant wave height for total sea H_{s,tot,extreme} (m)",
     "value": "H_s_tot"
   },
