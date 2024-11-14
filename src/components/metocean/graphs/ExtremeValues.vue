@@ -129,7 +129,13 @@ export default {
   watch: {
     locationId(newLocationId) {
       if (newLocationId) {
-        this.getChartData()
+        this.selectedDirection = null
+        this.selectedParameter = null
+        this.data = []
+
+        this.$nextTick(() => {
+          this.updateChart()
+        })
       }
     }
   },
@@ -330,7 +336,9 @@ export default {
     },
     selectDirection(direction) {
       this.selectedDirection = direction
-      this.getChartData(direction)
+      this.$nextTick(() => {
+        this.getChartData(direction)
+      })
     },
     updateChart() {
       const instance = this.$refs.extremeValues?.chart
@@ -372,7 +380,7 @@ export default {
         })
 
         const locationName = this.getActiveLocationName()
-        
+
         instance.setOption(
           {
             title: {

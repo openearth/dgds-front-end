@@ -1,5 +1,6 @@
 <template>
   <v-navigation-drawer
+    v-if="['metocean_points', 'metocean_WRA_points2'].includes(activeLocationDataset)"
     class="pl-16"
     permanent
     absolute
@@ -18,7 +19,7 @@
         <v-icon>mdi-close</v-icon>
       </v-btn>
       <div
-        v-if="activeLocationName && user && user.email && user.email.includes('@deltares.nl')"
+        v-if="activeLocationName"
         class="flex-grow-1 py-3 scrollbar"
         align-space-between
       >
@@ -75,7 +76,7 @@
               color="background"
               dark
             >
-              Weather window
+              Persistence
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
               <weather-window :location-id="$route.params.locationId" />

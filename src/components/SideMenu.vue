@@ -15,7 +15,7 @@
         <v-list-item
           class="px-2"
           data-v-step="1"
-          @click="$router.push({ name: 'home' })"
+          @click="openExternalLink('https://www.deltares.nl')"
         >
           <v-list-item-avatar>
             <custom-icon name="deltares" />

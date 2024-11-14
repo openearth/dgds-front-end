@@ -350,6 +350,7 @@ export default {
       // route accordingly
       this.geometry = detail.geometry
       const locationIds = []
+
       // detail.feature.properties contains attributes from Mapbox points
       detail.features.forEach((feature) => {
         // When a layer has a metadata with locationIdField use this layer and
@@ -367,8 +368,9 @@ export default {
         // write location index for zarr file to state
         if (feature.source.includes('metocean')) {
           this.$store.commit('setActiveLocationDataset', feature.sourceLayer)
+          this.$store.commit('setActiveLocationName', feature.properties.Name)
         }
-        
+
         if (feature.properties.zarrIndex) {
           this.setActiveLocationIndex(feature.properties.zarrIndex)
           this.$store.commit('setActiveLocationName', String(feature.properties.Name))
