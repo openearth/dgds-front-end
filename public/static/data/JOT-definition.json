@@ -1959,7 +1959,7 @@
       "bin": "U_dir_bins"
     }
   },
-  "JOT-WL_tot-CD_res_dav": {
+  "JOT-WL_res-CD_res_dav": {
     "selection_box": {
       "title": "Months of interest",
       "options": [
@@ -1979,12 +1979,12 @@
       ]
     },
     "parameter1": {
-      "title": "Total water level WL_{tot} (m)",
-      "bin": "WL_tot_bins"
+      "title": "Total water level WL_{res} (m)",
+      "bin": "WL_res_bins"
     },
     "parameter2": {
       "title": "Depth-averaged residual current direction CD_{res,dav} ({circ}N coming from)",
-      "bin": "CS_res_dav_bins"
+      "bin": "CD_res_dav_bins"
     }
   },
   "JOT-WL_tot-CD_tot_dav": {
@@ -2012,7 +2012,7 @@
     },
     "parameter2": {
       "title": "Depth-averaged total current direction CD_{tot,dav} ({circ}N coming from)",
-      "bin": "CS_tot_dav_bins"
+      "bin": "CD_tot_dav_bins"
     }
   },
   "JOT-WL_tot-H_s_tot": {
