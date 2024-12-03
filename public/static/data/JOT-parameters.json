@@ -841,8 +841,8 @@
   },
   {
     "parameter1": {
-      "label": "Total water level WL_{tot} (m)",
-      "value": "WL_tot"
+      "label": "Total water level WL_{res} (m)",
+      "value": "WL_res"
     },
     "parameter2": {
       "label": "Depth-averaged residual current direction CD_{res,dav} ({circ}N coming from)",
