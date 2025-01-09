@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import VChart, { THEME_KEY } from 'vue-echarts'
 import { mapActions, mapGetters } from 'vuex'
 
@@ -127,6 +128,18 @@ export default {
     }
   },
   watch: {
+    getActiveLocationLat: {
+      immediate: true,
+      handler(newVal) {
+        this.activeLocationLat = newVal
+      }
+    },
+    getActiveLocationLng: {
+      immediate: true,
+      handler(newVal) {
+        this.activeLocationLng = newVal
+      }
+    },
     locationId(newLocationId) {
       if (newLocationId) {
         this.selectedDirection = null
@@ -144,7 +157,11 @@ export default {
   },
   methods: {
     ...mapActions(['loadNonTimeGraphDataForLocation']),
-    ...mapGetters(['getActiveLocationName']),
+    ...mapGetters([
+      'getActiveLocationName',
+      'getActiveLocationLat',
+      'getActiveLocationLng'
+    ]),
     transformLabel(label) {
       label = label.replace(/_\{([^}]+)\}/g, '<sub>$1</sub>')
       label = label.replace(/\^\{([^}]+)\}/g, '<sup>$1</sup>')
@@ -448,37 +465,43 @@ export default {
       if (instance) {
         const option = instance.getOption()
 
-        // Get the current state of the legend (which series are selected/visible)
-        const legend = option.legend[0].selected
+        if (!this.selectedParameter || !this.selectedDirection) return
 
-        // Add header row to CSV
-        let csvContent = `data:text/csv;charset=utf-8,${keys.join(',')} \r\n`
+        const legend = option.legend[0]?.selected
 
-        // Retrieve visible data from the current state (respect dataZoom)
+        let csvContent = ''
+
+        const lat = this.getActiveLocationLat()
+        const lng = this.getActiveLocationLng()
+
+        csvContent += `# Parameter: ${this.replaceSubSupTags(this.selectedParameter.label).replaceAll(",", "_")} \r\n`
+        csvContent += `# Direction: ${this.selectedDirection} \r\n`
+        csvContent += `# Location (lat-lon): ${lat}-${lng} \r\n`
+        csvContent += `# Data generated at metoceandata.org on ${moment().format("DD-MM-YYYY HH:mm")} \r\n`
+        csvContent += `# See report: https://offshore.digital-database.economie.fgov.be/#/category/60 \r\n`
+        csvContent += '\r\n'
+
+        const delimiter = ';'
+        csvContent += `${keys.join(delimiter)} \r\n`
+
         const zoomStart = option.dataZoom?.[0]?.start / 100 || 0
         const zoomEnd = option.dataZoom?.[0]?.end / 100 || 1
 
-        // Prepare an object to group data by "return period"
         let groupedData = {}
 
-        // Collect data across all series
         option.series.forEach((serie) => {
           if (serie.data && legend[serie.name] !== false) {
             const startIndex = Math.floor(zoomStart * serie.data.length)
             const endIndex = Math.ceil(zoomEnd * serie.data.length)
 
-            // Process the visible data range for this series
             serie.data.slice(startIndex, endIndex).forEach((point) => {
-              const returnPeriodIndex =
-                serie.dimensions.indexOf('return period')
+              const returnPeriodIndex = serie.dimensions.indexOf('return period')
               const returnPeriod = point[returnPeriodIndex]
 
-              // Initialize the group if necessary
               if (!groupedData[returnPeriod]) {
                 groupedData[returnPeriod] = {}
               }
 
-              // Assign data for each key
               keys.forEach((key) => {
                 const keyIndex = serie.dimensions.indexOf(key)
                 if (keyIndex !== -1) {
@@ -489,23 +512,29 @@ export default {
           }
         })
 
-        // Build CSV content by iterating over grouped data
         Object.keys(groupedData).forEach((returnPeriod) => {
           const row = [returnPeriod]
           keys.slice(1).forEach((key) => {
             row.push(groupedData[returnPeriod][key] || 'undefined')
           })
-          csvContent += row.join(',') + '\r\n'
+          csvContent += row.join(delimiter) + '\r\n'
         })
 
-        // Trigger CSV download
-        const encodedUri = encodeURI(csvContent)
+        // Convert CSV content to a Blob with UTF-8 BOM
+        const BOM = '\uFEFF' // UTF-8 BOM
+        const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' })
+
+        // Create a temporary link and trigger the download
         const link = document.createElement('a')
-        link.setAttribute('href', encodedUri)
+        const url = URL.createObjectURL(blob)
+        link.href = url
         link.setAttribute('download', `${filename}.csv`)
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
+
+        // Revoke the object URL to free up memory
+        URL.revokeObjectURL(url)
       }
     },
     createTitleText() {

@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import VChart, { THEME_KEY } from 'vue-echarts'
 import { mapActions, mapGetters } from 'vuex'
 
@@ -145,6 +146,18 @@ export default {
     }
   },
   watch: {
+    getActiveLocationLat: {
+      immediate: true,
+      handler(newVal) {
+        this.activeLocationLat = newVal
+      }
+    },
+    getActiveLocationLng: {
+      immediate: true,
+      handler(newVal) {
+        this.activeLocationLng = newVal
+      }
+    },
     locationId(newLocationId) {
       if (newLocationId) {
         this.getChartData()
@@ -156,7 +169,18 @@ export default {
   },
   methods: {
     ...mapActions(['loadNonTimeGraphDataForLocation']),
-    ...mapGetters(['getActiveLocationName']),
+    ...mapGetters([
+      'getActiveLocationName',
+      'getActiveLocationLat',
+      'getActiveLocationLng'
+    ]),
+    replaceSubSupTags(label) {
+      return label
+        .replace(/<sub>/g, '')
+        .replace(/<\/sub>/g, '')
+        .replace(/<sup>/g, '')
+        .replace(/<\/sup>/g, '')
+    },
     transformLabel(label) {
       label = label.replace(/_\{([^}]+)\}/g, '<sub>$1</sub>')
       label = label.replace(/\^\{([^}]+)\}/g, '<sup>$1</sup>')
@@ -657,8 +681,23 @@ export default {
         // Get the current range of the visualMap (which series are selected/visible)
         const visualMap = option.visualMap[0].range
 
-        // Add header row to CSV
-        let csvContent = `data:text/csv;charset=utf-8,${keys.join(',')} \r\n`
+        let csvContent = ''
+
+        const lat = this.getActiveLocationLat()
+        const lng = this.getActiveLocationLng()
+
+        csvContent += `# First parameter: ${this.replaceSubSupTags(this.selectedParameter1.label).replaceAll(",", "_")} \r\n`
+        csvContent += `# Second parameter: ${this.replaceSubSupTags(this.selectedParameter2.label).replaceAll(",", "_")} \r\n`
+        if (this.selectionBox) {
+          csvContent += `# ${this.selectionBox.title}: ${this.selectionBox.value} \r\n`
+        }
+        csvContent += `# Location (lat-lon): ${lat}-${lng} \r\n`
+        csvContent += `# Data generated at metoceandata.org on ${moment().format("DD-MM-YYYY HH:mm")} \r\n`
+        csvContent += `# See report: https://offshore.digital-database.economie.fgov.be/#/category/60 \r\n`
+        csvContent += '\r\n'
+
+        const delimiter = ';'
+        csvContent += `${keys.join(delimiter)} \r\n`
 
         // Retrieve visible data from the current state (respect dataZoom)
         const zoomStart = option.dataZoom?.[0]?.start / 100 || 0
@@ -671,31 +710,35 @@ export default {
 
             // Process the visible data range for this series
             serie.data
-              .filter((point) =>
-                this.isValueInRange(visualMap, parseFloat(point[2]))
-              )
+              .filter((point) => this.isValueInRange(visualMap, parseFloat(point[2])))
               .slice(startIndex, endIndex)
               .forEach((point) => {
                 keys.forEach((key, keyIndex) => {
                   const indexOfKey = serie.dimensions.indexOf(key)
-
-                  csvContent +=
-                    keyIndex === 0
-                      ? point[indexOfKey]
-                      : `, ${point[indexOfKey]}`
+                  const value = point[indexOfKey]
+                  csvContent += keyIndex === 0 ? value : `${delimiter}${value}`
                 })
+
                 csvContent += '\r\n'
               })
           }
         })
 
-        const encodedUri = encodeURI(csvContent)
+        // Convert CSV content to a Blob with UTF-8 BOM
+        const BOM = '\uFEFF' // UTF-8 BOM
+        const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' })
+
+        // Create a temporary link and trigger the download
         const link = document.createElement('a')
-        link.setAttribute('href', encodedUri)
+        const url = URL.createObjectURL(blob)
+        link.href = url
         link.setAttribute('download', `${filename}.csv`)
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
+
+        // Revoke the object URL to free up memory
+        URL.revokeObjectURL(url)
       }
     },
     createTitleText() {

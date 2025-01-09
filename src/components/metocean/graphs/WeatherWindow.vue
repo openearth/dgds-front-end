@@ -100,6 +100,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import VChart, { THEME_KEY } from 'vue-echarts'
 import { mapActions, mapGetters } from 'vuex'
 
@@ -236,6 +237,18 @@ export default {
     }
   },
   watch: {
+    getActiveLocationLat: {
+      immediate: true,
+      handler(newVal) {
+        this.activeLocationLat = newVal
+      }
+    },
+    getActiveLocationLng: {
+      immediate: true,
+      handler(newVal) {
+        this.activeLocationLng = newVal
+      }
+    },
     locationId(newLocationId) {
       if (newLocationId) {
         this.getChartData()
@@ -247,7 +260,11 @@ export default {
   },
   methods: {
     ...mapActions(['loadNonTimeGraphDataForLocation']),
-    ...mapGetters(['getActiveLocationName']),
+    ...mapGetters([
+      'getActiveLocationName',
+      'getActiveLocationLat',
+      'getActiveLocationLng'
+    ]),
     transformLabel(label) {
       label = label.replace(/_\{([^}]+)\}/g, '<sub>$1</sub>')
       label = label.replace(/\^\{([^}]+)\}/g, '<sup>$1</sup>')
@@ -433,7 +450,7 @@ export default {
         title += `Hs: ${this.selectedHs} \n`
       }
       if (this.selectedU) {
-        title += `U: ${this.selectedU} \n`
+        title += `Umag: ${this.selectedU} \n`
       }
       if (this.selectedExceedance) {
         title += `Exceedance ${this.selectedExceedance} \n`
@@ -476,10 +493,31 @@ export default {
         const option = instance.getOption()
 
         // Get the current state of the legend (which series are selected/visible)
-        const legend = option.legend[0].selected
+        const legend = option.legend[0]?.selected
 
-        // Add header row to CSV
-        let csvContent = `data:text/csvcharset=utf-8,${keys.join(',')} \r\n`
+        let csvContent = ''
+
+        const lat = this.getActiveLocationLat()
+        const lng = this.getActiveLocationLng()
+
+        csvContent += `# Parameter: ${this.replaceSubSupTags(this.selectedParameter.label).replaceAll(",", "_")} \r\n`
+        if (this.selectedHs) {
+          csvContent += `# Hs: ${this.selectedHs} \r\n`
+        }
+        if (this.selectedU) {
+          csvContent += `# Umag: ${this.selectedU} \r\n`
+        }
+        if (this.selectedExceedance) {
+          csvContent += `# Exceedance: ${this.selectedExceedance} \r\n`
+        }
+
+        csvContent += `# Location (lat-lon): ${lat}-${lng} \r\n`
+        csvContent += `# Data generated at metoceandata.org on ${moment().format("DD-MM-YYYY HH:mm")} \r\n`
+        csvContent += `# See report: https://offshore.digital-database.economie.fgov.be/#/category/60 \r\n`
+        csvContent += '\r\n'
+
+        const delimiter = ';'
+        csvContent += `${keys.join(delimiter)} \r\n`
 
         // Retrieve visible data from the current state (respect dataZoom)
         const zoomStart = option.dataZoom?.[0]?.start / 100 || 0
@@ -493,20 +531,29 @@ export default {
             // Process the visible data range for this series
             serie.data.slice(startIndex, endIndex).forEach((point) => {
               keys.forEach((key, keyIndex) => {
-                csvContent += keyIndex === 0 ? point[key] : `, ${point[key]}`
+                const value = point[key]
+                csvContent += keyIndex === 0 ? value : `${delimiter}${value}`
               })
               csvContent += '\r\n'
             })
           }
         })
 
-        const encodedUri = encodeURI(csvContent)
+        // Convert CSV content to a Blob with UTF-8 BOM
+        const BOM = '\uFEFF' // UTF-8 BOM
+        const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' })
+
+        // Create a temporary link and trigger the download
         const link = document.createElement('a')
-        link.setAttribute('href', encodedUri)
+        const url = URL.createObjectURL(blob)
+        link.href = url
         link.setAttribute('download', `${filename}.csv`)
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
+
+        // Revoke the object URL to free up memory
+        URL.revokeObjectURL(url)
       }
     },
     createSlice() {

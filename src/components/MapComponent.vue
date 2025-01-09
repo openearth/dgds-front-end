@@ -189,7 +189,9 @@ export default {
       'setGeographicalScope',
       'setActiveLocationIndex',
       'setActiveLocationName',
-      'setActiveLocationDataset'
+      'setActiveLocationDataset',
+      'setActiveLocationLat',
+      'setActiveLocationLng'
     ]),
 
     getMapboxLayers(collection) {
@@ -369,6 +371,8 @@ export default {
         if (feature.source.includes('metocean')) {
           this.$store.commit('setActiveLocationDataset', feature.sourceLayer)
           this.$store.commit('setActiveLocationName', feature.properties.Name)
+          this.$store.commit('setActiveLocationLat', detail.geometry.coordinates[1])
+          this.$store.commit('setActiveLocationLng', detail.geometry.coordinates[0])
         }
 
         if (feature.properties.zarrIndex) {

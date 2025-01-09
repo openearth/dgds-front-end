@@ -39,6 +39,8 @@ export const mutations = {
     state.activeLocationIndex = []
     state.activeLocationName = ''
     state.activeLocationDataset = ''
+    state.activeLocationLat = ''
+    state.activeLocationLng = ''
     state.activeTheme = ''
     state.loadingRasterLayers = false
   },
@@ -72,6 +74,12 @@ export const mutations = {
   },
   setActiveLocationDataset(state, name) {
     Vue.set(state, 'activeLocationDataset', name)
+  },
+  setActiveLocationLat(state, name) {
+    Vue.set(state, 'activeLocationLat', name)
+  },
+  setActiveLocationLng(state, name) {
+    Vue.set(state, 'activeLocationLng', name)
   },
   clearActiveLocationIds(state) {
     state.activeLocationIds = []
@@ -607,6 +615,12 @@ export const getters = {
   },
   getActiveLocationDataset(state) {
     return state.activeLocationDataset
+  },
+  getActiveLocationLat(state) {
+    return state.activeLocationLat
+  },
+  getActiveLocationLng(state) {
+    return state.activeLocationLng
   },
   getExpandedPanels(state) {
     return state.expandedPanels
