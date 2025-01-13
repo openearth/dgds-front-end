@@ -83,6 +83,7 @@ export const mutations = {
     state.activeRasterLayerId = id
   },
   setActiveVectorDataIds(state, ids) {
+    console.log("Setting active vector data ids" + ids)
     Vue.set(state, 'activeVectorDataIds', ids)
   },
   setActiveSummary(state, summary) {
@@ -286,7 +287,7 @@ export const actions = {
     const datasetId = state.activeVectorDataIds
     const paddedLocationId = state.activeLocationIndex.toString().padStart(5, '0')
     // const paddedLocationId = '06435'
-    const url = `https://storage.googleapis.com/dgds-data-public/metocean/${graph}/point_${paddedLocationId}.zarr`
+    const url = `https://metocean-data.s3.eu-central-1.amazonaws.com/metocean-pez/${graph}/point_${paddedLocationId}.zarr`
     const path = parameter
     // console.log(parameter)
     return openArray({
@@ -318,7 +319,7 @@ export const actions = {
     const datasetId = state.activeVectorDataIds
     const paddedLocationId = state.activeLocationIndex.toString().padStart(5, '0')
     // const paddedLocationId = '06435'
-    const url = `https://storage.googleapis.com/dgds-data-public/metocean/${graph}/point_${paddedLocationId}.zarr`
+    const url = `https://metocean-data.s3.eu-central-1.amazonaws.com/metocean-pez/${graph}/point_${paddedLocationId}.zarr`
 
     return openArray({
       store: url,

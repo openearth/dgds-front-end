@@ -211,7 +211,9 @@ export default {
     },
     selectParameter3(value) {
       this.selectionBox.value = value
-      this.updateChart()
+      this.$nextTick(() => {
+        this.updateChart()
+      })
     },
     populateParameter1Options() {
       const uniqueParameter1Options = [
@@ -613,7 +615,8 @@ export default {
               },
               outOfRange: {
                 color: '#c1c1c1'
-              }
+              },
+              formatter: (value) => value.toFixed(2)
             },
             series: [
               {

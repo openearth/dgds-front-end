@@ -1,6 +1,6 @@
 <template>
   <v-navigation-drawer
-    v-if="['metocean_points', 'metocean_WRA_points2'].includes(activeLocationDataset)"
+    v-if="['metocean_100m_analysis_points', 'metocean_100m_other_points', 'metocean_5km_points', 'metocean_WRA_points2'].includes(activeLocationDataset)"
     class="pl-16"
     permanent
     absolute
@@ -46,7 +46,7 @@
               />
             </v-expansion-panel-content>
           </v-expansion-panel>
-          <v-expansion-panel v-if="activeLocationName?.includes('PEI')">
+          <v-expansion-panel v-if="activeLocationDataset != 'metocean_WRA_points2'">
             <v-expansion-panel-header
               class="h4"
               color="background"
@@ -58,7 +58,7 @@
               <rose-plot :location-id="$route.params.locationId" />
             </v-expansion-panel-content>
           </v-expansion-panel>
-          <v-expansion-panel v-if="activeLocationName?.includes('PEI')">
+          <v-expansion-panel v-if="activeLocationDataset != 'metocean_WRA_points2'">
             <v-expansion-panel-header
               class="h4"
               color="background"
@@ -67,10 +67,10 @@
               Joint Occurence
             </v-expansion-panel-header>
             <v-expansion-panel-content color="background">
-              <joint-occurence />
+              <joint-occurence :location-id="$route.params.locationId" />
             </v-expansion-panel-content>
           </v-expansion-panel>
-          <v-expansion-panel v-if="activeLocationName?.includes('PEI')">
+          <v-expansion-panel v-if="activeLocationDataset != 'metocean_WRA_points2'">
             <v-expansion-panel-header
               class="h4"
               color="background"
@@ -82,7 +82,7 @@
               <weather-window :location-id="$route.params.locationId" />
             </v-expansion-panel-content>
           </v-expansion-panel>
-          <v-expansion-panel v-if="activeLocationDataset == 'metocean_points'">
+          <v-expansion-panel v-if="activeLocationDataset == 'metocean_100m_analysis_points' || activeLocationDataset == 'metocean_100m_other_points'">
             <v-expansion-panel-header
               class="h4"
               color="background"

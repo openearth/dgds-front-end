@@ -30,6 +30,7 @@
             :key="dataset.id"
           >
             <v-expansion-panel-header
+              v-if="dataset.title"
               hide-actions
               color="background"
               dark
@@ -39,9 +40,7 @@
                   cols="7"
                   class="ma-auto pa-0"
                 >
-                  <span class="ml-2 d-sm-none d-md-flex">{{
-                    dataset.title
-                  }}</span>
+                  <span class="ml-2 d-sm-none d-md-flex">{{ dataset.title }}</span>
                 </v-col>
                 <v-col
                   cols="2"
@@ -212,6 +211,9 @@ export default {
       'activeVectorData',
       'getActiveVectorDataIds'
     ]),
+    filteredDatasets() {
+      return Object.values(this.datasets).filter(dataset => dataset.title);
+    },
     themeName() {
       return this.getActiveTheme || 'Map layers'
     },
@@ -231,6 +233,8 @@ export default {
       // Take care that setActiveVectorDataIds is set when entering site with vector layer enabled
       const params = this.$route.params
       const initialDataset = _.get(this.datasets, `${params.datasetIds}`)
+
+      console.log(this.datasets)
 
       if (this.activeVectorDataIds === '' && params.datasetIds !== '') {
         if (
@@ -294,6 +298,9 @@ export default {
       this.hoverId ? (this.hoverId = null) : (this.hoverId = id)
     },
     toggleLocationDataset(dataset) {
+
+      console.log("Adding location layer")
+
       let oldParams = _.get(this.$route, 'params.datasetIds')
       const params = this.$route.params
       let newParams
@@ -335,6 +342,7 @@ export default {
 
       // Store which vector layers are active
       // this.setActiveVectorDataIds(params.datasetIds)
+      console.log("Commiting to store" + params.datasetIds)
       this.$store.commit('setActiveVectorDataIds', params.datasetIds)
 
       // create new activeSummary list (only if summary exists for dataset)
@@ -352,8 +360,10 @@ export default {
       if (!layers) {
         return false
       }
+      
       const typeArray = layers.map((layer) => {
         const title = _.get(layer, 'title')
+
         if (!title) {
           return false
         }
@@ -437,6 +447,9 @@ export default {
 
 .v-expansion-panel {
   border-color: var(--v-background-base);
+  height: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .v-input--selection-controls__input .v-icon {

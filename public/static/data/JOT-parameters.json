@@ -122,11 +122,11 @@
   {
     "parameter1": {
       "label": "Tidal current speed CS_{tid,d75} (m/s)",
-      "value": "CStid_d75"
+      "value": "CS_tid_d75"
     },
     "parameter2": {
       "label": "Tidal current direction at 75% of the water depth CD_{tid,d75} ({circ}N going to)",
-      "value": "CDtid_d75"
+      "value": "CD_tid_d75"
     },
     "rose": true,
     "jot": true
@@ -841,7 +841,7 @@
   },
   {
     "parameter1": {
-      "label": "Total water level WL_{res} (m)",
+      "label": "Residual water level WL_{res} (m)",
       "value": "WL_res"
     },
     "parameter2": {

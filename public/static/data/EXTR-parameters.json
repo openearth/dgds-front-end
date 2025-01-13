@@ -1,15 +1,11 @@
 [
   {
-    "label": "Total extreme current speed at 100% of the water depth CS_{tot,extreme,d100} (m/s)",
-    "value": "CS_tot_d100"
+    "label": "Total extreme current speed at 5% of the water depth CS_{tot,extreme,d5} (m/s)",
+    "value": "CS_tot_d5"
   },
   {
     "label": "Total extreme current speed at 25% of the water depth CS_{tot,extreme,d25} (m/s)",
     "value": "CS_tot_d25"
-  },
-  {
-    "label": "Total extreme current speed at 5% of the water depth CS_{tot,extreme,d5} (m/s)",
-    "value": "CS_tot_d5"
   },
   {
     "label": "Total extreme current speed at 50% of the water depth CS_{tot,extreme,d50} (m/s)",
@@ -18,6 +14,10 @@
   {
     "label": "Total extreme current speed at 75% of the water depth CS_{tot,extreme,d75} (m/s)",
     "value": "CS_tot_d75"
+  },
+  {
+    "label": "Total extreme current speed at 100% of the water depth CS_{tot,extreme,d100} (m/s)",
+    "value": "CS_tot_d100"
   },
   {
     "label": "Total extreme current speed depth-averaged CS_{tot,extreme,dav} (m/s)",
@@ -32,12 +32,16 @@
     "value": "H_s_tot"
   },
   {
-    "label": "Hourly-averaged extreme horizontal wind speed at 100 m height U_{100,mag,extreme} (m/s)",
-    "value": "U_100_mag"
-  },
-  {
     "label": "Hourly-averaged extreme horizontal wind speed at 10 m height U_{10,mag,extreme} (m/s)",
     "value": "U_10_mag"
+  },
+  {
+    "label": "Hourly-averaged extreme horizontal wind speed at 60 m height U_{60,mag,extreme} (m/s)",
+    "value": "U_60_mag"
+  },
+  {
+    "label": "Hourly-averaged extreme horizontal wind speed at 100 m height U_{100,mag,extreme} (m/s)",
+    "value": "U_100_mag"
   },
   {
     "label": "Hourly-averaged extreme horizontal wind speed at 120 m height U_{120,mag,extreme} (m/s)",
@@ -60,15 +64,11 @@
     "value": "U_300_mag"
   },
   {
-    "label": "Hourly-averaged extreme horizontal wind speed at 60 m height U_{60,mag,extreme} (m/s)",
-    "value": "U_60_mag"
-  },
-  {
-    "label": "Extreme water level for total sea maxima Wlv_{tot,extreme,max} (m+MSL",
+    "label": "Extreme water level for total sea maxima WL_{tot,extreme,max} (m+MSL)",
     "value": "Wlv_tot_max"
   },
   {
-    "label": "Extreme water level for total sea minima Wlv_{tot,extreme,min} (m+MSL)",
+    "label": "Extreme water level for total sea minima WL_{tot,extreme,min} (m+MSL)",
     "value": "Wlv_tot_min"
   }
 ]

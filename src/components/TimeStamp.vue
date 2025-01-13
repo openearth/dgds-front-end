@@ -1,6 +1,6 @@
 <template>
   <v-card class="time-stamp pa-1">
-    <v-card-title class="h4">
+    <!-- <v-card-title class="h4">
       Date raster layer
     </v-card-title>
     <time-slider
@@ -41,7 +41,7 @@
           <v-icon>mdi-chevron-right</v-icon>
         </v-btn>
       </template>
-    </time-slider>
+    </time-slider> -->
   </v-card>
 </template>
 
@@ -49,11 +49,11 @@
 import { mapActions, mapGetters, mapState } from 'vuex'
 import _ from 'lodash'
 import moment from 'moment'
-import TimeSlider from '@/components/time-slider/TimeSlider.vue'
+// import TimeSlider from '@/components/time-slider/TimeSlider.vue'
 
 export default {
   components: {
-    TimeSlider
+    // TimeSlider
   },
   computed: {
     ...mapState(['loadingRasterLayers']),

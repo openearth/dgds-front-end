@@ -279,7 +279,7 @@
       "bin": "CD_tid_d_bins"
     }
   },
-  "JOT-CStid_d75-CDtid_d75": {
+  "JOT-CS_tid_d75-CD_tid_d75": {
     "selection_box": {
       "title": "Months of interest",
       "options": [
@@ -2064,7 +2064,7 @@
     },
     "parameter1": {
       "title": "Residual water level WL_{res} (m+MSL)",
-      "bin": "WL_rest_bins"
+      "bin": "WL_res_bins"
     },
     "parameter2": {
       "title": "Significant wave height for total sea H_{s,tot} (m)",

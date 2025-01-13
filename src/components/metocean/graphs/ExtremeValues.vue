@@ -98,7 +98,7 @@ export default {
           }
         },
         xAxis: {
-          name: 'Return period',
+          name: 'Return period (yr)',
           nameLocation: 'center',
           nameGap: 24,
           type: 'log',
@@ -417,10 +417,13 @@ export default {
                   onclick: () => {
                     this.downloadAsCSV(
                       [
-                        'return period',
+                        'return period (yr)',
                         '2.5% bound',
                         'best estimate',
-                        '97.5% bound'
+                        '97.5% bound',
+                        'location',
+                        'parameter',
+                        'direction'
                       ],
                       `Extreme_values_${locationName}`
                     )
@@ -493,7 +496,18 @@ export default {
         Object.keys(groupedData).forEach((returnPeriod) => {
           const row = [returnPeriod]
           keys.slice(1).forEach((key) => {
-            row.push(groupedData[returnPeriod][key] || 'undefined')
+            if(key == 'location') {
+              row.push(this.getActiveLocationName())
+            }
+            else if(key == 'parameter') {
+              row.push(this.selectedParameter.value)
+            }
+            else if(key == 'direction') {
+              row.push(this.selectedDirection)
+            }
+            else {
+              row.push(groupedData[returnPeriod][key])
+            }
           })
           csvContent += row.join(',') + '\r\n'
         })
